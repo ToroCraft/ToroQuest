@@ -30,7 +30,7 @@ public class EventHooks {
 
 	private void dropWormWithOdds(HarvestDropsEvent event, int maxOdds) {
 		if (event.harvester.worldObj.rand.nextInt(maxOdds) == 0) {
-			event.drops.add(new ItemStack(FishingMod.worm));
+			event.drops.add(new ItemStack(FishingMod.worms));
 		}
 	}
 

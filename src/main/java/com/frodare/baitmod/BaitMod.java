@@ -40,7 +40,6 @@ public class BaitMod {
 		
 		//2
 		ModelResourceLocation sugarBlockModel = new ModelResourceLocation("baitmod:sugarBlock", "inventory");
-		
 		//3
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(sugarBlockItem, 0, sugarBlockModel);
 	}

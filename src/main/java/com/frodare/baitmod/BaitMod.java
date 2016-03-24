@@ -25,7 +25,7 @@ public class BaitMod {
 		sugarBlock = new SugarBlock();
 		
 		GameRegistry.registerBlock(sugarBlock, SugarBlock.NAME);
-		GameRegistry.registerTileEntity(SugarBlockTileEntity.class, SugarBlockTileEntity.class.getSimpleName());
+		GameRegistry.registerTileEntity(SugarBlockTileEntity.class, "sugar_tile_entity");
 		
 		
 		GameRegistry.addRecipe(new ItemStack(sugarBlock), "sss", "sss", "sss", 's', new ItemStack(Items.sugar));

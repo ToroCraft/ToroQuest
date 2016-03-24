@@ -1,4 +1,4 @@
-package com.frodare.baitmod;
+package net.torocraft.baitmod;
 
 import java.util.List;
 import java.util.Random;

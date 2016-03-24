@@ -1,4 +1,4 @@
-package com.frodare.fishing;
+package net.torocraft.fishing;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderItem;
@@ -16,10 +16,10 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
-import com.frodare.baitmod.SugarBlock;
-import com.frodare.baitmod.SugarBlockTileEntity;
-import com.frodare.fishing.events.EventHooks;
-import com.frodare.fishing.items.Worms;
+import net.torocraft.baitmod.SugarBlock;
+import net.torocraft.baitmod.SugarBlockTileEntity;
+import net.torocraft.fishing.events.EventHooks;
+import net.torocraft.fishing.items.Worms;
 
 @Mod(modid=FishingMod.MODID, name=FishingMod.MODNAME, version=FishingMod.VERSION)
 public class FishingMod {

@@ -1,4 +1,4 @@
-package com.frodare.baitmod;
+package net.torocraft.baitmod;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;

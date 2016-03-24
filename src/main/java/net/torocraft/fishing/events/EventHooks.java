@@ -18,14 +18,18 @@ public class EventHooks {
 				return;
 			}
 			BiomeGenBase biome = event.world.getBiomeGenForCoords(event.pos);
-			if (BiomeDictionary.isBiomeOfType(biome, Type.PLAINS)) {
+			if (isBiomeOfType(biome, Type.PLAINS)) {
 				dropWormWithOdds(event, 12);
-			} else if (BiomeDictionary.isBiomeOfType(biome, Type.FOREST)) {
+			} else if (isBiomeOfType(biome, Type.FOREST)) {
 				dropWormWithOdds(event, 6);
-			} else if (BiomeDictionary.isBiomeOfType(biome, Type.JUNGLE)) {
+			} else if (isBiomeOfType(biome, Type.JUNGLE)) {
 				dropWormWithOdds(event, 1);
 			}
 		}
+	}
+
+	private boolean isBiomeOfType(BiomeGenBase biome, Type type) {
+		return BiomeDictionary.isBiomeOfType(biome, type);
 	}
 
 	private void dropWormWithOdds(HarvestDropsEvent event, int maxOdds) {

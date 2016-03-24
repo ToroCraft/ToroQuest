@@ -34,11 +34,7 @@ public class FishingMod {
 	public static Item worms;
 	
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		
-		
-		
-	}
+	public void preInit(FMLPreInitializationEvent event) {}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
@@ -51,17 +47,11 @@ public class FishingMod {
 		if(event.getSide() == Side.CLIENT){
 			RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 			renderItem.getItemModelMesher().register(worms, 0, new ModelResourceLocation(FishingMod.MODID + ":" + Worms.NAME, "inventory"));
-			
-			
 		}
 	}
 	
-	
-	
 	@EventHandler
-	public void load(FMLInitializationEvent event) {
-		//Blocks.grass.onBlockDestroyedByPlayer(Forge, pos, state);
-	}
+	public void load(FMLInitializationEvent event) {}
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {

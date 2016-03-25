@@ -17,11 +17,14 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
 public class SugarBlock extends BlockContainer {
 
 	public static final String NAME = "sugarBlock";
+	
+	private SugarBlockTileEntity titleEntity;
 
 	public SugarBlock() {
 		super(Material.ground);
@@ -30,6 +33,8 @@ public class SugarBlock extends BlockContainer {
 		setHardness(0.5f);
 		setLightLevel(0);
 		setCreativeTab(CreativeTabs.tabBlock);
+		
+		titleEntity = new SugarBlockTileEntity();
 	}
 
 	@Override
@@ -38,10 +43,25 @@ public class SugarBlock extends BlockContainer {
 	}
 
 	@Override
-	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
-		// worldIn.addWeatherEffect(new EntityLightningBolt(worldIn, pos.getX(),
-		// pos.getY(), pos.getZ(), true));
+	public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state) {
+		cleanUp();
 	}
+
+	@Override
+	public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn) {
+		cleanUp();
+	}
+
+	public void cleanUp() {
+		titleEntity.cleanUp();
+	}
+	
+	@Override
+	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+		//titleEntity.findEntities();
+	}
+	
+	
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,

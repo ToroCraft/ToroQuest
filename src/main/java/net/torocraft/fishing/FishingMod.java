@@ -3,9 +3,13 @@ package net.torocraft.fishing;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.init.Items;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.enchantment.Enchantment.Rarity;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -15,9 +19,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-
-import net.torocraft.baitmod.SugarBlock;
-import net.torocraft.baitmod.SugarBlockTileEntity;
+import net.torocraft.fishing.enchantments.EnchantmentJuicy;
 import net.torocraft.fishing.events.EventHooks;
 import net.torocraft.fishing.items.Worms;
 
@@ -32,6 +34,10 @@ public class FishingMod {
 	public static FishingMod instance;
 	
 	public static Item worms;
+	
+	public static final EntityEquipmentSlot[] wormSlots = {EntityEquipmentSlot.OFFHAND};
+	public static final Enchantment juicy = new EnchantmentJuicy(Rarity.COMMON, 
+			EnumEnchantmentType.WEAPON, wormSlots);
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {}
@@ -48,6 +54,8 @@ public class FishingMod {
 			RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 			renderItem.getItemModelMesher().register(worms, 0, new ModelResourceLocation(FishingMod.MODID + ":" + Worms.NAME, "inventory"));
 		}
+		
+		Enchantment.enchantmentRegistry.register(300, new ResourceLocation(FishingMod.MODID + ":" + EnchantmentJuicy.NAME), juicy);
 	}
 	
 	@EventHandler

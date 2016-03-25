@@ -1,5 +1,6 @@
 package net.torocraft.fishing.events;
 
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
@@ -38,8 +39,16 @@ public class EventHooks {
 
 	private void dropWormWithOdds(HarvestDropsEvent event, int maxOdds) {
 		if (event.harvester.worldObj.rand.nextInt(maxOdds) == 0) {
-			event.drops.add(new ItemStack(FishingMod.worms));
+			event.drops.add(newWorm(event));
 		}
+	}
+
+	private ItemStack newWorm(HarvestDropsEvent event) {
+		ItemStack worm = new ItemStack(FishingMod.worms);
+		if (event.harvester.worldObj.rand.nextInt(100) == 0) {
+			worm.addEnchantment(FishingMod.juicy, 1);
+		}
+		return worm;
 	}
 
 	private boolean isGrassBlock(HarvestDropsEvent event) {

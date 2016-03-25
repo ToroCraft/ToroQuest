@@ -59,5 +59,20 @@ public class SugarBlock extends BlockContainer {
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new SugarBlockTileEntity();
 	}
+	
+	/**
+	 * Making Something Happen When Item Goes Into Water
+	 * 
+	 * I've noticed it is fairly common for people to want to have a mod item
+	 * that does something special when tossed into water.
+	 * 
+	 * As mentioned above, when an Item is dropped it is turned into an
+	 * EntityItem. An EntityItem extends the Entity class, so you can @Override
+	 * the onUpdate() method for your custom EntityItem to check for whether it
+	 * is in contact with water. Since EntityItem extends the Entity class are
+	 * two possible methods to check for contact with water. If you want rain to
+	 * also cause some effect, then use the isWet() method. If you only want it
+	 * to have effect when submerged in water use the isInWater() method.
+	 */
 
 }

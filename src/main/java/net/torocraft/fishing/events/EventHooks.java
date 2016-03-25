@@ -4,9 +4,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
 import net.torocraft.fishing.FishingMod;
 
 public class EventHooks {
@@ -28,6 +28,10 @@ public class EventHooks {
 		}
 	}
 
+	@SubscribeEvent
+	public void hookWormOnPole(PlayerEvent event) {
+	}
+	
 	private boolean isBiomeOfType(BiomeGenBase biome, Type type) {
 		return BiomeDictionary.isBiomeOfType(biome, type);
 	}

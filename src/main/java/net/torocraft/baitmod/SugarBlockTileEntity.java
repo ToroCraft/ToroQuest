@@ -38,19 +38,23 @@ public class SugarBlockTileEntity extends TileEntity implements ITickable {
 	}
 
 	public void findEntities() {
+		findEntities(worldObj);
+	}
+	
 
+	public void findEntities(World world) {
 		int radius = 50;
 
 		AxisAlignedBB attractorBounds = new AxisAlignedBB(pos.getX() - RANGE, pos.getY() - RANGE, pos.getZ() - RANGE,
 				pos.getX() + 50d, pos.getY() + 50d, pos.getZ() + 50d);
 
-		List<EntityCreature> entsInBounds = worldObj.getEntitiesWithinAABB(EntityCreature.class, attractorBounds);
+		List<EntityCreature> entsInBounds = world.getEntitiesWithinAABB(EntityCreature.class, attractorBounds);
 
 		for (EntityCreature e : entsInBounds) {
-			
 			attractUsingAITask(e);
 		}
 	}
+
 
 	private void attractUsingAITask(EntityCreature entity) {
 		if (hasMoveToTask(entity)) {
@@ -76,9 +80,10 @@ public class SugarBlockTileEntity extends TileEntity implements ITickable {
 
 	public void cleanUp() {
 		for(EntityAIMoveToPosition task : activeTasks) {
-			activeTasks.remove(task);
+			task.remove();
 		}
 		activeTasks.clear();
+		
 	}
 
 	

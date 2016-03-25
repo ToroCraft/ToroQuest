@@ -11,6 +11,8 @@ public class EntityAIMoveToPosition extends EntityAIBase {
 	private final EntityCreature entity;
 	private final double speed;
 	private int timeoutCounter;
+	
+	private boolean done = false;
 
 	/** Controls task execution delay */
 	protected int runDelay;
@@ -32,8 +34,8 @@ public class EntityAIMoveToPosition extends EntityAIBase {
 	
 	@Override
 	public boolean shouldExecute() {
-		if( isTimedout()){
-			//log("Timedout");
+		if( isTimedout() || done){
+			log("Timedout");
 			//remove();
 			return false;
 		}
@@ -50,7 +52,8 @@ public class EntityAIMoveToPosition extends EntityAIBase {
 	}
 
 	public void remove() {
-		entity.tasks.removeTask(this);
+		//entity.tasks.removeTask(this);
+		this.done = true;
 	}
 
 	public void updateTask() {

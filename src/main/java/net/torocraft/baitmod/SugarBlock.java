@@ -58,11 +58,9 @@ public class SugarBlock extends BlockContainer {
 	
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
-		//titleEntity.findEntities();
+		titleEntity.findEntities(worldIn);
 	}
 	
-	
-
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
 			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
@@ -77,7 +75,7 @@ public class SugarBlock extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		return new SugarBlockTileEntity();
+		return titleEntity;
 	}
 	
 	/**

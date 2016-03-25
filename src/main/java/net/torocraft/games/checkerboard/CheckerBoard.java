@@ -1,5 +1,6 @@
 package net.torocraft.games.checkerboard;
 
+import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockQuartz;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.state.IBlockState;
@@ -22,7 +23,7 @@ public class CheckerBoard {
 	private static final IBlockState stairsEast = Blocks.quartz_stairs.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.EAST);
 
 	private static final IBlockState BORDER = Blocks.quartz_block.getDefaultState().withProperty(BlockQuartz.VARIANT, BlockQuartz.EnumType.CHISELED);
-	
+
 	/*
 	 * Cursor Variables
 	 */
@@ -30,7 +31,7 @@ public class CheckerBoard {
 	private int y;
 	private int z;
 	private IBlockState block;
-	
+
 	/*
 	 * Draw Flags
 	 */
@@ -47,24 +48,44 @@ public class CheckerBoard {
 
 	public void generate() {
 		/*
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
-		 *    01234567
-		 * 
+		 * SB01234567BS 
+		 * SBBBBBBBBBBS 
+		 * SSSSSPPSSSSS
 		 */
+		block = BORDER;
+		
+		z = y = x = 0;
+		
 		placeCheckerBlocks();
 		placeBorderBlocks();
 		placeBorderStairs();
+		placePodiums();
+	}
+
+	private void placePodiums() {
+		y = -1;
+		x = 3;
+		z = -2;
+		placePodium(EnumFacing.NORTH);
+		
+		y = -1;
+		x = 3;
+		z = 9;
+		placePodium(EnumFacing.SOUTH);
+	}
+
+	private void placePodium(EnumFacing facing) {
+		block = BORDER;
+		drawLine(Axis.X, 2);
+		
+		block = Blocks.chest.getDefaultState().withProperty(BlockChest.FACING, facing);
+		y++;
+		drawLine(Axis.X, -2);
 	}
 
 	private void placeBorderBlocks() {
 		block = BORDER;
+		y = 0;
 		z = x = -1;
 		drawLine(Axis.X, 10);
 		drawLine(Axis.Z, 10);
@@ -74,6 +95,7 @@ public class CheckerBoard {
 
 	private void placeBorderStairs() {
 		z = x = -2;
+		y = 0;
 		int length = 12;
 
 		drawStairBorder(length);
@@ -85,7 +107,7 @@ public class CheckerBoard {
 			x--;
 			y--;
 			length += 2;
-			if(!drawStairBorder(length)){
+			if (!drawStairBorder(length)) {
 				break;
 			}
 		}
@@ -95,7 +117,7 @@ public class CheckerBoard {
 
 	private boolean drawStairBorder(int length) {
 		boolean somethingDrawn = false;
-		
+
 		block = stairsSouth;
 		somethingDrawn = drawLine(Axis.X, length) || somethingDrawn;
 
@@ -107,7 +129,7 @@ public class CheckerBoard {
 
 		block = stairsEast;
 		somethingDrawn = drawLine(Axis.Z, -length) || somethingDrawn;
-		
+
 		return somethingDrawn;
 	}
 
@@ -117,18 +139,22 @@ public class CheckerBoard {
 		boolean somethingDrawn = false;
 		for (int i = 0; i < l; i++) {
 			placeBlock();
-			if (isPositive) {
-				incrementAxis(axis, 1);
-			} else {
-				incrementAxis(axis, -1);
+			if(i < l - 1){
+				if (isPositive) {
+					incrementAxis(axis, 1);
+				} else {
+					incrementAxis(axis, -1);
+				}
 			}
+			
 			somethingDrawn = somethingDrawn || blockWasDrawable;
 		}
+		
 		return somethingDrawn;
 	}
 
 	private int computeTravelDistance(int length) {
-		return Math.abs(length) - 1;
+		return Math.abs(length);
 	}
 
 	private void incrementAxis(Axis axis, int amount) {
@@ -148,6 +174,7 @@ public class CheckerBoard {
 	}
 
 	private void placeCheckerBlocks() {
+		y = 0;
 		for (x = 0; x < 8; x++) {
 			for (z = 0; z < 8; z++) {
 				placeBlock(defineCheckerBlock());
@@ -159,7 +186,7 @@ public class CheckerBoard {
 		if (okToPlaceBlock()) {
 			blockWasDrawable = true;
 			world.setBlockState(l(), type);
-		}else{
+		} else {
 			blockWasDrawable = false;
 		}
 	}

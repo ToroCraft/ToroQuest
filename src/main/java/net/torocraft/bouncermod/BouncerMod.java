@@ -19,26 +19,30 @@ public class BouncerMod {
 	
 	public static Block bounceBlock;
 	public static Block flubberBlock;
+	public static Block launchBlock;
 	
 	@EventHandler
 	public void init(FMLInitializationEvent e) {
 		bounceBlock = new BounceBlock();
 		flubberBlock = new FlubberBlock();
+		launchBlock = new LaunchBlock();
 		
 		GameRegistry.registerBlock(bounceBlock, BounceBlock.NAME);
-		GameRegistry.registerTileEntity(BounceBlockTileEntity.class, "bounce_tile_entity");
 		GameRegistry.registerBlock(flubberBlock, FlubberBlock.NAME);
-		GameRegistry.registerTileEntity(BounceBlockTileEntity.class, "flubber_tile_entity");
+		GameRegistry.registerBlock(launchBlock, LaunchBlock.NAME);
 				
 		
 		Item bounceBlockItem = GameRegistry.findItem(MODID, BounceBlock.NAME);
 		Item flubberBlockItem = GameRegistry.findItem(MODID, FlubberBlock.NAME);
+		Item launchBlockItem = GameRegistry.findItem(MODID, LaunchBlock.NAME);
 		
 		ModelResourceLocation bounceBlockModel = new ModelResourceLocation("bouncermod:bounceBlock", "inventory");
 		ModelResourceLocation flubberBlockModel = new ModelResourceLocation("bouncermod:flubberBlock", "inventory");
+		ModelResourceLocation launchBlockModel = new ModelResourceLocation("bouncermod:launchBlock", "inventory");
 
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(bounceBlockItem, 0, bounceBlockModel);
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(flubberBlockItem, 0, flubberBlockModel);
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(launchBlockItem, 0, launchBlockModel);
 	}
 	
 	

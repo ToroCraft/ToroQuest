@@ -1,22 +1,24 @@
 package net.torocraft.bouncermod;
 
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
-public class BounceBlock extends BlockContainer {
+public class BounceBlock extends Block {
 
 	public static final String NAME = "bounceBlock";
+		
+	protected Double springiness = 1.1;
+	protected Integer bounceDirection;
+	protected Double minBounceSpeed;
+	protected Double maxBounceSpeed;
 	
-	protected BounceBlockTileEntity titleEntity;
-	protected Double Springiness = 1.2;
+	private Double entityBounceSpeed;
 	
 	public BounceBlock() {
 		super(Material.ground);
@@ -24,28 +26,12 @@ public class BounceBlock extends BlockContainer {
 		setResistance(0.1f);
 		setHardness(5f);
 		setLightLevel(0);
-		this.translucent = true;
 		setCreativeTab(CreativeTabs.tabBlock);
-		
-		titleEntity = new BounceBlockTileEntity();
 	}
 
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
 		return EnumBlockRenderType.MODEL;
-	}
-
-	@Override
-	public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state) {
-		cleanUp();
-	}
-
-	@Override
-	public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn) {
-		cleanUp();
-	}
-
-	public void cleanUp() {
 	}
 	
 	@Override
@@ -57,12 +43,54 @@ public class BounceBlock extends BlockContainer {
 		if (!worldIn.isRemote) {
 			return;
 		}
-		
-		entityIn.motionY = -(Springiness*entityIn.motionY);
+		bounce(entityIn);
 	}
 	
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		return titleEntity;
+    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, Entity entityIn)
+    {
+    	bounce(entityIn);
+        super.onEntityCollidedWithBlock(worldIn, pos, entityIn);
+    }
+    
+	private void bounce(Entity entityIn) {
+		setIncomingSpeed(entityIn);
+		modifyBounceSpeedBySpringiness();
+		setToMinimumSpeedIfGoingTooSlow();
+		setToMaximumSpeedIfGoingTooFast();
+		setEntitySpeed(entityIn);
+	}
+	
+	private void setIncomingSpeed(Entity entityIn) {
+		entityBounceSpeed = Math.abs(entityIn.motionY);
+	}
+	
+	private void modifyBounceSpeedBySpringiness() {
+		if(springiness == null) {
+			return;
+		}
+		entityBounceSpeed = springiness * entityBounceSpeed;
+	}
+
+	private void setToMinimumSpeedIfGoingTooSlow() {
+		if(minBounceSpeed == null) {
+			return;
+		}
+		if(minBounceSpeed < entityBounceSpeed) {
+			entityBounceSpeed = minBounceSpeed;
+		}
+	}
+
+	private void setToMaximumSpeedIfGoingTooFast() {
+		if(maxBounceSpeed == null) {
+			return;
+		}
+		if(maxBounceSpeed > entityBounceSpeed) {
+			entityBounceSpeed = maxBounceSpeed;
+		}
+	}
+	
+	private void setEntitySpeed(Entity entityIn) {
+		entityIn.motionY = entityBounceSpeed;
 	}
 }

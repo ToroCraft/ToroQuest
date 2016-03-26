@@ -1,9 +1,16 @@
 package net.torocraft.games.checkerboard;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockQuartz;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.ai.EntityAITasks;
+import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
@@ -17,12 +24,17 @@ public class CheckerBoard {
 	private final int yOrigin;
 	private final int zOrigin;
 
-	private static final IBlockState stairsNorth = Blocks.quartz_stairs.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH);
-	private static final IBlockState stairsSouth = Blocks.quartz_stairs.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.SOUTH);
-	private static final IBlockState stairsWest = Blocks.quartz_stairs.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.WEST);
-	private static final IBlockState stairsEast = Blocks.quartz_stairs.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.EAST);
+	private static final IBlockState stairsNorth = Blocks.quartz_stairs.getDefaultState()
+			.withProperty(BlockStairs.FACING, EnumFacing.NORTH);
+	private static final IBlockState stairsSouth = Blocks.quartz_stairs.getDefaultState()
+			.withProperty(BlockStairs.FACING, EnumFacing.SOUTH);
+	private static final IBlockState stairsWest = Blocks.quartz_stairs.getDefaultState()
+			.withProperty(BlockStairs.FACING, EnumFacing.WEST);
+	private static final IBlockState stairsEast = Blocks.quartz_stairs.getDefaultState()
+			.withProperty(BlockStairs.FACING, EnumFacing.EAST);
 
-	private static final IBlockState BORDER = Blocks.quartz_block.getDefaultState().withProperty(BlockQuartz.VARIANT, BlockQuartz.EnumType.CHISELED);
+	private static final IBlockState BORDER = Blocks.quartz_block.getDefaultState().withProperty(BlockQuartz.VARIANT,
+			BlockQuartz.EnumType.CHISELED);
 
 	/*
 	 * Cursor Variables
@@ -42,7 +54,7 @@ public class CheckerBoard {
 	public CheckerBoard(World world, BlockPos position) {
 		this.world = world;
 		this.xOrigin = position.getX() - 4;
-		this.yOrigin = position.getY() + 1;
+		this.yOrigin = position.getY() - 1;
 		this.zOrigin = position.getZ() - 4;
 	}
 
@@ -60,6 +72,29 @@ public class CheckerBoard {
 		placeBorderBlocks();
 		placeBorderStairs();
 		placePodiums();
+		
+		//TODO clear top
+		
+	}
+
+	private void cancelCurrentTasks(EntityLiving ent) {
+		Iterator iterator = ent.tasks.taskEntries.iterator();
+
+		List<EntityAITasks.EntityAITaskEntry> currentTasks = new ArrayList<EntityAITasks.EntityAITaskEntry>();
+		
+		while (iterator.hasNext()) {
+			EntityAITaskEntry entityaitaskentry = (EntityAITasks.EntityAITaskEntry) iterator.next();
+			if (entityaitaskentry != null) {
+				currentTasks.add(entityaitaskentry);
+			}
+		}
+		
+		
+		// Only available way to stop current execution is to remove all current
+		// tasks, then re-add them
+		for (EntityAITaskEntry task : currentTasks) {
+			ent.tasks.removeTask(task.action);
+		}
 	}
 
 	private void placePodiums() {
@@ -67,7 +102,7 @@ public class CheckerBoard {
 		x = 3;
 		z = -2;
 		placePodium(EnumFacing.NORTH);
-		
+
 		y = -1;
 		x = 3;
 		z = 9;
@@ -77,7 +112,7 @@ public class CheckerBoard {
 	private void placePodium(EnumFacing facing) {
 		block = BORDER;
 		drawLine(Axis.X, 2);
-		
+
 		block = Blocks.chest.getDefaultState().withProperty(BlockChest.FACING, facing);
 		y++;
 		drawLine(Axis.X, -2);
@@ -139,17 +174,17 @@ public class CheckerBoard {
 		boolean somethingDrawn = false;
 		for (int i = 0; i < l; i++) {
 			placeBlock();
-			if(i < l - 1){
+			if (i < l - 1) {
 				if (isPositive) {
 					incrementAxis(axis, 1);
 				} else {
 					incrementAxis(axis, -1);
 				}
 			}
-			
+
 			somethingDrawn = somethingDrawn || blockWasDrawable;
 		}
-		
+
 		return somethingDrawn;
 	}
 

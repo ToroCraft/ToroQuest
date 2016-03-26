@@ -35,7 +35,7 @@ public class EntityAIMoveToPosition extends EntityAIBase {
 	@Override
 	public boolean shouldExecute() {
 		if( isTimedout() || done){
-			log("Timedout");
+			//log("Timedout");
 			//remove();
 			return false;
 		}

@@ -30,6 +30,16 @@ public class BounceBlock extends Block {
 	}
 
 	@Override
+    public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance)
+    {
+		if(entityIn.isSneaking()) {
+			super.onFallenUpon(worldIn, pos, entityIn, fallDistance);
+		} else {
+			entityIn.fall(fallDistance, 0F);
+		}
+    }
+	
+	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
 		return EnumBlockRenderType.MODEL;
 	}
@@ -41,16 +51,24 @@ public class BounceBlock extends Block {
 	@Override
 	public void onLanded(World worldIn, Entity entityIn) {
 		if (!worldIn.isRemote) {
-			return;
+			return; 
 		}
-		bounce(entityIn);
+		if(entityIn.isSneaking()) {
+			super.onLanded(worldIn, entityIn);
+		} else {
+			bounce(entityIn);
+		}
 	}
 	
 	@Override
     public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, Entity entityIn)
     {
-    	bounce(entityIn);
-        super.onEntityCollidedWithBlock(worldIn, pos, entityIn);
+		if(entityIn.isSneaking()) {
+			super.onEntityCollidedWithBlock(worldIn, pos, entityIn);
+		} else {
+			bounce(entityIn);
+			super.onEntityCollidedWithBlock(worldIn, pos, entityIn);
+		}
     }
     
 	private void bounce(Entity entityIn) {

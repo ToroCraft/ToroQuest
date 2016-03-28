@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "normal": { "model": "torogamesmod:chess_control" }
+    }
+}

@@ -14,6 +14,7 @@ public class EventHooks {
 
 	@SubscribeEvent
 	public void dropWorms(HarvestDropsEvent event) {
+		/*
 		if (isGrassBlock(event)) {
 			if (event.isSilkTouching) {
 				return;
@@ -26,7 +27,7 @@ public class EventHooks {
 			} else if (isBiomeOfType(biome, Type.JUNGLE)) {
 				dropWormWithOdds(event, 1);
 			}
-		}
+		}*/
 	}
 
 	@SubscribeEvent
@@ -38,21 +39,24 @@ public class EventHooks {
 	}
 
 	private void dropWormWithOdds(HarvestDropsEvent event, int maxOdds) {
+		/*
 		if (event.harvester.worldObj.rand.nextInt(maxOdds) == 0) {
 			event.drops.add(newWorm(event));
-		}
+		}*/
 	}
 
 	private ItemStack newWorm(HarvestDropsEvent event) {
 		ItemStack worm = new ItemStack(FishingMod.worms);
+		/*
 		if (event.harvester.worldObj.rand.nextInt(100) == 0) {
 			worm.addEnchantment(FishingMod.juicy, 1);
-		}
+		}*/
 		return worm;
 	}
 
 	private boolean isGrassBlock(HarvestDropsEvent event) {
-		return event.state.getBlock().getUnlocalizedName().equals("tile.grass");
+		//return event.state.getBlock().getUnlocalizedName().equals("tile.grass");
+		return false;
 	}
 	
 }

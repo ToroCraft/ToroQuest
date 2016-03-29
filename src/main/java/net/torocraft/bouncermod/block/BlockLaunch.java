@@ -1,15 +1,15 @@
-package net.torocraft.bouncermod;
+package net.torocraft.bouncermod.block;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class LaunchBlock extends BounceBlock {
+public class BlockLaunch extends BlockRubber {
 	
 	public static final String NAME = "launchBlock";
 
-	public LaunchBlock() {
+	public BlockLaunch() {
 		super();
 		setUnlocalizedName(NAME);
 		this.minBounceSpeed = 1.2D;

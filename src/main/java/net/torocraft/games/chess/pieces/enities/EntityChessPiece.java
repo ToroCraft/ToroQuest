@@ -29,8 +29,7 @@ import net.torocraft.games.chess.BlockChessControl;
 import net.torocraft.games.chess.ChessGame;
 import net.torocraft.games.chess.ai.EntityAILookDownBoard;
 import net.torocraft.games.chess.ai.EntityAIMoveToPosition;
-import net.torocraft.games.chess.pieces.IChessPiece;
-import net.torocraft.games.chess.pieces.IChessPiece.Side;
+import net.torocraft.games.chess.pieces.enities.IChessPiece.Side;
 
 public abstract class EntityChessPiece extends EntityCreature implements IChessPiece {
 

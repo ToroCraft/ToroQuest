@@ -4,8 +4,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.torocraft.games.chess.pieces.IChessPiece.Side;
 import net.torocraft.games.chess.pieces.enities.EntityChessPiece;
+import net.torocraft.games.chess.pieces.enities.IChessPiece.Side;
 
 public class EntityAILookDownBoard extends EntityAIBase {
 

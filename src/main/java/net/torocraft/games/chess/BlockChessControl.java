@@ -49,7 +49,6 @@ public class BlockChessControl extends BlockContainer {
 	public ChessGame getGame() {
 
 		if (game == null) {
-			System.out.println("game is null, creating now");
 			game = new ChessGame(tileEntity.getWorld(), tileEntity.getPos());
 		}
 
@@ -89,10 +88,9 @@ public class BlockChessControl extends BlockContainer {
 		if (worldIn.isRemote) {
 			return;
 		}
-
 		updateOnState(worldIn, pos);
-
 		if (isTurningOn()) {
+			System.out.println("placePieces");
 			getGame().placePieces();
 		} else {
 			worldIn.scheduleUpdate(pos, this, 8);
@@ -108,7 +106,7 @@ public class BlockChessControl extends BlockContainer {
 		if (worldIn.isRemote) {
 			return;
 		}
-
+		
 		if (!worldIn.isBlockPowered(pos)) {
 			wasOn = false;
 			isOn = false;

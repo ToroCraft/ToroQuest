@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.torocraft.games.checkerboard.CheckerBoard;
-import net.torocraft.games.chess.pieces.IChessPiece.Side;
 import net.torocraft.games.chess.pieces.enities.EntityBishop;
 import net.torocraft.games.chess.pieces.enities.EntityChessPiece;
 import net.torocraft.games.chess.pieces.enities.EntityKing;
@@ -14,6 +13,7 @@ import net.torocraft.games.chess.pieces.enities.EntityKnight;
 import net.torocraft.games.chess.pieces.enities.EntityPawn;
 import net.torocraft.games.chess.pieces.enities.EntityQueen;
 import net.torocraft.games.chess.pieces.enities.EntityRook;
+import net.torocraft.games.chess.pieces.enities.IChessPiece.Side;
 
 public class ChessGame {
 
@@ -48,9 +48,7 @@ public class ChessGame {
 
 		int i = 0;
 		addWand(i++);
-
-		placePieces();
-
+		//placePieces();
 	}
 
 	public void placePieces() {

@@ -19,7 +19,7 @@ import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
-import net.torocraft.games.chess.pieces.IChessPiece.Side;
+import net.torocraft.games.chess.pieces.enities.IChessPiece.Side;
 
 public class CheckerBoard {
 

@@ -7,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.torocraft.games.chess.ai.EntityAILookDownBoard;
-import net.torocraft.games.chess.pieces.IChessPiece;
 
 public class EntityKnight extends EntityChessPiece implements IChessPiece {
 

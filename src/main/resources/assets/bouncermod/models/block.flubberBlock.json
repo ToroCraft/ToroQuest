@@ -1,0 +1,13 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"down": "bouncermod:blocks/flubber_block",
+		"up": "bouncermod:blocks/flubber_block",
+		"north": "bouncermod:blocks/flubber_block",
+		"south": "bouncermod:blocks/flubber_block",
+		"east": "bouncermod:blocks/flubber_block",
+		"west": "bouncermod:blocks/flubber_block",
+		"particle": "bouncermod:blocks/flubber_block"
+
+	}
+}

@@ -1,15 +1,15 @@
-package net.torocraft.bouncermod;
+package net.torocraft.bouncermod.block;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class FlubberBlock extends BounceBlock {
+public class BlockFlubber extends BlockRubber {
 	
 	public static final String NAME = "flubberBlock";
 
-	public FlubberBlock() {
+	public BlockFlubber() {
 		super();
 		setUnlocalizedName(NAME);
 		this.springiness = 1.25;

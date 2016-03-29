@@ -1,4 +1,4 @@
-package net.torocraft.bouncermod;
+package net.torocraft.bouncermod.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -9,7 +9,7 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BounceBlock extends Block {
+public class BlockRubber extends Block {
 
 	public static final String NAME = "bounceBlock";
 		
@@ -20,7 +20,7 @@ public class BounceBlock extends Block {
 	
 	private Double entityBounceSpeed;
 	
-	public BounceBlock() {
+	public BlockRubber() {
 		super(Material.ground);
 		setUnlocalizedName(NAME);
 		setResistance(0.1f);

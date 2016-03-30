@@ -1,0 +1,211 @@
+----------
+-=minecraft:air
+W=minecraft:planks
+G=minecraft:glass_pane
+b=minecraft:bed
+B=minecraft:stonebrick
+c=minecraft:cauldron
+f=minecraft:furnace
+C=minecraft:chest|facing:north
+F=minecraft:fence
+D=minecraft:wooden_door
+N=minecraft:dark_oak_stairs|facing:south
+S=minecraft:dark_oak_stairs|facing:north
+L=minecraft:log
+T=minecraft:torch
+----------
+L     L     L     L     L
+                         
+                        BB
+                        BB
+L     L     L     L     BB
+                        BB
+                         
+                         
+                         
+L     L     L     L     L
+                           
+                           
+                           
+L     L     L     L     L
+  NNN   NNN
+----------
+LWWWWWWWWWWWWWWWWWWWWWWLL
+WWWWWWWWWWWWWWWWWWWWWWWWW
+WWWWWWWWWWWWWWWWWWWWWWBBBB
+WWWWWWWWWWWWWWWWWWWWWWBBBB
+WWWWWWWWWWWWWWWWWWWWWWBBBB
+WWWWWWWWWWWWWWWWWWWWWWBBBB
+WWWWWWWWWWWWWWWWWWWWWWWWW
+WWWWWWWWWWWWWWWWWWWWWWWWW
+WWWWWWWWWWWWWWWWWWWWWWWWW
+WWWWWWWWWWWWWWWWWWWWWWWWW
+WWWWWWWWWWWWWWWWWWWWWWWWW
+WWWWWWWWWWWWWWWWWWWWWWWWW
+WWWWWWWWWWWWWWWWWWWWWWWWW
+LWWWWWWWWWWWWWWWWWWWWWWWL
+----------
+LWWWWWWWWWWWWWWWWWWWWWWWL
+WCCcffcCCW--------------W
+W--------W--------------BB
+W--------D------T--------B
+WCCFCCFCCW---------------B
+WWWWWWWWWW------T-------BB
+W--------D--------------W
+W-b-b-b--W--------------W
+W--------W------WWWWDWWWW
+LWWWWWWWWWWWWWDWW-------W
+----------------W-------W
+----------------W-------W
+----------------W-------W
+F-----F-----F---LWWWWWWWL
+----------
+LWWWWWWWWWWGGWWWGGWWWGGWL
+W--------W--------------W
+G--------W--------------BB
+G-------- ---------------B
+W--------W---------------B
+WWWWWWWWWW--------------BB
+W-------- --------------W
+G--------W--------------W
+W--------W------WWWW WWWW
+LWGGWWGGWWGGWW WW-------W
+----------------W-------G
+----------------G-------G
+----------------W-------W
+F-----F-----F---LWGGWGGWL
+----------
+LWWWWWWWWWWGGWWWGGWWWGGWL
+W---T----W----T----T----W
+G--------WT------------TBB
+G--------W---------------B
+W---T----WT--------------B
+WWWWWWWWWW-------------TBB
+W---T----W--------------W
+G--------WT--------T----W
+W---T----W------WWWWWWWWW
+LWGGWWGGWWGGWWWWW-------W
+----------------W-------W
+----------------WT-----TW
+----------------W-------W
+F-----F-----F---LWGGWGGWL
+----------
+NNNNNNNNNNNNNNNNNNNNNNNNN
+W--------W -------------W
+W--------W -------------W 
+W--------W -------------W 
+W--------W -------------BB
+WWWWWWWWWW -------------BB
+W--------W -------------W
+W--------W -------------W
+W--------W -----WWWWWWWWW
+WWWWWWWWWWWWWWWWW-------W
+----------------W-------W
+----------------W-------W
+----------------W-------W
+SSSSSSSSSSSSSSSSSSSSSSSSS
+----------
+
+NNNNNNNNNNNNNNNNNNNNNNNNN
+W--------W--------------W 
+W--------W--------------W 
+W--------W--------------BB
+WWWWWWWWWW--------------BB
+W--------W--------------W
+W--------W--------------W
+W--------W------WWWWWWWWW
+WWWWWWWWWWWWWWWWW-------W
+----------------W-------W
+----------------W-------W
+SSSSSSSSSSSSSSSSSSSSSSSSS
+ 
+----------
+ 
+ 
+NNNNNNNNNNNNNNNNNNNNNNNNN
+W--------W--------------W 
+W--------W--------------BB
+WWWWWWWWWW--------------BB
+W--------W--------------W
+W--------W--------------W
+W--------W------WWWWWWWWW
+WWWWWWWWWWWWWWWWW-------W
+----------------W-------W
+SSSSSSSSSSSSSSSSSSSSSSSSS
+ 
+ 
+----------
+ 
+ 
+ 
+NNNNNNNNNNNNNNNNNNNNNNNNN 
+W--------W--------------BB
+WWWWWWWWWW--------------BB
+W--------W--------------W
+W--------W--------------W
+W--------W------WWWWWWWWW
+WWWWWWWWWWWWWWWWW-------W
+SSSSSSSSSSSSSSSSSSSSSSSSS
+ 
+ 
+ 
+----------
+ 
+ 
+ 
+ 
+NNNNNNNNNNNNNNNNNNNNNNNNBB
+WWWWWWWWWW--------------BB
+W--------W--------------W
+W--------W--------------W
+W--------W------WWWWWWWWW
+SSSSSSSSSSSSSSSSSSSSSSSSS
+ 
+ 
+ 
+ 
+----------
+ 
+ 
+ 
+ 
+                        BB
+NNNNNNNNNNNNNNNNNNNNNNNNBB
+W--------W--------------W
+W--------W--------------W
+SSSSSSSSSSSSSSSSSSSSSSSSS
+ 
+ 
+ 
+ 
+ 
+----------
+ 
+ 
+ 
+ 
+                        BB
+                        BB
+NNNNNNNNNNNNNNNNNNNNNNNNN
+SSSSSSSSSSSSSSSSSSSSSSSSS
+ 
+ 
+ 
+ 
+ 
+ 
+----------
+ 
+ 
+ 
+ 
+                        BB
+                        BB
+                        
+ 
+ 
+ 
+ 
+ 
+ 
+ 

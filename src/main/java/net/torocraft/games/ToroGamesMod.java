@@ -38,6 +38,8 @@ import net.torocraft.games.chess.pieces.render.RenderKnight;
 import net.torocraft.games.chess.pieces.render.RenderPawn;
 import net.torocraft.games.chess.pieces.render.RenderQueen;
 import net.torocraft.games.chess.pieces.render.RenderRook;
+import net.torocraft.toroutils.generation.CuboidCommand;
+import net.torocraft.toroutils.generation.ToroGenCommand;
 
 @Mod(modid = ToroGamesMod.MODID, name = ToroGamesMod.MODNAME, version = ToroGamesMod.VERSION)
 public class ToroGamesMod {
@@ -124,6 +126,8 @@ public class ToroGamesMod {
 		ICommandManager comManager = event.getServer().getCommandManager();
 		((ServerCommandManager) comManager).registerCommand(new CheckboardCreateCommand());
 		((ServerCommandManager) comManager).registerCommand(new ChessCreateCommand());
+		((ServerCommandManager) comManager).registerCommand(new CuboidCommand());
+		((ServerCommandManager) comManager).registerCommand(new ToroGenCommand());
 	}
 
 }

@@ -1,6 +1,7 @@
 ----------
 -=minecraft:air
 W=minecraft:planks
+p=minecraft:wooden_pressure_platee_plate
 G=minecraft:glass_pane
 b=minecraft:bed
 B=minecraft:stonebrick
@@ -8,11 +9,16 @@ c=minecraft:cauldron
 f=minecraft:furnace
 C=minecraft:chest|facing:north
 F=minecraft:fence
-D=minecraft:wooden_door
 N=minecraft:dark_oak_stairs|facing:south
 S=minecraft:dark_oak_stairs|facing:north
 L=minecraft:log
 T=minecraft:torch
+s=minecraft:wooden_slab
+D=minecraft:wooden_door|(2)|facing:south
+^=minecraft:torch|(2)|facing:south
+v=minecraft:torch|(2)|facing:north
+<=minecraft:torch|(2)|facing:west
+>=minecraft:torch|(2)|facing:east
 ----------
 L     L     L     L     L
                          
@@ -30,6 +36,8 @@ L     L     L     L     L
 L     L     L     L     L
   NNN   NNN
 ----------
+_REPEAT_UNTIL_GROUNDED_
+----------
 LWWWWWWWWWWWWWWWWWWWWWWLL
 WWWWWWWWWWWWWWWWWWWWWWWWW
 WWWWWWWWWWWWWWWWWWWWWWBBBB
@@ -43,14 +51,14 @@ WWWWWWWWWWWWWWWWWWWWWWWWW
 WWWWWWWWWWWWWWWWWWWWWWWWW
 WWWWWWWWWWWWWWWWWWWWWWWWW
 WWWWWWWWWWWWWWWWWWWWWWWWW
-LWWWWWWWWWWWWWWWWWWWWWWWL
+LWWWWWLWWWWWLWWWWWWWWWWWL
 ----------
 LWWWWWWWWWWWWWWWWWWWWWWWL
 WCCcffcCCW--------------W
 W--------W--------------BB
-W--------D------T--------B
+W--------D---------------B
 WCCFCCFCCW---------------B
-WWWWWWWWWW------T-------BB
+WWWWWWWWWW--------------BB
 W--------D--------------W
 W-b-b-b--W--------------W
 W--------W------WWWWDWWWW
@@ -64,7 +72,7 @@ LWWWWWWWWWWGGWWWGGWWWGGWL
 W--------W--------------W
 G--------W--------------BB
 G-------- ---------------B
-W--------W---------------B
+W--p--p--W---------------B
 WWWWWWWWWW--------------BB
 W-------- --------------W
 G--------W--------------W
@@ -76,44 +84,44 @@ LWGGWWGGWWGGWW WW-------W
 F-----F-----F---LWGGWGGWL
 ----------
 LWWWWWWWWWWGGWWWGGWWWGGWL
-W---T----W----T----T----W
-G--------WT------------TBB
+W---v----W----v----v----W
+G--------W>------------TBB
 G--------W---------------B
-W---T----WT--------------B
+W---^----W>--------------B
 WWWWWWWWWW-------------TBB
-W---T----W--------------W
-G--------WT--------T----W
-W---T----W------WWWWWWWWW
-LWGGWWGGWWGGWWWWW-------W
+W---v----W--------------W
+G--------W>---------^---W
+W---^----W------WWWWWWWWW
+LWGGWWGGWWGGWWWWW---v---W
 ----------------W-------W
-----------------WT-----TW
+----------------W>-----<W
 ----------------W-------W
 F-----F-----F---LWGGWGGWL
 ----------
 NNNNNNNNNNNNNNNNNNNNNNNNN
-W--------W -------------W
-W--------W -------------W 
-W--------W -------------W 
-W--------W -------------BB
-WWWWWWWWWW -------------BB
-W--------W -------------W
-W--------W -------------W
-W--------W -----WWWWWWWWW
-WWWWWWWWWWWWWWWWW-------W
-----------------W-------W
-----------------W-------W
-----------------W-------W
+WssssssssWsssssssss-----W
+GssssssssWsssssssss-----BB
+GssssssssWsssssssss-----BB
+WssssssssWsssssssss-----BB
+WssssssssWsssssssss-----BB
+GssssssssWsssssssss-----W
+GssssssssWsssssssss-----W
+WssssssssWssssssWDWWWWWWW
+WWWWWWWWWWWWWWWWWsssssssW
+----------------WsssssssW
+----------------WsssssssW
+----------------WsssssssW
 SSSSSSSSSSSSSSSSSSSSSSSSS
 ----------
 
 NNNNNNNNNNNNNNNNNNNNNNNNN
-W--------W--------------W 
-W--------W--------------W 
-W--------W--------------BB
-WWWWWWWWWW--------------BB
-W--------W--------------W
-W--------W--------------W
-W--------W------WWWWWWWWW
+W-----------------F-----W 
+WC----------------F-----W 
+WC----------------F-----BB
+W-----------------F-----BB
+WC----------------F-----W
+WC----------------F-----W
+W---------------W-WWWWWWW
 WWWWWWWWWWWWWWWWW-------W
 ----------------W-------W
 ----------------W-------W

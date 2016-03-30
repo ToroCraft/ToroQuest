@@ -18,7 +18,7 @@ public class BounceModItems {
 	public static Item rubberSwordItem;
 	public static Item flubberSwordItem;
 
-	public static ToolMaterial RUBBER = EnumHelper.addToolMaterial("RUBBER", 0, 1561, .75F, 0.0F, 15);
+	public static ToolMaterial RUBBER = EnumHelper.addToolMaterial("RUBBER", -3, 1561, .75F, 0.0F, 15);
 
 	public static final void init() {
 		initCraftingMaterials();

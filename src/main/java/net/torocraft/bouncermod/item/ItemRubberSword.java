@@ -1,8 +1,11 @@
 package net.torocraft.bouncermod.item;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.torocraft.bouncermod.util.KnockbackEffect;
 
 public class ItemRubberSword extends ItemSword {
 
@@ -21,14 +24,15 @@ public class ItemRubberSword extends ItemSword {
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
 		stack.damageItem(1, attacker);
-		target.motionX = Math.signum(target.posX - attacker.posX) * knockback;
-		target.motionZ = Math.signum(target.posZ - attacker.posZ) * knockback;
-
-		target.motionY = Math.signum(target.posY - attacker.posY) * knockback;
-		if (target.motionY == 0) {
-			target.motionY = knockback;
-		}
+		KnockbackEffect.getEntityKnockbackSpeed(target, attacker, knockback);
 		return true;
 	}
+	
+	@Override
+    public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
+    {
+		KnockbackEffect.getEntityKnockbackSpeed(player, entity, knockback*.25);
+        return false;
+    }
 
 }

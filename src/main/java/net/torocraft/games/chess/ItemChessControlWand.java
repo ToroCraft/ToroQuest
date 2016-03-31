@@ -30,6 +30,7 @@ public class ItemChessControlWand extends Item {
 	public ItemChessControlWand() {
 		setUnlocalizedName(NAME);
 		setMaxDamage(1);
+		setCreativeTab(CreativeTabs.tabMisc);
 	}
 
 	public void setChessControlBlockPosition(BlockPos pos) {

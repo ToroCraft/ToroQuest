@@ -2,9 +2,12 @@ package net.torocraft.games.chess;
 
 import java.util.Random;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.torocraft.games.ToroGamesMod;
 import net.torocraft.games.checkerboard.CheckerBoard;
 import net.torocraft.games.chess.pieces.enities.EntityBishop;
 import net.torocraft.games.chess.pieces.enities.EntityChessPiece;
@@ -91,7 +94,7 @@ public class ChessGame {
 	}
 
 	private void addWand(int index) {
-		ItemChessControlWand wand = new ItemChessControlWand();
+		ItemChessControlWand wand = (ItemChessControlWand)GameRegistry.findItem(ToroGamesMod.MODID, "chess_control_wand");
 		wand.setChessControlBlockPosition(origin);
 		ItemStack stack = new ItemStack(wand, 1);
 		getBoard().getWhiteChest().setInventorySlotContents(index, stack);

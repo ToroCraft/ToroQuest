@@ -7,9 +7,13 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 
+import com.google.common.base.Predicate;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.BlockSlab;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
@@ -29,7 +33,23 @@ public class BlockMap {
 	private int y = -1;
 	private int x;
 	private int z;
-	private Map<Character, IBlockState> palette;
+	private int pass = 1;
+	private int maxPass = 1;
+	private Map<Character, PaletteEntry> palette;
+	private boolean paletteParsed = false;
+
+	private static final PaletteEntry DEFAULT_PALETTE_ENTRY;
+
+	static {
+		DEFAULT_PALETTE_ENTRY = new PaletteEntry();
+		DEFAULT_PALETTE_ENTRY.block = Blocks.air.getDefaultState();
+		DEFAULT_PALETTE_ENTRY.pass = 1;
+	}
+
+	public static class PaletteEntry {
+		IBlockState block;
+		int pass = 1;
+	}
 
 	public BlockMap(World world, BlockPos origin) {
 		this.world = world;
@@ -49,13 +69,22 @@ public class BlockMap {
 	}
 
 	public void generate() {
-		palette = new HashMap<Character, IBlockState>();
+		palette = new HashMap<Character, PaletteEntry>();
+		palette.put(' ', DEFAULT_PALETTE_ENTRY);
 		splitIntoLines();
 		parseDelimiter();
-		for (lineIndex = 1; lineIndex < lines.length; lineIndex++) {
-			line = lines[lineIndex];
-			handleLine();
+
+		
+
+		for (pass = 1; pass <= maxPass; pass++) {
+			System.out.println("starting block scan MAXPASS[" + maxPass + "] PASS[" + pass + "]");
+			for (lineIndex = 1; lineIndex < lines.length; lineIndex++) {
+				line = lines[lineIndex];
+				handleLine();
+			}
+			y = -1;
 		}
+
 	}
 
 	private void handleLine() {
@@ -75,12 +104,18 @@ public class BlockMap {
 		if (y < 0) {
 			parsePalette();
 		} else {
+			paletteParsed = true;
 			generateLine();
 			z++;
 		}
 	}
 
 	private void parsePalette() {
+
+		if (paletteParsed) {
+			return;
+		}
+
 		if (line.length() < 3) {
 			System.out.println("Invalid palette line [" + line + "]");
 			return;
@@ -98,51 +133,92 @@ public class BlockMap {
 
 	}
 
-	private IBlockState parsePaleteBlock(String blockString) {
+	private PaletteEntry parsePaleteBlock(String blockString) {
+
+		PaletteEntry entry = new PaletteEntry();
 
 		String[] a = blockString.split("\\|");
 
-		IBlockState block = Block.blockRegistry.getObject(new ResourceLocation(a[0])).getDefaultState();
+		entry.block = Block.blockRegistry.getObject(new ResourceLocation(a[0])).getDefaultState();
+		
+		
+		if(a[0].equals("minecraft:wooden_slab")){
+			entry.block = entry.block.withProperty(BlockSlab.HALF, BlockSlab.EnumBlockHalf.TOP);
+		}
 
 		if (a.length > 0) {
 			for (int i = 1; i < a.length; i++) {
 				String propertyString = a[i];
+
 				if (propertyString == null) {
 					continue;
 				}
 
-				String[] aProp = propertyString.split(":");
-
-				if (aProp.length != 2) {
-					continue;
+				if (propertyString.matches("^\\(\\d+\\)$")) {
+					System.out.println("found pass number [" + propertyString + "]");
+					parsePaletePassNumber(propertyString, entry);
+				}else{
+					parsePaleteBlockParameter(a[0], propertyString, entry);
 				}
-
-				IProperty prop = null;
-				Object value = null;
-
-				if ("facing".equals(aProp[0])) {
-					prop = BlockHorizontal.FACING;
-				}
-
-				if ("north".equals(aProp[1])) {
-					value = EnumFacing.NORTH;
-				} else if ("south".equals(aProp[1])) {
-					value = EnumFacing.SOUTH;
-				}
-
-				if (value == null || prop == null) {
-					continue;
-				}
-
-				System.out.println("adding property [" + aProp[0] + "] [" + aProp[1] + "]");
-
-				block = block.withProperty(prop, value);
-
 			}
 		}
 
+		return entry;
+	}
 
-		return block;
+	private void parsePaletePassNumber(String propertyString, PaletteEntry entry) {
+		System.out.println("parsing pass [" + propertyString + "]");
+		entry.pass = Integer.parseInt(propertyString.replaceAll("[^0-9]", ""), 10);
+		maxPass = Math.max(maxPass, entry.pass);
+	}
+
+	private void parsePaleteBlockParameter(String blockname, String propertyString, PaletteEntry entry) {
+		String[] aProp = propertyString.split(":");
+
+		if (aProp.length != 2) {
+			return;
+		}
+
+		IProperty prop = null;
+		Object value = null;
+
+		if ("facing".equals(aProp[0])) {
+			// 
+
+			// prop = PropertyDirection.create("facing", new Predicate() {
+			// };<EnumFacing><EnumFacing>();
+
+			
+			if(blockname.equals("minecraft:torch")){
+				prop = PropertyDirection.create("facing", new Predicate<EnumFacing>() {
+					public boolean apply(EnumFacing p_apply_1_) {
+						return p_apply_1_ != EnumFacing.DOWN;
+					}
+				});
+				//FIXME
+				//return;
+			}else{
+				prop = BlockHorizontal.FACING;
+			}
+			
+			
+		} // PropertyDirection
+
+		if ("north".equals(aProp[1])) {
+			value = EnumFacing.NORTH;
+		} else if ("south".equals(aProp[1])) {
+			value = EnumFacing.SOUTH;
+		}
+		
+		
+
+		if (value == null || prop == null) {
+			return;
+		}
+
+		System.out.println("adding property [" + aProp[0] + "] [" + aProp[1] + "]");
+
+		entry.block = entry.block.withProperty(prop, value);
 	}
 
 	private void parseDelimiter() {
@@ -155,7 +231,7 @@ public class BlockMap {
 	}
 
 	private void generateLine() {
-		System.out.println("placing line [" + line + "] [" + x + "][" + y + "][" + z + "]");
+		System.out.println("placing line PASS[" + pass + "] [" + line + "] [" + x + "][" + y + "][" + z + "]");
 		x = 0;
 		char[] a = line.toCharArray();
 		for (char c : a) {
@@ -166,14 +242,22 @@ public class BlockMap {
 
 	private void placeBlock(char c) {
 
-		IBlockState block = palette.get(c);
+		if (c == ' ') {
+			return;
+		}
+		
+		PaletteEntry entry = palette.get(c);
 
-		if (block == null) {
-			block = Blocks.air.getDefaultState();
+		if (entry == null) {
+			entry = DEFAULT_PALETTE_ENTRY;
 			System.out.println("palette entry not found for [" + c + "]");
 		}
+		
+		if(entry.pass != pass){
+			return;
+		}
 
-		world.setBlockState(cursorCoords(), block);
+		world.setBlockState(cursorCoords(), entry.block, 3);
 	}
 
 	private boolean onAirBlock() {

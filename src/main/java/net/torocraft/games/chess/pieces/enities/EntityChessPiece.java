@@ -35,12 +35,16 @@ public abstract class EntityChessPiece extends EntityCreature implements IChessP
 
 	private Side side = Side.WHITE;
 	private String chessPosition;
+	private BlockPos gameBlockPosition;
 	private static final String NBT_SIDE_KEY = "chessside";
 	private static final String NBT_POSITION_KEY = "chessposition";
+	private static final String NBT_XGAME_POS_KEY = "xgamepos";
+	private static final String NBT_YGAME_POS_KEY = "ygamepos";
+	private static final String NBT_ZGAME_POS_KEY = "zgamepos";
 	private ChessGame game;
 
 	private boolean moved = true;
-	
+
 	public EntityChessPiece(World worldIn) {
 		super(worldIn);
 		experienceValue = 0;
@@ -58,28 +62,28 @@ public abstract class EntityChessPiece extends EntityCreature implements IChessP
 	public SoundCategory getSoundCategory() {
 		return SoundCategory.HOSTILE;
 	}
-	
+
 	public void resetMovedFlag() {
 		moved = false;
 	}
-	
+
 	public boolean hasMoved() {
 		return moved;
 	}
-	
+
 	double x = 0;
 	double z = 0;
-	
+
 	@Override
 	public void onEntityUpdate() {
 		super.onEntityUpdate();
-		
-		if(x != posX || z != posZ){
+
+		if (x != posX || z != posZ) {
 			moved = true;
 		}
-		
+
 		x = posX;
-		z = posZ; 
+		z = posZ;
 	}
 
 	public void onLivingUpdate() {
@@ -93,38 +97,36 @@ public abstract class EntityChessPiece extends EntityCreature implements IChessP
 	public void onUpdate() {
 		super.onUpdate();
 		if (game == null && isRunTick()) {
-			findGame();
+			kill();
 		}
 	}
-	
+
 	public ChessGame getGame() {
 		return game;
 	}
-	
+
 	public void setChessPosition(String position) {
+		System.out.println("setChessPosition(" + position + ")");
 		moved = true;
 		this.chessPosition = position;
 	}
-	
+
 	public String getChessPosition() {
 		return this.chessPosition;
 	}
-	
+
 	private boolean isRunTick() {
 		return worldObj.getTotalWorldTime() % 80L == 0L;
 	}
 
 	private void findGame() {
-		BlockPos pos = searchForChessControlBlock(10, 10, 10);
-		if(pos != null){
-			
-			//game = new ChessGame(worldObj, pos);
-			game = ((BlockChessControl)worldObj.getBlockState(pos).getBlock()).getGame();
-			
+		if (gameBlockPosition != null) {
+			game = ((BlockChessControl) worldObj.getBlockState(gameBlockPosition).getBlock()).getGame();
 			moved = true;
 		}
 	}
 
+	@Deprecated
 	private BlockPos searchForChessControlBlock(int xRange, int yRange, int zRange) {
 
 		BlockPos blockpos = new BlockPos(this);
@@ -145,7 +147,7 @@ public abstract class EntityChessPiece extends EntityCreature implements IChessP
 	}
 
 	private boolean blockIsChessControl(BlockPos pos) {
-		
+
 		return worldObj.getBlockState(pos).getBlock() instanceof BlockChessControl;
 	}
 
@@ -259,14 +261,26 @@ public abstract class EntityChessPiece extends EntityCreature implements IChessP
 		this.side = side;
 	}
 
+	public void setGamePosition(BlockPos pos) {
+		this.gameBlockPosition = pos;
+	}
+
+	public BlockPos getGamePosition() {
+		return this.gameBlockPosition;
+	}
+
 	/**
 	 * (abstract) Protected helper method to write subclass entity data to NBT.
 	 */
-	public void writeEntityToNBT(NBTTagCompound tagCompound) {
-		super.writeEntityToNBT(tagCompound);
+	public void writeEntityToNBT(NBTTagCompound t) {
+		super.writeEntityToNBT(t);
 
-		tagCompound.setBoolean(NBT_SIDE_KEY, castSide(side));
-		tagCompound.setString(NBT_POSITION_KEY, chessPosition);
+		t.setInteger(NBT_XGAME_POS_KEY, gameBlockPosition.getX());
+		t.setInteger(NBT_YGAME_POS_KEY, gameBlockPosition.getY());
+		t.setInteger(NBT_ZGAME_POS_KEY, gameBlockPosition.getZ());
+
+		t.setBoolean(NBT_SIDE_KEY, castSide(side));
+		t.setString(NBT_POSITION_KEY, chessPosition);
 	}
 
 	private boolean castSide(Side side) {
@@ -288,9 +302,16 @@ public abstract class EntityChessPiece extends EntityCreature implements IChessP
 	/**
 	 * (abstract) Protected helper method to read subclass entity data from NBT.
 	 */
-	public void readEntityFromNBT(NBTTagCompound tagCompund) {
-		super.readEntityFromNBT(tagCompund);
-		side = castSide(tagCompund.getBoolean(NBT_SIDE_KEY));
-		chessPosition = tagCompund.getString(NBT_POSITION_KEY);
+	public void readEntityFromNBT(NBTTagCompound t) {
+		super.readEntityFromNBT(t);
+		side = castSide(t.getBoolean(NBT_SIDE_KEY));
+		chessPosition = t.getString(NBT_POSITION_KEY);
+		gameBlockPosition = new BlockPos(t.getInteger(NBT_XGAME_POS_KEY),
+				t.getInteger(NBT_YGAME_POS_KEY), t.getInteger(NBT_ZGAME_POS_KEY));
+		
+		if(game == null){
+			findGame();
+		}
+		
 	}
 }

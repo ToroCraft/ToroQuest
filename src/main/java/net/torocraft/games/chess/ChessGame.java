@@ -55,6 +55,7 @@ public class ChessGame {
 	}
 
 	public void placePieces() {
+		System.out.println("placing pieces");
 		addWand(0);
 		placeEntity(new EntityPawn(world), Side.WHITE, "a2");
 		placeEntity(new EntityPawn(world), Side.WHITE, "b2");
@@ -105,6 +106,7 @@ public class ChessGame {
 		int z = board.getA1Position().getZ() + rand.nextInt(8);
 		
 		e.setChessPosition(position);
+		e.setGamePosition(origin);
 		e.setPosition(x, origin.getY() + 2, z);
 		e.setSide(side);
 		world.spawnEntityInWorld(e);

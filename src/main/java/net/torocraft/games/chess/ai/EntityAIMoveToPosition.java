@@ -73,6 +73,7 @@ public class EntityAIMoveToPosition extends EntityAIBase {
 			entity.resetMovedFlag();
 			isAboveDestination = false;
 			moving = false;
+			System.out.println("start entity walking to new position");
 			return true;
 		}
 		return false;

@@ -1,5 +1,5 @@
 {
-	"parent": "bouncermod:block.flubberBlock",
+	"parent": "bouncermod:block/flubberBlock",
 	"display": {
 		"thirdperson": {
 			"rotation": [10, -45, 170],

@@ -1,5 +1,5 @@
 {
-	"parent": "bouncermod:block.bounceBlock",
+	"parent": "bouncermod:block/bounceBlock",
 	"display": {
 		"thirdperson": {
 			"rotation": [10, -45, 170],

@@ -24,7 +24,7 @@ public class BounceModBlocks {
 		rubberBlock = new BlockRubber();
 		GameRegistry.registerBlock(rubberBlock, BlockRubber.NAME);
 		Item rubberBlockItem = GameRegistry.findItem(MODID, BlockRubber.NAME);
-		ModelResourceLocation rubberBlockModel = new ModelResourceLocation(MODID + ":bounceBlock", "inventory");
+		ModelResourceLocation rubberBlockModel = new ModelResourceLocation(MODID + ":" + BlockRubber.NAME, "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(rubberBlockItem, 0, rubberBlockModel);
 	}
 
@@ -32,7 +32,7 @@ public class BounceModBlocks {
 		flubberBlock = new BlockFlubber();
 		GameRegistry.registerBlock(flubberBlock, BlockFlubber.NAME);
 		Item flubberBlockItem = GameRegistry.findItem(MODID, BlockFlubber.NAME);
-		ModelResourceLocation flubberBlockModel = new ModelResourceLocation("bouncermod:flubberBlock", "inventory");
+		ModelResourceLocation flubberBlockModel = new ModelResourceLocation(MODID + ":" + BlockFlubber.NAME, "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(flubberBlockItem, 0, flubberBlockModel);
 	}
 
@@ -40,7 +40,7 @@ public class BounceModBlocks {
 		launchBlock = new BlockLaunch();
 		GameRegistry.registerBlock(launchBlock, BlockLaunch.NAME);
 		Item launchBlockItem = GameRegistry.findItem(MODID, BlockLaunch.NAME);
-		ModelResourceLocation launchBlockModel = new ModelResourceLocation("bouncermod:launchBlock", "inventory");
+		ModelResourceLocation launchBlockModel = new ModelResourceLocation(MODID + ":" + BlockLaunch.NAME, "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(launchBlockItem, 0, launchBlockModel);
 	}
 }

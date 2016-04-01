@@ -29,7 +29,7 @@ public class KnockbackEffect {
 		
 		target.motionY = Math.signum(target.posY - source.posY) * (knockback/2);
 		if (target.motionY == 0) {
-			target.motionY = knockback;
+			target.motionY = .5;
 		}
 	}
 	

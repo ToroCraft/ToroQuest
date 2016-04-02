@@ -22,8 +22,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.torocraft.games.checkerboard.CheckboardCreateCommand;
 import net.torocraft.games.chess.BlockChessControl;
-import net.torocraft.games.chess.BlockChessControl.TileEntityChessControl;
-import net.torocraft.games.chess.ChessCreateCommand;
 import net.torocraft.games.chess.ItemChessControlWand;
 import net.torocraft.games.chess.pieces.enities.EntityBishop;
 import net.torocraft.games.chess.pieces.enities.EntityChessPiece;
@@ -99,7 +97,7 @@ public class ToroGamesMod {
 
 	private void registerChessControlBlock() {
 		GameRegistry.registerBlock(chessControlBlock, BlockChessControl.NAME);
-		GameRegistry.registerTileEntity(TileEntityChessControl.class, TileEntityChessControl.NAME);
+		//GameRegistry.registerTileEntity(TileEntityChessControl.class, TileEntityChessControl.NAME);
 
 		Item controlBlockItem = GameRegistry.findItem(MODID, BlockChessControl.NAME);
 
@@ -125,7 +123,6 @@ public class ToroGamesMod {
 	public void onServerStart(FMLServerStartingEvent event) {
 		ICommandManager comManager = event.getServer().getCommandManager();
 		((ServerCommandManager) comManager).registerCommand(new CheckboardCreateCommand());
-		((ServerCommandManager) comManager).registerCommand(new ChessCreateCommand());
 		((ServerCommandManager) comManager).registerCommand(new CuboidCommand());
 		((ServerCommandManager) comManager).registerCommand(new ToroGenCommand());
 	}

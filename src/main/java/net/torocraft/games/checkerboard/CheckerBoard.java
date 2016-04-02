@@ -23,14 +23,8 @@ import net.torocraft.games.chess.pieces.enities.IChessPiece.Side;
 
 public class CheckerBoard {
 
-	private final World world;
-	
-	/**
-	 * the coordinates of board position a1
-	 */
-	private final BlockPos a1Pos;
-	private final BlockPos blockPosition;
-	private static final BlockPos A1_OFFSET = new BlockPos(-4, 1, -4);
+	private World world;
+	private BlockPos blockPosition;
 
 	private static final IBlockState STAIRS_NORTH = stairsBlock(EnumFacing.NORTH);
 	private static final IBlockState STAIRS_SOUTH = stairsBlock(EnumFacing.SOUTH);
@@ -52,51 +46,23 @@ public class CheckerBoard {
 	private boolean blockWasDrawable;
 	private boolean onlyPlaceIfAir = false;
 
-	public CheckerBoard(World world, BlockPos position) {
+	public void generate(World world, BlockPos position) {
 		this.world = world;
-		a1Pos = position.add(A1_OFFSET);
 		blockPosition = position;
-	}
-
-	public void generate() {
 		placeCheckerBlocks();
 		placeBorderBlocks();
 		placeBorderStairs();
 		placePodiums();
-		// TODO clear top
 	}
 
-	public BlockPos getA1Position() {
-		return a1Pos;
-	}
-
-	private void cancelCurrentTasks(EntityLiving ent) {
-		Iterator iterator = ent.tasks.taskEntries.iterator();
-
-		List<EntityAITasks.EntityAITaskEntry> currentTasks = new ArrayList<EntityAITasks.EntityAITaskEntry>();
-
-		while (iterator.hasNext()) {
-			EntityAITaskEntry entityaitaskentry = (EntityAITasks.EntityAITaskEntry) iterator.next();
-			if (entityaitaskentry != null) {
-				currentTasks.add(entityaitaskentry);
-			}
-		}
-
-		// Only available way to stop current execution is to remove all current
-		// tasks, then re-add them
-		for (EntityAITaskEntry task : currentTasks) {
-			ent.tasks.removeTask(task.action);
-		}
-	}
-
-	public String getPositionName(BlockPos coords) {
-		int xLocal = coords.getX() - a1Pos.getX();
-		int zLocal = coords.getZ() - a1Pos.getZ();
+	public static String getPositionName(BlockPos gameBlockPos, BlockPos coords) {
+		int xLocal = coords.getX() - gameBlockPos.getX();
+		int zLocal = coords.getZ() - gameBlockPos.getZ();
 		String name = encodeColumnName(xLocal) + minMax(zLocal + 1, 1, 8);
 		return name;
 	}
 
-	private int minMax(int i, int min, int max) {
+	private static int minMax(int i, int min, int max) {
 		if (i > max) {
 			return max;
 		}
@@ -111,12 +77,12 @@ public class CheckerBoard {
 	/**
 	 * Get the minecraft coordinates for a given chess position (such as a1, e5)
 	 */
-	public BlockPos getPosition(String name) {
+	public static BlockPos getPosition(BlockPos gameBlockPosition, String name) {
 		int[] parsed = parseIntPosition(name);
-		return new BlockPos(a1Pos.getX() + parsed[0], a1Pos.getY() + 1, a1Pos.getZ() + parsed[1]);
+		return gameBlockPosition.add(parsed[0], 1, parsed[1]);
 	}
 
-	private int[] parseIntPosition(String name) {
+	private static int[] parseIntPosition(String name) {
 		int[] p = { -10, -10 };
 
 		if (name == null || name.length() != 2) {
@@ -134,7 +100,7 @@ public class CheckerBoard {
 		return p;
 	}
 
-	private int i(String substring) {
+	private static int i(String substring) {
 		try {
 			return Integer.valueOf(substring, 10);
 		} catch (Exception e) {
@@ -142,7 +108,7 @@ public class CheckerBoard {
 		}
 	}
 
-	private String encodeColumnName(int i) {
+	private static String encodeColumnName(int i) {
 		switch (i) {
 		case 0:
 			return "a";
@@ -164,7 +130,7 @@ public class CheckerBoard {
 		return "a";
 	}
 
-	private int parseColumnName(String s) {
+	private static int parseColumnName(String s) {
 		if (s == null || s.length() != 1) {
 			return -10;
 		}
@@ -189,10 +155,9 @@ public class CheckerBoard {
 
 		return -10;
 	}
-	
+
 	private static final BlockPos BLACK_PODIUM = new BlockPos(3, -1, -2);
 	private static final BlockPos WHITE_PODIUM = new BlockPos(3, -1, 9);
-	
 
 	private void placePodiums() {
 		setCursor(WHITE_PODIUM);
@@ -201,7 +166,7 @@ public class CheckerBoard {
 		setCursor(BLACK_PODIUM);
 		placePodium(EnumFacing.SOUTH);
 	}
-	
+
 	private void setCursor(BlockPos pos) {
 		x = pos.getX();
 		y = pos.getY();
@@ -216,31 +181,34 @@ public class CheckerBoard {
 		y++;
 		drawLine(Axis.X, -2);
 
-		
-		
 		/*
-		if (BlockChest.FACING.equals(facing.SOUTH)) {
-			blackChest = ((BlockChest) world.getBlockState(cursorCoords()).getBlock()).getLockableContainer(world, cursorCoords());
-		} else {
-			whiteChest = ((BlockChest) world.getBlockState(cursorCoords()).getBlock()).getLockableContainer(world, cursorCoords());
-		}
-		*/
+		 * if (BlockChest.FACING.equals(facing.SOUTH)) { blackChest =
+		 * ((BlockChest)
+		 * world.getBlockState(cursorCoords()).getBlock()).getLockableContainer(
+		 * world, cursorCoords()); } else { whiteChest = ((BlockChest)
+		 * world.getBlockState(cursorCoords()).getBlock()).getLockableContainer(
+		 * world, cursorCoords()); }
+		 */
 	}
 
-	public ILockableContainer getWhiteChest() {
-		setCursor(WHITE_PODIUM);
-		y++;
-		return getChestAtCursor();
+	public static ILockableContainer getWhiteChest(World world, BlockPos gameBlockPos) {
+		return getChestAtCursor(world, gameBlockPos, WHITE_PODIUM);
 	}
-	
-	private ILockableContainer getChestAtCursor() {
-		return ((BlockChest) world.getBlockState(cursorCoords()).getBlock()).getLockableContainer(world, cursorCoords());
+
+	public static ILockableContainer getBlackChest(World world, BlockPos gameBlockPos) {
+		return getChestAtCursor(world, gameBlockPos, BLACK_PODIUM);
 	}
-	
-	public ILockableContainer getBlackChest() {
-		setCursor(BLACK_PODIUM);
-		y++;
-		return getChestAtCursor();
+
+	private static ILockableContainer getChestAtCursor(World world, BlockPos gameBlockPos, BlockPos offset) {
+
+		BlockPos chestLocation = gameBlockPos.add(offset).add(0, 2, 0);
+
+		try {
+			return ((BlockChest) world.getBlockState(chestLocation).getBlock()).getLockableContainer(world,
+					chestLocation);
+		} catch (ClassCastException e) {
+			return null;
+		}
 	}
 
 	private void placeBorderBlocks() {
@@ -360,12 +328,12 @@ public class CheckerBoard {
 		IBlockState currentBlock = world.getBlockState(cursorCoords());
 		return !currentBlock.isOpaqueCube();
 	}
-	
+
 	/**
 	 * Get the Minecraft coordinates of the cursor
 	 */
 	private BlockPos cursorCoords() {
-		return a1Pos.add(x, y, z);
+		return blockPosition.add(x, y + 1, z);
 	}
 
 	private IBlockState defineCheckerBlock() {

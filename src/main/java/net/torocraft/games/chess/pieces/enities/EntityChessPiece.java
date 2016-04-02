@@ -1,8 +1,5 @@
 package net.torocraft.games.chess.pieces.enities;
 
-import java.util.List;
-
-import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -17,19 +14,15 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.torocraft.games.chess.BlockChessControl;
-import net.torocraft.games.chess.ChessGame;
 import net.torocraft.games.chess.ai.EntityAILookDownBoard;
 import net.torocraft.games.chess.ai.EntityAIMoveToPosition;
-import net.torocraft.games.chess.pieces.enities.IChessPiece.Side;
 
 public abstract class EntityChessPiece extends EntityCreature implements IChessPiece {
 
@@ -41,14 +34,13 @@ public abstract class EntityChessPiece extends EntityCreature implements IChessP
 	private static final String NBT_XGAME_POS_KEY = "xgamepos";
 	private static final String NBT_YGAME_POS_KEY = "ygamepos";
 	private static final String NBT_ZGAME_POS_KEY = "zgamepos";
-	private ChessGame game;
 
 	private boolean moved = true;
 
 	public EntityChessPiece(World worldIn) {
 		super(worldIn);
 		experienceValue = 0;
-		setHealth(0.1f);
+		//setHealth(0.1f);
 	}
 
 	protected void initEntityAI() {
@@ -96,17 +88,9 @@ public abstract class EntityChessPiece extends EntityCreature implements IChessP
 	 */
 	public void onUpdate() {
 		super.onUpdate();
-		if (game == null && isRunTick()) {
-			kill();
-		}
-	}
-
-	public ChessGame getGame() {
-		return game;
 	}
 
 	public void setChessPosition(String position) {
-		System.out.println("setChessPosition(" + position + ")");
 		moved = true;
 		this.chessPosition = position;
 	}
@@ -119,12 +103,16 @@ public abstract class EntityChessPiece extends EntityCreature implements IChessP
 		return worldObj.getTotalWorldTime() % 80L == 0L;
 	}
 
-	private void findGame() {
-		if (gameBlockPosition != null) {
-			game = ((BlockChessControl) worldObj.getBlockState(gameBlockPosition).getBlock()).getGame();
-			moved = true;
-		}
-	}
+	/*
+	 * public ChessGame getGame() { if (game == null && gameBlockPosition !=
+	 * null) { try{ game = ((BlockChessControl)
+	 * worldObj.getBlockState(gameBlockPosition).getBlock()).getGame();
+	 * }catch(ClassCastException e){ game = null; } }
+	 * 
+	 * if(game == null){ kill(); }
+	 * 
+	 * return game; }
+	 */
 
 	@Deprecated
 	private BlockPos searchForChessControlBlock(int xRange, int yRange, int zRange) {
@@ -306,12 +294,7 @@ public abstract class EntityChessPiece extends EntityCreature implements IChessP
 		super.readEntityFromNBT(t);
 		side = castSide(t.getBoolean(NBT_SIDE_KEY));
 		chessPosition = t.getString(NBT_POSITION_KEY);
-		gameBlockPosition = new BlockPos(t.getInteger(NBT_XGAME_POS_KEY),
-				t.getInteger(NBT_YGAME_POS_KEY), t.getInteger(NBT_ZGAME_POS_KEY));
-		
-		if(game == null){
-			findGame();
-		}
-		
+		gameBlockPosition = new BlockPos(t.getInteger(NBT_XGAME_POS_KEY), t.getInteger(NBT_YGAME_POS_KEY),
+				t.getInteger(NBT_ZGAME_POS_KEY));
 	}
 }

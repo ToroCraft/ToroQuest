@@ -8,6 +8,7 @@ import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.torocraft.games.checkerboard.CheckerBoard;
 import net.torocraft.games.chess.pieces.enities.EntityChessPiece;
 import sun.util.logging.resources.logging;
 
@@ -25,8 +26,6 @@ public class EntityAIMoveToPosition extends EntityAIBase {
 	private double targetX;
 	private double targetY;
 	private double targetZ;
-	
-	
 
 	private boolean isAboveDestination;
 
@@ -37,51 +36,46 @@ public class EntityAIMoveToPosition extends EntityAIBase {
 	}
 
 	private void updateDestination() {
-		
-		if(entity.getGame() == null || entity.getChessPosition() == null){
+
+		if (entity.getGamePosition() == null || entity.getChessPosition() == null) {
 			destination = null;
 			return;
 		}
-		
-		if (entity.getChessPosition().equals(chessPosition)){
+
+		if (entity.getChessPosition().equals(chessPosition)) {
 			return;
 		}
-		
+
 		determineDestination();
 	}
 
 	private void determineDestination() {
-		if (entity.getGame() == null) {
+		if (entity.getGamePosition() == null) {
 			return;
 		}
-		//isAboveDestination = false;
+		// isAboveDestination = false;
 		chessPosition = entity.getChessPosition();
-		destination = entity.getGame().getPosition(chessPosition);
+		destination = CheckerBoard.getPosition(entity.getGamePosition(), chessPosition);
 		targetX = (double) this.destination.getX() + 0.5d;
 		targetY = (double) this.destination.getY();
 		targetZ = (double) this.destination.getZ() + 0.5d;
 	}
 
-	//private double distance = 100;
-	
+	// private double distance = 100;
+
 	/**
 	 * Returns whether the EntityAIBase should begin execution.
 	 */
 	public boolean shouldExecute() {
-		
-		if(entity.hasMoved()){
+
+		if (entity.hasMoved()) {
 			entity.resetMovedFlag();
 			isAboveDestination = false;
 			moving = false;
-			System.out.println("start entity walking to new position");
 			return true;
 		}
 		return false;
-		
-		
-		
-		
-		
+
 	}
 
 	/**
@@ -95,7 +89,7 @@ public class EntityAIMoveToPosition extends EntityAIBase {
 	 * Execute a one shot task or start executing a continuous task
 	 */
 	public void startExecuting() {
-		
+
 		/*
 		 * this.entity.getNavigator().tryMoveToXYZ((double) ((float)
 		 * this.destination.getX()) + 0.5D, (double) (this.destination.getY()),
@@ -118,42 +112,42 @@ public class EntityAIMoveToPosition extends EntityAIBase {
 	 * Updates the task
 	 */
 	public void updateTask() {
-		
+
 		updateDestination();
-		
-		if(destination == null){
+
+		if (destination == null) {
 			isAboveDestination = true;
 			timeoutCounter = 0;
 			return;
 		}
-		
+
 		double distance = distanceFromDestination();
-		
-		if(distance <= 0.02){
+
+		if (distance <= 0.02) {
 			isAboveDestination = true;
 			timeoutCounter = 0;
 			return;
 		}
 
-		if(distance < 1){
-			entity.setPosition(targetX, targetY, targetZ);
+		if (distance < 1) {
+			entity.setPosition(targetX, entity.posY, targetZ);
 			timeoutCounter = 0;
 			isAboveDestination = true;
 			return;
-		};
+		}
+		;
 
-		
 		timeoutCounter++;
 		if (moving && timeoutCounter < 40) {
 			return;
 		}
 
-		//double speed = Math.min(0.2 + distance * 0.05, 2);
+		// double speed = Math.min(0.2 + distance * 0.05, 2);
 		double speed = 0.5;
 
 		moving = entity.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, speed);
-		
-		///!this.entity.getNavigator().noPath()
+
+		/// !this.entity.getNavigator().noPath()
 
 		timeoutCounter = 0;
 	}
@@ -175,16 +169,17 @@ public class EntityAIMoveToPosition extends EntityAIBase {
 	protected boolean getIsAboveDestination() {
 		return this.isAboveDestination;
 	}
-/*
-	public boolean tryMoveToXYZ(double x, double y, double z, double speedIn) {
-
-		//PathEntity pathentity = entity.getNavigator().getPathToXYZ(x, y, z);
-		
-		
-		PathEntity pathentity = entity.getNavigator().getPathToPos(x, y, z);
-	    
-
-		return entity.getNavigator().setPath(pathentity, speedIn);
-	}*/
+	/*
+	 * public boolean tryMoveToXYZ(double x, double y, double z, double speedIn)
+	 * {
+	 * 
+	 * //PathEntity pathentity = entity.getNavigator().getPathToXYZ(x, y, z);
+	 * 
+	 * 
+	 * PathEntity pathentity = entity.getNavigator().getPathToPos(x, y, z);
+	 * 
+	 * 
+	 * return entity.getNavigator().setPath(pathentity, speedIn); }
+	 */
 
 }

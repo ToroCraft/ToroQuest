@@ -26,7 +26,7 @@ public class CheckboardCreateCommand extends CommandBase {
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		BlockPos pos = sender.getPosition();
-		new CheckerBoard(sender.getEntityWorld(), pos).generate();
+		new CheckerBoard().generate(sender.getEntityWorld(), pos);
 	}
 	
 

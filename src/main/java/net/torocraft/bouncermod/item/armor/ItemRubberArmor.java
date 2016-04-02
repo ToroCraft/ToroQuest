@@ -8,18 +8,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
-import net.torocraft.bouncermod.BouncerMod;
 import net.torocraft.bouncermod.item.BounceModItems;
-import net.minecraftforge.common.util.EnumHelper;
+import net.torocraft.bouncermod.material.ArmorMaterials;
 
 public class ItemRubberArmor extends ItemArmor {
-
-	private static String MODID = BouncerMod.MODID;
 	
-	public static ArmorMaterial RUBBER = EnumHelper.addArmorMaterial("RUBBER", MODID + ":rubberArmor", 15, new int[]{2, 5, 4, 1}, 12, null);
-
 	public ItemRubberArmor(String unlocalizedName, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn) {
-		super(RUBBER, renderIndexIn, equipmentSlotIn);
+		super(ArmorMaterials.RUBBER, renderIndexIn, equipmentSlotIn);
 		this.setUnlocalizedName(unlocalizedName);
 	}
 	

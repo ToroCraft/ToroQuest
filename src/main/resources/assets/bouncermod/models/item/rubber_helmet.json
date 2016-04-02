@@ -1,7 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "bouncermod:items/rubber_sap"
+        "layer0": "bouncermod:items/rubber_helmet"
     }
 }
-

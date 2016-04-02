@@ -1,7 +1,11 @@
 tile.bounceBlock.name=Rubber
 tile.flubberBlock.name=Flubber
 tile.launchBlock.name=Launcher
-item.rawRubberItem.name=Raw Rubber
-item.rubberSapItem.name=Rubber Sap
+item.rawRubber.name=Raw Rubber
+item.rubberSap.name=Rubber Sap
 item.rubberSword.name=Rubber Sword
 item.flubberSword.name=Flubber Sword
+item.rubber_boots.name=Rubber Boots
+item.rubber_helmet.name=Rubber Helmet
+item.rubber_leggings.name=Rubber Leggings
+item.rubber_chestplate.name=Rubber Chestplate

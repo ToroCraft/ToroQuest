@@ -1,7 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "bouncermod:items/flubber_sword"
+        "layer0": "bouncermod:items/rubber_boots"
     }
 }
-

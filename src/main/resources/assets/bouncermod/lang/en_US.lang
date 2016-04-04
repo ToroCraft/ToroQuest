@@ -1,6 +1,7 @@
 tile.bounceBlock.name=Rubber
 tile.flubberBlock.name=Flubber
 tile.launchBlock.name=Launcher
+tile.rubberWoodBlock.name=Rubber Wood
 item.rawRubber.name=Raw Rubber
 item.rubberSap.name=Rubber Sap
 item.rubberSword.name=Rubber Sword

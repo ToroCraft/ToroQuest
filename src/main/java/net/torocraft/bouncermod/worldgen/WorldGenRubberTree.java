@@ -11,8 +11,8 @@ import net.torocraft.bouncermod.block.BounceModBlocks;
 
 public class WorldGenRubberTree  extends WorldGenAbstractTree {
 
-    private static final IBlockState wood = BounceModBlocks.rubberBlock.getDefaultState();
-    private static final IBlockState leaves = BounceModBlocks.flubberBlock.getDefaultState();
+    private static final IBlockState wood = BounceModBlocks.rubberWoodBlock.getDefaultState();
+    private static final IBlockState leaves = Blocks.leaves.getDefaultState();
     private boolean useExtraRandomHeight;
 
     public WorldGenRubberTree(boolean notify, boolean useExtraRandomHeightIn)

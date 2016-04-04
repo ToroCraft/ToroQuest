@@ -13,15 +13,18 @@ public class BounceModBlocks {
 	public static Block rubberBlock;
 	public static Block flubberBlock;
 	public static Block launchBlock;
+	public static Block rubberWoodBlock;
 	
 	public static Item rubberBlockItem;
 	public static Item flubberBlockItem;
 	public static Item launchBlockItem;
+	public static Item rubberWoodBlockItem;
 
 	public static final void init() {
 		initRubber();
 		initFlubber();
 		initLauncher();
+		initRubberWood();
 	}
 
 	private static void initRubber() {
@@ -46,5 +49,13 @@ public class BounceModBlocks {
 		launchBlockItem = GameRegistry.findItem(MODID, BlockLaunch.NAME);
 		ModelResourceLocation launchBlockModel = new ModelResourceLocation(MODID + ":" + BlockLaunch.NAME, "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(launchBlockItem, 0, launchBlockModel);
+	}
+
+	private static void initRubberWood() {
+		rubberWoodBlock = new BlockRubberWood();
+		GameRegistry.registerBlock(rubberWoodBlock, BlockRubberWood.NAME);
+		rubberWoodBlockItem = GameRegistry.findItem(MODID, BlockRubberWood.NAME);
+		ModelResourceLocation rubberWoodModel = new ModelResourceLocation(MODID + ":" + BlockRubberWood.NAME, "inventory");
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(rubberWoodBlockItem, 0, rubberWoodModel);
 	}
 }

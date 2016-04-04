@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"down": "bouncermod:blocks/rubber_wood_block_core",
+		"up": "bouncermod:blocks/rubber_wood_block_core",
+		"north": "bouncermod:blocks/rubber_wood_block_bark",
+		"south": "bouncermod:blocks/rubber_wood_block_bark",
+		"east": "bouncermod:blocks/rubber_wood_block_bark",
+		"west": "bouncermod:blocks/rubber_wood_block_bark",
+		"particle": "bouncermod:blocks/rubber_wood_block_bark"
+	}
+}

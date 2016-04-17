@@ -1,6 +1,5 @@
 package net.torocraft.fishing.events;
 
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
@@ -14,20 +13,21 @@ public class EventHooks {
 
 	@SubscribeEvent
 	public void dropWorms(HarvestDropsEvent event) {
-		/*
+		
 		if (isGrassBlock(event)) {
-			if (event.isSilkTouching) {
+			if (event.isSilkTouching()) {
 				return;
 			}
-			BiomeGenBase biome = event.world.getBiomeGenForCoords(event.pos);
+			
+			BiomeGenBase biome = event.getWorld().getBiomeGenForCoords(event.getPos());
 			if (isBiomeOfType(biome, Type.PLAINS)) {
-				dropWormWithOdds(event, 12);
+				dropWormWithOdds(event, 24);
 			} else if (isBiomeOfType(biome, Type.FOREST)) {
-				dropWormWithOdds(event, 6);
+				dropWormWithOdds(event, 12);
 			} else if (isBiomeOfType(biome, Type.JUNGLE)) {
-				dropWormWithOdds(event, 1);
+				dropWormWithOdds(event, 3);
 			}
-		}*/
+		}
 	}
 
 	@SubscribeEvent
@@ -39,24 +39,22 @@ public class EventHooks {
 	}
 
 	private void dropWormWithOdds(HarvestDropsEvent event, int maxOdds) {
-		/*
-		if (event.harvester.worldObj.rand.nextInt(maxOdds) == 0) {
-			event.drops.add(newWorm(event));
-		}*/
+		
+		if (event.getHarvester().worldObj.rand.nextInt(maxOdds) == 0) {
+			event.getDrops().add(newWorm(event));
+		}
 	}
 
 	private ItemStack newWorm(HarvestDropsEvent event) {
 		ItemStack worm = new ItemStack(FishingMod.worms);
-		/*
-		if (event.harvester.worldObj.rand.nextInt(100) == 0) {
+		if (event.getHarvester().worldObj.rand.nextInt(100) == 0) {
 			worm.addEnchantment(FishingMod.juicy, 1);
-		}*/
+		}
 		return worm;
 	}
 
 	private boolean isGrassBlock(HarvestDropsEvent event) {
-		//return event.state.getBlock().getUnlocalizedName().equals("tile.grass");
-		return false;
+		return event.getState().getBlock().getUnlocalizedName().equals("tile.grass");
 	}
 	
 }

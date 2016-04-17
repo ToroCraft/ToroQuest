@@ -19,12 +19,6 @@ public class ToroBaseModRecipes {
 		GameRegistry.addRecipe(new ItemStack(ItemHeavyDiamodArmor.leggingsItem), "###", "# #", "# #", '#',  Items.diamond_leggings);
 		GameRegistry.addRecipe(new ItemStack(ItemHeavyDiamodArmor.bootsItem), "# #", "# #", '#',  Items.diamond_boots);
 		
-		/*
-		GameRegistry.addShapelessRecipe(new ItemStack(ItemHeavyDiamodArmor.helmetItem), new Object[] {Items.diamond_helmet, Items.diamond_helmet});
-		GameRegistry.addShapelessRecipe(new ItemStack(ItemHeavyDiamodArmor.chestplateItem), new Object[] {Items.diamond_chestplate, Items.diamond_chestplate});
-		GameRegistry.addShapelessRecipe(new ItemStack(ItemHeavyDiamodArmor.leggingsItem), new Object[] {Items.diamond_leggings, Items.diamond_leggings});
-		GameRegistry.addShapelessRecipe(new ItemStack(ItemHeavyDiamodArmor.bootsItem), new Object[] {Items.diamond_boots, Items.diamond_boots});
-		*/
 	}
 	
 }

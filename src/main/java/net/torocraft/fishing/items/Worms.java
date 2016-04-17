@@ -23,8 +23,6 @@ public class Worms extends ItemFood {
 		this(64, CreativeTabs.tabMisc, NAME);
 	}
 	
-	
-	
 	public Worms(int maxStackSize, CreativeTabs tab, String name) {
 		super(healAmount, saturation, isWolfFood);
 		setMaxStackSize(maxStackSize);

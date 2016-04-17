@@ -22,20 +22,32 @@ public class WorldGenRubberTreePlacer implements IWorldGenerator {
 		}
 
 	}
-
-	private void generateSurface(World world, Random random, int BlockX, int BlockZ) {
-
-		for (int i = 0; i < 20; i++) {
-			int Xcoord1 = BlockX + random.nextInt(16);
-			int Ycoord1 = random.nextInt(90);
-			int Zcoord1 = BlockZ + random.nextInt(16);
-
-			(new WorldGenRubberTree(false, false)).generate(world, random, new BlockPos(Xcoord1, Ycoord1, Zcoord1));
+	
+	private void generate(World world, Random random, int BlockX, int BlockZ) {
+		
+		if(random.nextInt(10) > 8){
+			placeTree(world, random, BlockX, BlockZ);
 		}
+		
+		/*
+		for (int i = 0; i < 20; i++) {
+			placeTree(world, random, BlockX, BlockZ);
+		}
+		*/
+		
 	}
 
-	private void generateNether(World world, Random random, int i, int j) {
+	private void placeTree(World world, Random random, int BlockX, int BlockZ) {
+		BlockPos pos = new BlockPos(BlockX + random.nextInt(16), random.nextInt(90), random.nextInt(16));
+		(new WorldGenRubberTree(false, false)).generate(world, random, pos);
+	}
 
+	private void generateSurface(World world, Random random, int x, int z) {
+		generate(world, random, x, z);
+	}
+
+	private void generateNether(World world, Random random, int x, int z) {
+		
 	}
 
 }

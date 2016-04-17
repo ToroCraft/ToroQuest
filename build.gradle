@@ -26,7 +26,8 @@ archivesBaseName = "modid"
 
 minecraft {
    // version = "1.9-12.16.0.1782-1.9"
-    version = "1.9-12.16.0.1809-1.9"
+   // version = "1.9-12.16.0.1809-1.9"
+    version = "1.9-12.16.0.1865-1.9"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.

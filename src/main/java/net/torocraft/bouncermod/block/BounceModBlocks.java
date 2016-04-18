@@ -26,36 +26,43 @@ public class BounceModBlocks {
 		initLauncher();
 		initRubberWood();
 	}
+	
+	public static void registerRenders() {
+		ModelResourceLocation rubberBlockModel = new ModelResourceLocation(MODID + ":" + BlockRubber.NAME, "inventory");
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(rubberBlockItem, 0, rubberBlockModel);
+		
+		ModelResourceLocation flubberBlockModel = new ModelResourceLocation(MODID + ":" + BlockFlubber.NAME, "inventory");
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(flubberBlockItem, 0, flubberBlockModel);
+		
+		ModelResourceLocation launchBlockModel = new ModelResourceLocation(MODID + ":" + BlockLaunch.NAME, "inventory");
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(launchBlockItem, 0, launchBlockModel);
+		
+		ModelResourceLocation rubberWoodModel = new ModelResourceLocation(MODID + ":" + BlockRubberWood.NAME, "inventory");
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(rubberWoodBlockItem, 0, rubberWoodModel);
+	}
 
 	private static void initRubber() {
 		rubberBlock = new BlockRubber();
 		GameRegistry.registerBlock(rubberBlock, BlockRubber.NAME);
 		rubberBlockItem = GameRegistry.findItem(MODID, BlockRubber.NAME);
-		ModelResourceLocation rubberBlockModel = new ModelResourceLocation(MODID + ":" + BlockRubber.NAME, "inventory");
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(rubberBlockItem, 0, rubberBlockModel);
+		
 	}
 
 	private static void initFlubber() {
 		flubberBlock = new BlockFlubber();
 		GameRegistry.registerBlock(flubberBlock, BlockFlubber.NAME);
 		flubberBlockItem = GameRegistry.findItem(MODID, BlockFlubber.NAME);
-		ModelResourceLocation flubberBlockModel = new ModelResourceLocation(MODID + ":" + BlockFlubber.NAME, "inventory");
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(flubberBlockItem, 0, flubberBlockModel);
 	}
 
 	private static void initLauncher() {
 		launchBlock = new BlockLaunch();
 		GameRegistry.registerBlock(launchBlock, BlockLaunch.NAME);
 		launchBlockItem = GameRegistry.findItem(MODID, BlockLaunch.NAME);
-		ModelResourceLocation launchBlockModel = new ModelResourceLocation(MODID + ":" + BlockLaunch.NAME, "inventory");
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(launchBlockItem, 0, launchBlockModel);
 	}
 
 	private static void initRubberWood() {
 		rubberWoodBlock = new BlockRubberWood();
 		GameRegistry.registerBlock(rubberWoodBlock, BlockRubberWood.NAME);
 		rubberWoodBlockItem = GameRegistry.findItem(MODID, BlockRubberWood.NAME);
-		ModelResourceLocation rubberWoodModel = new ModelResourceLocation(MODID + ":" + BlockRubberWood.NAME, "inventory");
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(rubberWoodBlockItem, 0, rubberWoodModel);
 	}
 }

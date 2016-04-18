@@ -17,8 +17,8 @@ public class AutoRunMod {
 	
 	@EventHandler
 	public void onServerStart(FMLServerStartingEvent event) {
-		ICommandManager comManager = event.getServer().getCommandManager();
-		((ServerCommandManager)comManager).registerCommand(new AutoRunCommand());
+		//ICommandManager comManager = event.getServer().getCommandManager();
+		//((ServerCommandManager)comManager).registerCommand(new AutoRunCommand());
 	}
 	
 	

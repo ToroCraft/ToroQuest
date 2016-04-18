@@ -47,12 +47,14 @@ public class FishingMod {
 		worms = new Worms();
 		GameRegistry.registerItem(worms, Worms.NAME);
 		
-		ModelResourceLocation wormsModel = new ModelResourceLocation("fishingmod:worms", "inventory");
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(worms, 0, wormsModel);
+		
 		
 		if(event.getSide() == Side.CLIENT){
 			RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 			renderItem.getItemModelMesher().register(worms, 0, new ModelResourceLocation(FishingMod.MODID + ":" + Worms.NAME, "inventory"));
+			
+			ModelResourceLocation wormsModel = new ModelResourceLocation("fishingmod:worms", "inventory");
+			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(worms, 0, wormsModel);
 		}
 		
 		Enchantment.enchantmentRegistry.register(300, new ResourceLocation(FishingMod.MODID + ":" + EnchantmentJuicy.NAME), juicy);

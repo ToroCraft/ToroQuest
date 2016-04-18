@@ -26,5 +26,11 @@ public class ToroBaseModItems {
 		ItemBullArmor.init();
 		ItemHeavyDiamodArmor.init();
 	}
+	
+	public static final void registerRenders() {
+		ItemKingArmor.registerRenders();
+		ItemBullArmor.registerRenders();
+		ItemHeavyDiamodArmor.registerRenders();
+	}
 
 }

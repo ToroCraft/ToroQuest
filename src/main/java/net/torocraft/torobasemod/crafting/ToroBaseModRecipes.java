@@ -13,12 +13,10 @@ public class ToroBaseModRecipes {
 	}
 
 	private static void heavyDiamondArmor() {
-		
 		GameRegistry.addRecipe(new ItemStack(ItemHeavyDiamodArmor.helmetItem), "###", "# #", '#',  Items.diamond_helmet);
 		GameRegistry.addRecipe(new ItemStack(ItemHeavyDiamodArmor.chestplateItem), "# #", "###", "###", '#',  Items.diamond_chestplate);
 		GameRegistry.addRecipe(new ItemStack(ItemHeavyDiamodArmor.leggingsItem), "###", "# #", "# #", '#',  Items.diamond_leggings);
 		GameRegistry.addRecipe(new ItemStack(ItemHeavyDiamodArmor.bootsItem), "# #", "# #", '#',  Items.diamond_boots);
-		
 	}
 	
 }

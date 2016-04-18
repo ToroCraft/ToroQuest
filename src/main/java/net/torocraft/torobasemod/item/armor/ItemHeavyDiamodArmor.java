@@ -38,27 +38,46 @@ public class ItemHeavyDiamodArmor extends ItemArmor {
 		MinecraftForge.EVENT_BUS.register(new EventHandlers());
 	}
 
+	public static void registerRenders() {
+		registerRendersHelmet();
+		registerRendersChestPlate();
+		registerRendersLeggings();
+		registerRendersBoots();
+	}
+
 	private static void initBoots() {
 		bootsItem = new ItemHeavyDiamodArmor(NAME + "_boots", 1, EntityEquipmentSlot.FEET);
 		GameRegistry.registerItem(bootsItem, NAME + "_boots");
+	}
+
+	private static void registerRendersBoots() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(bootsItem, 0, model("boots"));
 	}
 
 	private static void initLeggings() {
 		leggingsItem = new ItemHeavyDiamodArmor(NAME + "_leggings", 2, EntityEquipmentSlot.LEGS);
 		GameRegistry.registerItem(leggingsItem, NAME + "_leggings");
+	}
+
+	private static void registerRendersLeggings() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(leggingsItem, 0, model("leggings"));
 	}
 
 	private static void initHelmet() {
 		helmetItem = new ItemHeavyDiamodArmor(NAME + "_helmet", 1, EntityEquipmentSlot.HEAD);
 		GameRegistry.registerItem(helmetItem, NAME + "_helmet");
+	}
+
+	private static void registerRendersHelmet() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(helmetItem, 0, model("helmet"));
 	}
 
 	private static void initChestPlate() {
 		chestplateItem = new ItemHeavyDiamodArmor(NAME + "_chestplate", 1, EntityEquipmentSlot.CHEST);
 		GameRegistry.registerItem(chestplateItem, NAME + "_chestplate");
+	}
+
+	private static void registerRendersChestPlate() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(chestplateItem, 0, model("chestplate"));
 	}
 
@@ -83,7 +102,7 @@ public class ItemHeavyDiamodArmor extends ItemArmor {
 
 		effectPlayer(player, MobEffects.moveSlowdown, 2);
 
-		//effectPlayer(player, MobEffects.jump, -2);
+		// effectPlayer(player, MobEffects.jump, -2);
 
 		if (player.isSwingInProgress) {
 			player.addExhaustion(0.025f);
@@ -100,27 +119,28 @@ public class ItemHeavyDiamodArmor extends ItemArmor {
 	public static class EventHandlers {
 		@SubscribeEvent
 		public void postInit(LivingHurtEvent e) {
-		   
-		   DamageSource source = e.getSource();
-		   
-		   Iterable<ItemStack> armorStacks = e.getEntityLiving().getArmorInventoryList();
-		   
-		   boolean hasHeavyArmor = false;
-		   float reduction = 0;
-		   
-		   for(ItemStack armorStack : armorStacks){
-			   if(isHeavyArmor(armorStack)){
-				   if(source.isProjectile() || source.isExplosion()){
-					   reduction += 0.2;
-				   }
-			   }
-		   }
-		   
-		   if(reduction > 0){
-			   float newDamage = (1 - reduction) * e.getAmount();
-			   System.out.println("Heavy armor reduction: [" + reduction + "] IN[" + e.getAmount() + "] OUT[" + newDamage + "]");
-			   e.setAmount(newDamage);
-		   }
+
+			DamageSource source = e.getSource();
+
+			Iterable<ItemStack> armorStacks = e.getEntityLiving().getArmorInventoryList();
+
+			boolean hasHeavyArmor = false;
+			float reduction = 0;
+
+			for (ItemStack armorStack : armorStacks) {
+				if (isHeavyArmor(armorStack)) {
+					if (source.isProjectile() || source.isExplosion()) {
+						reduction += 0.2;
+					}
+				}
+			}
+
+			if (reduction > 0) {
+				float newDamage = (1 - reduction) * e.getAmount();
+				System.out.println(
+						"Heavy armor reduction: [" + reduction + "] IN[" + e.getAmount() + "] OUT[" + newDamage + "]");
+				e.setAmount(newDamage);
+			}
 		}
 
 		private boolean isHeavyArmor(ItemStack armorStack) {

@@ -1,5 +1,6 @@
 package net.torocraft.fishing.events;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
@@ -39,15 +40,20 @@ public class EventHooks {
 	}
 
 	private void dropWormWithOdds(HarvestDropsEvent event, int maxOdds) {
+		EntityPlayer player = event.getHarvester();
 		
-		if (event.getHarvester().worldObj.rand.nextInt(maxOdds) == 0) {
+		if(player == null){
+			return;
+		}
+		
+		if (event.getWorld().rand.nextInt(maxOdds) == 0) {
 			event.getDrops().add(newWorm(event));
 		}
 	}
 
 	private ItemStack newWorm(HarvestDropsEvent event) {
 		ItemStack worm = new ItemStack(FishingMod.worms);
-		if (event.getHarvester().worldObj.rand.nextInt(100) == 0) {
+		if (event.getWorld().rand.nextInt(100) == 0) {
 			worm.addEnchantment(FishingMod.juicy, 1);
 		}
 		return worm;

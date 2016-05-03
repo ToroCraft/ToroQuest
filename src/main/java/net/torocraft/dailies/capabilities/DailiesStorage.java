@@ -9,25 +9,21 @@ public class DailiesStorage implements Capability.IStorage<IDailiesCapability> {
 
 	@Override
 	public NBTBase writeNBT(Capability<IDailiesCapability> capability, IDailiesCapability instance, EnumFacing side) {
-
-		NBTTagCompound c = new NBTTagCompound();
-		if (instance != null) {
-			c.setInteger("gather", instance.getGatherCount());
-			c.setInteger("hunt", instance.getHuntCount());
-		}
-		return c;
+		return instance.writeNBT();
 	}
 
 	@Override
 	public void readNBT(Capability<IDailiesCapability> capability, IDailiesCapability instance, EnumFacing side, NBTBase base) {
-
-		if (base == null || instance == null) {
+		if (instance == null) {
 			return;
 		}
 
-		NBTTagCompound c = (NBTTagCompound) base;
-		instance.setGatherCount(c.getInteger("gather"));
-		instance.setHuntCount(c.getInteger("hunt"));
+		NBTTagCompound c = null;
 
+		if (base != null && base instanceof NBTTagCompound) {
+			c = (NBTTagCompound) base;
+		}
+
+		instance.readNBT(c);
 	}
 }

@@ -1,19 +1,25 @@
 package net.torocraft.dailies.capabilities;
 
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+
 public interface IDailiesCapability {
 
-	void gather(int count);
+	/**
+	 * return true when quest target was hit
+	 */
+	boolean gather(EntityPlayer player, EntityItem item, int count);
 
-	void hunt(int count);
+	/**
+	 * return true when quest target was hit
+	 */
+	boolean hunt(EntityPlayer player, EntityLiving mob, int count);
+	
 
-	String statusMessage();
+	NBTTagCompound writeNBT();
 
-	int getGatherCount();
-
-	int getHuntCount();
-
-	void setGatherCount(int gatherCount);
-
-	void setHuntCount(int huntCount);
+	void readNBT(NBTTagCompound c);
 
 }

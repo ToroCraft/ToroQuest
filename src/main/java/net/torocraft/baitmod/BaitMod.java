@@ -31,15 +31,12 @@ public class BaitMod {
 		GameRegistry.addRecipe(new ItemStack(sugarBlock), "sss", "sss", "sss", 's', new ItemStack(Items.sugar));
 		GameRegistry.addShapelessRecipe(new ItemStack(Items.sugar, 9), sugarBlock);
 
-		// 1
 		Item sugarBlockItem = GameRegistry.findItem(MODID, SugarBlock.NAME);
 
 		if (e.getSide() == Side.CLIENT) {
-
-			// 2
 			ModelResourceLocation sugarBlockModel = new ModelResourceLocation("baitmod:sugarBlock", "inventory");
-			// 3
 			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(sugarBlockItem, 0, sugarBlockModel);
+
 		}
 	}
 

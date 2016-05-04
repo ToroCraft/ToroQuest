@@ -46,6 +46,12 @@ public class DailiesMod {
 		DailiesRequester requester = new DailiesRequester();
 		List<DailyQuest> dailies = requester.getDailies();
 		
+		if (dailies == null) {
+			System.out.println("No dailies found, lame!");
+		} else {
+			System.out.println("Dailies found COUNT[" + dailies.size() + "]");
+		}
+
 		if (Side.SERVER.equals(e.getSide())) {
 			// World world = Minecraft.getMinecraft().theWorld;
 			World world = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();

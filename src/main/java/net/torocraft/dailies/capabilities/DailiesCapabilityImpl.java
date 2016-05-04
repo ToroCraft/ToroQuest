@@ -3,7 +3,7 @@ package net.torocraft.dailies.capabilities;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,14 +18,14 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 	private List<IDailyQuest> quests;
 
 	@Override
-	public boolean gather(EntityPlayer player, EntityItem item, int count) {
+	public boolean gather(EntityPlayer player, EntityItem item) {
 
 		List<IDailyQuest> completedQuests = new ArrayList<IDailyQuest>();
 
 		boolean hit = false;
 
 		for (IDailyQuest quest : quests) {
-			if (quest.gather(player, item, count)) {
+			if (quest.gather(player, item)) {
 
 				if (quest.isComplete()) {
 					quest.reward(player);
@@ -46,9 +46,25 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 	}
 
 	@Override
-	public boolean hunt(EntityPlayer player, EntityLiving mob, int count) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean hunt(EntityPlayer player, EntityLivingBase mob) {
+		List<IDailyQuest> completedQuests = new ArrayList<IDailyQuest>();
+		boolean hit = false;
+
+		for (IDailyQuest quest : quests) {
+			if (quest.hunt(player, mob)) {
+				if (quest.isComplete()) {
+					quest.reward(player);
+					completedQuests.add(quest);
+				}
+				hit = true;
+				break;
+			}
+		}
+
+		for (IDailyQuest quest : completedQuests) {
+			quests.remove(quest);
+		}
+		return hit;
 	}
 
 	@Override
@@ -103,6 +119,20 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 		quest.type = "gather";
 		quest.reward = reward;
 		quest.target = target;
+
+		quests.add(quest);
+
+		quest = new DailyQuest();
+		reward = new Reward();
+		reward.quantity = 10000;
+		reward.type = Reward.XP;
+		target = new TypedInteger();
+		target.type = 101;
+		target.quantity = 2;
+		quest.type = "hunt";
+		quest.reward = reward;
+		quest.target = target;
+
 		quests.add(quest);
 	}
 

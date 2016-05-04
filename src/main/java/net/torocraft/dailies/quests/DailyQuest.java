@@ -1,5 +1,6 @@
 package net.torocraft.dailies.quests;
 
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -58,7 +59,7 @@ public class DailyQuest implements IDailyQuest {
 			return false;
 		}
 
-		int id = mob.getEntityId();
+		int id = EntityList.getEntityID(mob);// mob.getEntityId();
 
 		System.out.println("Entity [" + mob.getName() + "] [" + id + "]");
 

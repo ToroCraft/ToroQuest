@@ -9,11 +9,11 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-import net.torocraft.dailies.quests.DailyQuest;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
+import net.torocraft.dailies.quests.DailyQuest;
 
 public class DailiesRequester {
 	

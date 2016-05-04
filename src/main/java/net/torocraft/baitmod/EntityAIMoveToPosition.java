@@ -1,90 +1,110 @@
 package net.torocraft.baitmod;
 
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.util.math.BlockPos;
-import sun.util.logging.resources.logging;
 
 public class EntityAIMoveToPosition extends EntityAIBase {
-
-	private final EntityCreature entity;
-	private final double speed;
-	private int timeoutCounter;
-	
-	private boolean done = false;
-
+	private final EntityLiving entity;
+	private final double movementSpeed;
 	/** Controls task execution delay */
 	protected int runDelay;
+	private int timeoutCounter;
+	private int field_179490_f;
+	/** Block to move to */
 
-	protected BlockPos destination;
+	
+	private double targetX;
+	private double targetY;
+	private double targetZ;
 
-	EntityAIMoveToPosition(EntityCreature creature, BlockPos destination, double speedIn) {
+	private boolean isAboveDestination;
+
+	public EntityAIMoveToPosition(EntityLiving creature, BlockPos target) {
 		this.entity = creature;
-		this.speed = speedIn;
-		this.destination = destination;
+		this.movementSpeed = 0.75;
 		this.setMutexBits(5);
+
+		targetX = target.getX() + 0.5d;
+		targetY = target.getY() + 0.5d;
+		targetZ = target.getZ() + 0.5d;
 	}
-	
-	private void log(String message) {
-		if (!entity.worldObj.isRemote) {
-			System.out.println(message);
-		}
+
+	public EntityLiving getEntity() {
+		return entity;
 	}
-	
-	@Override
+
+	/**
+	 * Returns whether the EntityAIBase should begin execution.
+	 */
 	public boolean shouldExecute() {
-		if( isTimedout() || done){
-			//log("Timedout");
-			//remove();
-			return false;
-		}
-		return true;
+		return !isAboveDestination;
 	}
 
-	private boolean isTimedout() {
-		return timeoutCounter > 1200;
+	/**
+	 * Returns whether an in-progress EntityAIBase should continue executing
+	 */
+	public boolean continueExecuting() {
+		return !isAboveDestination;
 	}
 
-	@Override
+	/**
+	 * Execute a one shot task or start executing a continuous task
+	 */
 	public void startExecuting() {
-		moveToDestination();
+
 	}
 
-	public void remove() {
-		//entity.tasks.removeTask(this);
-		this.done = true;
+	/**
+	 * Resets the task
+	 */
+	public void resetTask() {
 	}
 
+	boolean moving = false;
+
+	/**
+	 * Updates the task
+	 */
 	public void updateTask() {
-		timeoutCounter++;
-		if (isAboveDestination()) {
-			if (this.timeoutCounter % 40 == 0) {
-				moveToDestination();
-			}
+
+		double distance = distanceFromDestination();
+
+		if (distance <= 1) {
+			isAboveDestination = true;
+			timeoutCounter = 0;
+			return;
 		}
+
+		timeoutCounter++;
+		if (moving && timeoutCounter < 40) {
+			return;
+		}
+
+		moving = entity.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, movementSpeed);
+
+		/// !this.entity.getNavigator().noPath()
+
+		timeoutCounter = 0;
 	}
 
-	private void moveToDestination() {
-		entity.getNavigator().tryMoveToXYZ(getTargetX(), getTargetY(), getTargetZ(), speed);
-	}
-	
-	private double getTargetZ() {
-		return (double) ((float) this.destination.getZ()) + 0.5D;
+	private double distanceFromXDesination() {
+		return entity.posX - targetX;
 	}
 
-	private double getTargetY() {
-		return (double) (this.destination.getY() + 1);
+	private double distanceFromZDesination() {
+		return entity.posZ - targetZ;
 	}
 
-	private double getTargetX() {
-		return (double) ((float) this.destination.getX()) + 0.5D;
+	private double distanceFromDestination() {
+		double x = distanceFromXDesination();
+		double z = distanceFromZDesination();
+		return Math.sqrt(Math.pow(x, 2) + Math.pow(z, 2));
 	}
 
-	private boolean isAboveDestination() {
-		return entity.getDistanceSqToCenter(destination.up()) > 1.0D;
+	protected boolean getIsAboveDestination() {
+		return this.isAboveDestination;
 	}
 
-	
 
 }

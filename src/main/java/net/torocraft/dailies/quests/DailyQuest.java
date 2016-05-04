@@ -21,14 +21,26 @@ public class DailyQuest implements IDailyQuest {
 
 	@Override
 	public String getStatusMessage() {
+		return getDisplayName() + " (" + Math.round(100 * currentQuantity / target.quantity) + "% complete)";
+	}
 
+	private String targetItemName() {
 		if (targetName == null) {
 			targetName = Item.getItemById(target.type).getUnlocalizedName();
 		}
-
-
-		return type + " " + targetName + " " + currentQuantity + " of  " + target.quantity;
+		return targetName;
 	}
+
+	@Override
+	public String getDisplayName() {
+		if ("gather".equals(type)) {
+			return "⇓ Gather Quest: collect " + target.quantity + " pieces of " + targetItemName();
+		} else if ("hunt".equals(type)) {
+			return "⚔ Hunt Quest: kill " + target.quantity + " " + targetItemName() + " mobs";
+		}
+		return "...";
+	}
+
 
 	@Override
 	public boolean gather(EntityPlayer player, EntityItem item) {
@@ -130,5 +142,6 @@ public class DailyQuest implements IDailyQuest {
 	public boolean isComplete() {
 		return currentQuantity >= target.quantity;
 	}
+
 
 }

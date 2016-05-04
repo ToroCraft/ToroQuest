@@ -9,6 +9,8 @@ public interface IDailyQuest extends IDailiesCapability {
 
 	String getStatusMessage();
 
+	String getDisplayName();
+
 	String getName();
 
 	String getType();

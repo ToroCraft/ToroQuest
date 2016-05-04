@@ -1,8 +1,11 @@
 package net.torocraft.dailies.capabilities;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -29,7 +32,7 @@ public class Events {
 			return;
 		}
 
-		boolean hit = dailes.gather(event.getEntityPlayer(), event.getItem(), 1);
+		boolean hit = dailes.gather(event.getEntityPlayer(), event.getItem());
 
 		if (hit) {
 			event.setCanceled(true);
@@ -47,6 +50,30 @@ public class Events {
 	 * 
 	 * }
 	 */
+
+	@SubscribeEvent
+	public void onHunt(LivingDeathEvent event) {
+
+		EntityPlayer player = null;
+
+		EntityLivingBase e = (EntityLivingBase) event.getEntity();
+		DamageSource source = event.getSource();
+
+		if (source.getSourceOfDamage() instanceof EntityPlayer) {
+			player = (EntityPlayer) source.getSourceOfDamage();
+		}
+
+		if (player == null) {
+			return;
+		}
+
+		IDailiesCapability dailes = getCapability(player);
+		if (dailes == null) {
+			return;
+		}
+
+		dailes.hunt(player, e);
+	}
 
 	@SubscribeEvent
 	public void onDeath(PlayerEvent.Clone event) {

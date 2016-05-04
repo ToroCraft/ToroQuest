@@ -1,6 +1,6 @@
 package net.torocraft.dailies.quests;
 
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -25,11 +25,12 @@ public class DailyQuest implements IDailyQuest {
 			targetName = Item.getItemById(target.type).getUnlocalizedName();
 		}
 
+
 		return type + " " + targetName + " " + currentQuantity + " of  " + target.quantity;
 	}
 
 	@Override
-	public boolean gather(EntityPlayer player, EntityItem item, int count) {
+	public boolean gather(EntityPlayer player, EntityItem item) {
 		if (!"gather".equals(type)) {
 			return false;
 		}
@@ -52,10 +53,22 @@ public class DailyQuest implements IDailyQuest {
 	}
 
 	@Override
-	public boolean hunt(EntityPlayer player, EntityLiving mob, int count) {
-		if (!"hunt".equals(type)) {
+	public boolean hunt(EntityPlayer player, EntityLivingBase mob) {
+		if (!"hunt".equals(type) || mob == null) {
 			return false;
 		}
+
+		int id = mob.getEntityId();
+
+		System.out.println("Entity [" + mob.getName() + "] [" + id + "]");
+
+
+		if (id != target.type) {
+			return false;
+		}
+
+		currentQuantity++;
+		player.addChatMessage(new TextComponentString(TextFormatting.RED + "" + getStatusMessage()));
 
 		return false;
 	}

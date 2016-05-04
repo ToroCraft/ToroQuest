@@ -14,13 +14,13 @@ import net.torocraft.dailies.quests.DailyQuest;
 public class ListDailiesCommand implements ICommand {
 
 	private List<String> aliases;
-	
+
 	public ListDailiesCommand() {
 		this.aliases = new ArrayList<String>();
 		this.aliases.add("dailies");
 		this.aliases.add("listdailies");
 	}
-	
+
 	@Override
 	public int compareTo(ICommand arg0) {
 		// TODO Auto-generated method stub
@@ -44,33 +44,39 @@ public class ListDailiesCommand implements ICommand {
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-			DailiesWorldData worldData =DailiesWorldData.get(server.getEntityWorld());
-			List<DailyQuest> dailies = worldData.getDailies();
-			if(dailies != null) {
-				String dailiesList = buildDailiesListText(dailies);
-				sender.addChatMessage(new TextComponentString(dailiesList));
-			}
+		DailiesWorldData worldData = DailiesWorldData.get(server.getEntityWorld());
+		List<DailyQuest> dailies = worldData.getDailies();
+
+		if (dailies == null) {
+			System.out.println("No dailies found, lame!");
+		} else {
+			System.out.println("Dailies found COUNT[" + dailies.size() + "]");
+		}
+
+		if (dailies != null) {
+			String dailiesList = buildDailiesListText(dailies);
+			sender.addChatMessage(new TextComponentString(dailiesList));
+		}
 	}
-	
+
 	private String buildDailiesListText(List<DailyQuest> dailies) {
 		StringBuilder builder = new StringBuilder();
-		for(DailyQuest quest : dailies) {
+		for (DailyQuest quest : dailies) {
 			builder.append(quest.getName() + ": " + quest.getType());
 			builder.append("\n");
 		}
-		
+
 		return builder.toString();
 	}
 
 	@Override
 	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
-	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args,
-			BlockPos pos) {
+	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
 		// TODO Auto-generated method stub
 		return null;
 	}

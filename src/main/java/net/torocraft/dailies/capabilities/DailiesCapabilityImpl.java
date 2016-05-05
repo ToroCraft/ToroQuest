@@ -126,6 +126,20 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 			setDefaultQuests();
 		}
 	}
+	
+	@Override
+	public void acceptQuest(DailyQuest quest) {
+		if(quests != null) {
+			quests.add(quest);
+		}
+	}
+	
+	@Override
+	public void abandonQuest(DailyQuest quest) {
+		if(quests != null) {
+			quests.remove(quest);
+		}
+	}
 
 	private void setDefaultQuests() {
 		quests = new ArrayList<IDailyQuest>();

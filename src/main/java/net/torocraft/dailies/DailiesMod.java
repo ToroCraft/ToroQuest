@@ -30,7 +30,7 @@ public class DailiesMod {
 
 	@EventHandler
 	public void serverLoad(FMLServerStartingEvent e) {
-		e.registerServerCommand(new ListDailiesCommand());
+		e.registerServerCommand(new DailiesCommand());
 	}
 	
 	@EventHandler

@@ -161,5 +161,17 @@ public class DailyQuest implements IDailyQuest {
 		return currentQuantity >= target.quantity;
 	}
 
+	@Override
+	public void acceptQuest(DailyQuest quest) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void abandonQuest(DailyQuest quest) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

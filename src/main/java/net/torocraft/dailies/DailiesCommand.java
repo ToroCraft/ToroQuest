@@ -21,11 +21,15 @@ public class DailiesCommand implements ICommand {
 	private EntityPlayer player;
 
 	public DailiesCommand() {
+		buildAliases();
+	}
+	
+	private void buildAliases() {
 		this.aliases = new ArrayList<String>();
 		this.aliases.add("dailies");
 		this.aliases.add("listdailies");
 	}
-
+	
 	@Override
 	public int compareTo(ICommand arg0) {
 		// TODO Auto-generated method stub
@@ -141,14 +145,33 @@ public class DailiesCommand implements ICommand {
 
 	@Override
 	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> tabOptions = new ArrayList<String>();
+		
+		if(args.length == 0) {
+			tabOptions.add("dailies");
+		} else if(args.length == 1) {
+			String command = args[0];
+			
+			if(command.length() > 2) {
+				tabOptions.add(getTabbedCommand(command));
+			}
+		}
+		
+		return tabOptions;
+	}
+	
+	private String getTabbedCommand(String command) {
+		if(command.startsWith("ac")) {
+			return "accept";
+		} else if(command.startsWith("ab"))
+			return "abandon";
+		
+		return "";
 	}
 
 	@Override

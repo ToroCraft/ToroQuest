@@ -74,13 +74,15 @@ public class DailiesCommand implements ICommand {
 			sender.addChatMessage(new TextComponentString("No Dailies Found"));
 		}
 		
+
 		if(args.length == 0) {
 			String dailiesList = buildDailiesListText(dailies);
 			sender.addChatMessage(new TextComponentString(dailiesList));
 		} else if(args.length == 2) {
 			String command = args[0];
-			String id = args[1];
-			DailyQuest quest = getDailyQuest(id);
+			int index = i(args[1]);
+
+			DailyQuest quest = dailies.get(index);
 			
 			if(!validCommand(command)) {
 				sender.addChatMessage(new TextComponentString("Invalid Command"));
@@ -92,12 +94,12 @@ public class DailiesCommand implements ICommand {
 				return;
 			}
 			
-			if(command.equals("abandon")) {
+			if (command.equalsIgnoreCase("abandon")) {
 				abandonQuest(quest);
-				sender.addChatMessage(new TextComponentString("Quest " + id + " abandoned"));
-			} else if (command.equals("accept")) {
+				sender.addChatMessage(new TextComponentString("Quest " + index + " abandoned"));
+			} else if (command.equalsIgnoreCase("accept")) {
 				acceptQuest(quest);
-				sender.addChatMessage(new TextComponentString("Quest " + id + " accepted"));
+				sender.addChatMessage(new TextComponentString("Quest " + index + " accepted"));
 			}
 			
 		} else {
@@ -107,6 +109,14 @@ public class DailiesCommand implements ICommand {
 		
 	}
 	
+	private int i(String string) {
+		try {
+			return Integer.valueOf(string);
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+
 	private boolean validCommand(String command) {
 		if(command.equals("abandon") || command.equals("accept")) {
 			return true;
@@ -120,9 +130,9 @@ public class DailiesCommand implements ICommand {
 		}
 
 		StringBuilder builder = new StringBuilder();
-		for (DailyQuest quest : dailies) {
-			// builder.append(quest.getName() + ": " + quest.getType());
-			builder.append(quest.getDisplayName());
+		for (int i = 0; i < dailies.size(); i++) {
+			builder.append("(").append(i).append(") ");
+			builder.append(dailies.get(i).getDisplayName());
 			builder.append("\n");
 		}
 
@@ -139,14 +149,6 @@ public class DailiesCommand implements ICommand {
 		dailies.acceptQuest(quest);
 	}
 	
-	private DailyQuest getDailyQuest(String id) {
-		for(DailyQuest quest : dailies) {
-			if(String.valueOf(quest.getId()).equals(id)) {
-				return quest;
-			}
-		}
-		return null;
-	}
 
 	@Override
 	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {

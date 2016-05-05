@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.torocraft.dailies.quests.DailyQuest;
 
 public interface IDailiesCapability {
 
@@ -21,5 +22,9 @@ public interface IDailiesCapability {
 	NBTTagCompound writeNBT();
 
 	void readNBT(NBTTagCompound c);
+	
+	void acceptQuest(DailyQuest quest);
+	
+	void abandonQuest(DailyQuest quest);
 
 }

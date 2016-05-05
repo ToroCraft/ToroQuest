@@ -97,13 +97,10 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 	@Override
 	public void readNBT(NBTTagCompound b) {
 		quests = new ArrayList<IDailyQuest>();
-		
-
-		if (true) {
-			setDefaultQuests();
-			return;
-		}
-		
+		/*
+		 * 
+		 * if (true) { setDefaultQuests(); return; }
+		 */
 		if (b == null || !(b.getTag("quests") instanceof NBTTagList)) {
 			setDefaultQuests();
 			return;

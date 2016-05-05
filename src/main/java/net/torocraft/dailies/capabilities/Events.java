@@ -1,5 +1,7 @@
 package net.torocraft.dailies.capabilities;
 
+import java.util.List;
+
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
@@ -8,7 +10,11 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.torocraft.dailies.DailiesRequester;
+import net.torocraft.dailies.DailiesWorldData;
+import net.torocraft.dailies.quests.DailyQuest;
 
 public class Events {
 
@@ -25,6 +31,26 @@ public class Events {
 		event.getHarvester().addChatMessage(new TextComponentString(TextFormatting.RED + "" + dailes.statusMessage()));
 	}*/
 	
+	// @SideOnly(Side.SERVER)
+	@SubscribeEvent
+	public void onWorldLoad(WorldEvent.Load event) {
+
+		DailiesRequester requester = new DailiesRequester();
+		List<DailyQuest> dailies = requester.getDailies();
+
+		if (dailies == null) {
+			System.out.println("******************* No dailies found, lame!");
+		} else {
+			System.out.println("********************** Dailies found COUNT[" + dailies.size() + "]");
+		}
+
+		if (dailies != null) {
+			DailiesWorldData worldData = DailiesWorldData.get(event.getWorld());
+			worldData.setDailies(dailies);
+		}
+
+	}
+
 	@SubscribeEvent
 	public void onGather(EntityItemPickupEvent event) {
 		IDailiesCapability dailes = getCapability(event.getEntityPlayer());

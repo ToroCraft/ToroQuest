@@ -1,6 +1,7 @@
 package net.torocraft.dailies;
 
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -56,9 +57,15 @@ public class DailiesRequester {
 			Gson gson = new GsonBuilder().create();
 			try {
 				String jsonString = EntityUtils.toString(response.getEntity());
-				dailies = gson.fromJson(jsonString, listType);
+
+				System.out.println("************* json response: " + jsonString);
+
+				DailyQuest[] aQuests = gson.fromJson(jsonString, DailyQuest[].class);
+
+				dailies = Arrays.asList(aQuests);
+
 			} catch (Exception ex) {
-				
+				ex.printStackTrace();
 			}
 		}
 	}

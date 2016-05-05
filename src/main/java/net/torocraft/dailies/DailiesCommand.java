@@ -115,9 +115,14 @@ public class DailiesCommand implements ICommand {
 	}
 
 	private String buildDailiesListText(List<DailyQuest> dailies) {
+		if (dailies == null || dailies.size() < 1) {
+			return "No dailies found";
+		}
+
 		StringBuilder builder = new StringBuilder();
 		for (DailyQuest quest : dailies) {
-			builder.append(quest.getName() + ": " + quest.getType());
+			// builder.append(quest.getName() + ": " + quest.getType());
+			builder.append(quest.getDisplayName());
 			builder.append("\n");
 		}
 

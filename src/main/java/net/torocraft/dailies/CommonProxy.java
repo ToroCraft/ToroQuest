@@ -11,13 +11,12 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent e) {
-		// DailiesMod.achievementDailyQuestComplete.registerStat();
-		// AchievementPage.registerAchievementPage(new AchievementPage("Daily
-		// Quest Completed!", new Achievement[] {
-		// DailiesMod.achievementDailyQuestComplete }));
+
     }
 
     public void postInit(FMLPostInitializationEvent e) {
+
+
 
     }
 }

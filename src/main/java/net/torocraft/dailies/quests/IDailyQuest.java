@@ -15,7 +15,7 @@ public interface IDailyQuest extends IDailiesCapability {
 
 	String getType();
 
-	long getId();
+	String getId();
 
 	void reward(EntityPlayer player);
 

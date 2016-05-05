@@ -17,29 +17,45 @@ public class DailyQuest implements IDailyQuest {
 	public TypedInteger target;
 	public Reward reward;
 	public int currentQuantity;
+	public String id;
+	public long date;
 
-	public String targetName;
+	public transient String targetName;
 
 	@Override
 	public String getStatusMessage() {
 		return getDisplayName() + " (" + Math.round(100 * currentQuantity / target.quantity) + "% complete)";
 	}
 
+	private String decodeMob(int i) {
+		switch(i) {
+		case 54:
+			return "zombie";
+		case 51:
+			return "skeleton";
+		case 50:
+			return "creeper";
+		case 52:
+			return "spider";
+		default:
+			return i + "";
+		}
+	}
+
+	public DailyQuest clone() {
+		DailyQuest quest = new DailyQuest();
+		quest.readNBT(writeNBT());
+		return quest;
+	}
+
 	private String targetItemName() {
 		if (targetName == null) {
-
 			if (isGatherQuest()) {
 				targetName = I18n.translateToLocal(Item.getItemById(target.type).getUnlocalizedName());
 			} else if (isHuntQuest()) {
-
-				// TODO: find a way to decode mob name even if we just maintain
-				// our own mapping
-				targetName = "Mob[" + target.type + "]";
-
-				// targetName = EntityList.
-				// //Item.getItemById(target.type).getUnlocalizedName();
+				// TODO: improve the mob name decoding
+				targetName = decodeMob(target.type);
 			}
-
 		}
 		return targetName;
 	}
@@ -115,8 +131,8 @@ public class DailyQuest implements IDailyQuest {
 	}
 
 	@Override
-	public long getId() {
-		return 0;
+	public String getId() {
+		return id;
 	}
 
 	@Override
@@ -132,6 +148,8 @@ public class DailyQuest implements IDailyQuest {
 		c.setInteger("currentQuantity", currentQuantity);
 		c.setTag("target", target.writeNBT());
 		c.setTag("reward", reward.writeNBT());
+		c.setLong("date", date);
+		c.setString("id", id);
 		return c;
 	}
 
@@ -141,6 +159,8 @@ public class DailyQuest implements IDailyQuest {
 		}
 		type = c.getString("type");
 		currentQuantity = c.getInteger("currentQuantity");
+		date = c.getLong("date");
+		id = c.getString("id");
 
 		target = new TypedInteger();
 		reward = new Reward();
@@ -163,15 +183,37 @@ public class DailyQuest implements IDailyQuest {
 
 	@Override
 	public void acceptQuest(DailyQuest quest) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void abandonQuest(DailyQuest quest) {
-		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DailyQuest other = (DailyQuest) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
 
 }

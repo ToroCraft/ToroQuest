@@ -1,7 +1,9 @@
 package net.torocraft.dailies.capabilities;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,12 +17,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.torocraft.dailies.quests.DailyQuest;
 import net.torocraft.dailies.quests.IDailyQuest;
-import net.torocraft.dailies.quests.Reward;
-import net.torocraft.dailies.quests.TypedInteger;
 
 public class DailiesCapabilityImpl implements IDailiesCapability {
 
-	private List<IDailyQuest> quests;
+	private Set<IDailyQuest> quests;
+	private Set<IDailyQuest> completedQuests;
 
 	@Override
 	public boolean gather(EntityPlayer player, EntityItem item) {
@@ -83,34 +84,46 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 
 	@Override
 	public NBTTagCompound writeNBT() {
+		NBTTagCompound c = new NBTTagCompound();
+		writeQuestsList(c, "quests", quests);
+		writeQuestsList(c, "completedQuests", completedQuests);
+		return c;
+	}
+
+	private void writeQuestsList(NBTTagCompound c, String key, Set<IDailyQuest> quests) {
 		NBTTagList list = new NBTTagList();
 		for (IDailyQuest quest : quests) {
 			list.appendTag(quest.writeNBT());
 		}
-
-		NBTTagCompound c = new NBTTagCompound();
-		c.setTag("quests", list);
-
-		return c;
+		c.setTag(key, list);
 	}
 
 	@Override
 	public void readNBT(NBTTagCompound b) {
-		quests = new ArrayList<IDailyQuest>();
+
 		/*
 		 * 
 		 * if (true) { setDefaultQuests(); return; }
 		 */
 		if (b == null || !(b.getTag("quests") instanceof NBTTagList)) {
-			setDefaultQuests();
+			// setDefaultQuests();
 			return;
 		}
 
-		NBTTagList list = (NBTTagList) b.getTag("quests");
+		quests = readQuestList(b, "quests");
+		completedQuests = readQuestList(b, "completedQuests");
+
+		if (quests.size() < 1) {
+			// setDefaultQuests();
+		}
+	}
+
+	private Set<IDailyQuest> readQuestList(NBTTagCompound b, String key) {
+		Set<IDailyQuest> quests = new HashSet<IDailyQuest>();
+		NBTTagList list = (NBTTagList) b.getTag(key);
 
 		if (list == null) {
-			setDefaultQuests();
-			return;
+			return quests;
 		}
 
 		for (int i = 0; i < list.tagCount(); i++) {
@@ -119,66 +132,53 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 			quests.add(quest);
 		}
 
-		if (quests.size() < 1) {
-			setDefaultQuests();
-		}
+		return quests;
 	}
 	
 	@Override
 	public void acceptQuest(DailyQuest quest) {
-		if(quests != null) {
-			quests.add(quest);
+		if (quests == null) {
+			return;
 		}
+
+		DailyQuest playerQuest = quest.clone();
+		playerQuest.date = System.currentTimeMillis();
+		quests.add(playerQuest);
+
 	}
 	
 	@Override
 	public void abandonQuest(DailyQuest quest) {
-		if(quests != null) {
-			quests.remove(quest);
+		if (quests == null) {
+			return;
 		}
+		if (quests.remove(quest)) {
+			completedQuests.add(quest);
+		}
+
 	}
-
-	private void setDefaultQuests() {
-		quests = new ArrayList<IDailyQuest>();
-		DailyQuest quest = new DailyQuest();
-		Reward reward = new Reward();
-		reward.quantity = 20;
-		reward.type = 384;
-		TypedInteger target = new TypedInteger();
-		target.type = 12;
-		target.quantity = 2;
-		quest.type = "gather";
-		quest.reward = reward;
-		quest.target = target;
-
-		quests.add(quest);
-
-		quest = new DailyQuest();
-		reward = new Reward();
-		reward.quantity = 50;
-		reward.type = 264;
-		target = new TypedInteger();
-		target.type = 3;
-		target.quantity = 2;
-		quest.type = "gather";
-		quest.reward = reward;
-		quest.target = target;
-
-		quests.add(quest);
-		
-		quest = new DailyQuest();
-		reward = new Reward();
-		reward.quantity = 30;
-		reward.type = 384;
-		target = new TypedInteger();
-		target.type = 101;
-		target.quantity = 2;
-		quest.type = "hunt";
-		quest.reward = reward;
-		quest.target = target;
-
-		quests.add(quest);
-	}
-
+	/*
+	 * private void setDefaultQuests() { quests = new ArrayList<IDailyQuest>();
+	 * DailyQuest quest = new DailyQuest(); Reward reward = new Reward();
+	 * reward.quantity = 20; reward.type = 384; TypedInteger target = new
+	 * TypedInteger(); target.type = 12; target.quantity = 2; quest.type =
+	 * "gather"; quest.reward = reward; quest.target = target;
+	 * 
+	 * quests.add(quest);
+	 * 
+	 * quest = new DailyQuest(); reward = new Reward(); reward.quantity = 50;
+	 * reward.type = 264; target = new TypedInteger(); target.type = 3;
+	 * target.quantity = 2; quest.type = "gather"; quest.reward = reward;
+	 * quest.target = target;
+	 * 
+	 * quests.add(quest);
+	 * 
+	 * quest = new DailyQuest(); reward = new Reward(); reward.quantity = 30;
+	 * reward.type = 384; target = new TypedInteger(); target.type = 101;
+	 * target.quantity = 2; quest.type = "hunt"; quest.reward = reward;
+	 * quest.target = target;
+	 * 
+	 * quests.add(quest); }
+	 */
 
 }

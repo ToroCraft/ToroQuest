@@ -35,6 +35,10 @@ public class Events {
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
 
+		if (event.getWorld().isRemote) {
+			return;
+		}
+
 		DailiesRequester requester = new DailiesRequester();
 		List<DailyQuest> dailies = requester.getDailies();
 

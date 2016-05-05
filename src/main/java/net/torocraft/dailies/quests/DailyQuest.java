@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 
 public class DailyQuest implements IDailyQuest {
 
@@ -26,25 +27,44 @@ public class DailyQuest implements IDailyQuest {
 
 	private String targetItemName() {
 		if (targetName == null) {
-			targetName = Item.getItemById(target.type).getUnlocalizedName();
+
+			if (isGatherQuest()) {
+				targetName = I18n.translateToLocal(Item.getItemById(target.type).getUnlocalizedName());
+			} else if (isHuntQuest()) {
+
+				// TODO: find a way to decode mob name even if we just maintain
+				// our own mapping
+				targetName = "Mob[" + target.type + "]";
+
+				// targetName = EntityList.
+				// //Item.getItemById(target.type).getUnlocalizedName();
+			}
+
 		}
 		return targetName;
 	}
 
 	@Override
 	public String getDisplayName() {
-		if ("gather".equals(type)) {
+		if (isGatherQuest()) {
 			return "⇓ Gather Quest: collect " + target.quantity + " pieces of " + targetItemName();
-		} else if ("hunt".equals(type)) {
+		} else if (isHuntQuest()) {
 			return "⚔ Hunt Quest: kill " + target.quantity + " " + targetItemName() + " mobs";
 		}
 		return "...";
 	}
 
+	private boolean isHuntQuest() {
+		return "hunt".equals(type);
+	}
+
+	private boolean isGatherQuest() {
+		return "gather".equals(type);
+	}
 
 	@Override
 	public boolean gather(EntityPlayer player, EntityItem item) {
-		if (!"gather".equals(type)) {
+		if (!isGatherQuest()) {
 			return false;
 		}
 
@@ -67,13 +87,11 @@ public class DailyQuest implements IDailyQuest {
 
 	@Override
 	public boolean hunt(EntityPlayer player, EntityLivingBase mob) {
-		if (!"hunt".equals(type) || mob == null) {
+		if (!isHuntQuest() || mob == null) {
 			return false;
 		}
 
 		int id = EntityList.getEntityID(mob);// mob.getEntityId();
-
-		System.out.println("Entity [" + mob.getName() + "] [" + id + "]");
 
 
 		if (id != target.type) {
@@ -83,7 +101,7 @@ public class DailyQuest implements IDailyQuest {
 		currentQuantity++;
 		player.addChatMessage(new TextComponentString(TextFormatting.RED + "" + getStatusMessage()));
 
-		return false;
+		return true;
 	}
 
 	@Override

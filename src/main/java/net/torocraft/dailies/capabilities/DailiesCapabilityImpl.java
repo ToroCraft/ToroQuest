@@ -3,11 +3,16 @@ package net.torocraft.dailies.capabilities;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.stats.Achievement;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.torocraft.dailies.quests.DailyQuest;
 import net.torocraft.dailies.quests.IDailyQuest;
 import net.torocraft.dailies.quests.Reward;
@@ -29,6 +34,7 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 
 				if (quest.isComplete()) {
 					quest.reward(player);
+					displayAchievement((DailyQuest)quest, player);
 					completedQuests.add(quest);
 				}
 
@@ -54,6 +60,7 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 			if (quest.hunt(player, mob)) {
 				if (quest.isComplete()) {
 					quest.reward(player);
+					displayAchievement((DailyQuest)quest, player);
 					completedQuests.add(quest);
 				}
 				hit = true;
@@ -66,6 +73,13 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 		}
 		return hit;
 	}
+
+	@SideOnly(Side.CLIENT)
+	private void displayAchievement(DailyQuest quest, EntityPlayer player) {
+		Achievement achievement = new Achievement(quest.getDisplayName(), "dailyquestcompleted", 0, 0, Item.getItemById(quest.target.type), (Achievement) null);
+		Minecraft.getMinecraft().guiAchievement.displayAchievement(achievement);
+	}
+
 
 	@Override
 	public NBTTagCompound writeNBT() {
@@ -83,11 +97,13 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 	@Override
 	public void readNBT(NBTTagCompound b) {
 		quests = new ArrayList<IDailyQuest>();
+		
 
-		/*
-		 * if (true) { setDefaultQuests(); return; }
-		 */
-
+		if (true) {
+			setDefaultQuests();
+			return;
+		}
+		
 		if (b == null || !(b.getTag("quests") instanceof NBTTagList)) {
 			setDefaultQuests();
 			return;
@@ -119,7 +135,7 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 		reward.type = 384;
 		TypedInteger target = new TypedInteger();
 		target.type = 12;
-		target.quantity = 10;
+		target.quantity = 2;
 		quest.type = "gather";
 		quest.reward = reward;
 		quest.target = target;
@@ -132,7 +148,7 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 		reward.type = 264;
 		target = new TypedInteger();
 		target.type = 3;
-		target.quantity = 4;
+		target.quantity = 2;
 		quest.type = "gather";
 		quest.reward = reward;
 		quest.target = target;

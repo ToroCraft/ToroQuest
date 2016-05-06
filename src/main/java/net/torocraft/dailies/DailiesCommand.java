@@ -2,6 +2,7 @@ package net.torocraft.dailies;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -13,6 +14,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.torocraft.dailies.capabilities.CapabilityDailiesHandler;
 import net.torocraft.dailies.capabilities.IDailiesCapability;
 import net.torocraft.dailies.quests.DailyQuest;
+import net.torocraft.dailies.quests.IDailyQuest;
 
 public class DailiesCommand implements ICommand {
 
@@ -58,6 +60,7 @@ public class DailiesCommand implements ICommand {
 			return;
 		}
 		
+
 		player = (EntityPlayer)sender;
 		dailies = null;
 		
@@ -76,11 +79,11 @@ public class DailiesCommand implements ICommand {
 		
 
 		if(args.length == 0) {
-			String dailiesList = buildDailiesListText(dailies);
+			String dailiesList = buildDailiesListText(dailies, player);
 			sender.addChatMessage(new TextComponentString(dailiesList));
 		} else if(args.length == 2) {
 			String command = args[0];
-			int index = i(args[1]);
+			int index = toIndex(args[1]);
 
 			DailyQuest quest = dailies.get(index);
 			
@@ -109,9 +112,9 @@ public class DailiesCommand implements ICommand {
 		
 	}
 	
-	private int i(String string) {
+	private int toIndex(String string) {
 		try {
-			return Integer.valueOf(string);
+			return Integer.valueOf(string) - 1;
 		} catch (Exception e) {
 			return 0;
 		}
@@ -124,18 +127,34 @@ public class DailiesCommand implements ICommand {
 		return false;
 	}
 
-	private String buildDailiesListText(List<DailyQuest> dailies) {
+	private String buildDailiesListText(List<DailyQuest> dailies, EntityPlayer player) {
 		if (dailies == null || dailies.size() < 1) {
 			return "No dailies found";
 		}
 
+		IDailiesCapability playerDailiesCapability = player.getCapability(CapabilityDailiesHandler.DAILIES_CAPABILITY, null);
+		Set<IDailyQuest> playerDailies = playerDailiesCapability.getAcceptedQuests();
+
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < dailies.size(); i++) {
-			builder.append("(").append(i).append(") ");
+
+			if (playerDailies.contains(dailies.get(i))) {
+				continue;
+			}
+
+			builder.append("(").append(i + 1).append(") NEW ");
 			builder.append(dailies.get(i).getDisplayName());
 			builder.append("\n");
 		}
+		
 
+
+		for (IDailyQuest quest : playerDailies) {
+			builder.append("ACCEPTED :: ");
+			builder.append(quest.getStatusMessage());
+			builder.append("\n");
+		}
+		
 		return builder.toString();
 	}
 	

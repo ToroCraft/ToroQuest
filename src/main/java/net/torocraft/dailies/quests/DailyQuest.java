@@ -1,5 +1,7 @@
 package net.torocraft.dailies.quests;
 
+import java.util.Set;
+
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -214,6 +216,16 @@ public class DailyQuest implements IDailyQuest {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	@Override
+	public Set<IDailyQuest> getAcceptedQuests() {
+		return null;
+	}
+
+	@Override
+	public Set<IDailyQuest> getCompletedQuests() {
+		return null;
 	}
 
 }

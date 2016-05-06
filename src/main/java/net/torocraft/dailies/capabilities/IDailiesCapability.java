@@ -1,10 +1,13 @@
 package net.torocraft.dailies.capabilities;
 
+import java.util.Set;
+
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.torocraft.dailies.quests.DailyQuest;
+import net.torocraft.dailies.quests.IDailyQuest;
 
 public interface IDailiesCapability {
 
@@ -26,5 +29,9 @@ public interface IDailiesCapability {
 	void acceptQuest(DailyQuest quest);
 	
 	void abandonQuest(DailyQuest quest);
+
+	Set<IDailyQuest> getAcceptedQuests();
+
+	Set<IDailyQuest> getCompletedQuests();
 
 }

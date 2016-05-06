@@ -19,18 +19,17 @@ import net.torocraft.dailies.quests.IDailyQuest;
 public class DailiesCommand implements ICommand {
 
 	private List<String> aliases;
-	private List<DailyQuest> dailies;
-	private EntityPlayer player;
+	// private List<DailyQuest> dailies;
+	// private EntityPlayer player;
 
 	public DailiesCommand() {
-		buildAliases();
+		// buildAliases();
 	}
 	
-	private void buildAliases() {
-		this.aliases = new ArrayList<String>();
-		this.aliases.add("dailies");
-		this.aliases.add("listdailies");
-	}
+	/*
+	 * private void buildAliases() { this.aliases = new ArrayList<String>();
+	 * this.aliases.add("dailies"); this.aliases.add("listdailies"); }
+	 */
 	
 	@Override
 	public int compareTo(ICommand arg0) {
@@ -53,39 +52,29 @@ public class DailiesCommand implements ICommand {
 		return this.aliases;
 	}
 
+	public static class PlayerDailyQuests {
+		public EntityPlayer player = null;
+		public IDailiesCapability playerDailiesCapability;
+		public List<IDailyQuest> openDailyQuests = null;
+		public List<IDailyQuest> acceptedDailyQuests = null;
+		public List<IDailyQuest> completedDailyQuests = null;
+	}
+
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		
-		if(!(sender instanceof EntityPlayer)) {
-			return;
-		}
+		PlayerDailyQuests questsData = setupQuestsData(server, sender);
+		EntityPlayer player = (EntityPlayer) sender;
 		
-
-		player = (EntityPlayer)sender;
-		dailies = null;
-		
-		DailiesWorldData worldData = DailiesWorldData.get(server.getEntityWorld());
-		dailies = worldData.getDailies();
-		
-		if (dailies == null) {
-			System.out.println("No dailies found, lame!");
-		} else {
-			System.out.println("Dailies found COUNT[" + dailies.size() + "]");
-		}
-		
-		if (dailies == null) {
-			sender.addChatMessage(new TextComponentString("No Dailies Found"));
-		}
 		
 
 		if(args.length == 0) {
-			String dailiesList = buildDailiesListText(dailies, player);
-			sender.addChatMessage(new TextComponentString(dailiesList));
+			listDailyQuests(questsData);
 		} else if(args.length == 2) {
 			String command = args[0];
 			int index = toIndex(args[1]);
 
-			DailyQuest quest = dailies.get(index);
+			DailyQuest quest = dailyQuests.get(index);
 			
 			if(!validCommand(command)) {
 				sender.addChatMessage(new TextComponentString("Invalid Command"));
@@ -111,6 +100,53 @@ public class DailiesCommand implements ICommand {
 
 		
 	}
+
+	private PlayerDailyQuests setupQuestsData(MinecraftServer server, ICommandSender sender) {
+
+		if (!(sender instanceof EntityPlayer)) {
+			return null;
+		}
+
+		PlayerDailyQuests d = new PlayerDailyQuests();
+
+		d.playerDailiesCapability = d.player.getCapability(CapabilityDailiesHandler.DAILIES_CAPABILITY, null);
+
+		d.player = (EntityPlayer) sender;
+		Set<IDailyQuest> serversDailyQuests = getDailyQuests(server);
+		d.openDailyQuests = new ArrayList<IDailyQuest>();
+		d.acceptedDailyQuests = new ArrayList<IDailyQuest>();
+		d.completedDailyQuests = new ArrayList<IDailyQuest>();
+
+		maPlayersAcceptedQuestsToQuestData(d);
+
+		return d;
+	}
+
+	private void maPlayersAcceptedQuestsToQuestData(PlayerDailyQuests d) {
+		Set<IDailyQuest> playerDailiesSet = d.playerDailiesCapability.getAcceptedQuests();
+		if (playerDailiesSet != null) {
+			d.acceptedDailyQuests.addAll(playerDailiesSet);
+		}
+	}
+
+	private void maPlayersCompletedQuestsToQuestData(PlayerDailyQuests d) {
+		Set<IDailyQuest> playerDailiesSet = d.playerDailiesCapability.getCompletedQuests();
+		if (playerDailiesSet != null) {
+			d.completedDailyQuests.addAll(playerDailiesSet);
+		}
+	}
+
+	private void listDailyQuests(PlayerDailyQuests questsData) {
+		String dailiesList = buildDailiesListText(dailyQuests, player);
+		sender.addChatMessage(new TextComponentString(dailiesList));
+	}
+
+	private Set<IDailyQuest> getDailyQuests(MinecraftServer server) {
+		Set<IDailyQuest> dailyQuests;
+		DailiesWorldData worldData = DailiesWorldData.get(server.getEntityWorld());
+		dailyQuests = worldData.getDailyQuests();
+		return dailyQuests;
+	}
 	
 	private int toIndex(String string) {
 		try {
@@ -127,7 +163,7 @@ public class DailiesCommand implements ICommand {
 		return false;
 	}
 
-	private String buildDailiesListText(List<DailyQuest> dailies, EntityPlayer player) {
+	private String buildDailiesListText(Set<DailyQuest> dailies, EntityPlayer player) {
 		if (dailies == null || dailies.size() < 1) {
 			return "No dailies found";
 		}

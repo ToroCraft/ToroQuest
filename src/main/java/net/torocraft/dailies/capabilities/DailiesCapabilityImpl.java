@@ -90,13 +90,7 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 		return c;
 	}
 
-	private void writeQuestsList(NBTTagCompound c, String key, Set<IDailyQuest> quests) {
-		NBTTagList list = new NBTTagList();
-		for (IDailyQuest quest : quests) {
-			list.appendTag(quest.writeNBT());
-		}
-		c.setTag(key, list);
-	}
+
 
 	@Override
 	public void readNBT(NBTTagCompound b) {
@@ -116,6 +110,14 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 		if (quests.size() < 1) {
 			// setDefaultQuests();
 		}
+	}
+
+	private void writeQuestsList(NBTTagCompound c, String key, Set<IDailyQuest> quests) {
+		NBTTagList list = new NBTTagList();
+		for (IDailyQuest quest : quests) {
+			list.appendTag(quest.writeNBT());
+		}
+		c.setTag(key, list);
 	}
 
 	private Set<IDailyQuest> readQuestList(NBTTagCompound b, String key) {

@@ -1,6 +1,7 @@
 package net.torocraft.dailies;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -14,26 +15,13 @@ import net.minecraft.util.text.TextComponentString;
 import net.torocraft.dailies.capabilities.CapabilityDailiesHandler;
 import net.torocraft.dailies.capabilities.IDailiesCapability;
 import net.torocraft.dailies.quests.DailyQuest;
-import net.torocraft.dailies.quests.IDailyQuest;
 
 public class DailiesCommand implements ICommand {
 
-	private List<String> aliases;
-	// private List<DailyQuest> dailies;
-	// private EntityPlayer player;
+	private List<String> aliases = new ArrayList<String>();
 
-	public DailiesCommand() {
-		// buildAliases();
-	}
-	
-	/*
-	 * private void buildAliases() { this.aliases = new ArrayList<String>();
-	 * this.aliases.add("dailies"); this.aliases.add("listdailies"); }
-	 */
-	
 	@Override
 	public int compareTo(ICommand arg0) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -55,50 +43,50 @@ public class DailiesCommand implements ICommand {
 	public static class PlayerDailyQuests {
 		public EntityPlayer player = null;
 		public IDailiesCapability playerDailiesCapability;
-		public List<IDailyQuest> openDailyQuests = null;
-		public List<IDailyQuest> acceptedDailyQuests = null;
-		public List<IDailyQuest> completedDailyQuests = null;
+		public List<DailyQuest> openDailyQuests = null;
+		public List<DailyQuest> acceptedDailyQuests = null;
 	}
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-		
 		PlayerDailyQuests questsData = setupQuestsData(server, sender);
-		EntityPlayer player = (EntityPlayer) sender;
-		
-		
 
-		if(args.length == 0) {
+		if (args.length == 0) {
 			listDailyQuests(questsData);
-		} else if(args.length == 2) {
-			String command = args[0];
-			int index = toIndex(args[1]);
-
-			DailyQuest quest = dailyQuests.get(index);
-			
-			if(!validCommand(command)) {
-				sender.addChatMessage(new TextComponentString("Invalid Command"));
-				return;
-			}
-			
-			if (quest == null) {
-				sender.addChatMessage(new TextComponentString("Invalid Quest"));
-				return;
-			}
-			
-			if (command.equalsIgnoreCase("abandon")) {
-				abandonQuest(quest);
-				sender.addChatMessage(new TextComponentString("Quest " + index + " abandoned"));
-			} else if (command.equalsIgnoreCase("accept")) {
-				acceptQuest(quest);
-				sender.addChatMessage(new TextComponentString("Quest " + index + " accepted"));
-			}
-			
+		} else if (args.length == 2) {
+			handleSubCommand(questsData, args);
 		} else {
 			sender.addChatMessage(new TextComponentString("Invalid Command"));
 		}
+	}
 
-		
+	private void handleSubCommand(PlayerDailyQuests d, String[] args) {
+		String command = args[0];
+		int index = toIndex(args[1]);
+
+		if (!validCommand(command)) {
+			d.player.addChatMessage(new TextComponentString("Invalid Command"));
+			return;
+		}
+
+		if (command.equalsIgnoreCase("abandon")) {
+			DailyQuest quest = d.acceptedDailyQuests.get(index);
+			if (quest == null) {
+				d.player.addChatMessage(new TextComponentString("quest not found"));
+			} else {
+				d.playerDailiesCapability.abandonQuest(quest);
+				d.player.addChatMessage(new TextComponentString("Quest " + index + " abandoned"));
+			}
+
+		} else if (command.equalsIgnoreCase("accept")) {
+			DailyQuest quest = d.openDailyQuests.get(index);
+			if (quest == null) {
+				d.player.addChatMessage(new TextComponentString("quest not found"));
+			} else {
+				d.playerDailiesCapability.acceptQuest(quest);
+				d.player.addChatMessage(new TextComponentString("Quest " + index + " accepted"));
+			}
+		}
 	}
 
 	private PlayerDailyQuests setupQuestsData(MinecraftServer server, ICommandSender sender) {
@@ -109,45 +97,48 @@ public class DailiesCommand implements ICommand {
 
 		PlayerDailyQuests d = new PlayerDailyQuests();
 
-		d.playerDailiesCapability = d.player.getCapability(CapabilityDailiesHandler.DAILIES_CAPABILITY, null);
-
 		d.player = (EntityPlayer) sender;
-		Set<IDailyQuest> serversDailyQuests = getDailyQuests(server);
-		d.openDailyQuests = new ArrayList<IDailyQuest>();
-		d.acceptedDailyQuests = new ArrayList<IDailyQuest>();
-		d.completedDailyQuests = new ArrayList<IDailyQuest>();
+		d.playerDailiesCapability = d.player.getCapability(CapabilityDailiesHandler.DAILIES_CAPABILITY, null);
+		Set<DailyQuest> completedQuestSet = d.playerDailiesCapability.getCompletedQuests();
+		Set<DailyQuest> acceptedQuestSet = d.playerDailiesCapability.getAcceptedQuests();
+		Set<DailyQuest> serversDailyQuests = getDailyQuests(server);
 
-		maPlayersAcceptedQuestsToQuestData(d);
+		if (completedQuestSet == null) {
+			completedQuestSet = new HashSet<DailyQuest>();
+		}
+
+		if (acceptedQuestSet == null) {
+			acceptedQuestSet = new HashSet<DailyQuest>();
+		}
+
+		d.openDailyQuests = new ArrayList<DailyQuest>();
+		d.acceptedDailyQuests = new ArrayList<DailyQuest>();
+
+		for (DailyQuest quest : serversDailyQuests) {
+			if (!acceptedQuestSet.contains(quest) && !completedQuestSet.contains(quest)) {
+				d.openDailyQuests.add(quest);
+			}
+		}
+
+		for (DailyQuest quest : acceptedQuestSet) {
+			d.acceptedDailyQuests.add(quest);
+		}
 
 		return d;
 	}
 
-	private void maPlayersAcceptedQuestsToQuestData(PlayerDailyQuests d) {
-		Set<IDailyQuest> playerDailiesSet = d.playerDailiesCapability.getAcceptedQuests();
-		if (playerDailiesSet != null) {
-			d.acceptedDailyQuests.addAll(playerDailiesSet);
-		}
-	}
-
-	private void maPlayersCompletedQuestsToQuestData(PlayerDailyQuests d) {
-		Set<IDailyQuest> playerDailiesSet = d.playerDailiesCapability.getCompletedQuests();
-		if (playerDailiesSet != null) {
-			d.completedDailyQuests.addAll(playerDailiesSet);
-		}
-	}
-
 	private void listDailyQuests(PlayerDailyQuests questsData) {
-		String dailiesList = buildDailiesListText(dailyQuests, player);
-		sender.addChatMessage(new TextComponentString(dailiesList));
+		String dailiesList = buildDailiesListText(questsData);
+		questsData.player.addChatMessage(new TextComponentString(dailiesList));
 	}
 
-	private Set<IDailyQuest> getDailyQuests(MinecraftServer server) {
-		Set<IDailyQuest> dailyQuests;
+	private Set<DailyQuest> getDailyQuests(MinecraftServer server) {
+		Set<DailyQuest> dailyQuests;
 		DailiesWorldData worldData = DailiesWorldData.get(server.getEntityWorld());
 		dailyQuests = worldData.getDailyQuests();
 		return dailyQuests;
 	}
-	
+
 	private int toIndex(String string) {
 		try {
 			return Integer.valueOf(string) - 1;
@@ -157,53 +148,40 @@ public class DailiesCommand implements ICommand {
 	}
 
 	private boolean validCommand(String command) {
-		if(command.equals("abandon") || command.equals("accept")) {
+		if (command.equals("abandon") || command.equals("accept")) {
 			return true;
 		}
 		return false;
 	}
 
-	private String buildDailiesListText(Set<DailyQuest> dailies, EntityPlayer player) {
-		if (dailies == null || dailies.size() < 1) {
-			return "No dailies found";
-		}
-
-		IDailiesCapability playerDailiesCapability = player.getCapability(CapabilityDailiesHandler.DAILIES_CAPABILITY, null);
-		Set<IDailyQuest> playerDailies = playerDailiesCapability.getAcceptedQuests();
+	private String buildDailiesListText(PlayerDailyQuests d) {
 
 		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i < dailies.size(); i++) {
 
-			if (playerDailies.contains(dailies.get(i))) {
-				continue;
+		if (d.openDailyQuests.size() < 1) {
+			builder.append("No new daily quests found.\n");
+		} else {
+			for (int i = 0; i < d.openDailyQuests.size(); i++) {
+				builder.append("(").append(i + 1).append(") OPEN :: ");
+				builder.append(d.openDailyQuests.get(i).getDisplayName());
+				builder.append("\n");
 			}
-
-			builder.append("(").append(i + 1).append(") NEW ");
-			builder.append(dailies.get(i).getDisplayName());
-			builder.append("\n");
 		}
-		
 
+		builder.append("\n");
 
-		for (IDailyQuest quest : playerDailies) {
-			builder.append("ACCEPTED :: ");
-			builder.append(quest.getStatusMessage());
-			builder.append("\n");
+		if (d.openDailyQuests.size() < 1) {
+			builder.append("You have no accepted quests.\n");
+		} else {
+			for (int i = 0; i < d.acceptedDailyQuests.size(); i++) {
+				builder.append("(").append(i + 1).append(") ACCEPTED :: ");
+				builder.append(d.acceptedDailyQuests.get(i).getDisplayName());
+				builder.append("\n");
+			}
 		}
-		
+
 		return builder.toString();
 	}
-	
-	private void abandonQuest(DailyQuest quest) {
-		IDailiesCapability dailies = player.getCapability(CapabilityDailiesHandler.DAILIES_CAPABILITY, null);
-		dailies.abandonQuest(quest);
-	}
-	
-	private void acceptQuest(DailyQuest quest) {
-		IDailiesCapability dailies = player.getCapability(CapabilityDailiesHandler.DAILIES_CAPABILITY, null);
-		dailies.acceptQuest(quest);
-	}
-	
 
 	@Override
 	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
@@ -213,26 +191,26 @@ public class DailiesCommand implements ICommand {
 	@Override
 	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
 		List<String> tabOptions = new ArrayList<String>();
-		
-		if(args.length == 0) {
+
+		if (args.length == 0) {
 			tabOptions.add("dailies");
-		} else if(args.length == 1) {
+		} else if (args.length == 1) {
 			String command = args[0];
-			
-			if(command.length() > 2) {
+
+			if (command.length() > 2) {
 				tabOptions.add(getTabbedCommand(command));
 			}
 		}
-		
+
 		return tabOptions;
 	}
-	
+
 	private String getTabbedCommand(String command) {
-		if(command.startsWith("ac")) {
+		if (command.startsWith("ac")) {
 			return "accept";
-		} else if(command.startsWith("ab"))
+		} else if (command.startsWith("ab"))
 			return "abandon";
-		
+
 		return "";
 	}
 

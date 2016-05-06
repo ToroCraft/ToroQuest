@@ -1,7 +1,5 @@
 package net.torocraft.dailies.quests;
 
-import java.util.Set;
-
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -13,7 +11,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 
-public class DailyQuest implements IDailyQuest {
+public class DailyQuest {
 
 	public String type;
 	public TypedInteger target;
@@ -24,13 +22,12 @@ public class DailyQuest implements IDailyQuest {
 
 	public transient String targetName;
 
-	@Override
 	public String getStatusMessage() {
 		return getDisplayName() + " (" + Math.round(100 * currentQuantity / target.quantity) + "% complete)";
 	}
 
 	private String decodeMob(int i) {
-		switch(i) {
+		switch (i) {
 		case 54:
 			return "zombie";
 		case 51:
@@ -62,7 +59,6 @@ public class DailyQuest implements IDailyQuest {
 		return targetName;
 	}
 
-	@Override
 	public String getDisplayName() {
 		if (isGatherQuest()) {
 			return "⇓ Gather Quest: collect " + target.quantity + " pieces of " + targetItemName();
@@ -80,7 +76,6 @@ public class DailyQuest implements IDailyQuest {
 		return "gather".equals(type);
 	}
 
-	@Override
 	public boolean gather(EntityPlayer player, EntityItem item) {
 		if (!isGatherQuest()) {
 			return false;
@@ -99,18 +94,15 @@ public class DailyQuest implements IDailyQuest {
 		currentQuantity++;
 		player.addChatMessage(new TextComponentString(TextFormatting.RED + "" + getStatusMessage()));
 
-
 		return true;
 	}
 
-	@Override
 	public boolean hunt(EntityPlayer player, EntityLivingBase mob) {
 		if (!isHuntQuest() || mob == null) {
 			return false;
 		}
 
 		int id = EntityList.getEntityID(mob);// mob.getEntityId();
-
 
 		if (id != target.type) {
 			return false;
@@ -122,28 +114,24 @@ public class DailyQuest implements IDailyQuest {
 		return true;
 	}
 
-	@Override
 	public String getName() {
 		return "";
 	}
 
-	@Override
 	public String getType() {
 		return type;
 	}
 
-	@Override
 	public String getId() {
 		return id;
 	}
 
-	@Override
 	public void reward(EntityPlayer player) {
 		if (reward != null) {
 			reward.reward(player);
 		}
 	}
-	
+
 	public NBTTagCompound writeNBT() {
 		NBTTagCompound c = new NBTTagCompound();
 		c.setString("type", type);
@@ -178,19 +166,8 @@ public class DailyQuest implements IDailyQuest {
 		return (NBTTagCompound) c;
 	}
 
-	@Override
 	public boolean isComplete() {
 		return currentQuantity >= target.quantity;
-	}
-
-	@Override
-	public void acceptQuest(DailyQuest quest) {
-		
-	}
-
-	@Override
-	public void abandonQuest(DailyQuest quest) {
-		
 	}
 
 	@Override
@@ -216,16 +193,6 @@ public class DailyQuest implements IDailyQuest {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}
-
-	@Override
-	public Set<IDailyQuest> getAcceptedQuests() {
-		return null;
-	}
-
-	@Override
-	public Set<IDailyQuest> getCompletedQuests() {
-		return null;
 	}
 
 }

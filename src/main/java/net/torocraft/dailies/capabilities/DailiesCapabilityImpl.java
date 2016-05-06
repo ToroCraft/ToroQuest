@@ -16,26 +16,25 @@ import net.minecraft.stats.Achievement;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.torocraft.dailies.quests.DailyQuest;
-import net.torocraft.dailies.quests.IDailyQuest;
 
 public class DailiesCapabilityImpl implements IDailiesCapability {
 
-	private Set<IDailyQuest> quests;
-	private Set<IDailyQuest> completedQuests;
+	private Set<DailyQuest> quests;
+	private Set<DailyQuest> completedQuests;
 
 	@Override
 	public boolean gather(EntityPlayer player, EntityItem item) {
 
-		List<IDailyQuest> completedQuests = new ArrayList<IDailyQuest>();
+		List<DailyQuest> completedQuests = new ArrayList<DailyQuest>();
 
 		boolean hit = false;
 
-		for (IDailyQuest quest : quests) {
+		for (DailyQuest quest : quests) {
 			if (quest.gather(player, item)) {
 
 				if (quest.isComplete()) {
 					quest.reward(player);
-					displayAchievement((DailyQuest)quest, player);
+					displayAchievement((DailyQuest) quest, player);
 					completedQuests.add(quest);
 				}
 
@@ -45,7 +44,7 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 			}
 		}
 
-		for (IDailyQuest quest : completedQuests) {
+		for (DailyQuest quest : completedQuests) {
 			quests.remove(quest);
 		}
 
@@ -54,14 +53,14 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 
 	@Override
 	public boolean hunt(EntityPlayer player, EntityLivingBase mob) {
-		List<IDailyQuest> completedQuests = new ArrayList<IDailyQuest>();
+		List<DailyQuest> completedQuests = new ArrayList<DailyQuest>();
 		boolean hit = false;
 
-		for (IDailyQuest quest : quests) {
+		for (DailyQuest quest : quests) {
 			if (quest.hunt(player, mob)) {
 				if (quest.isComplete()) {
 					quest.reward(player);
-					displayAchievement((DailyQuest)quest, player);
+					displayAchievement((DailyQuest) quest, player);
 					completedQuests.add(quest);
 				}
 				hit = true;
@@ -69,7 +68,7 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 			}
 		}
 
-		for (IDailyQuest quest : completedQuests) {
+		for (DailyQuest quest : completedQuests) {
 			quests.remove(quest);
 		}
 		return hit;
@@ -77,10 +76,10 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 
 	@SideOnly(Side.CLIENT)
 	private void displayAchievement(DailyQuest quest, EntityPlayer player) {
-		Achievement achievement = new Achievement(quest.getDisplayName(), "dailyquestcompleted", 0, 0, Item.getItemById(quest.target.type), (Achievement) null);
+		Achievement achievement = new Achievement(quest.getDisplayName(), "dailyquestcompleted", 0, 0, Item.getItemById(quest.target.type),
+				(Achievement) null);
 		Minecraft.getMinecraft().guiAchievement.displayAchievement(achievement);
 	}
-
 
 	@Override
 	public NBTTagCompound writeNBT() {
@@ -89,8 +88,6 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 		writeQuestsList(c, "completedQuests", completedQuests);
 		return c;
 	}
-
-
 
 	@Override
 	public void readNBT(NBTTagCompound b) {
@@ -112,16 +109,18 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 		}
 	}
 
-	private void writeQuestsList(NBTTagCompound c, String key, Set<IDailyQuest> quests) {
+	private void writeQuestsList(NBTTagCompound c, String key, Set<DailyQuest> quests) {
 		NBTTagList list = new NBTTagList();
-		for (IDailyQuest quest : quests) {
-			list.appendTag(quest.writeNBT());
+		if (quests != null) {
+			for (DailyQuest quest : quests) {
+				list.appendTag(quest.writeNBT());
+			}
 		}
 		c.setTag(key, list);
 	}
 
-	private Set<IDailyQuest> readQuestList(NBTTagCompound b, String key) {
-		Set<IDailyQuest> quests = new HashSet<IDailyQuest>();
+	private Set<DailyQuest> readQuestList(NBTTagCompound b, String key) {
+		Set<DailyQuest> quests = new HashSet<DailyQuest>();
 		NBTTagList list = (NBTTagList) b.getTag(key);
 
 		if (list == null) {
@@ -136,19 +135,19 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 
 		return quests;
 	}
-	
+
 	@Override
 	public void acceptQuest(DailyQuest quest) {
 		if (quests == null) {
 			return;
 		}
 
-		DailyQuest playerQuest = quest.clone();
+		DailyQuest playerQuest = (DailyQuest) quest.clone();
 		playerQuest.date = System.currentTimeMillis();
 		quests.add(playerQuest);
 
 	}
-	
+
 	@Override
 	public void abandonQuest(DailyQuest quest) {
 		if (quests == null) {
@@ -160,7 +159,7 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 
 	}
 	/*
-	 * private void setDefaultQuests() { quests = new ArrayList<IDailyQuest>();
+	 * private void setDefaultQuests() { quests = new ArrayList<DailyQuest>();
 	 * DailyQuest quest = new DailyQuest(); Reward reward = new Reward();
 	 * reward.quantity = 20; reward.type = 384; TypedInteger target = new
 	 * TypedInteger(); target.type = 12; target.quantity = 2; quest.type =
@@ -184,12 +183,12 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 	 */
 
 	@Override
-	public Set<IDailyQuest> getAcceptedQuests() {
+	public Set<DailyQuest> getAcceptedQuests() {
 		return quests;
 	}
 
 	@Override
-	public Set<IDailyQuest> getCompletedQuests() {
+	public Set<DailyQuest> getCompletedQuests() {
 		return completedQuests;
 	}
 

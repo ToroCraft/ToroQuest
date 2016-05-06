@@ -1,8 +1,7 @@
 package net.torocraft.dailies;
 
-import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -12,58 +11,54 @@ import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import net.torocraft.dailies.quests.DailyQuest;
 
 public class DailiesRequester {
-	
+
 	private HttpClient httpClient;
 	private HttpGet httpGet;
 	private HttpResponse response;
-	
+
 	private String url = "https://minecraft-dailies.herokuapp.com/quests";
-	
-	private List<DailyQuest> dailies;
-	
+
+	private Set<DailyQuest> dailyQuests;
+
 	public DailiesRequester() {
 		buildHttpClient();
 	}
-	
-	public List<DailyQuest> getDailies() {
+
+	public Set<DailyQuest> getDailies() {
+		dailyQuests = new HashSet<DailyQuest>();
 		makeRequest();
 		parseResponse();
-		
-		return dailies;
+
+		return dailyQuests;
 	}
-	
+
 	private void buildHttpClient() {
 		httpClient = HttpClients.createDefault();
 	}
-	
-	private void makeRequest()  {
+
+	private void makeRequest() {
 		httpGet = new HttpGet(url);
-		
+
 		try {
 			response = httpClient.execute(httpGet);
-		} catch(Exception ex) {
-			
+		} catch (Exception ex) {
+
 		}
 	}
-	
+
 	private void parseResponse() {
-		if(response != null) {
-			Type listType = new TypeToken<List<DailyQuest>>(){}.getClass();
+		if (response != null) {
 			Gson gson = new GsonBuilder().create();
 			try {
 				String jsonString = EntityUtils.toString(response.getEntity());
-
-				System.out.println("************* json response: " + jsonString);
-
 				DailyQuest[] aQuests = gson.fromJson(jsonString, DailyQuest[].class);
-
-				dailies = Arrays.asList(aQuests);
-
+				for (DailyQuest quest : aQuests) {
+					dailyQuests.add(quest);
+				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

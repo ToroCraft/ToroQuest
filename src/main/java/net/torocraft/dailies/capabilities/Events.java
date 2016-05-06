@@ -1,9 +1,10 @@
 package net.torocraft.dailies.capabilities;
 
-import java.util.List;
+import java.util.Set;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -19,18 +20,15 @@ import net.torocraft.dailies.quests.DailyQuest;
 public class Events {
 
 	/*
-	SubscribeEvent
-	public void harvestDrops(HarvestDropsEvent event) {
-		IDailiesCapability dailes = getCapability(event.getHarvester());
-		if (dailes == null) {
-			return;
-		}
+	 * SubscribeEvent public void harvestDrops(HarvestDropsEvent event) {
+	 * IDailiesCapability dailes = getCapability(event.getHarvester()); if
+	 * (dailes == null) { return; }
+	 * 
+	 * dailes.gather(1); System.out.println(dailes.statusMessage());
+	 * event.getHarvester().addChatMessage(new
+	 * TextComponentString(TextFormatting.RED + "" + dailes.statusMessage())); }
+	 */
 
-		dailes.gather(1);
-		System.out.println(dailes.statusMessage());
-		event.getHarvester().addChatMessage(new TextComponentString(TextFormatting.RED + "" + dailes.statusMessage()));
-	}*/
-	
 	// @SideOnly(Side.SERVER)
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
@@ -40,7 +38,7 @@ public class Events {
 		}
 
 		DailiesRequester requester = new DailiesRequester();
-		List<DailyQuest> dailies = requester.getDailies();
+		Set<DailyQuest> dailies = requester.getDailies();
 
 		if (dailies == null) {
 			System.out.println("******************* No dailies found, lame!");
@@ -50,7 +48,7 @@ public class Events {
 
 		if (dailies != null) {
 			DailiesWorldData worldData = DailiesWorldData.get(event.getWorld());
-			worldData.setDailies(dailies);
+			worldData.setDailyQuests(dailies);
 		}
 
 	}
@@ -107,7 +105,7 @@ public class Events {
 
 	@SubscribeEvent
 	public void onDeath(PlayerEvent.Clone event) {
-		if(!event.isWasDeath()){
+		if (!event.isWasDeath()) {
 			return;
 		}
 
@@ -117,7 +115,7 @@ public class Events {
 		if (newDailes == null || originalDailes == null) {
 			return;
 		}
-		
+
 		newDailes.readNBT(originalDailes.writeNBT());
 	}
 
@@ -127,7 +125,7 @@ public class Events {
 		if (dailes == null) {
 			return;
 		}
-		event.getEntityPlayer().getEntityData().setTag(CapabilityDailiesHandler.NAME, CapabilityDailiesHandler.DAILIES_CAPABILITY.writeNBT(dailes, null));
+		event.getEntityPlayer().getEntityData().setTag(CapabilityDailiesHandler.NAME, dailes.writeNBT());
 	}
 
 	@SubscribeEvent
@@ -136,22 +134,19 @@ public class Events {
 		if (dailes == null) {
 			return;
 		}
-		CapabilityDailiesHandler.DAILIES_CAPABILITY.readNBT(dailes, null, event.getEntityPlayer().getEntityData().getTag(CapabilityDailiesHandler.NAME));
+		dailes.readNBT((NBTTagCompound) event.getEntityPlayer().getEntityData().getTag(CapabilityDailiesHandler.NAME));
 	}
 
 	private IDailiesCapability getCapability(EntityPlayer player) {
 		if (isMissingCapability(player)) {
 			return null;
 		}
-
 		return player.getCapability(CapabilityDailiesHandler.DAILIES_CAPABILITY, null);
 	}
 
 	private boolean isMissingCapability(EntityPlayer player) {
 		return player == null || !player.hasCapability(CapabilityDailiesHandler.DAILIES_CAPABILITY, null);
 	}
-
-
 
 	@SubscribeEvent
 	public void onEntityLoad(AttachCapabilitiesEvent.Entity event) {
@@ -169,6 +164,5 @@ public class Events {
 		event.addCapability(new ResourceLocation(CapabilityDailiesHandler.NAME), new Provider());
 
 	}
-
 
 }

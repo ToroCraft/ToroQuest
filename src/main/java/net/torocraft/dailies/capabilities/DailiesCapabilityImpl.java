@@ -32,6 +32,9 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 			quest.reward(player);
 			displayAchievement(quest, player);
 			quests.remove(quest);
+			if (completedQuests == null) {
+				completedQuests = new HashSet<DailyQuest>();
+			}
 			completedQuests.add(quest);
 		}
 
@@ -39,6 +42,9 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 	}
 
 	private DailyQuest gatherNextQuest(EntityPlayer player, EntityItem item) {
+		if (quests == null) {
+			return null;
+		}
 		for (DailyQuest q : quests) {
 			if (q.gather(player, item)) {
 				return q;
@@ -59,6 +65,9 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 			quest.reward(player);
 			displayAchievement(quest, player);
 			quests.remove(quest);
+			if (completedQuests == null) {
+				completedQuests = new HashSet<DailyQuest>();
+			}
 			completedQuests.add(quest);
 		}
 
@@ -66,6 +75,9 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 	}
 
 	private DailyQuest huntNextQuest(EntityPlayer player, EntityLivingBase mob) {
+		if (quests == null) {
+			return null;
+		}
 		for (DailyQuest q : quests) {
 			if (q.hunt(player, mob)) {
 				return q;
@@ -91,6 +103,7 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 	@Override
 	public void readNBT(NBTTagCompound b) {
 		if (b == null) {
+			quests = new HashSet<DailyQuest>();
 			return;
 		}
 		quests = readQuestList(b, "quests");

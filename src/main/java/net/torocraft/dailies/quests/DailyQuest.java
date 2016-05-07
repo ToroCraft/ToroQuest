@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
@@ -91,10 +92,31 @@ public class DailyQuest {
 			return false;
 		}
 
-		currentQuantity++;
+		int stackSize = item.getEntityItem().stackSize;
+
+		int remainingTarget = target.quantity - currentQuantity;
+
+		int leftOver = stackSize - remainingTarget;
+
+		if (leftOver > 0) {
+			dropNewStack(player, item, leftOver);
+		} else {
+			leftOver = 0;
+		}
+
+		currentQuantity += stackSize - leftOver;
+
 		player.addChatMessage(new TextComponentString(TextFormatting.RED + "" + getStatusMessage()));
 
 		return true;
+	}
+
+	public void dropNewStack(EntityPlayer player, EntityItem item, int amount) {
+		ItemStack stack = item.getEntityItem().copy();
+		stack.stackSize = amount;
+		EntityItem dropItem = new EntityItem(player.worldObj, player.posX, player.posY, player.posZ, stack);
+		dropItem.setNoPickupDelay();
+		player.worldObj.spawnEntityInWorld(dropItem);
 	}
 
 	public boolean hunt(EntityPlayer player, EntityLivingBase mob) {

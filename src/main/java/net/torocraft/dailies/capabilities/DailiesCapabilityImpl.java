@@ -1,8 +1,6 @@
 package net.torocraft.dailies.capabilities;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import net.minecraft.client.Minecraft;
@@ -24,60 +22,61 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 
 	@Override
 	public boolean gather(EntityPlayer player, EntityItem item) {
+		DailyQuest quest = gatherNextQuest(player, item);
 
-		List<DailyQuest> completedQuests = new ArrayList<DailyQuest>();
+		if (quest == null) {
+			return false;
+		}
 
-		boolean hit = false;
+		if (quest.isComplete()) {
+			quest.reward(player);
+			displayAchievement(quest, player);
+			quests.remove(quest);
+			completedQuests.add(quest);
+		}
 
-		for (DailyQuest quest : quests) {
-			if (quest.gather(player, item)) {
+		return true;
+	}
 
-				if (quest.isComplete()) {
-					quest.reward(player);
-					displayAchievement((DailyQuest) quest, player);
-					completedQuests.add(quest);
-				}
-
-				hit = true;
-
-				break;
+	private DailyQuest gatherNextQuest(EntityPlayer player, EntityItem item) {
+		for (DailyQuest q : quests) {
+			if (q.gather(player, item)) {
+				return q;
 			}
 		}
-
-		for (DailyQuest quest : completedQuests) {
-			quests.remove(quest);
-		}
-
-		return hit;
+		return null;
 	}
 
 	@Override
 	public boolean hunt(EntityPlayer player, EntityLivingBase mob) {
-		List<DailyQuest> completedQuests = new ArrayList<DailyQuest>();
-		boolean hit = false;
+		DailyQuest quest = huntNextQuest(player, mob);
 
-		for (DailyQuest quest : quests) {
-			if (quest.hunt(player, mob)) {
-				if (quest.isComplete()) {
-					quest.reward(player);
-					displayAchievement((DailyQuest) quest, player);
-					completedQuests.add(quest);
-				}
-				hit = true;
-				break;
+		if (quest == null) {
+			return false;
+		}
+
+		if (quest.isComplete()) {
+			quest.reward(player);
+			displayAchievement(quest, player);
+			quests.remove(quest);
+			completedQuests.add(quest);
+		}
+
+		return true;
+	}
+
+	private DailyQuest huntNextQuest(EntityPlayer player, EntityLivingBase mob) {
+		for (DailyQuest q : quests) {
+			if (q.hunt(player, mob)) {
+				return q;
 			}
 		}
-
-		for (DailyQuest quest : completedQuests) {
-			quests.remove(quest);
-		}
-		return hit;
+		return null;
 	}
 
 	@SideOnly(Side.CLIENT)
 	private void displayAchievement(DailyQuest quest, EntityPlayer player) {
-		Achievement achievement = new Achievement(quest.getDisplayName(), "dailyquestcompleted", 0, 0, Item.getItemById(quest.target.type),
-				(Achievement) null);
+		Achievement achievement = new Achievement(quest.getDisplayName(), "dailyquestcompleted", 0, 0, Item.getItemById(quest.target.type), (Achievement) null);
 		Minecraft.getMinecraft().guiAchievement.displayAchievement(achievement);
 	}
 

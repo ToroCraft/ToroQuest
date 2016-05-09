@@ -86,8 +86,10 @@ public class Events {
 
 		EntityLivingBase e = (EntityLivingBase) event.getEntity();
 		DamageSource source = event.getSource();
-
-		if (source.getSourceOfDamage() instanceof EntityPlayer) {
+		
+		if (killedByArrow(source) && source.getEntity() instanceof EntityPlayer) {
+			player = (EntityPlayer) source.getEntity();
+		} else if (source.getSourceOfDamage() instanceof EntityPlayer) {
 			player = (EntityPlayer) source.getSourceOfDamage();
 		}
 
@@ -101,6 +103,10 @@ public class Events {
 		}
 
 		dailes.hunt(player, e);
+	}
+
+	private boolean killedByArrow(DamageSource source) {
+		return source.getDamageType().equals("arrow");
 	}
 
 	@SubscribeEvent

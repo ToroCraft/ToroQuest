@@ -51,7 +51,7 @@ public class DailyQuest {
 	private String targetItemName() {
 		if (targetName == null) {
 			if (isGatherQuest()) {
-				targetName = I18n.translateToLocal(Item.getItemById(target.type).getUnlocalizedName());
+				targetName = I18n.translateToLocal(Item.getItemById(target.type).getUnlocalizedName() + ".name");
 			} else if (isHuntQuest()) {
 				// TODO: improve the mob name decoding
 				targetName = decodeMob(target.type);

@@ -170,7 +170,7 @@ public class DailiesCommand implements ICommand {
 
 		builder.append("\n");
 
-		if (d.openDailyQuests.size() < 1) {
+		if (d.acceptedDailyQuests.size() < 1) {
 			builder.append("You have no accepted quests.\n");
 		} else {
 			for (int i = 0; i < d.acceptedDailyQuests.size(); i++) {

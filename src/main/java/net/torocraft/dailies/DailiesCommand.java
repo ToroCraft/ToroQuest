@@ -75,7 +75,7 @@ public class DailiesCommand implements ICommand {
 				d.player.addChatMessage(new TextComponentString("quest not found"));
 			} else {
 				d.playerDailiesCapability.abandonQuest(quest);
-				d.player.addChatMessage(new TextComponentString("Quest " + index + " abandoned"));
+				d.player.addChatMessage(new TextComponentString("Quest " + fromIndex(index) + " " + quest.getDisplayName() + " abandoned"));
 			}
 
 		} else if (command.equalsIgnoreCase("accept")) {
@@ -84,7 +84,7 @@ public class DailiesCommand implements ICommand {
 				d.player.addChatMessage(new TextComponentString("quest not found"));
 			} else {
 				d.playerDailiesCapability.acceptQuest(quest);
-				d.player.addChatMessage(new TextComponentString("Quest " + index + " accepted"));
+				d.player.addChatMessage(new TextComponentString("Quest " + fromIndex(index) + " " + quest.getDisplayName() + " accepted"));
 			}
 		}
 	}
@@ -145,6 +145,10 @@ public class DailiesCommand implements ICommand {
 		} catch (Exception e) {
 			return 0;
 		}
+	}
+	
+	private String fromIndex(int index) {
+		return Integer.toString(index + 1);
 	}
 
 	private boolean validCommand(String command) {

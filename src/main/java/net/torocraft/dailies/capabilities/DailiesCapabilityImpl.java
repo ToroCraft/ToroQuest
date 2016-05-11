@@ -3,16 +3,11 @@ package net.torocraft.dailies.capabilities;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.stats.Achievement;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.torocraft.dailies.quests.DailyQuest;
 
 public class DailiesCapabilityImpl implements IDailiesCapability {
@@ -30,7 +25,11 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 
 		if (quest.isComplete()) {
 			quest.reward(player);
-			displayAchievement(quest, player);
+			try {
+				displayAchievement(quest, player);
+			} catch (Exception e) {
+
+			}
 			quests.remove(quest);
 			if (completedQuests == null) {
 				completedQuests = new HashSet<DailyQuest>();
@@ -63,7 +62,13 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 
 		if (quest.isComplete()) {
 			quest.reward(player);
-			displayAchievement(quest, player);
+			try {
+				if (player.worldObj.isRemote) {
+					displayAchievement(quest, player);
+				}
+			} catch (Exception e) {
+
+			}
 			quests.remove(quest);
 			if (completedQuests == null) {
 				completedQuests = new HashSet<DailyQuest>();
@@ -86,10 +91,17 @@ public class DailiesCapabilityImpl implements IDailiesCapability {
 		return null;
 	}
 
-	@SideOnly(Side.CLIENT)
+
 	private void displayAchievement(DailyQuest quest, EntityPlayer player) {
-		Achievement achievement = new Achievement(quest.getDisplayName(), "dailyquestcompleted", 0, 0, Item.getItemById(quest.target.type), (Achievement) null);
-		Minecraft.getMinecraft().guiAchievement.displayAchievement(achievement);
+		// need to figure out how to make this work without crashing the server
+
+		/*
+		 * Achievement achievement = new Achievement(quest.getDisplayName(),
+		 * "dailyquestcompleted", 0, 0, Item.getItemById(quest.target.type),
+		 * (Achievement) null);
+		 * Minecraft.getMinecraft().guiAchievement.displayAchievement(
+		 * achievement);
+		 */
 	}
 
 	@Override

@@ -75,7 +75,7 @@ public class DailiesCommand implements ICommand {
 				d.player.addChatMessage(new TextComponentString("quest not found"));
 			} else {
 				d.playerDailiesCapability.abandonQuest(quest);
-				d.player.addChatMessage(new TextComponentString("Quest " + index + " abandoned"));
+				d.player.addChatMessage(new TextComponentString("Quest " + fromIndex(index) + " " + quest.getDisplayName() + " abandoned"));
 			}
 
 		} else if (command.equalsIgnoreCase("accept")) {
@@ -84,7 +84,7 @@ public class DailiesCommand implements ICommand {
 				d.player.addChatMessage(new TextComponentString("quest not found"));
 			} else {
 				d.playerDailiesCapability.acceptQuest(quest);
-				d.player.addChatMessage(new TextComponentString("Quest " + index + " accepted"));
+				d.player.addChatMessage(new TextComponentString("Quest " + fromIndex(index) + " " + quest.getDisplayName() + " accepted"));
 			}
 		}
 	}
@@ -146,6 +146,10 @@ public class DailiesCommand implements ICommand {
 			return 0;
 		}
 	}
+	
+	private String fromIndex(int index) {
+		return Integer.toString(index + 1);
+	}
 
 	private boolean validCommand(String command) {
 		if (command.equals("abandon") || command.equals("accept")) {
@@ -170,7 +174,7 @@ public class DailiesCommand implements ICommand {
 
 		builder.append("\n");
 
-		if (d.openDailyQuests.size() < 1) {
+		if (d.acceptedDailyQuests.size() < 1) {
 			builder.append("You have no accepted quests.\n");
 		} else {
 			for (int i = 0; i < d.acceptedDailyQuests.size(); i++) {

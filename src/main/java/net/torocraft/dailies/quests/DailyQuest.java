@@ -1,5 +1,6 @@
 package net.torocraft.dailies.quests;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -27,37 +28,10 @@ public class DailyQuest {
 		return getDisplayName() + " (" + Math.round(100 * currentQuantity / target.quantity) + "% complete)";
 	}
 
-	private String decodeMob(int i) {
-		switch (i) {
-		case 54:
-			return "zombie";
-		case 51:
-			return "skeleton";
-		case 50:
-			return "creeper";
-		case 52:
-			return "spider";
-		default:
-			return i + "";
-		}
-	}
-
 	public DailyQuest clone() {
 		DailyQuest quest = new DailyQuest();
 		quest.readNBT(writeNBT());
 		return quest;
-	}
-
-	private String targetItemName() {
-		if (targetName == null) {
-			if (isGatherQuest()) {
-				targetName = I18n.translateToLocal(Item.getItemById(target.type).getUnlocalizedName());
-			} else if (isHuntQuest()) {
-				// TODO: improve the mob name decoding
-				targetName = decodeMob(target.type);
-			}
-		}
-		return targetName;
 	}
 
 	public String getDisplayName() {
@@ -75,6 +49,37 @@ public class DailyQuest {
 
 	private boolean isGatherQuest() {
 		return "gather".equals(type);
+	}
+	
+	private String targetItemName() {
+		if (targetName == null) {
+			if (isGatherQuest()) {
+				targetName = decodeItem(target.type);
+			} else if (isHuntQuest()) {
+				targetName = decodeMob(target.type);
+			}
+		}
+		return targetName;
+	}
+	
+	private String decodeItem(int entityId) {
+		return I18n.translateToLocal(Item.getItemById(entityId).getUnlocalizedName() + ".name");
+	}
+
+	private String decodeMob(int entityId) {
+		String langKey = entityIdToLangKey(entityId);
+		return I18n.translateToLocal(langKey);
+	}
+
+	private String entityIdToLangKey(int entityId) {
+		Class<? extends Entity> entityClass = EntityList.idToClassMapping.get(entityId);
+		String entityName = EntityList.classToStringMapping.get(entityClass);
+		
+		if (entityName == null || entityName.length() == 0) {
+			entityName = "generic";
+		}
+		
+		return "entity." + entityName + ".name";
 	}
 
 	public boolean gather(EntityPlayer player, EntityItem item) {

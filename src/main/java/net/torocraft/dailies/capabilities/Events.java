@@ -86,11 +86,11 @@ public class Events {
 
 		EntityLivingBase e = (EntityLivingBase) event.getEntity();
 		DamageSource source = event.getSource();
-
-		if (source.getSourceOfDamage() instanceof EntityPlayer) {
-			player = (EntityPlayer) source.getSourceOfDamage();
+		
+		if (source.getEntity() instanceof EntityPlayer) {
+			player = (EntityPlayer) source.getEntity();
 		}
-
+		
 		if (player == null) {
 			return;
 		}

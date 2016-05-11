@@ -1,13 +1,7 @@
 package net.torocraft.torobasemod.item;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.torocraft.torobasemod.ToroBaseMod;
 import net.torocraft.torobasemod.item.armor.ItemBullArmor;
-import net.torocraft.torobasemod.item.armor.ItemHeavyDiamodArmor;
+import net.torocraft.torobasemod.item.armor.ItemHeavyDiamondArmor;
 import net.torocraft.torobasemod.item.armor.ItemKingArmor;
 
 public class ToroBaseModItems {
@@ -24,13 +18,13 @@ public class ToroBaseModItems {
 	private static void initArmor() {
 		ItemKingArmor.init();
 		ItemBullArmor.init();
-		ItemHeavyDiamodArmor.init();
+		ItemHeavyDiamondArmor.init();
 	}
 	
 	public static final void registerRenders() {
 		ItemKingArmor.registerRenders();
 		ItemBullArmor.registerRenders();
-		ItemHeavyDiamodArmor.registerRenders();
+		ItemHeavyDiamondArmor.registerRenders();
 	}
 
 }

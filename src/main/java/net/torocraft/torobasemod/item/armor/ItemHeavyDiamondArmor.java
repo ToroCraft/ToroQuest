@@ -15,18 +15,18 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.torocraft.torobasemod.ToroBaseMod;
 import net.torocraft.torobasemod.material.ArmorMaterials;
+import net.torocraft.torobasemod.util.ToroBaseUtils;
 
-public class ItemHeavyDiamodArmor extends ItemArmor {
+public class ItemHeavyDiamondArmor extends ItemArmor {
 
 	public static final String NAME = "heavyDiamond";
 
-	public static ItemHeavyDiamodArmor helmetItem;
-	public static ItemHeavyDiamodArmor chestplateItem;
-	public static ItemHeavyDiamodArmor leggingsItem;
-	public static ItemHeavyDiamodArmor bootsItem;
+	public static ItemHeavyDiamondArmor helmetItem;
+	public static ItemHeavyDiamondArmor chestplateItem;
+	public static ItemHeavyDiamondArmor leggingsItem;
+	public static ItemHeavyDiamondArmor bootsItem;
 
 	public static void init() {
 
@@ -46,8 +46,8 @@ public class ItemHeavyDiamodArmor extends ItemArmor {
 	}
 
 	private static void initBoots() {
-		bootsItem = new ItemHeavyDiamodArmor(NAME + "_boots", 1, EntityEquipmentSlot.FEET);
-		GameRegistry.registerItem(bootsItem, NAME + "_boots");
+		bootsItem = new ItemHeavyDiamondArmor(NAME + "_boots", 1, EntityEquipmentSlot.FEET);
+		ToroBaseUtils.registerItem(bootsItem, NAME + "_boots");
 	}
 
 	private static void registerRendersBoots() {
@@ -55,8 +55,8 @@ public class ItemHeavyDiamodArmor extends ItemArmor {
 	}
 
 	private static void initLeggings() {
-		leggingsItem = new ItemHeavyDiamodArmor(NAME + "_leggings", 2, EntityEquipmentSlot.LEGS);
-		GameRegistry.registerItem(leggingsItem, NAME + "_leggings");
+		leggingsItem = new ItemHeavyDiamondArmor(NAME + "_leggings", 2, EntityEquipmentSlot.LEGS);
+		ToroBaseUtils.registerItem(leggingsItem, NAME + "_leggings");
 	}
 
 	private static void registerRendersLeggings() {
@@ -64,8 +64,8 @@ public class ItemHeavyDiamodArmor extends ItemArmor {
 	}
 
 	private static void initHelmet() {
-		helmetItem = new ItemHeavyDiamodArmor(NAME + "_helmet", 1, EntityEquipmentSlot.HEAD);
-		GameRegistry.registerItem(helmetItem, NAME + "_helmet");
+		helmetItem = new ItemHeavyDiamondArmor(NAME + "_helmet", 1, EntityEquipmentSlot.HEAD);
+		ToroBaseUtils.registerItem(helmetItem, NAME + "_helmet");
 	}
 
 	private static void registerRendersHelmet() {
@@ -73,8 +73,8 @@ public class ItemHeavyDiamodArmor extends ItemArmor {
 	}
 
 	private static void initChestPlate() {
-		chestplateItem = new ItemHeavyDiamodArmor(NAME + "_chestplate", 1, EntityEquipmentSlot.CHEST);
-		GameRegistry.registerItem(chestplateItem, NAME + "_chestplate");
+		chestplateItem = new ItemHeavyDiamondArmor(NAME + "_chestplate", 1, EntityEquipmentSlot.CHEST);
+		ToroBaseUtils.registerItem(chestplateItem, NAME + "_chestplate");
 	}
 
 	private static void registerRendersChestPlate() {
@@ -85,7 +85,7 @@ public class ItemHeavyDiamodArmor extends ItemArmor {
 		return new ModelResourceLocation(ToroBaseMod.MODID + ":" + NAME + "_" + model, "inventory");
 	}
 
-	public ItemHeavyDiamodArmor(String unlocalizedName, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn) {
+	public ItemHeavyDiamondArmor(String unlocalizedName, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn) {
 		super(ArmorMaterials.HEAVY_DIAMOND, renderIndexIn, equipmentSlotIn);
 		this.setUnlocalizedName(unlocalizedName);
 		setMaxDamage(8588);
@@ -124,7 +124,7 @@ public class ItemHeavyDiamodArmor extends ItemArmor {
 
 			Iterable<ItemStack> armorStacks = e.getEntityLiving().getArmorInventoryList();
 
-			boolean hasHeavyArmor = false;
+			//boolean hasHeavyArmor = false;
 			float reduction = 0;
 
 			for (ItemStack armorStack : armorStacks) {

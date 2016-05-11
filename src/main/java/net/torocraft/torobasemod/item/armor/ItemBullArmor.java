@@ -2,18 +2,11 @@ package net.torocraft.torobasemod.item.armor;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.torocraft.torobasemod.ToroBaseMod;
 import net.torocraft.torobasemod.material.ArmorMaterials;
+import net.torocraft.torobasemod.util.ToroBaseUtils;
 
 public class ItemBullArmor extends ItemArmor {
 
@@ -40,7 +33,7 @@ public class ItemBullArmor extends ItemArmor {
 
 	private static void initBoots() {
 		bootsItem = new ItemBullArmor(NAME + "_boots", 1, EntityEquipmentSlot.FEET);
-		GameRegistry.registerItem(bootsItem, NAME + "_boots");
+		ToroBaseUtils.registerItem(bootsItem, NAME + "_boots");
 	}
 
 	private static void registerRendersBoots() {
@@ -49,7 +42,7 @@ public class ItemBullArmor extends ItemArmor {
 
 	private static void initLeggings() {
 		leggingsItem = new ItemBullArmor(NAME + "_leggings", 2, EntityEquipmentSlot.LEGS);
-		GameRegistry.registerItem(leggingsItem, NAME + "_leggings");
+		ToroBaseUtils.registerItem(leggingsItem, NAME + "_leggings");
 	}
 
 	private static void registerRendersLeggings() {
@@ -58,7 +51,7 @@ public class ItemBullArmor extends ItemArmor {
 
 	private static void initHelmet() {
 		helmetItem = new ItemBullArmor(NAME + "_helmet", 1, EntityEquipmentSlot.HEAD);
-		GameRegistry.registerItem(helmetItem, NAME + "_helmet");
+		ToroBaseUtils.registerItem(helmetItem, NAME + "_helmet");
 	}
 
 	private static void registerRendersHelmet() {
@@ -67,7 +60,7 @@ public class ItemBullArmor extends ItemArmor {
 
 	private static void initChestPlate() {
 		chestplateItem = new ItemBullArmor(NAME + "_chestplate", 1, EntityEquipmentSlot.CHEST);
-		GameRegistry.registerItem(chestplateItem, NAME + "_chestplate");
+		ToroBaseUtils.registerItem(chestplateItem, NAME + "_chestplate");
 	}
 
 	private static void registerRendersChestPlate() {

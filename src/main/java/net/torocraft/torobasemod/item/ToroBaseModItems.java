@@ -3,6 +3,7 @@ package net.torocraft.torobasemod.item;
 import net.torocraft.torobasemod.item.armor.ItemBullArmor;
 import net.torocraft.torobasemod.item.armor.ItemHeavyDiamondArmor;
 import net.torocraft.torobasemod.item.armor.ItemKingArmor;
+import net.torocraft.torobasemod.item.projectile.ItemTorchArrow;
 
 public class ToroBaseModItems {
 
@@ -12,7 +13,7 @@ public class ToroBaseModItems {
 	}
 
 	private static void initTools() {
-
+		ItemTorchArrow.init();
 	}
 
 	private static void initArmor() {

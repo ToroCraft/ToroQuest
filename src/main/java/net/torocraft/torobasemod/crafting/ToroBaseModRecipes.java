@@ -3,14 +3,28 @@ package net.torocraft.torobasemod.crafting;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.torocraft.torobasemod.ToroBaseMod;
+import net.torocraft.torobasemod.item.ToroBaseModItems;
 import net.torocraft.torobasemod.item.armor.ItemHeavyDiamondArmor;
 import net.torocraft.torobasemod.item.armor.ItemKingArmor;
+import net.torocraft.torobasemod.item.projectile.ItemTorchArrow;
 
 public class ToroBaseModRecipes {
 	
 	public static final void init() {
 		heavyDiamondArmor();
 		kingArmor();
+		torchArrow();
+	}
+	
+	private static void torchArrow() {
+		ItemStack stick = new ItemStack(Items.stick);
+		ItemStack feather = new ItemStack(Items.feather);
+		ItemStack coal = new ItemStack(Items.coal);
+		ItemStack charcoal = new ItemStack(Items.coal, 1, 1);
+		
+		GameRegistry.addRecipe(new ItemStack(ItemTorchArrow.torchArrow), "c", "s", "f", 'c', coal, 's', stick, 'f', feather);
+		GameRegistry.addRecipe(new ItemStack(ItemTorchArrow.torchArrow), "c", "s", "f", 'c', charcoal, 's', stick, 'f', feather);
 	}
 	
 	private static void kingArmor() {

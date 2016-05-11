@@ -18,18 +18,23 @@ import net.minecraft.world.World;
 
 public class EntityTorchArrow extends EntityArrow {
 
+	private double damage;
+	
 	private enum CollideAction { PLACE, BREAK, DROP };
 	
 	public EntityTorchArrow(World worldIn) {
         super(worldIn);
+        damage = 0.0;
     }
 
     public EntityTorchArrow(World worldIn, EntityLivingBase shooter) {
         super(worldIn, shooter);
+        damage = 0.0;
     }
 
     public EntityTorchArrow(World worldIn, double x, double y, double z) {
         super(worldIn, x, y, z);
+        damage = 0.0;
     }
     
     @Override
@@ -109,6 +114,11 @@ public class EntityTorchArrow extends EntityArrow {
         }
     }
 
+    @Override
+    protected void arrowHit(EntityLivingBase living) {
+    	dropTorch(Blocks.torch, living.chunkCoordX, living.chunkCoordY, living.chunkCoordZ);
+    }
+    
     @Override
     public double getDamage() {
     	return 0.0;

@@ -1,9 +1,8 @@
 package net.torocraft.torobasemod.entity.projectile;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockTorch;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -20,8 +19,6 @@ import net.minecraft.world.World;
 public class EntityTorchArrow extends EntityArrow {
 
 	private enum CollideAction { PLACE, BREAK, DROP };
-	
-	public static final PropertyDirection FACING = PropertyDirection.create("facing");
 	
 	public EntityTorchArrow(World worldIn) {
         super(worldIn);
@@ -45,10 +42,6 @@ public class EntityTorchArrow extends EntityArrow {
     	
     	Block torch = Blocks.torch;
 		IBlockState state = torch.getDefaultState();
-		
-		for (IProperty prop: state.getProperties().keySet()) {
-			System.out.println(prop);
-		}
 		
 		CollideAction action = CollideAction.PLACE;
 
@@ -77,19 +70,19 @@ public class EntityTorchArrow extends EntityArrow {
         				y++;
         				break;
         			case NORTH:
-        				state = state.withProperty(FACING, EnumFacing.NORTH);
+        				state = state.withProperty(BlockTorch.FACING, EnumFacing.NORTH);
         				z--;
         				break;
         			case SOUTH:
-        				state = state.withProperty(FACING, EnumFacing.SOUTH);
+        				state = state.withProperty(BlockTorch.FACING, EnumFacing.SOUTH);
         				z++;
         				break;
         			case WEST:
-        				state = state.withProperty(FACING, EnumFacing.WEST);
+        				state = state.withProperty(BlockTorch.FACING, EnumFacing.WEST);
         				x--;
         				break;
         			case EAST:
-        				state = state.withProperty(FACING, EnumFacing.EAST);
+        				state = state.withProperty(BlockTorch.FACING, EnumFacing.EAST);
         				x++;
         				break;
         		}
@@ -116,6 +109,11 @@ public class EntityTorchArrow extends EntityArrow {
         }
     }
 
+    @Override
+    public double getDamage() {
+    	return 0.0;
+    }
+    
 	private boolean dropTorch(Block torch, int x, int y, int z) {
 		return worldObj.spawnEntityInWorld(new EntityItem(worldObj, x, y, z, new ItemStack(torch)));
 	}

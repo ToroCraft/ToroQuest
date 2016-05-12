@@ -42,7 +42,7 @@ public class ToroBaseModItems {
 
 	@SideOnly(Side.CLIENT)
 	private static void registerRendersTorchArrow() {
-		EntityRegistry.registerModEntity(EntityTorchArrow.class, "TorchArrow", 100, ToroBaseMod.instance, 64, 1, true);
+		EntityRegistry.registerModEntity(EntityTorchArrow.class, "TorchArrow", 100, ToroBaseMod.instance, 80, 10, true);
 		RenderManager rm = Minecraft.getMinecraft().getRenderManager();
 		RenderingRegistry.registerEntityRenderingHandler(EntityTorchArrow.class, new RenderTorchArrow(rm));
 	}

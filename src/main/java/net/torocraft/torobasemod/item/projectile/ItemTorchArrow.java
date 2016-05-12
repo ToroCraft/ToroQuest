@@ -8,7 +8,6 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.torobasemod.ToroBaseMod;
 import net.torocraft.torobasemod.entity.projectile.EntityTorchArrow;
 import net.torocraft.torobasemod.util.ToroBaseUtils;
@@ -30,7 +29,6 @@ public class ItemTorchArrow extends ItemArrow {
 	}
 
 	public static void registerRenders() {
-		EntityRegistry.registerModEntity(EntityTorchArrow.class, "Torch Arrow", 0, ToroBaseMod.instance, 80, 10, true);
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(torchArrow, 0, new ModelResourceLocation(ToroBaseMod.MODID + ":" + NAME, "inventory"));
 	}
 	

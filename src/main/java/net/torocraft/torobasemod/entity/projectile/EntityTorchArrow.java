@@ -6,7 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntitySpectralArrow;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -16,7 +16,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class EntityTorchArrow extends EntityArrow {
+public class EntityTorchArrow extends EntitySpectralArrow {
 
 	private double damage;
 	

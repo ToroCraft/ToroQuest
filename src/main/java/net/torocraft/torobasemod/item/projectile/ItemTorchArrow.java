@@ -5,14 +5,14 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemArrow;
+import net.minecraft.item.ItemSpectralArrow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.torocraft.torobasemod.ToroBaseMod;
 import net.torocraft.torobasemod.entity.projectile.EntityTorchArrow;
 import net.torocraft.torobasemod.util.ToroBaseUtils;
 
-public class ItemTorchArrow extends ItemArrow {
+public class ItemTorchArrow extends ItemSpectralArrow {
 	
 	public static final String NAME = "torch_arrow";
 	

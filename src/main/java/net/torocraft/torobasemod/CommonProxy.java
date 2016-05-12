@@ -9,7 +9,7 @@ import net.torocraft.torobasemod.item.ToroBaseModItems;
 
 public class CommonProxy {
     public void preInit(FMLPreInitializationEvent e) {
-
+    	ToroBaseModItems.preInit();
     }
 
     public void init(FMLInitializationEvent e) {

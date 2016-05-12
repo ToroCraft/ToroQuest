@@ -1,9 +1,7 @@
 package net.torocraft.torobasemod.item;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -25,7 +23,6 @@ public class ToroBaseModItems {
 
 	private static void initTools() {
 		ItemTorchArrow.init();
-		registerRendersTorchArrow();
 	}
 
 	private static void initArmor() {
@@ -39,22 +36,15 @@ public class ToroBaseModItems {
 		ItemKingArmor.registerRenders();
 		ItemBullArmor.registerRenders();
 		ItemHeavyDiamondArmor.registerRenders();
+		registerRendersTorchArrow();
 		ItemTorchArrow.registerRenders();
 	}
-	
+
+	@SideOnly(Side.CLIENT)
 	private static void registerRendersTorchArrow() {
-		EntityRegistry.registerModEntity(EntityTorchArrow.class, "TorchArrow", 100, ToroBaseMod.instance, 64, 20, true);
-	}
-
-	public static void preInit() {
-		RenderingRegistry.registerEntityRenderingHandler(EntityTorchArrow.class, new IRenderFactory<EntityTorchArrow>() {
-
-			@Override
-			public Render<? super EntityTorchArrow> createRenderFor(
-					RenderManager manager) {
-				return new RenderTorchArrow(manager);
-			}
-		});
+		EntityRegistry.registerModEntity(EntityTorchArrow.class, "TorchArrow", 100, ToroBaseMod.instance, 80, 10, true);
+		RenderManager rm = Minecraft.getMinecraft().getRenderManager();
+		RenderingRegistry.registerEntityRenderingHandler(EntityTorchArrow.class, new RenderTorchArrow(rm));
 	}
 
 }

@@ -55,6 +55,11 @@ public class EntityTorchArrow extends EntityArrow {
         Vec3d vec3d = new Vec3d(posX + motionX, posY + motionY, posZ + motionZ);
         RayTraceResult rtr = worldObj.rayTraceBlocks(vec3d1, vec3d, false, true, false);
         
+		if (rtr == null || rtr.getBlockPos() == null) {
+			dropTorch(torch, (int) posX, (int) posY, (int) posZ);
+			return;
+		}
+
         BlockPos pos = rtr.getBlockPos();
         
         int x = pos.getX();

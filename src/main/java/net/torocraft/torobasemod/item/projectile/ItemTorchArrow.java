@@ -27,8 +27,10 @@ public class ItemTorchArrow extends ItemArrow {
 	public static void init() {
 		torchArrow = new ItemTorchArrow(NAME, 1, EntityEquipmentSlot.OFFHAND);
 		ToroBaseUtils.registerItem(torchArrow, NAME);
+	}
+
+	public static void registerRenders() {
 		EntityRegistry.registerModEntity(EntityTorchArrow.class, "Torch Arrow", 0, ToroBaseMod.instance, 80, 10, true);
-		
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(torchArrow, 0, new ModelResourceLocation(ToroBaseMod.MODID + ":" + NAME, "inventory"));
 	}
 	

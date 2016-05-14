@@ -1,6 +1,0 @@
-{
-    "parent": "item/handheld",
-    "textures": {
-        "layer0": "torogamesmod:items/chess_control_wand"
-    }
-}

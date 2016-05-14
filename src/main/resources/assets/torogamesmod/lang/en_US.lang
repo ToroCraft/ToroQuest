@@ -1,4 +1,0 @@
-commands.checkerboardcreate.usage=/checkerboardcreate
-commands.chesscreate.usage=/chesscreate
-item.chess_control_wand.name=Chess Wand
-tile.chess_control.name=Chess Control

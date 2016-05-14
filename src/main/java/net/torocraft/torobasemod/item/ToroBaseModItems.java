@@ -12,6 +12,7 @@ import net.torocraft.torobasemod.entity.projectile.RenderTorchArrow;
 import net.torocraft.torobasemod.item.armor.ItemBullArmor;
 import net.torocraft.torobasemod.item.armor.ItemHeavyDiamondArmor;
 import net.torocraft.torobasemod.item.armor.ItemKingArmor;
+import net.torocraft.torobasemod.item.armor.ItemSamuraiArmor;
 import net.torocraft.torobasemod.item.projectile.ItemTorchArrow;
 
 public class ToroBaseModItems {
@@ -29,6 +30,7 @@ public class ToroBaseModItems {
 		ItemKingArmor.init();
 		ItemBullArmor.init();
 		ItemHeavyDiamondArmor.init();
+		ItemSamuraiArmor.init();
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -38,6 +40,7 @@ public class ToroBaseModItems {
 		ItemHeavyDiamondArmor.registerRenders();
 		registerRendersTorchArrow();
 		ItemTorchArrow.registerRenders();
+		ItemSamuraiArmor.registerRenders();
 	}
 
 	@SideOnly(Side.CLIENT)

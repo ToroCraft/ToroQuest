@@ -7,8 +7,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.torocraft.torobasemod.entity.projectile.EntityTorchArrow;
 
 @Mod (modid = ToroBaseMod.MODID, name = ToroBaseMod.MODNAME, version = ToroBaseMod.VERSION)
 public class ToroBaseMod {

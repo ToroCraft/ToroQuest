@@ -30,7 +30,7 @@ public class ToroBaseModRecipes {
 		GameRegistry.addRecipe(new ItemStack(ItemSamuraiArmor.helmetItem), "ggg", "ddd", "d d", 'g', emerald, 'd', leather);
 		GameRegistry.addRecipe(new ItemStack(ItemSamuraiArmor.chestplateItem), "dgd", "ddd", "ddd", 'g', emerald, 'd', leather);
 		GameRegistry.addRecipe(new ItemStack(ItemSamuraiArmor.leggingsItem), "ddd", "dgd", "dgd", 'g', emerald, 'd', leather);
-		GameRegistry.addRecipe(new ItemStack(ItemSamuraiArmor.bootsItem), "dgd", "dgd", "   ", 'g', emerald, 'd', leather);
+		GameRegistry.addRecipe(new ItemStack(ItemSamuraiArmor.bootsItem), "dgd", "dgd", 'g', emerald, 'd', leather);
 	}
 
 	private static void heavyDiamondArmor() {

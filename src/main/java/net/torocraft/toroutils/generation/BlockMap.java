@@ -17,7 +17,6 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -42,7 +41,7 @@ public class BlockMap {
 
 	static {
 		DEFAULT_PALETTE_ENTRY = new PaletteEntry();
-		DEFAULT_PALETTE_ENTRY.block = Blocks.air.getDefaultState();
+		DEFAULT_PALETTE_ENTRY.block = Blocks.AIR.getDefaultState();
 		DEFAULT_PALETTE_ENTRY.pass = 1;
 	}
 
@@ -139,7 +138,8 @@ public class BlockMap {
 
 		String[] a = blockString.split("\\|");
 
-		entry.block = Block.blockRegistry.getObject(new ResourceLocation(a[0])).getDefaultState();
+		entry.block = Block.getBlockFromName(a[0]).getDefaultState(); // blockRegistry.getObject(new
+																		// ResourceLocation(a[0])).getDefaultState();
 		
 		
 		if(a[0].equals("minecraft:wooden_slab")){

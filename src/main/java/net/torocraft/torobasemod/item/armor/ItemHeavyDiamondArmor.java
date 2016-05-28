@@ -100,7 +100,7 @@ public class ItemHeavyDiamondArmor extends ItemArmor {
 
 		// Minecraft.getMinecraft().thePlayer.movementInput =
 
-		effectPlayer(player, MobEffects.moveSlowdown, 2);
+		effectPlayer(player, MobEffects.SLOWNESS, 2);
 
 		// effectPlayer(player, MobEffects.jump, -2);
 
@@ -124,7 +124,7 @@ public class ItemHeavyDiamondArmor extends ItemArmor {
 
 			Iterable<ItemStack> armorStacks = e.getEntityLiving().getArmorInventoryList();
 
-			//boolean hasHeavyArmor = false;
+			// boolean hasHeavyArmor = false;
 			float reduction = 0;
 
 			for (ItemStack armorStack : armorStacks) {
@@ -137,8 +137,7 @@ public class ItemHeavyDiamondArmor extends ItemArmor {
 
 			if (reduction > 0) {
 				float newDamage = (1 - reduction) * e.getAmount();
-				System.out.println(
-						"Heavy armor reduction: [" + reduction + "] IN[" + e.getAmount() + "] OUT[" + newDamage + "]");
+				System.out.println("Heavy armor reduction: [" + reduction + "] IN[" + e.getAmount() + "] OUT[" + newDamage + "]");
 				e.setAmount(newDamage);
 			}
 		}

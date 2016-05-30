@@ -5,6 +5,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.torocraft.torobasemod.block.ToroBaseModBlocks;
 import net.torocraft.torobasemod.crafting.ToroBaseModRecipes;
+import net.torocraft.torobasemod.generation.WorldGenMageTowerPlacer;
 import net.torocraft.torobasemod.item.ToroBaseModItems;
 
 public class CommonProxy {
@@ -16,6 +17,7 @@ public class CommonProxy {
         ToroBaseModItems.init();
     	ToroBaseModBlocks.init();
     	ToroBaseModRecipes.init();
+		WorldGenMageTowerPlacer.init();
     }
 
     public void postInit(FMLPostInitializationEvent e) {

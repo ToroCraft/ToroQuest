@@ -7,6 +7,8 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.torocraft.toroutils.generation.ToroGenCommand;
 
 @Mod (modid = ToroBaseMod.MODID, name = ToroBaseMod.MODNAME, version = ToroBaseMod.VERSION)
 public class ToroBaseMod {
@@ -37,7 +39,10 @@ public class ToroBaseMod {
 	    proxy.postInit(e);
 	}
 	
-	
+	@EventHandler
+	public void serverLoad(FMLServerStartingEvent e) {
+		e.registerServerCommand(new ToroGenCommand());
+	}
 	
 	
 }

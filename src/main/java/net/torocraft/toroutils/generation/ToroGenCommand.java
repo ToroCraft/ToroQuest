@@ -1,14 +1,10 @@
 package net.torocraft.toroutils.generation;
 
-import net.minecraft.block.BlockAir;
-import net.minecraft.block.BlockGlass;
-import net.minecraft.block.BlockGlowstone;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
+import net.torocraft.torobasemod.generation.MageTowerGenerator;
 
 public class ToroGenCommand extends CommandBase {
 
@@ -30,8 +26,11 @@ public class ToroGenCommand extends CommandBase {
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		//if(args[0].equals("verdererscabin")){
-			new VerderersCabin(sender.getEntityWorld(), sender.getPosition()).generate();
+		// new VerderersCabin(sender.getEntityWorld(),
+		// sender.getPosition()).generate();
 		//}
+
+		new MageTowerGenerator().generate(sender.getEntityWorld(), sender.getEntityWorld().rand, sender.getPosition().add(2, -1, 0));
 	}
 
 }

@@ -1,10 +1,14 @@
 package net.torocraft.torobasemod;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.torocraft.torobasemod.block.ToroBaseModBlocks;
-import net.torocraft.torobasemod.crafting.ToroBaseModRecipes;
+import net.torocraft.torobasemod.entities.render.RenderMage;
 import net.torocraft.torobasemod.item.ToroBaseModItems;
 
 public class ClientProxy extends CommonProxy {
@@ -20,7 +24,13 @@ public class ClientProxy extends CommonProxy {
         ToroBaseModItems.registerRenders();
     	//ToroBaseModBlocks.init();
     	//ToroBaseModRecipes.init();
+		RenderManager rm = Minecraft.getMinecraft().getRenderManager();
+		registerRender(Entity.class, new RenderMage(rm));
     }
+
+	private void registerRender(Class<? extends Entity> e, Render<? extends Entity> renderer) {
+		RenderingRegistry.registerEntityRenderingHandler(e, renderer);
+	}
 
     @Override
     public void postInit(FMLPostInitializationEvent e) {

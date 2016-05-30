@@ -4,7 +4,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.torocraft.torobasemod.generation.MageTowerGenerator;
+import net.torocraft.torobasemod.entities.EntityMage;
 
 public class ToroGenCommand extends CommandBase {
 
@@ -30,7 +30,17 @@ public class ToroGenCommand extends CommandBase {
 		// sender.getPosition()).generate();
 		//}
 
-		new MageTowerGenerator().generate(sender.getEntityWorld(), sender.getEntityWorld().rand, sender.getPosition().add(2, -1, 0));
+		// new MageTowerGenerator().generate(sender.getEntityWorld(),
+		// sender.getEntityWorld().rand, sender.getPosition().add(2, -1, 0));
+
+		EntityMage e = new EntityMage(server.getEntityWorld());
+
+		int x = sender.getPosition().getX();
+		int y = sender.getPosition().getY();
+		int z = sender.getPosition().getZ();
+
+		e.setPosition(x, y, z);
+		server.getEntityWorld().spawnEntityInWorld(e);
 	}
 
 }

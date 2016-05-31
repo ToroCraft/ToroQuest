@@ -1,5 +1,7 @@
 package net.torocraft.torobasemod.generation;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.BlockBush;
@@ -10,9 +12,12 @@ import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockStoneBrick;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.MobSpawnerBaseLogic;
+import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
+import net.torocraft.torobasemod.entities.EntityMage;
 
 public class MageTowerGenerator extends WorldGenerator {
 
@@ -76,7 +81,16 @@ public class MageTowerGenerator extends WorldGenerator {
 		}
 
 		placeTower(world, rand, surface);
+
+		spawnMage(world, surface);
+
 		return true;
+	}
+
+	private void spawnMage(World world, BlockPos pos) {
+		EntityMage e = new EntityMage(world);
+		e.setPosition(pos.getX() + 2, pos.getY() + (floors * FLOOR_HEIGHT) + 1, pos.getZ() + 2);
+		world.spawnEntityInWorld(e);
 	}
 
 	private BlockPos findSurface(World world, BlockPos start) {
@@ -156,6 +170,8 @@ public class MageTowerGenerator extends WorldGenerator {
 		int innerRadiusSquared = (radius - 2) * radius;
 		int magSq;
 
+		spawners = new ArrayList<BlockPos>();
+
 		for (int y = 0; y < 6; y++) {
 			for (int x = -radius - 1; x <= radius + 1; x++) {
 				for (int z = -radius - 1; z <= radius + 1; z++) {
@@ -172,6 +188,44 @@ public class MageTowerGenerator extends WorldGenerator {
 			}
 		}
 
+		for (BlockPos p : spawners) {
+			placeSpawner(world, p.add(pos), randomMob(rand));
+		}
+
+	}
+
+	private String randomMob(Random rand) {
+		switch (rand.nextInt(7)) {
+		case 0:
+			return "CaveSpider";
+		case 1:
+			return "Blaze";
+		case 2:
+			return "Skeleton";
+		case 3:
+			return "Spider";
+		case 4:
+			return "Giant";
+		case 5:
+			return "Zombie";
+		case 6:
+			return "PigZombie";
+		}
+		return "Zombie";
+	}
+
+	public static void placeSpawner(World world, BlockPos pos, String mob) {
+
+		System.out.println("placeSpawner[" + mob + "]: " + pos);
+
+		placeBlock(world, pos, Blocks.MOB_SPAWNER);
+		TileEntityMobSpawner theSpawner = (TileEntityMobSpawner) world.getTileEntity(pos);
+		MobSpawnerBaseLogic logic = theSpawner.getSpawnerBaseLogic();
+		logic.setEntityName(mob);
+	}
+
+	public static void placeBlock(World world, BlockPos pos, net.minecraft.block.Block block) {
+		world.setBlockState(pos, block.getDefaultState());
 	}
 
 	private void placeTowerBlock(World world, Random rand, BlockPos pos, int radiusSquared, int innerRadiusSquared, int y, int x, int z) {
@@ -213,7 +267,12 @@ public class MageTowerGenerator extends WorldGenerator {
 		return block;
 	}
 
+	List<BlockPos> spawners;
+
 	private IBlockState getBlockAtLocation(Random rand, int innerRadiusSquared, int magSq, IBlockState currentBlock, int y, int x, int z) {
+
+		// this.doBlockNotify = false;
+
 		if (isFloor(y)) {
 			currentBlock = getFloorBlock();
 		}
@@ -228,6 +287,10 @@ public class MageTowerGenerator extends WorldGenerator {
 
 		if (isStairsLocation(x, y, z)) {
 			currentBlock = getStairBlock(x, y, z);
+		}
+
+		if (isSpawnerLocation(x, y, z)) {
+			spawners.add(new BlockPos(x, y, z));
 		}
 
 		return currentBlock;
@@ -389,6 +452,13 @@ public class MageTowerGenerator extends WorldGenerator {
 		return (Math.abs(x) == radius - 2 && z == 0) || (Math.abs(z) == radius - 2 && x == 0);
 	}
 
+	private boolean isSpawnerLocation(int x, int y, int z) {
+		if (y % FLOOR_HEIGHT != FLOOR_HEIGHT - 2) {
+			return false;
+		}
+		return (Math.abs(x) == radius - (radius / 2) && z == 0) || (Math.abs(z) == radius - (radius / 2) && x == 0);
+	}
+
 	private boolean isWindowLocation(int x, int y, int z) {
 		/*
 		 * int offset = y % FLOOR_HEIGHT; return offset > 1 && offset < 5 &&
@@ -407,7 +477,7 @@ public class MageTowerGenerator extends WorldGenerator {
 	}
 
 	private boolean isFloor(int y) {
-		return y % FLOOR_HEIGHT == 0;
+		return y % FLOOR_HEIGHT == 0;// || y % FLOOR_HEIGHT == FLOOR_HEIGHT - 2;
 	}
 
 }

@@ -5,6 +5,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.torocraft.torobasemod.entities.EntityMage;
+import net.torocraft.torobasemod.generation.MageTowerGenerator;
 
 public class ToroGenCommand extends CommandBase {
 
@@ -25,14 +26,21 @@ public class ToroGenCommand extends CommandBase {
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-		//if(args[0].equals("verdererscabin")){
+		// if(args[0].equals("verdererscabin")){
 		// new VerderersCabin(sender.getEntityWorld(),
 		// sender.getPosition()).generate();
-		//}
+		// }
 
-		// new MageTowerGenerator().generate(sender.getEntityWorld(),
-		// sender.getEntityWorld().rand, sender.getPosition().add(2, -1, 0));
+		spawnTower(sender);
 
+		// spawnMage(server, sender);
+	}
+
+	protected void spawnTower(ICommandSender sender) {
+		new MageTowerGenerator().generate(sender.getEntityWorld(), sender.getEntityWorld().rand, sender.getPosition().add(2, -1, 0));
+	}
+
+	protected void spawnMage(MinecraftServer server, ICommandSender sender) {
 		EntityMage e = new EntityMage(server.getEntityWorld());
 
 		int x = sender.getPosition().getX();

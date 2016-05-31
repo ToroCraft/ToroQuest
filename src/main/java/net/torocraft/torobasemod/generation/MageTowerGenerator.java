@@ -218,9 +218,6 @@ public class MageTowerGenerator extends WorldGenerator {
 	}
 
 	public static void placeSpawner(World world, BlockPos pos, String mob) {
-
-		System.out.println("placeSpawner[" + mob + "]: " + pos);
-
 		placeBlock(world, pos, Blocks.MOB_SPAWNER);
 		TileEntityMobSpawner theSpawner = (TileEntityMobSpawner) world.getTileEntity(pos);
 		MobSpawnerBaseLogic logic = theSpawner.getSpawnerBaseLogic();
@@ -251,12 +248,16 @@ public class MageTowerGenerator extends WorldGenerator {
 		if (block != null) {
 			BlockPos placementPos = pos.add(x, y, z);
 			setBlockAndNotifyAdequately(world, placementPos, block);
-			if (block.getBlock() == Blocks.CHEST) {
-				TileEntity tileentity = world.getTileEntity(placementPos);
+			addLootToChest(world, block, placementPos);
+		}
+	}
 
-				if (tileentity instanceof TileEntityChest) {
-					((TileEntityChest) tileentity).setLootTable(LootTableList.CHESTS_END_CITY_TREASURE, world.rand.nextLong());
-				}
+	protected void addLootToChest(World world, IBlockState block, BlockPos placementPos) {
+		if (block.getBlock() == Blocks.CHEST) {
+			TileEntity tileentity = world.getTileEntity(placementPos);
+
+			if (tileentity instanceof TileEntityChest) {
+				((TileEntityChest) tileentity).setLootTable(LootTableList.CHESTS_END_CITY_TREASURE, world.rand.nextLong());
 			}
 		}
 	}
@@ -292,7 +293,7 @@ public class MageTowerGenerator extends WorldGenerator {
 			currentBlock = getWallBlock(rand, y, x, z);
 		}
 
-		if (isChestLocation(innerRadiusSquared, magSq, x, y, z)) {
+		if (isChestLocation(rand, x, y, z)) {
 			currentBlock = getChestBlock(x, z);
 		}
 
@@ -456,7 +457,12 @@ public class MageTowerGenerator extends WorldGenerator {
 		return magSq >= innerRadiusSquared;
 	}
 
-	private boolean isChestLocation(int innerRadiusSquared, int magSq, int x, int y, int z) {
+	private boolean isChestLocation(Random rand, int x, int y, int z) {
+
+		if (y < height - 4 && rand.nextInt(10) > 1) {
+			return false;
+		}
+
 		if (y % FLOOR_HEIGHT != 1) {
 			return false;
 		}

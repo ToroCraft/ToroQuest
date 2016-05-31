@@ -15,7 +15,7 @@ public class WorldGenMageTowerPlacer implements IWorldGenerator {
 		GameRegistry.registerWorldGenerator(new WorldGenMageTowerPlacer(), 2);
 	}
 
-	public static final double LOW_CHANCE = 0.998;
+	public static final double LOW_CHANCE = 0.999;
 	public static final double HIGH_CHANCE = 0.9;
 
 	@Override

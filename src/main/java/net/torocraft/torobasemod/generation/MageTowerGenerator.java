@@ -10,9 +10,12 @@ import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockStoneBrick;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
+import net.minecraft.world.storage.loot.LootTableList;
 
 public class MageTowerGenerator extends WorldGenerator {
 
@@ -192,7 +195,15 @@ public class MageTowerGenerator extends WorldGenerator {
 		}
 
 		if (block != null) {
-			setBlockAndNotifyAdequately(world, pos.add(x, y, z), block);
+			BlockPos placementPos = pos.add(x, y, z);
+			setBlockAndNotifyAdequately(world, placementPos, block);
+			if (block.getBlock() == Blocks.CHEST) {
+				TileEntity tileentity = world.getTileEntity(placementPos);
+
+				if (tileentity instanceof TileEntityChest) {
+					((TileEntityChest)tileentity).setLootTable(LootTableList.CHESTS_END_CITY_TREASURE, world.rand.nextLong());
+				}
+			}
 		}
 	}
 

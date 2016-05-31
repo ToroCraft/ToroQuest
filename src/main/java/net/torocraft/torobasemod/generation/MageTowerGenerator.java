@@ -6,7 +6,6 @@ import java.util.Random;
 
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockChest;
-import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockQuartz;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockStoneBrick;
@@ -30,7 +29,9 @@ public class MageTowerGenerator extends WorldGenerator {
 	private int height = floors * FLOOR_HEIGHT + 2;
 
 	protected IBlockState getFloorBlock() {
-		return ((BlockPlanks) Blocks.PLANKS).getStateFromMeta(5);
+		// return ((BlockPlanks) Blocks.PLANKS).getStateFromMeta(5);
+
+		return Blocks.NETHER_BRICK.getDefaultState();
 	}
 
 	protected IBlockState getWallBlock() {
@@ -83,6 +84,8 @@ public class MageTowerGenerator extends WorldGenerator {
 			return false;
 		}
 
+		System.out.println("Spawning Mage Tower [" + surface + "]");
+
 		placeTower(world, rand, surface);
 
 		spawnMage(world, surface);
@@ -92,7 +95,7 @@ public class MageTowerGenerator extends WorldGenerator {
 
 	private void spawnMage(World world, BlockPos pos) {
 		EntityMage e = new EntityMage(world);
-		e.setPosition(pos.getX() + 2, pos.getY() + (floors * FLOOR_HEIGHT) + 1, pos.getZ() + 2);
+		e.setPosition(pos.getX() + 3, pos.getY() + (floors * FLOOR_HEIGHT) + 1, pos.getZ() + 3);
 		world.spawnEntityInWorld(e);
 	}
 

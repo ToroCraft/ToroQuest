@@ -15,9 +15,12 @@ public class WorldGenMageTowerPlacer implements IWorldGenerator {
 		GameRegistry.registerWorldGenerator(new WorldGenMageTowerPlacer(), 2);
 	}
 
+	public static final double LOW_CHANCE = 0.998;
+	public static final double HIGH_CHANCE = 0.9;
+
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
-		if (world.provider.getDimension() == 0 && random.nextDouble() > 0.99) {
+		if (world.provider.getDimension() == 0 && random.nextDouble() > LOW_CHANCE) {
 			BlockPos pos = new BlockPos(chunkX * 16 + random.nextInt(16), world.getActualHeight(), chunkZ * 16 + random.nextInt(16));
 			new MageTowerGenerator().generate(world, random, pos);
 		}

@@ -60,6 +60,12 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 	public EntityMage(World worldIn) {
 		super(worldIn);
 		this.setSize(0.6F, 1.95F);
+
+	}
+
+	@Override
+	protected boolean canDespawn() {
+		return false;
 	}
 
 	protected void initEntityAI() {

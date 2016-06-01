@@ -23,56 +23,34 @@ import net.torocraft.torobasemod.entities.EntityMage;
 
 public class MageTowerGenerator extends WorldGenerator {
 
-	private static final int FLOOR_HEIGHT = 8;
-	private int radius = 12;
-	private int floors = 7;
-	private int height = floors * FLOOR_HEIGHT + 2;
+	private int floorHieght = 0;// 8;
+	private int radius = 0;// 12;
+	private int floors = 0;// 7;
 
-	protected IBlockState getFloorBlock() {
-		// return ((BlockPlanks) Blocks.PLANKS).getStateFromMeta(5);
+	private int height = 0;// floors * floorHieght + 2;
 
-		return Blocks.NETHER_BRICK.getDefaultState();
-	}
+	protected IBlockState[] aFloorBlock = { Blocks.NETHER_BRICK.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), ((BlockStoneBrick) Blocks.STONEBRICK).getStateFromMeta(1), Blocks.BRICK_BLOCK.getDefaultState() };
+	protected IBlockState aWallDecorationBlock[] = { Blocks.GLOWSTONE.getDefaultState(), Blocks.SEA_LANTERN.getDefaultState() };
+	protected IBlockState[] aWallBlock = { Blocks.QUARTZ_BLOCK.getDefaultState(), Blocks.STONEBRICK.getDefaultState() };
+	protected IBlockState[] aWallRandBlock = { ((BlockQuartz) Blocks.QUARTZ_BLOCK).getStateFromMeta(1), Blocks.COBBLESTONE.getDefaultState() };
 
-	protected IBlockState getWallBlock() {
-		return Blocks.QUARTZ_BLOCK.getDefaultState();
-	}
+	protected BlockStairs stairsBlock = (BlockStairs) Blocks.QUARTZ_STAIRS;
+	protected IBlockState stairsFoundationBlock = ((BlockStoneBrick) Blocks.STONEBRICK).getStateFromMeta(1);
+	protected IBlockState stairsConnectorBlock = Blocks.QUARTZ_BLOCK.getDefaultState();
+	protected IBlockState stairsColumnBlock = Blocks.QUARTZ_BLOCK.getDefaultState();
 
-	protected IBlockState getWallDecorationBlock() {
-		// return ((BlockQuartz) Blocks.QUARTZ_BLOCK).getStateFromMeta(4);
+	protected IBlockState wallBlock;
+	protected IBlockState wallRandBlock;
+	protected IBlockState floorBlock;
+	protected IBlockState wallDecorationBlock;
 
-		return Blocks.GLOWSTONE.getDefaultState();
-	}
+	protected IBlockState windowBlock = Blocks.DARK_OAK_FENCE.getDefaultState();
 
-	protected IBlockState getWallRandBlock() {
-		return ((BlockQuartz) Blocks.QUARTZ_BLOCK).getStateFromMeta(1);
-	}
-
-	protected BlockStairs getStairsBlock() {
-		return (BlockStairs) Blocks.QUARTZ_STAIRS;
-	}
-
-	protected IBlockState getStairsFoundationBlock() {
-		return ((BlockStoneBrick) Blocks.STONEBRICK).getStateFromMeta(1);
-	}
-
-	protected IBlockState getStairsConnectorBlock() {
-		return Blocks.QUARTZ_BLOCK.getDefaultState();
-	}
-
-	protected IBlockState getStairsColumnBlock() {
-		return Blocks.QUARTZ_BLOCK.getDefaultState();
-	}
-
-	protected IBlockState getWindowBlock() {
-		return Blocks.DARK_OAK_FENCE.getDefaultState();
-		// return ((BlockGlass)Blocks.GLASS).getStateId(15);
-	}
-
-	public boolean generate(int floors, int radius, World world, Random rand, BlockPos pos) {
+	public boolean generate(int floors, int radius, int floorHieght, World world, Random rand, BlockPos pos) {
 		this.radius = radius;
 		this.floors = floors;
-		this.height = floors * FLOOR_HEIGHT + 2;
+		this.floorHieght = floorHieght;
+		this.height = floors * floorHieght + 2;
 		return generate(world, rand, pos);
 	}
 
@@ -86,6 +64,22 @@ public class MageTowerGenerator extends WorldGenerator {
 
 		System.out.println("Spawning Mage Tower [" + surface + "]");
 
+		randomizeBlocks(rand);
+
+		if (radius == 0) {
+			radius = 5 + rand.nextInt(15);
+		}
+
+		if (floors == 0) {
+			floors = 3 + rand.nextInt(5);
+		}
+
+		if (floorHieght == 0) {
+			floorHieght = 4 + rand.nextInt(5);
+		}
+
+		this.height = floors * floorHieght + 2;
+
 		placeTower(world, rand, surface);
 
 		spawnMage(world, surface);
@@ -93,9 +87,21 @@ public class MageTowerGenerator extends WorldGenerator {
 		return true;
 	}
 
+	private void randomizeBlocks(Random rand) {
+		wallBlock = randomPick(rand, aWallBlock);
+		wallRandBlock = randomPick(rand, aWallRandBlock);
+		floorBlock = randomPick(rand, aFloorBlock);
+		wallDecorationBlock = randomPick(rand, aWallDecorationBlock);
+	}
+
+	private IBlockState randomPick(Random rand, IBlockState[] a) {
+		// return a[rand.nextInt(a.length)];
+		return a[0];
+	}
+
 	private void spawnMage(World world, BlockPos pos) {
 		EntityMage e = new EntityMage(world);
-		e.setPosition(pos.getX() + 3, pos.getY() + (floors * FLOOR_HEIGHT) + 1, pos.getZ() + 3);
+		e.setPosition(pos.getX() + 3, pos.getY() + (floors * floorHieght) + 1, pos.getZ() + 3);
 		world.spawnEntityInWorld(e);
 	}
 
@@ -241,7 +247,7 @@ public class MageTowerGenerator extends WorldGenerator {
 			block = Blocks.AIR.getDefaultState();
 			block = getBlockAtLocation(rand, innerRadiusSquared, magSq, block, y, x, z);
 		} else if (y == 0) {
-			block = getStairsFoundationBlock();
+			block = stairsFoundationBlock;
 		}
 
 		if (isDoorwayLocation(x, y, z)) {
@@ -273,11 +279,11 @@ public class MageTowerGenerator extends WorldGenerator {
 		int zm = Math.abs(z);
 
 		if (y == 5 || y == 0) {
-			block = getWallBlock();
+			block = wallBlock;
 		}
 
 		if (xm == 2 || zm == 2) {
-			block = getWallBlock();
+			block = wallBlock;
 		}
 		return block;
 	}
@@ -289,7 +295,7 @@ public class MageTowerGenerator extends WorldGenerator {
 		// this.doBlockNotify = false;
 
 		if (isFloor(y)) {
-			currentBlock = getFloorBlock();
+			currentBlock = floorBlock;
 		}
 
 		if (isWallLocation(innerRadiusSquared, magSq)) {
@@ -348,7 +354,7 @@ public class MageTowerGenerator extends WorldGenerator {
 	private IBlockState getWallBlock(Random rand, int y, int x, int z) {
 		IBlockState currentBlock;
 		if (isWindowLocation(x, y, z)) {
-			currentBlock = getWindowBlock();
+			currentBlock = windowBlock;
 		} else {
 
 			// if (x - (y % FLOOR_HEIGHT) <= 1) { wegdes
@@ -356,12 +362,12 @@ public class MageTowerGenerator extends WorldGenerator {
 			// if (Math.abs(x - z) <= 1) { //corner columns WIP
 
 			if (isHelixLocation(y, x, z)) {
-				currentBlock = getWallDecorationBlock();
+				currentBlock = wallDecorationBlock;
 			} else {
 				if (rand.nextInt(100) > 10) {
-					currentBlock = getWallBlock();
+					currentBlock = wallBlock;
 				} else {
-					currentBlock = getWallRandBlock();
+					currentBlock = wallRandBlock;
 				}
 			}
 		}
@@ -375,11 +381,11 @@ public class MageTowerGenerator extends WorldGenerator {
 		}
 
 		if (y < 1) {
-			return getStairsFoundationBlock();
+			return stairsFoundationBlock;
 		}
 
 		if (x == 0 && z == 0) {
-			return getStairsColumnBlock();
+			return stairsColumnBlock;
 		}
 
 		int yAdj = (y + 1) % 4;
@@ -387,34 +393,34 @@ public class MageTowerGenerator extends WorldGenerator {
 		switch (yAdj) {
 		case 0:
 			if (x == 1 && z == 0) {
-				return getStairsBlock().getStateFromMeta(2);
+				return stairsBlock.getStateFromMeta(2);
 			}
 			if (x == 1 && z == 1) {
-				return getStairsConnectorBlock();
+				return stairsConnectorBlock;
 			}
 			break;
 		case 1:
 			if (x == 0 && z == 1) {
-				return getStairsBlock().getStateFromMeta(1);
+				return stairsBlock.getStateFromMeta(1);
 			}
 			if (x == -1 && z == 1) {
-				return getStairsConnectorBlock();
+				return stairsConnectorBlock;
 			}
 			break;
 		case 2:
 			if (x == -1 && z == 0) {
-				return getStairsBlock().getStateFromMeta(3);
+				return stairsBlock.getStateFromMeta(3);
 			}
 			if (x == -1 && z == -1) {
-				return getStairsConnectorBlock();
+				return stairsConnectorBlock;
 			}
 			break;
 		case 3:
 			if (x == 0 && z == -1) {
-				return getStairsBlock().getStateFromMeta(0);
+				return stairsBlock.getStateFromMeta(0);
 			}
 			if (x == 1 && z == -1) {
-				return getStairsConnectorBlock();
+				return stairsConnectorBlock;
 			}
 			break;
 		default:
@@ -466,14 +472,14 @@ public class MageTowerGenerator extends WorldGenerator {
 			return false;
 		}
 
-		if (y % FLOOR_HEIGHT != 1) {
+		if (y % floorHieght != 1) {
 			return false;
 		}
 		return (Math.abs(x) == radius - 2 && z == 0) || (Math.abs(z) == radius - 2 && x == 0);
 	}
 
 	private boolean isSpawnerLocation(int x, int y, int z) {
-		if (y % FLOOR_HEIGHT != FLOOR_HEIGHT - 2) {
+		if (y % floorHieght != floorHieght - 2) {
 			return false;
 		}
 		return (Math.abs(x) == radius - (radius / 2) && z == 0) || (Math.abs(z) == radius - (radius / 2) && x == 0);
@@ -497,7 +503,7 @@ public class MageTowerGenerator extends WorldGenerator {
 	}
 
 	private boolean isFloor(int y) {
-		return y % FLOOR_HEIGHT == 0;// || y % FLOOR_HEIGHT == FLOOR_HEIGHT - 2;
+		return y % floorHieght == 0;// || y % FLOOR_HEIGHT == FLOOR_HEIGHT - 2;
 	}
 
 }

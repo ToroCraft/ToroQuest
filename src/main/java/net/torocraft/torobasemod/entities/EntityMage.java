@@ -6,6 +6,8 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
@@ -45,8 +47,12 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.torocraft.torobasemod.ToroBaseMod;
+import net.torocraft.torobasemod.entities.render.RenderMage;
 
 public class EntityMage extends EntityMob implements IRangedAttackMob {
 
@@ -57,10 +63,30 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 
 	private int attackTimer;
 
+	public static String NAME = "mage";
+
+	public static void init(int entityId) {
+		EntityRegistry.registerModEntity(EntityMage.class, NAME, entityId, ToroBaseMod.instance, 60, 2, true);
+	}
+
+	public static void registerRenders() {
+		RenderManager rm = Minecraft.getMinecraft().getRenderManager();
+		RenderingRegistry.registerEntityRenderingHandler(EntityMage.class, new RenderMage(rm));
+	}
+
 	public EntityMage(World worldIn) {
 		super(worldIn);
 		this.setSize(0.6F, 1.95F);
+	}
 
+	@Override
+	public void onDeath(DamageSource cause) {
+		super.onDeath(cause);
+		if (worldObj.isRemote) {
+			EntityFriendlyMage friendlyMage = new EntityFriendlyMage(worldObj);
+			friendlyMage.setPosition(posX, posY, posZ);
+			worldObj.spawnEntityInWorld(friendlyMage);
+		}
 	}
 
 	@Override

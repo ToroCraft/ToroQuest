@@ -32,6 +32,12 @@ public class ToroGenCommand extends CommandBase {
 		// sender.getPosition()).generate();
 		// }
 
+		// spawnArrayOfTowers(sender);
+
+		spawnMage(server, sender);
+	}
+
+	protected void spawnArrayOfTowers(ICommandSender sender) {
 		BlockPos pos = sender.getPosition().add(2, -1, 0);
 
 		int floors = 2;
@@ -44,8 +50,6 @@ public class ToroGenCommand extends CommandBase {
 			pos = pos.add(radius * 2, 0, 0);
 			radius = radius - 4;
 		}
-
-		// spawnMage(server, sender);
 	}
 
 	protected void spawnTower(int floors, int radius, int floorHieght, ICommandSender sender, BlockPos pos) {

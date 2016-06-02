@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.torobasemod.block.ToroBaseModBlocks;
 import net.torocraft.torobasemod.crafting.ToroBaseModRecipes;
 import net.torocraft.torobasemod.entities.EntityMage;
+import net.torocraft.torobasemod.entities.EntityMonolithEye;
 import net.torocraft.torobasemod.generation.WorldGenMageTowerPlacer;
 import net.torocraft.torobasemod.generation.WorldGenMonolithPlacer;
 import net.torocraft.torobasemod.item.ToroBaseModItems;
@@ -25,6 +26,7 @@ public class CommonProxy {
 		WorldGenMonolithPlacer.init();
 		int id = 50;
 		registerEntity(EntityMage.class, "Mage", id++);
+		registerEntity(EntityMonolithEye.class, "MonolithEye", id++);
     }
 
 	private void registerEntity(Class<? extends Entity> entity, String name, int id) {

@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.torocraft.torobasemod.entities.render.RenderMage;
+import net.torocraft.torobasemod.entities.render.RenderMonolithEye;
 import net.torocraft.torobasemod.item.ToroBaseModItems;
 
 public class ClientProxy extends CommonProxy {
@@ -26,6 +27,7 @@ public class ClientProxy extends CommonProxy {
     	//ToroBaseModRecipes.init();
 		RenderManager rm = Minecraft.getMinecraft().getRenderManager();
 		registerRender(Entity.class, new RenderMage(rm));
+		registerRender(Entity.class, new RenderMonolithEye(rm));
     }
 
 	private void registerRender(Class<? extends Entity> e, Render<? extends Entity> renderer) {

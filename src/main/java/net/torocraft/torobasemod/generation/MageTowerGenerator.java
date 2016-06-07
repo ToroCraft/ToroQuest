@@ -56,35 +56,31 @@ public class MageTowerGenerator extends WorldGenerator {
 
 	@Override
 	public boolean generate(World world, Random rand, BlockPos pos) {
+		randomizeBlocks(rand);
+		randomizeParameters(rand);
 		BlockPos surface = findSurface(world, pos);
-
 		if (surface == null) {
 			return false;
 		}
+		placeTower(world, rand, surface);
+		spawnMage(world, surface);
+		return true;
+	}
 
-		System.out.println("Spawning Mage Tower [" + surface + "]");
-
-		randomizeBlocks(rand);
-
+	protected void randomizeParameters(Random rand) {
 		if (radius == 0) {
-			radius = 5 + rand.nextInt(15);
+			radius = 7 + rand.nextInt(12);
 		}
 
 		if (floors == 0) {
-			floors = 3 + rand.nextInt(5);
+			floors = 3 + rand.nextInt(7);
 		}
 
 		if (floorHieght == 0) {
-			floorHieght = 4 + rand.nextInt(5);
+			floorHieght = 5 + rand.nextInt(5);
 		}
 
 		this.height = floors * floorHieght + 2;
-
-		placeTower(world, rand, surface);
-
-		spawnMage(world, surface);
-
-		return true;
 	}
 
 	private void randomizeBlocks(Random rand) {

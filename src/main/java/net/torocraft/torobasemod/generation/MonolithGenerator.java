@@ -13,14 +13,16 @@ import net.torocraft.torobasemod.entities.EntityMonolithEye;
 
 public class MonolithGenerator extends WorldGenerator {
 
-	private int shallowsDepth = 50;
-	private int monolithRadius = 0;
-	private int monolithHeight = 4;
-	private int underseaHeight = 0;
-	private int eyeRadius = 0;
-	private int eyeHeight = 0;
-	private int eyeFloatHeight = 1;
-	private int height = monolithHeight + eyeFloatHeight + eyeHeight + 1;
+	private static int shallowsDepth = 50;
+	private static int monolithRadius = 0;
+	private static int monolithHeightBase = 4;
+	private static int underseaHeight = 0;
+	private static int eyeRadius = 0;
+	private static int eyeHeight = 0;
+	private static int eyeFloatHeight = 1;
+
+	private int monolithHeight;
+	private int height;
 	
 	protected IBlockState getObsidianBlock() {
 		return Blocks.OBSIDIAN.getDefaultState();
@@ -32,13 +34,12 @@ public class MonolithGenerator extends WorldGenerator {
 
 	@Override
 	public boolean generate(World world, Random rand, BlockPos pos) {
+		setHeight(rand);
 		BlockPos surface = findSurface(world, pos);
-
+		
 		if (surface == null) {
 			return false;
 		}
-
-		System.out.println("Spawning Monolith [" + surface + "]");
 
 		placeMonolith(world, rand, surface);
 		spawnMonolithEye(world, surface);
@@ -47,14 +48,17 @@ public class MonolithGenerator extends WorldGenerator {
 		
 		return true;
 	}
+	
+	private void setHeight(Random rand) {
+		monolithHeight = (int) Math.round(monolithHeightBase * (1+rand.nextDouble()));
+		height = monolithHeight + eyeFloatHeight + eyeHeight + 1;		
+	}
 
 	private void spawnMonolithEye(World world, BlockPos pos) {
 		EntityMonolithEye e = new EntityMonolithEye(world);
 		e.setPosition(pos.getX() + .5, pos.getY() + (monolithHeight + underseaHeight + eyeFloatHeight), pos.getZ() + .5);
 		
 		world.spawnEntityInWorld(e);
-		System.out.println("Spawning Monolith Eye [" + e.getPosition() + "]");
-
 	}
 	
 	private BlockPos findSurface(World world, BlockPos start) {

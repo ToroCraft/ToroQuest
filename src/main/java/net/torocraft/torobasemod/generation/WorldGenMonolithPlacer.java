@@ -20,7 +20,7 @@ public class WorldGenMonolithPlacer implements IWorldGenerator {
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
-		if (world.provider.getDimension() == 0 && random.nextDouble() > LOW_CHANCE) {
+		if (world.provider.getDimension() == 0 && random.nextDouble() > HIGH_CHANCE) {
 			BlockPos pos = new BlockPos(chunkX * 16 + random.nextInt(16), world.getActualHeight(), chunkZ * 16 + random.nextInt(16));
 			new MonolithGenerator().generate(world, random, pos);
 		}

@@ -6,11 +6,13 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackRanged;
+import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityWitch;
@@ -24,23 +26,29 @@ import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.torocraft.torobasemod.entities.ai.EntityAIMonolithStun;
 
 public class EntityMonolithEye extends EntityFlying implements IRangedAttackMob {
 
 	private static final DataParameter<Boolean> IS_AGGRESSIVE = EntityDataManager.<Boolean>createKey(EntityWitch.class, DataSerializers.BOOLEAN);
+    
+	public Vec3d originPos;
 
 	private EntityLivingBase targetedEntity;
     private float field_175485_bl;
     private float field_175486_bm;
-
+    private boolean isStunned;
+        
 	public EntityMonolithEye(World worldIn) {
 		super(worldIn);
 		this.setSize(0.6F, 1.95F);
-
+		originPos = this.getPositionVector();
 	}
 
     @SideOnly(Side.CLIENT)
@@ -55,11 +63,10 @@ public class EntityMonolithEye extends EntityFlying implements IRangedAttackMob 
 	}
 
 	protected void initEntityAI() {
-		this.tasks.addTask(2, new EntityAIAttackRanged(this, 1.0D, 30, 10.0F));
-		this.tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-		this.tasks.addTask(3, new EntityAILookIdle(this));
-//		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false, new Class[0]));
-//		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
+//		this.tasks.addTask(1, new EntityAIMonolithStun(this));				
+//	    this.tasks.addTask(2, new EntityAIAttackRanged(this, 1.0D, 30, 10.0F));
+		this.tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 20.0F));
+//		this.tasks.addTask(3, new EntityAILookIdle(this));
 	}
 
 	protected void entityInit() {
@@ -199,16 +206,23 @@ public class EntityMonolithEye extends EntityFlying implements IRangedAttackMob 
 			return false;
 		}
 
-		if (source instanceof EntityDamageSourceIndirect) {
-			// TODO Handle Hit by Arrow
-			//return false;
+		if (hitByRangedAttack(source)) {
+			this.isStunned = true;
 		}
-
-		return super.attackEntityFrom(source, amount);
+		
+		return false;
+//		return super.attackEntityFrom(source, amount);
 	}
 	
-	@Override
-	public boolean isEntityInvulnerable(DamageSource source) {
-		return true;
+	private boolean hitByRangedAttack(DamageSource source) {
+		return source instanceof EntityDamageSourceIndirect;
+	}
+	
+	public boolean getIsStunned() {
+		return this.isStunned;
+	}
+
+	public void setIsStunned(Boolean bool) {
+		this.isStunned = bool;
 	}
 }

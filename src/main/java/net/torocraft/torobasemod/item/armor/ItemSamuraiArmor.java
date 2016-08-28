@@ -74,7 +74,6 @@ public class ItemSamuraiArmor extends ItemArmor {
 	public ItemSamuraiArmor(String unlocalizedName, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn) {
 		super(ArmorMaterials.SAMURAI, renderIndexIn, equipmentSlotIn);
 		this.setUnlocalizedName(unlocalizedName);
-		setMaxDamage(5000);
+		setMaxDamage(80);
 	}
-
 }

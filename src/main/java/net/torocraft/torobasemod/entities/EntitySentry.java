@@ -43,7 +43,4 @@ public class EntitySentry extends EntityCreature implements IAnimals {
 	public double getBaseMoveSpeed() {
 		return this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue();
 	}
-	
-	
-
 }

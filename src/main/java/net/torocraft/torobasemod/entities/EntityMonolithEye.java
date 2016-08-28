@@ -1,19 +1,12 @@
 package net.torocraft.torobasemod.entities;
 
-import java.util.Random;
-import java.util.UUID;
-
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackRanged;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,18 +19,20 @@ import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.torocraft.torobasemod.entities.ai.EntityAIMonolithStun;
+import net.torocraft.torobasemod.ToroBaseMod;
 
 public class EntityMonolithEye extends EntityFlying implements IRangedAttackMob {
 
 	private static final DataParameter<Boolean> IS_AGGRESSIVE = EntityDataManager.<Boolean>createKey(EntityWitch.class, DataSerializers.BOOLEAN);
     
+	public static String NAME = "monolitheye";
+	
 	public Vec3d originPos;
 
 	private EntityLivingBase targetedEntity;
@@ -49,6 +44,10 @@ public class EntityMonolithEye extends EntityFlying implements IRangedAttackMob 
 		super(worldIn);
 		this.setSize(0.6F, 1.95F);
 		originPos = this.getPositionVector();
+	}
+	
+	public static void init(int entityId) {
+		EntityRegistry.registerModEntity(EntityMonolithEye.class, NAME, entityId, ToroBaseMod.instance, 60, 2, true);
 	}
 
     @SideOnly(Side.CLIENT)

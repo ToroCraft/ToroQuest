@@ -2,8 +2,6 @@ package net.torocraft.torobasemod.entities;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,12 +20,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.torocraft.torobasemod.ToroBaseMod;
-import net.torocraft.torobasemod.entities.render.RenderFriendlyMage;
 
 public class EntityFriendlyMage extends EntityCreature {
 
@@ -40,11 +36,6 @@ public class EntityFriendlyMage extends EntityCreature {
 
 	public static void init(int entityId) {
 		EntityRegistry.registerModEntity(EntityFriendlyMage.class, NAME, entityId, ToroBaseMod.instance, 60, 2, true);
-	}
-
-	public static void registerRenders() {
-		RenderManager rm = Minecraft.getMinecraft().getRenderManager();
-		RenderingRegistry.registerEntityRenderingHandler(EntityFriendlyMage.class, new RenderFriendlyMage(rm));
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import net.torocraft.toroquest.entities.model.ModelMonolithEye;
 
 @SideOnly(Side.CLIENT)
 public class RenderMonolithEye extends RenderLiving<EntityMonolithEye> {
-	private static final ResourceLocation guardianTextures = new ResourceLocation("TOROBASEMOD:textures/entity/monolithEye.png");
+	private static final ResourceLocation guardianTextures = new ResourceLocation("toroquest:textures/entity/monolithEye.png");
 
 	public RenderMonolithEye(RenderManager renderManagerIn) {
 		super(renderManagerIn, new ModelMonolithEye(), 0.5F);

@@ -7,7 +7,7 @@ import net.torocraft.toroquest.item.armor.ItemHeavyDiamondArmor;
 import net.torocraft.toroquest.item.armor.ItemKingArmor;
 import net.torocraft.toroquest.item.armor.ItemSamuraiArmor;
 
-public class ToroBaseModItems {
+public class ToroQuestItems {
 
 	public static final void init() {
 		initTools();

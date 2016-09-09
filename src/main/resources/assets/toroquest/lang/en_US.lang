@@ -15,5 +15,5 @@ item.bull_helmet.name=Bull Helmet
 item.bull_leggings.name=Bull Leggings
 item.bull_chestplate.name=Bull Chestplate
 item.torch_arrow.name=Torch Arrow
-entity.torobasemod.mage.name=Mage
-entity.torobasemod.friendly_mage.name=Mage
+entity.toroquest.mage.name=Mage
+entity.toroquest.friendly_mage.name=Mage

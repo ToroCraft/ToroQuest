@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "torobasemod:items/samurai_helmet"
+        "layer0": "toroquest:items/samurai_helmet"
     }
 }

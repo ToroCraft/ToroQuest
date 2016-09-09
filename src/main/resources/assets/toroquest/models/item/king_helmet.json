@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "torobasemod:items/king_helmet"
+        "layer0": "toroquest:items/king_helmet"
     }
 }

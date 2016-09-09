@@ -7,7 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.torocraft.toroquest.ToroQuestMod;
 
-public class ToroBaseModBlocks {
+public class ToroQuestBlocks {
 	
 	public static final String MODID = ToroQuestMod.MODID;
 	

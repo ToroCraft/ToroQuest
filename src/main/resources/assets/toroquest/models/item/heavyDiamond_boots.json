@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "torobasemod:items/heavyDiamod_boots"
+        "layer0": "toroquest:items/heavyDiamod_boots"
     }
 }

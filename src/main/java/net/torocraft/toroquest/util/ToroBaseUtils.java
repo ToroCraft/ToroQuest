@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 
 public class ToroBaseUtils {
 	
-	public static final String RESOURCE_DOMAIN = "torobasemod"; 
+	public static final String RESOURCE_DOMAIN = "toroquest";
 
 	public static <K extends IForgeRegistryEntry<?>> K registerItem(K object, String domain, String name) {
 		ResourceLocation resourceName = new ResourceLocation(domain, name);

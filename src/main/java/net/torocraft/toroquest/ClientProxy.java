@@ -3,7 +3,7 @@ package net.torocraft.toroquest;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.torocraft.toroquest.entities.render.ToroEntityRenders;
+import net.torocraft.toroquest.entities.render.ToroQuestEntityRenders;
 import net.torocraft.toroquest.item.ToroQuestItems;
 
 public class ClientProxy extends CommonProxy {
@@ -11,7 +11,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void preInit(FMLPreInitializationEvent e) {
         super.preInit(e);
-        ToroEntityRenders.init();
+        ToroQuestEntityRenders.init();
     }
 
     @Override

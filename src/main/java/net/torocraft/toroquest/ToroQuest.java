@@ -10,8 +10,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.torocraft.toroquest.util.generation.ToroGenCommand;
 
-@Mod (modid = ToroQuestMod.MODID, name = ToroQuestMod.MODNAME, version = ToroQuestMod.VERSION)
-public class ToroQuestMod {
+@Mod (modid = ToroQuest.MODID, name = ToroQuest.MODNAME, version = ToroQuest.VERSION)
+public class ToroQuest {
 
 	
 	public static final String MODID = "toroquest";
@@ -21,8 +21,8 @@ public class ToroQuestMod {
 	@SidedProxy(clientSide = "net.torocraft.toroquest.ClientProxy", serverSide = "net.torocraft.toroquest.ServerProxy")
 	public static CommonProxy proxy;
 	
-	@Instance(value = ToroQuestMod.MODID)
-	public static ToroQuestMod instance;
+	@Instance(value = ToroQuest.MODID)
+	public static ToroQuest INSTANCE;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {

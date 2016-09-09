@@ -5,11 +5,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.torocraft.toroquest.ToroQuestMod;
+import net.torocraft.toroquest.ToroQuest;
 
 public class ToroQuestBlocks {
 	
-	public static final String MODID = ToroQuestMod.MODID;
+	public static final String MODID = ToroQuest.MODID;
 	
 	//public static Block rubberBlock;
 	

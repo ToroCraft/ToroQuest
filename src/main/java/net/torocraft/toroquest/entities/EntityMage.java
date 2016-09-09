@@ -48,7 +48,7 @@ import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.torocraft.toroquest.ToroQuestMod;
+import net.torocraft.toroquest.ToroQuest;
 
 public class EntityMage extends EntityMob implements IRangedAttackMob {
 
@@ -62,7 +62,7 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 	public static String NAME = "mage";
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(EntityMage.class, NAME, entityId, ToroQuestMod.instance, 60, 2, true);
+		EntityRegistry.registerModEntity(EntityMage.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true);
 	}
 
 	public EntityMage(World worldIn) {

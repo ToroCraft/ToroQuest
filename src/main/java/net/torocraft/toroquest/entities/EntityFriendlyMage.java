@@ -23,7 +23,7 @@ import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.torocraft.toroquest.ToroQuestMod;
+import net.torocraft.toroquest.ToroQuest;
 
 public class EntityFriendlyMage extends EntityCreature {
 
@@ -35,7 +35,7 @@ public class EntityFriendlyMage extends EntityCreature {
 	public static String NAME = "friendly_mage";
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(EntityFriendlyMage.class, NAME, entityId, ToroQuestMod.instance, 60, 2, true);
+		EntityRegistry.registerModEntity(EntityFriendlyMage.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true);
 	}
 
 	@Override

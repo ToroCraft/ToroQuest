@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.torocraft.toroquest.block.ToroQuestBlocks;
 import net.torocraft.toroquest.crafting.ToroQuestRecipes;
-import net.torocraft.toroquest.entities.ToroEntities;
+import net.torocraft.toroquest.entities.ToroQuestEntities;
 import net.torocraft.toroquest.generation.CivilizationGenerator;
 import net.torocraft.toroquest.generation.WorldGenMageTowerPlacer;
 import net.torocraft.toroquest.generation.WorldGenMonolithPlacer;
@@ -24,7 +24,7 @@ public class CommonProxy {
 		ToroQuestRecipes.init();
 		WorldGenMageTowerPlacer.init();
 		WorldGenMonolithPlacer.init();
-		ToroEntities.init();
+		ToroQuestEntities.init();
     }
 
 	public void postInit(FMLPostInitializationEvent e) {

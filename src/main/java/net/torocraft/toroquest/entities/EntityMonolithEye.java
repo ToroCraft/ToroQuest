@@ -25,7 +25,7 @@ import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.torocraft.toroquest.ToroQuestMod;
+import net.torocraft.toroquest.ToroQuest;
 
 public class EntityMonolithEye extends EntityFlying implements IRangedAttackMob {
 
@@ -47,7 +47,7 @@ public class EntityMonolithEye extends EntityFlying implements IRangedAttackMob 
 	}
 	
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(EntityMonolithEye.class, NAME, entityId, ToroQuestMod.instance, 60, 2, true);
+		EntityRegistry.registerModEntity(EntityMonolithEye.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true);
 	}
 
     @SideOnly(Side.CLIENT)

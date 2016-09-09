@@ -8,14 +8,16 @@ import net.torocraft.toroquest.entities.EntityFriendlyMage;
 import net.torocraft.toroquest.entities.EntityMage;
 import net.torocraft.toroquest.entities.EntityMonolithEye;
 import net.torocraft.toroquest.entities.EntitySentry;
+import net.torocraft.toroquest.entities.EntityToro;
 
-public class ToroEntityRenders {
+public class ToroQuestEntityRenders {
 
 	public static void init() {
 		registerMageRenderer();
 		registerFriendlyMageRenderer();
 		registerMonolithEyeRenderer();
 		registerSentryRenderer();
+		EntityToro.registerRenders();
 	}
 	
 	public static void registerMageRenderer() {

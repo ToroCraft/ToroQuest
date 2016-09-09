@@ -6,7 +6,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.torocraft.toroquest.ToroQuestMod;
+import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.material.ArmorMaterials;
 import net.torocraft.toroquest.util.ToroBaseUtils;
 
@@ -70,7 +70,7 @@ public class ItemKingArmor extends ItemArmor {
 	}
 
 	private static ModelResourceLocation model(String model) {
-		return new ModelResourceLocation(ToroQuestMod.MODID + ":" + NAME + "_" + model, "inventory");
+		return new ModelResourceLocation(ToroQuest.MODID + ":" + NAME + "_" + model, "inventory");
 	}
 
 	public ItemKingArmor(String unlocalizedName, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn) {

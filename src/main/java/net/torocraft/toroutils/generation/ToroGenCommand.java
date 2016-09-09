@@ -34,7 +34,9 @@ public class ToroGenCommand extends CommandBase {
 
 		// spawnArrayOfTowers(sender);
 
-		spawnMage(server, sender);
+		// spawnMage(server, sender);
+
+		spawnTower(4, 10, 6, sender, sender.getPosition().add(2, -1, 0));
 	}
 
 	protected void spawnArrayOfTowers(ICommandSender sender) {

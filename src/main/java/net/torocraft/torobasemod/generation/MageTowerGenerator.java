@@ -196,8 +196,32 @@ public class MageTowerGenerator extends WorldGenerator {
 			}
 		}
 
+		placeSpikes(world, pos);
+
 		for (BlockPos p : spawners) {
 			placeSpawner(world, p.add(pos), randomMob(rand));
+		}
+
+	}
+
+	private void placeSpikes(World world, BlockPos pos) {
+		int l = radius / 2;
+		int h = Long.valueOf(Math.round(l * 1.5)).intValue();
+
+		BlockPos locPos = pos.add(0, height - 1, 0);
+		int z = 0;
+		for (int y = 0; y <= h; y++) {
+			for (int x = l; x <= radius + 1; x++) {
+
+				if ((x - l - 1) > (y / 2) || x == radius + 1) {
+					setBlockAndNotifyAdequately(world, locPos.add(x, y, z), wallBlock);
+					setBlockAndNotifyAdequately(world, locPos.add(-x, y, z), wallBlock);
+
+					setBlockAndNotifyAdequately(world, locPos.add(z, y, x), wallBlock);
+					setBlockAndNotifyAdequately(world, locPos.add(z, y, -x), wallBlock);
+				}
+
+			}
 		}
 
 	}
@@ -288,8 +312,6 @@ public class MageTowerGenerator extends WorldGenerator {
 
 	private IBlockState getBlockAtLocation(Random rand, int innerRadiusSquared, int magSq, IBlockState currentBlock, int y, int x, int z) {
 
-		// this.doBlockNotify = false;
-
 		if (isFloor(y)) {
 			currentBlock = floorBlock;
 		}
@@ -352,11 +374,6 @@ public class MageTowerGenerator extends WorldGenerator {
 		if (isWindowLocation(x, y, z)) {
 			currentBlock = windowBlock;
 		} else {
-
-			// if (x - (y % FLOOR_HEIGHT) <= 1) { wegdes
-
-			// if (Math.abs(x - z) <= 1) { //corner columns WIP
-
 			if (isHelixLocation(y, x, z)) {
 				currentBlock = wallDecorationBlock;
 			} else {

@@ -10,7 +10,13 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityTameable;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.datafix.DataFixer;
@@ -21,28 +27,51 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.entities.model.ModelToro;
 import net.torocraft.toroquest.entities.render.RenderToro;
 
 public class EntityToro extends EntityTameable {
 
 	public static String NAME = "toro";
 
+	private static final DataParameter<Boolean> CHARGING = EntityDataManager.<Boolean>createKey(EntityToro.class, DataSerializers.BOOLEAN);
+
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(EntityToro.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0xFF0000, 0x0000FF);
+		EntityRegistry.registerModEntity(EntityToro.class, ToroQuest.MODID + NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0xFF0000, 0x0000FF);
 	}
 
 	public static void registerRenders() {
 		RenderingRegistry.registerEntityRenderingHandler(EntityToro.class, new IRenderFactory<EntityToro>() {
 			@Override
 			public Render<EntityToro> createRenderFor(RenderManager manager) {
-				return new RenderToro(manager);
+				return new RenderToro(manager, new ModelToro(), 0.7F);
 			}
 		});
 	}
 
+	protected void entityInit() {
+		super.entityInit();
+		this.dataManager.register(CHARGING, Boolean.valueOf(false));
+	}
+
+	public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+		if (isCharging()) {
+			System.out.println("Reset Charge");
+			dataManager.set(CHARGING, false);
+		} else {
+			System.out.println("Set Charge");
+			dataManager.set(CHARGING, true);
+		}
+		return true;
+	}
+
+	public boolean isCharging() {
+		return ((Boolean) this.dataManager.get(CHARGING)).booleanValue();
+	}
+
 	public EntityToro(World worldIn) {
 		super(worldIn);
-		this.setSize(0.9F, 1.4F);
+		setSize(1.8F, 1.6F);
 	}
 
 	public static void registerFixesCow(DataFixer fixer) {
@@ -50,16 +79,17 @@ public class EntityToro extends EntityTameable {
 	}
 
 	protected void initEntityAI() {
-		// this.tasks.addTask(0, new EntityAISwimming(this));
-		// this.tasks.addTask(1, new EntityAIPanic(this, 2.0D));
-		// this.tasks.addTask(2, new EntityAIMate(this, 1.0D));
-		// this.tasks.addTask(3, new EntityAITempt(this, 1.25D, Items.WHEAT,
-		// false));
-		// this.tasks.addTask(4, new EntityAIFollowParent(this, 1.25D));
-		// this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
-		// this.tasks.addTask(6, new EntityAIWatchClosest(this,
-		// EntityPlayer.class, 6.0F));
-		// this.tasks.addTask(7, new EntityAILookIdle(this));
+		/*
+		 * this.tasks.addTask(0, new EntityAISwimming(this));
+		 * this.tasks.addTask(1, new EntityAIPanic(this, 2.0D));
+		 * this.tasks.addTask(2, new EntityAIMate(this, 1.0D));
+		 * this.tasks.addTask(3, new EntityAITempt(this, 1.25D, Items.WHEAT,
+		 * false)); this.tasks.addTask(4, new EntityAIFollowParent(this,
+		 * 1.25D)); this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
+		 * this.tasks.addTask(6, new EntityAIWatchClosest(this,
+		 * EntityPlayer.class, 6.0F)); this.tasks.addTask(7, new
+		 * EntityAILookIdle(this));
+		 */
 	}
 
 	protected void applyEntityAttributes() {

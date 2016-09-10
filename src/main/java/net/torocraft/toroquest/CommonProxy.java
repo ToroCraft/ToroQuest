@@ -25,6 +25,9 @@ public class CommonProxy {
 		WorldGenMageTowerPlacer.init();
 		WorldGenMonolithPlacer.init();
 		ToroQuestEntities.init();
+
+		EventHandlers handlers = new EventHandlers();
+		MinecraftForge.EVENT_BUS.register(handlers);
     }
 
 	public void postInit(FMLPostInitializationEvent e) {

@@ -5,22 +5,40 @@ import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.entity.ai.EntityAIFollowParent;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAIMate;
+import net.minecraft.entity.ai.EntityAIPanic;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAITempt;
+import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -30,7 +48,7 @@ import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.entities.model.ModelToro;
 import net.torocraft.toroquest.entities.render.RenderToro;
 
-public class EntityToro extends EntityTameable {
+public class EntityToro extends EntityTameable implements IMob {
 
 	public static String NAME = "toro";
 
@@ -54,15 +72,14 @@ public class EntityToro extends EntityTameable {
 		this.dataManager.register(CHARGING, Boolean.valueOf(false));
 	}
 
-	public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-		if (isCharging()) {
-			System.out.println("Reset Charge");
-			dataManager.set(CHARGING, false);
-		} else {
-			System.out.println("Set Charge");
-			dataManager.set(CHARGING, true);
-		}
-		return true;
+	/*
+	 * public boolean processInteract(EntityPlayer player, EnumHand
+	 * hand, @Nullable ItemStack stack) { if (isCharging()) {
+	 * setAttackTarget(null); } else { setAttackTarget(player); } return true; }
+	 */
+
+	private void setCharging(boolean b) {
+		dataManager.set(CHARGING, b);
 	}
 
 	public boolean isCharging() {
@@ -76,26 +93,32 @@ public class EntityToro extends EntityTameable {
 
 	public static void registerFixesCow(DataFixer fixer) {
 		EntityLiving.registerFixesMob(fixer, "Cow");
+		EntityLiving.registerFixesMob(fixer, "Monster");
 	}
 
 	protected void initEntityAI() {
-		/*
-		 * this.tasks.addTask(0, new EntityAISwimming(this));
-		 * this.tasks.addTask(1, new EntityAIPanic(this, 2.0D));
-		 * this.tasks.addTask(2, new EntityAIMate(this, 1.0D));
-		 * this.tasks.addTask(3, new EntityAITempt(this, 1.25D, Items.WHEAT,
-		 * false)); this.tasks.addTask(4, new EntityAIFollowParent(this,
-		 * 1.25D)); this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
-		 * this.tasks.addTask(6, new EntityAIWatchClosest(this,
-		 * EntityPlayer.class, 6.0F)); this.tasks.addTask(7, new
-		 * EntityAILookIdle(this));
-		 */
+		enableCowAi();
+		targetTasks.addTask(2, new ToroAIAttackMelee(this));
+	}
+
+	protected void enableCowAi() {
+		this.tasks.addTask(0, new EntityAISwimming(this));
+		this.tasks.addTask(1, new EntityAIPanic(this, 2.0D));
+		this.tasks.addTask(2, new EntityAIMate(this, 1.0D));
+		this.tasks.addTask(3, new EntityAITempt(this, 1.25D, Items.WHEAT, false));
+		this.tasks.addTask(4, new EntityAIFollowParent(this, 1.25D));
+		this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
+		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
+		this.tasks.addTask(7, new EntityAILookIdle(this));
 	}
 
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(10.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.20000000298023224D);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
+		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(10.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(64.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
 	}
 
 	protected SoundEvent getAmbientSound() {
@@ -112,6 +135,82 @@ public class EntityToro extends EntityTameable {
 
 	protected void playStepSound(BlockPos pos, Block blockIn) {
 		this.playSound(SoundEvents.ENTITY_COW_STEP, 0.15F, 1.0F);
+	}
+
+	public void notifyDataManagerChange(DataParameter<?> key) {
+		if (CHARGING.equals(key) && this.isCharging() && worldObj.isRemote) {
+			// example => playEndermanSound();
+			// TODO: play charge sound
+		}
+		super.notifyDataManagerChange(key);
+	}
+
+	public boolean attackEntityFrom(DamageSource source, float amount) {
+		if (ignoreableAttack(source)) {
+			setAttackTarget(getAttacker(source));
+		}
+		return super.attackEntityFrom(source, amount);
+	}
+
+	protected boolean ignoreableAttack(DamageSource source) {
+		return !this.isEntityInvulnerable(source) && !(source instanceof EntityDamageSourceIndirect);
+	}
+
+	private EntityLivingBase getAttacker(DamageSource source) {
+		try {
+			return (EntityLivingBase) source.getEntity();
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	public void setAttackTarget(EntityLivingBase entitylivingbaseIn) {
+		super.setAttackTarget(entitylivingbaseIn);
+		setCharging(entitylivingbaseIn != null);
+	}
+
+	public boolean attackEntityAsMob(Entity victim) {
+
+		float attackDamage = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
+		int knockback = 0;
+
+		if (victim instanceof EntityLivingBase) {
+			attackDamage += EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), ((EntityLivingBase) victim).getCreatureAttribute());
+			knockback += EnchantmentHelper.getKnockbackModifier(this);
+		}
+
+		boolean wasDamaged = victim.attackEntityFrom(DamageSource.causeMobDamage(this), attackDamage);
+
+		if (wasDamaged) {
+
+			setAttackTarget(null);
+
+			if (knockback > 0 && victim instanceof EntityLivingBase) {
+				((EntityLivingBase) victim).knockBack(this, (float) knockback * 0.5F, (double) MathHelper.sin(this.rotationYaw * 0.017453292F), (double) (-MathHelper.cos(this.rotationYaw * 0.017453292F)));
+				this.motionX *= 0.6D;
+				this.motionZ *= 0.6D;
+			}
+
+			if (victim instanceof EntityPlayer) {
+				EntityPlayer entityplayer = (EntityPlayer) victim;
+				ItemStack itemstack = this.getHeldItemMainhand();
+				ItemStack itemstack1 = entityplayer.isHandActive() ? entityplayer.getActiveItemStack() : null;
+
+				if (itemstack != null && itemstack1 != null && itemstack.getItem() instanceof ItemAxe && itemstack1.getItem() == Items.SHIELD) {
+					float f1 = 0.25F + (float) EnchantmentHelper.getEfficiencyModifier(this) * 0.05F;
+
+					if (this.rand.nextFloat() < f1) {
+						entityplayer.getCooldownTracker().setCooldown(Items.SHIELD, 100);
+						this.worldObj.setEntityState(entityplayer, (byte) 30);
+					}
+				}
+			}
+
+			this.applyEnchantments(this, victim);
+		}
+
+		return wasDamaged;
 	}
 
 	/**
@@ -132,5 +231,17 @@ public class EntityToro extends EntityTameable {
 
 	public float getEyeHeight() {
 		return this.isChild() ? this.height : 1.3F;
+	}
+
+	public static class ToroAIAttackMelee extends EntityAIAttackMelee {
+
+		public ToroAIAttackMelee(EntityCreature creature) {
+			super(creature, 1.75, false);
+		}
+
+		protected double getAttackReachSqr(EntityLivingBase attackTarget) {
+			return 1.5 + attackTarget.width;
+		}
+
 	}
 }

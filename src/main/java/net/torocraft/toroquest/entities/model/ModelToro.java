@@ -10,6 +10,11 @@ public class ModelToro extends ModelQuadruped {
 
 	protected ModelRenderer horns;
 
+	private static final float HEAD_HEIGHT = 3;
+	private static final float HEAD_DISTANCE = -15;
+
+	private static final float BODY_HEIGHT = 1;
+
 	private static final int TEX_WIDTH = 100;
 	private static final int TEX_HEIGHT = 100;
 	private static final int LEG_HEIGHT = 12;
@@ -28,7 +33,10 @@ public class ModelToro extends ModelQuadruped {
 		head.setTextureSize(TEX_WIDTH, TEX_HEIGHT);
 
 		head.addBox(-5.0F, -5.0F, -8.0F, 10, 10, 8, 0.0F);
-		head.setRotationPoint(0.0F, 3.0F, -15.0F);
+
+		head.setRotationPoint(0.0F, HEAD_HEIGHT, HEAD_DISTANCE);
+
+		// head.setRotationPoint(0.0F, 30.0F, -15.0F); moved it down
 
 		horns = new ModelRenderer(this, 0, 0);
 		horns.setTextureSize(TEX_WIDTH, TEX_HEIGHT);
@@ -43,7 +51,7 @@ public class ModelToro extends ModelQuadruped {
 		body.setTextureSize(TEX_WIDTH, TEX_HEIGHT);
 		body.setTextureOffset(0, 18).addBox(-7.0F, -15.0F, -12.0F, 14, 15, 16, 0);
 		body.setTextureOffset(0, 49).addBox(-6.0F, 0.0F, -12.0F, 12, 24, 15, 0);
-		body.setRotationPoint(0, 1.0F, 0);
+		body.setRotationPoint(0, BODY_HEIGHT, 0);
 		body.setTextureOffset(52, 0);
 	}
 
@@ -92,9 +100,22 @@ public class ModelToro extends ModelQuadruped {
 
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
 		super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
+
+		head.rotationPointY = HEAD_HEIGHT;
+		head.rotationPointZ = HEAD_DISTANCE;
+
+		body.rotationPointY = BODY_HEIGHT;
+
 		if (this.isCharging) {
-			head.rotateAngleX = 0.6f;
-			body.rotateAngleX += 0.3f;
+			head.rotateAngleX = 0.8f;
+			body.rotateAngleX += 0.10f;
+
+
+			head.rotationPointY += 6;
+			head.rotationPointZ += 2;
+
+			body.rotationPointY += 4;
+
 		}
 	}
 

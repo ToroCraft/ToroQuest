@@ -55,7 +55,7 @@ public class EntityToro extends EntityTameable implements IMob {
 	private static final DataParameter<Boolean> CHARGING = EntityDataManager.<Boolean>createKey(EntityToro.class, DataSerializers.BOOLEAN);
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(EntityToro.class, ToroQuest.MODID + NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0xFF0000, 0x0000FF);
+		EntityRegistry.registerModEntity(EntityToro.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0x3f3024, 0xe0d6b9);
 	}
 
 	public static void registerRenders() {

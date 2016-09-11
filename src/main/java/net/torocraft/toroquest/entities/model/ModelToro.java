@@ -41,8 +41,8 @@ public class ModelToro extends ModelQuadruped {
 		horns = new ModelRenderer(this, 0, 0);
 		horns.setTextureSize(TEX_WIDTH, TEX_HEIGHT);
 		head.addChild(horns);
-		horns.setTextureOffset(26, 0).addBox(-6.0F, -16F, -3.0F, 1, 10, 1, 0.0F);
-		horns.setTextureOffset(26, 0).addBox(5.0F, -16F, -3.0F, 1, 10, 1, 0.0F);
+		horns.setTextureOffset(36, 0).addBox(-6.0F, -16F, -3.0F, 1, 10, 1, 0.0F);
+		horns.setTextureOffset(36, 0).addBox(5.0F, -16F, -3.0F, 1, 10, 1, 0.0F);
 		horns.rotateAngleX = 0.5f;
 	}
 
@@ -55,6 +55,7 @@ public class ModelToro extends ModelQuadruped {
 		body.setTextureOffset(52, 0);
 	}
 
+	@SuppressWarnings("unused")
 	private void drawAxes(ModelRenderer m) {
 		if (m == null) {
 			m = new ModelRenderer(this, 0, 16);
@@ -92,7 +93,7 @@ public class ModelToro extends ModelQuadruped {
 	}
 
 	protected ModelRenderer createLeg() {
-		ModelRenderer leg = new ModelRenderer(this, 30, 0);
+		ModelRenderer leg = new ModelRenderer(this, 40, 0);
 		leg.setTextureSize(TEX_WIDTH, TEX_HEIGHT);
 		leg.addBox(-2.0F, 0.0F, -2.0F, 4, LEG_HEIGHT, 4, 0);
 		return leg;

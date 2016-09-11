@@ -165,15 +165,28 @@ public class EntityToro extends EntityTameable implements IMob {
 	}
 
 	@Override
+	public void onEntityUpdate() {
+		super.onEntityUpdate();
+		if (worldObj.getTotalWorldTime() % 100L == 0L) {
+			// TODO why does the charge get out of sync with the attack target?
+			syncChargingWithAttackTarget();
+		}
+	}
+
+	protected void syncChargingWithAttackTarget() {
+		setCharging(getAttackTarget() != null || getAITarget() != null);
+	};
+
+	@Override
 	public void setAttackTarget(EntityLivingBase entitylivingbaseIn) {
 		super.setAttackTarget(entitylivingbaseIn);
-		setCharging(entitylivingbaseIn != null);
+		syncChargingWithAttackTarget();
 	}
 
 	public boolean attackEntityAsMob(Entity victim) {
 
 		float attackDamage = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
-		int knockback = 0;
+		int knockback = 2;
 
 		if (victim instanceof EntityLivingBase) {
 			attackDamage += EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), ((EntityLivingBase) victim).getCreatureAttribute());
@@ -184,6 +197,7 @@ public class EntityToro extends EntityTameable implements IMob {
 
 		if (wasDamaged) {
 
+			setRevengeTarget(getAttackTarget());
 			setAttackTarget(null);
 
 			if (knockback > 0 && victim instanceof EntityLivingBase) {

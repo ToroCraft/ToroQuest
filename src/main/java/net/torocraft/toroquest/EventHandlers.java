@@ -7,36 +7,15 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData;
-import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData.Civilization;
 import net.torocraft.toroquest.entities.EntityToro;
 
 public class EventHandlers {
-
-	@SubscribeEvent
-	public void handleEnteringBorder(EntityEvent.EnteringChunk event) {
-		if (!(event.getEntity() instanceof EntityPlayerMP)) {
-			return;
-		}
-		EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
-		CivilizationsWorldSaveData civData = CivilizationsWorldSaveData.get(player.getEntityWorld());
-
-		Civilization civ = civData.getCivilationAt(event.getNewChunkX(), event.getNewChunkZ());
-
-		if (civ != null) {
-			player.addChatMessage(new TextComponentString("Entering Civilization of the " + civ));
-		}
-
-	}
 
 	@SubscribeEvent
 	public void spawnToroWhenCowPackSpawns(EntityJoinWorldEvent event) {

@@ -1,32 +1,63 @@
 package net.torocraft.toroquest.civilization;
 
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.terraingen.PopulateChunkEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData.Civilization;
 
 public class CivilizationHandlers {
 	
 	@SubscribeEvent
-	public void registerNewCiviliationBorder(PopulateChunkEvent.Populate event) {
-		if (!event.isHasVillageGenerated()) {
+	public void onHunt(LivingDeathEvent event) {
+
+		System.out.println("LivingDeathEvent");
+
+		EntityPlayer player = null;
+
+		EntityLivingBase e = (EntityLivingBase) event.getEntity();
+		DamageSource source = event.getSource();
+
+		if (source.getEntity() instanceof EntityPlayer) {
+			player = (EntityPlayer) source.getEntity();
+		}
+
+		if (player == null) {
 			return;
 		}
 
-		System.out.println("*** PopulateChunkEvent.Populate in EVENT_BUS");
+		int rep = player.getEntityData().getInteger("CivilizationRep");
+		rep += 1;
+		player.getEntityData().setInteger("CivilizationRep", rep);
 
-		CivilizationsWorldSaveData civData = CivilizationsWorldSaveData.get(event.getWorld());
+		System.out.println("Your rep is now [" + rep + "]");
 
-		Civilization civ = civData.getCivilationAt(event.getChunkX(), event.getChunkZ());
+	}
 
-		if (civ != null) {
-			return;
-		}
+	@SubscribeEvent
+	public void onSave(PlayerEvent.SaveToFile event) {
 
-		civ = Civilization.values()[event.getRand().nextInt(Civilization.values().length)];
-		civData.registerBorder(event.getChunkX(), event.getChunkZ(), civ);
+		/*
+		 * IDailiesCapability dailies = getCapability(event.getEntityPlayer());
+		 * if (dailies == null) { return; }
+		 * event.getEntityPlayer().getEntityData().setTag(
+		 * CapabilityDailiesHandler.NAME, dailies.writeNBT());
+		 */
+	}
+
+	@SubscribeEvent
+	public void onLoad(PlayerEvent.LoadFromFile event) {
+		/*
+		 * (NBTTagCompound) event.getEntityPlayer().getEntityData().getTag(
+		 * CapabilityDailiesHandler.NAME)
+		 * 
+		 * dailies.readNBT();
+		 */
 	}
 
 	@SubscribeEvent

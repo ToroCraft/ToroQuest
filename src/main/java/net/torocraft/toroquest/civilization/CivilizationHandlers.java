@@ -34,17 +34,13 @@ public class CivilizationHandlers {
 
 	protected void adjustRep(EntityPlayer player, EntityLivingBase victum) {
 
-		Civilization civ = CivilizationsWorldSaveData.get(victum.worldObj).getCivilationAt(victum.chunkCoordX, victum.chunkCoordZ);
+		Civilization civ = getCurrentCivilization(player);
 
 		if (civ == null) {
 			return;
 		}
 
-		NBTTagCompound tag = (NBTTagCompound) player.getEntityData().getTag("toroquest");
-		if (tag == null) {
-			tag = new NBTTagCompound();
-			player.getEntityData().setTag("toroquest", tag);
-		}
+		NBTTagCompound tag = getToroQuestPlayerDataTag(player);
 
 		int rep = tag.getInteger("rep_" + civ);
 
@@ -61,19 +57,89 @@ public class CivilizationHandlers {
 		chat(player, "Your rep for [" + civ + "] is now [" + rep + "]");
 	}
 
+	public int getPlayerRep(EntityPlayer player, Civilization civ) {
+		try {
+			return getToroQuestPlayerDataTag(player).getInteger("rep_" + civ);
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+
+	private NBTTagCompound getToroQuestPlayerDataTag(EntityPlayer player) {
+		NBTTagCompound tag = (NBTTagCompound) player.getEntityData().getTag("toroquest");
+		if (tag == null) {
+			tag = new NBTTagCompound();
+			player.getEntityData().setTag("toroquest", tag);
+		}
+		return tag;
+	}
+
+	public Civilization getCurrentCivilization(EntityPlayer player) {
+		try {
+			return Civilization.valueOf(getToroQuestPlayerDataTag(player).getString("inciv"));
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public void updateCurrentCivilization(EntityPlayer player, Civilization civ) {
+		String sCiv = null;
+		if (civ != null) {
+			sCiv = civ.toString();
+		}
+		try {
+			getToroQuestPlayerDataTag(player).setString("inciv", sCiv);
+		} catch (Exception e) {
+			System.out.println("Unable to save current civilization location: " + e.getMessage());
+		}
+	}
+
 	@SubscribeEvent
 	public void handleEnteringBorder(EntityEvent.EnteringChunk event) {
 		if (!(event.getEntity() instanceof EntityPlayerMP)) {
 			return;
 		}
+
 		EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
-		CivilizationsWorldSaveData civData = CivilizationsWorldSaveData.get(player.getEntityWorld());
 
-		Civilization civ = civData.getCivilationAt(event.getNewChunkX(), event.getNewChunkZ());
+		Civilization oldCiv = getCurrentCivilization(player);
+		Civilization newCiv = queryCurrentCiv(event, player);
 
-		if (civ != null) {
-			chat(player, "Entering Civilization of the " + civ);
+		if (newCiv == null && oldCiv != null) {
+			chat(player, leavingMessage(player, oldCiv));
+			updateCurrentCivilization(player, null);
+		} else if (newCiv != null && !newCiv.equals(oldCiv)) {
+			chat(player, enteringMessage(player, oldCiv));
+			updateCurrentCivilization(player, newCiv);
 		}
+	}
+
+	private String leavingMessage(EntityPlayerMP player, Civilization civ) {
+		int rep = getPlayerRep(player, civ);
+		if (rep >= 10) {
+			return civ.getFriendlyLeavingMessage();
+		} else if (rep <= -10) {
+			return civ.getHostileLeavingMessage();
+		} else {
+			return civ.getNeutralLeavingMessage();
+		}
+	}
+
+	private String enteringMessage(EntityPlayerMP player, Civilization civ) {
+		int rep = getPlayerRep(player, civ);
+		if (rep >= 10) {
+			return civ.getFriendlyEnteringMessage();
+		} else if (rep <= -10) {
+			return civ.getHostileEnteringMessage();
+		} else {
+			return civ.getNeutralEnteringMessage();
+		}
+	}
+
+	private Civilization queryCurrentCiv(EntityEvent.EnteringChunk event, EntityPlayerMP player) {
+		CivilizationsWorldSaveData civData = CivilizationsWorldSaveData.get(player.getEntityWorld());
+		Civilization civ = civData.getCivilationAt(event.getNewChunkX(), event.getNewChunkZ());
+		return civ;
 	}
 
 	private void chat(EntityPlayer player, String message) {

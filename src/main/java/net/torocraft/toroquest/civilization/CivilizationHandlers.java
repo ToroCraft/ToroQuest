@@ -1,26 +1,24 @@
 package net.torocraft.toroquest.civilization;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData.Civilization;
 
 public class CivilizationHandlers {
-	
+
 	@SubscribeEvent
 	public void onHunt(LivingDeathEvent event) {
-
-		System.out.println("LivingDeathEvent");
-
 		EntityPlayer player = null;
-
-		EntityLivingBase e = (EntityLivingBase) event.getEntity();
+		EntityLivingBase victum = (EntityLivingBase) event.getEntity();
 		DamageSource source = event.getSource();
 
 		if (source.getEntity() instanceof EntityPlayer) {
@@ -31,33 +29,36 @@ public class CivilizationHandlers {
 			return;
 		}
 
-		int rep = player.getEntityData().getInteger("CivilizationRep");
-		rep += 1;
-		player.getEntityData().setInteger("CivilizationRep", rep);
-
-		System.out.println("Your rep is now [" + rep + "]");
-
+		adjustRep(player, victum);
 	}
 
-	@SubscribeEvent
-	public void onSave(PlayerEvent.SaveToFile event) {
+	protected void adjustRep(EntityPlayer player, EntityLivingBase victum) {
 
-		/*
-		 * IDailiesCapability dailies = getCapability(event.getEntityPlayer());
-		 * if (dailies == null) { return; }
-		 * event.getEntityPlayer().getEntityData().setTag(
-		 * CapabilityDailiesHandler.NAME, dailies.writeNBT());
-		 */
-	}
+		Civilization civ = CivilizationsWorldSaveData.get(victum.worldObj).getCivilationAt(victum.chunkCoordX, victum.chunkCoordZ);
 
-	@SubscribeEvent
-	public void onLoad(PlayerEvent.LoadFromFile event) {
-		/*
-		 * (NBTTagCompound) event.getEntityPlayer().getEntityData().getTag(
-		 * CapabilityDailiesHandler.NAME)
-		 * 
-		 * dailies.readNBT();
-		 */
+		if (civ == null) {
+			return;
+		}
+
+		NBTTagCompound tag = (NBTTagCompound) player.getEntityData().getTag("toroquest");
+		if (tag == null) {
+			tag = new NBTTagCompound();
+			player.getEntityData().setTag("toroquest", tag);
+		}
+
+		int rep = tag.getInteger("rep_" + civ);
+
+		if (victum instanceof EntityVillager) {
+			rep -= 10;
+		} else if (victum instanceof EntityMob) {
+			rep += 1;
+		} else {
+			rep -= 1;
+		}
+
+		tag.setInteger("rep_" + civ, rep);
+
+		chat(player, "Your rep for [" + civ + "] is now [" + rep + "]");
 	}
 
 	@SubscribeEvent
@@ -71,8 +72,11 @@ public class CivilizationHandlers {
 		Civilization civ = civData.getCivilationAt(event.getNewChunkX(), event.getNewChunkZ());
 
 		if (civ != null) {
-			player.addChatMessage(new TextComponentString("Entering Civilization of the " + civ));
+			chat(player, "Entering Civilization of the " + civ);
 		}
+	}
 
+	private void chat(EntityPlayer player, String message) {
+		player.addChatMessage(new TextComponentString(message));
 	}
 }

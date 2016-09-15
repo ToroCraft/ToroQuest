@@ -88,7 +88,11 @@ public class CivilizationHandlers {
 			sCiv = civ.toString();
 		}
 		try {
-			getToroQuestPlayerDataTag(player).setString("inciv", sCiv);
+			if (sCiv == null) {
+				getToroQuestPlayerDataTag(player).removeTag("inciv");
+			} else {
+				getToroQuestPlayerDataTag(player).setString("inciv", sCiv);
+			}
 		} catch (Exception e) {
 			System.out.println("Unable to save current civilization location: " + e.getMessage());
 		}

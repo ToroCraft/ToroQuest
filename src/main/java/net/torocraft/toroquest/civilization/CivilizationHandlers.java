@@ -109,7 +109,7 @@ public class CivilizationHandlers {
 			chat(player, leavingMessage(player, oldCiv));
 			updateCurrentCivilization(player, null);
 		} else if (newCiv != null && !newCiv.equals(oldCiv)) {
-			chat(player, enteringMessage(player, oldCiv));
+			chat(player, enteringMessage(player, newCiv));
 			updateCurrentCivilization(player, newCiv);
 		}
 	}

@@ -1,0 +1,194 @@
+BCCCB    BCCCB
+CDDDC    CDDDC
+CDDDCCCCCCDDDC
+CDDDDDDDDDDDDC
+BCCDDDDDDDDCCB
+  CDDDDDDDDC
+  CDDDDDDDDC
+BCCDDDDDDDDCCB
+CDDDDDDDDDDDDC
+CDDDCCCCCCDDDC
+CDDDC    CDDDC
+BCCCB    BCCCB
+###################
+BCCCB    BCCCB
+C-l-C    C-l-C
+C---CCCCCC---C
+C------------C
+BCC--------CCB
+  C--------C
+  C--------C
+BCC--------CCB
+C------------C
+C---CCCCCC---C
+C-l-C    C-l-C
+BCCCB    BCCCB
+###################
+BCCCB    BCCCB
+C---C    C---C
+C--lCCCCCCl--C
+C------------C
+BCC--------CCB
+  C--------C
+  C--------C
+BCC--------CCB
+C------------C
+C--lCCCCCCl--C
+C---C    C---C
+BCCCB    BCCCB
+###################
+BCGCB    BCGCB
+C---C    C---C
+G--lCCCCCCl--G
+C------------C
+BCC--------CCB
+  C--------C
+  C--------C
+BCC--------CCB
+C------------C
+G--lCCCCCCl--C
+C---C    C---C
+BCGCB    BCGCB
+###################
+BCCCB    BCCCB
+C---C    C---C
+C--lCCCCCCl--C
+C------------C
+BCC--------CCB
+  C--------C
+  C--------C
+BCC--------CCB
+C------------C
+C--lCCCCCCl--C
+C---C    C---C
+BCCCB    BCCCB
+###################
+BBBBB    BBBBB
+BPPPB    BPPPB
+BPPlBBBBBBlPPB
+BPPPPPPPPPPPPB
+BBBPPPPPPPPBBB
+  BPPPPPPPPB
+  BPPPPPPPPB
+BBBPPPPPPPPBBB
+BPPPPPPPPPPPPB
+BPPlBBBBBBlPPB
+BPPPB    BPPPB
+BBBBB    BBBBB
+###################
+BCCCB    BCCCB
+C---C    C---C
+C--lCGCCGCl--C
+C------------C
+BCC--------CCB
+  C--------C
+  C--------C
+BCC--------CCB
+C------------C
+C--lCGCCGCl--C
+C---C    C---C
+BCCCB    BCCCB
+###################
+BCGCB    BCGCB
+C---C    C---C
+G--lCGCCGCl--C
+C------------C
+BCC--------CCB
+  C--------C
+  C--------C
+BCC--------CCB
+C------------C
+G--lCGCCGCl--G
+C---C    C---C
+BCGCB    BCGCB
+###################
+BCCCB    BCCCB
+C---C    C---C
+C--lCGCCGCl--C
+C------------C
+BCC--------CCB
+  C--------C
+  C--------C
+BCC--------CCB
+C------------C
+C--lCGCCGCl--C
+C---C    C---C
+BCCCB    BCCCB
+###################
+BBBBB    BBBBB
+BPlPB    BPlPB
+BPPPBBBBBBPPPB
+BPPPPPPPPPPPPB
+BBBPPPPPPPPBBB
+  BPPPPPPPPB
+  BPPPPPPPPB
+BBBPPPPPPPPBBB
+BPPPPPPPPPPPPB
+BPPPBBBBBBPPPB
+BPlPB    BPlPB
+BBBBB    BBBBB
+###################
+BCCCB    BCCCB
+C---C    C---C
+C--lCFFFFCl--C
+C------------C
+BCCCB----BCCCB
+  F--------F
+  F--------F
+BCCCB----BCCCB
+C------------C
+C--lCFFFFCl--C
+C---C    C---C
+BCCCB    BCCCB
+###################
+BCCCB    BCCCB
+C---C    C---C
+C--lC----Cl--C
+C------------C
+BCCCB----BCCCB
+--------------
+--------------
+BCCCB----BCCCB
+C------------C
+C--lC----Cl--C
+C---C    C---C
+BCCCB    BCCCB
+###################
+BCCCB    BCCCB
+C---C    C---C
+C---C----C---C
+C--lC----Cl--C
+BCCCB----BCCCB
+--------------
+--------------
+BCCCB----BCCCB
+C--lC----Cl--C
+C---C----C---C
+C---C    C---C
+BCCCB    BCCCB
+###################
+BBBBB    BBBBB
+BPPPB    BPPPB
+BPPPB----BPPPB
+BPPlB----BlPPB
+BBBBB----BBBBB
+--------------
+--------------
+BBBBB----BBBBB
+BPPlB----BlPPB
+BPPPB----BPPPB
+BPPPB    BPPPB
+BBBBB    BBBBB
+###################
+$-$-$----$-$-$
+--------------
+$---$----$---$
+--------------
+$-$-$----$-$-$
+--------------
+--------------
+$-$-$----$-$-$
+--------------
+$---$----$---$
+--------------
+$-$-$----$-$-$

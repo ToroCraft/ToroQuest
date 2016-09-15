@@ -12,6 +12,7 @@ import net.torocraft.toroquest.entities.ToroQuestEntities;
 import net.torocraft.toroquest.generation.WorldGenMageTowerPlacer;
 import net.torocraft.toroquest.generation.WorldGenMonolithPlacer;
 import net.torocraft.toroquest.generation.village.VillageHandlerKeep;
+import net.torocraft.toroquest.generation.village.VillageHandlerTrophy;
 import net.torocraft.toroquest.item.ToroQuestItems;
 
 public class CommonProxy {
@@ -21,6 +22,8 @@ public class CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new EventHandlers());
 		MinecraftForge.EVENT_BUS.register(new CivilizationHandlers());
 		VillageHandlerKeep.init();
+		VillageHandlerTrophy.init();
+		// VillageHandlerCabin.init();
 	}
 
 	public void init(FMLInitializationEvent e) {

@@ -26,15 +26,15 @@ public abstract class VillagePieceBlockMap extends StructureVillagePieces.Villag
 		DEFAULT_PALLETTE.put("Pw", Blocks.PLANKS.getDefaultState());
 		DEFAULT_PALLETTE.put("Fw", Blocks.OAK_FENCE.getDefaultState());
 		DEFAULT_PALLETTE.put("Lg", Blocks.LOG.getDefaultState());
-		DEFAULT_PALLETTE.put("l^", Blocks.LADDER.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH));
-		DEFAULT_PALLETTE.put("lv", Blocks.LADDER.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.SOUTH));
-		DEFAULT_PALLETTE.put("l>", Blocks.LADDER.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.EAST));
-		DEFAULT_PALLETTE.put("l<", Blocks.LADDER.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.WEST));
+		DEFAULT_PALLETTE.put("l<", Blocks.LADDER.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH));
+		DEFAULT_PALLETTE.put("l^", Blocks.LADDER.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.SOUTH));
+		DEFAULT_PALLETTE.put("l<", Blocks.LADDER.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.EAST));
+		DEFAULT_PALLETTE.put("l>", Blocks.LADDER.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.WEST));
 		DEFAULT_PALLETTE.put("Ss", Blocks.STONE_SLAB.getDefaultState());
 		DEFAULT_PALLETTE.put("Gp", Blocks.GLASS_PANE.getDefaultState());
 		DEFAULT_PALLETTE.put("Gs", Blocks.GLOWSTONE.getDefaultState());
-		DEFAULT_PALLETTE.put("S^", Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH));
-		DEFAULT_PALLETTE.put("Sv", Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.SOUTH));
+		DEFAULT_PALLETTE.put("Sv", Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH));
+		DEFAULT_PALLETTE.put("S^", Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.SOUTH));
 		DEFAULT_PALLETTE.put("S>", Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.EAST));
 		DEFAULT_PALLETTE.put("S<", Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.WEST));
 	}

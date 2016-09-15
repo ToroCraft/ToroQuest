@@ -1,5 +1,5 @@
 SbCsCsCsSb        SbCsCsCsSb
-CsDrDrDrCs        CsDrDrDrCs
+CsDrDrDrCsS^S^S^S^CsDrDrDrCs
 CsDrDrDrCsCsCsCsCsCsDrDrDrCs
 CsDrDrDrDrDrDrDrDrDrDrDrDrCs
 SbCsCsDrDrDrDrDrDrDrDrCsCsSb
@@ -8,19 +8,19 @@ SbCsCsDrDrDrDrDrDrDrDrCsCsSb
 SbCsCsDrDrDrDrDrDrDrDrCsCsSb
 CsDrDrDrDrDrDrDrDrDrDrDrDrCs
 CsDrDrDrCsCsCsCsCsCsDrDrDrCs
-CsDrDrDrCs        CsDrDrDrCs
+CsDrDrDrCsSvSvSvSvCsDrDrDrCs
 SbCsCsCsSb        SbCsCsCsSb
 ######################################
 SbCsCsCsSb        SbCsCsCsSb
 Cs------Cs        Cs------Cs
-Cs----L>CsCs----CsCsL<----Cs
+Cs----l>CsCs----CsCsl<----Cs
 Cs------------------------Cs
 SbCsCs----------------CsCsSb
     Cs----------------Cs
     Cs----------------Cs
 SbCsCs----------------CsCsSb
 Cs------------------------Cs
-Cs----L>CsCs----CsCsL<----Cs
+Cs----l>CsCs----CsCsl<----Cs
 Cs------Cs        Cs------Cs
 SbCsCsCsSb        SbCsCsCsSb
 ######################################
@@ -43,7 +43,7 @@ Gp----l>CsCs----CsCsl<----Gp
 Cs------------------------Cs
 SbCsCs----------------CsCsSb
     Cs----------------Cs
-   Cs----------------Cs
+    Cs----------------Cs
 SbCsCs----------------CsCsSb
 Cs------------------------Cs
 Gp----l>CsCs----CsCsl<----Gp
@@ -65,14 +65,14 @@ SbCsCsCsSb        SbCsCsCsSb
 ######################################
 SbSbSbSbSb        SbSbSbSbSb
 SbPwPwPwSb        SbPwPwPwSb
-SbPwPwl>SbSbSbSbSbSbl>PwPwSb
+SbPwPwl>SbSbSbSbSbSbl<PwPwSb
 SbPwPwPwPwPwGsGsPwPwPwPwPwSb
 SbSbSbPwPwPwPwPwPwPwPwSbSbSb
-    SbPwPwPwPwPwPwPwPwSb
-    SbPwPwPwPwPwPwPwPwSb
+    SbGsPwPwPwPwPwPwGsSb
+    SbGsPwPwPwPwPwPwGsSb
 SbSbSbPwPwPwPwPwPwPwPwSbSbSb
 SbPwPwPwPwPwGsGsPwPwPwPwPwSb
-SbPwPwl>SbSbSbSbSbSbl>PwPwSb
+SbPwPwl>SbSbSbSbSbSbl<PwPwSb
 SbPwPwPwSb        SbPwPwPwSb
 SbSbSbSbSb        SbSbSbSbSb
 ######################################
@@ -116,16 +116,16 @@ Cs------Cs        Cs------Cs
 SbCsCsCsSb        SbCsCsCsSb
 ######################################
 SbSbSbSbSb        SbSbSbSbSb
-SbPwl>PwSb        SbPwl<PwSb
-SbPwPwPwSbSbSbSbSbSbPwPwPwSb
+SbPwPwPwSb        SbPwPwPwSb
+SbPwPwl>SbSbSbSbSbSbl<PwPwSb
 SbPwPwPwPwPwGsGsPwPwPwPwPwSb
 SbSbSbPwPwPwPwPwPwPwPwSbSbSb
-    SbPwPwPwPwPwPwPwPwSb
-    SbPwPwPwPwPwPwPwPwSb
+    SbGsPwPwPwPwPwPwGsSb
+    SbGsPwPwPwPwPwPwGsSb
 SbSbSbPwPwPwPwPwPwPwPwSbSbSb
 SbPwPwPwPwPwGsGsPwPwPwPwPwSb
-SbPwPwPwSbSbSbSbSbSbPwPwPwSb
-SbPwl>PwSb        SbPwl<PwSb
+SbPwPwl>SbSbSbSbSbSbl<PwPwSb
+SbPwPwPwSb        SbPwPwPwSb
 SbSbSbSbSb        SbSbSbSbSb
 ######################################
 SbCsCsCsSb        SbCsCsCsSb
@@ -154,29 +154,29 @@ Cs----l>Cs--------Csl<----Cs
 Cs------Cs        Cs------Cs
 SbCsCsCsSb        SbCsCsCsSb
 ######################################
-SbCsCsCsSb        SbCsCsCsSb
+SbCsGpCsSb        SbCsGpCsSb
 Cs------Cs        Cs------Cs
+Gp----l>Cs--------Csl<----Gp
 Cs------Cs--------Cs------Cs
-Cs----l>Cs--------Csl<----Cs
 SbCsCsCsSb--------SbCsCsCsSb
 ----------------------------
 ----------------------------
 SbCsCsCsSb--------SbCsCsCsSb
-Cs----l>Cs--------Csl<----Cs
 Cs------Cs--------Cs------Cs
+Gp----l>Cs--------Csl<----Gp
 Cs------Cs        Cs------Cs
-SbCsCsCsSb        SbCsCsCsSb
+SbCsGpCsSb        SbCsGpCsSb
 ######################################
 SbSbSbSbSb        SbSbSbSbSb
 SbPwPwPwSb        SbPwPwPwSb
-SbPwGsPwSb--------SbPwGsPwSb
-SbPwPwl>Sb--------Sbl<PwPwSb
+SbPwGsl>Sb--------Sbl<GsPwSb
+SbPwPwPwSb--------SbPwPwPwSb
 SbSbSbSbSb--------SbSbSbSbSb
 ----------------------------
 ----------------------------
 SbSbSbSbSb--------SbSbSbSbSb
-SbPwPwl>Sb--------Sbl<PwPwSb
-SbPwGsPwSb--------SbPwGsPwSb
+SbPwPwPwSb--------SbPwPwPwSb
+SbPwGsl>Sb--------Sbl<GsPwSb
 SbPwPwPwSb        SbPwPwPwSb
 SbSbSbSbSb        SbSbSbSbSb
 ######################################

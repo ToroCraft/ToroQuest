@@ -33,7 +33,7 @@ public class BlockMapMeasurer extends BlockMapBase {
 					z = 0;
 					continue;
 				}
-				xMax = Math.max(xMax, line.toCharArray().length);
+				xMax = Math.max(xMax, line.toCharArray().length / 2);
 				z++;
 			}
 			yMax = Math.max(yMax, y);

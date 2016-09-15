@@ -7,7 +7,7 @@ import net.minecraft.block.state.IBlockState;
 
 public abstract class BlockMapBuilder extends BlockMapBase {
 
-	private Map<Character, IBlockState> palette;
+	private Map<String, IBlockState> palette;
 
 	protected abstract void setBlockState(IBlockState block, int x, int y, int z);
 
@@ -17,7 +17,7 @@ public abstract class BlockMapBuilder extends BlockMapBase {
 		super(name);
 	}
 
-	public void build(Map<Character, IBlockState> palette) {
+	public void build(Map<String, IBlockState> palette) {
 		this.palette = palette;
 		load();
 
@@ -52,16 +52,19 @@ public abstract class BlockMapBuilder extends BlockMapBase {
 
 		x = 0;
 
-		for (char c : line.toCharArray()) {
-			placeBlock(c);
+		char[] a = line.toCharArray();
+
+		for (int i = 0; i < a.length - 1; i += 2) {
+			placeBlock(String.valueOf(a[i]) + String.valueOf(a[i + 1]));
 			x++;
 		}
+
 
 		z++;
 	}
 
-	private void placeBlock(char c) {
-		if (c == ' ') {
+	private void placeBlock(String c) {
+		if (c == "  ") {
 			return;
 		}
 		IBlockState block = palette.get(c);

@@ -57,7 +57,7 @@ public class VillageHandlerKeep implements IVillageCreationHandler {
 		}
 
 		@Override
-		protected void alterPalette(Map<Character, IBlockState> palette) {
+		protected void alterPalette(Map<String, IBlockState> palette) {
 
 		}
 

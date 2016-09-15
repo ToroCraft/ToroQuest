@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import net.minecraft.block.BlockStairs;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
@@ -64,25 +62,30 @@ public class VillageHandlerCabin implements IVillageCreationHandler {
 		}
 
 		@Override
-		protected void alterPalette(Map<Character, IBlockState> palette) {
+		protected void alterPalette(Map<String, IBlockState> palette) {
 			palette.clear();
 
-			palette.put('-', Blocks.AIR.getDefaultState());
-			palette.put('W', Blocks.PLANKS.getDefaultState());
-			palette.put('p', Blocks.WOODEN_PRESSURE_PLATE.getDefaultState());
-			palette.put('G', Blocks.GLASS_PANE.getDefaultState());
-			// palette.put('b', Blocks.BED.getDefaultState());
-			palette.put('B', Blocks.STONEBRICK.getDefaultState());
-			palette.put('c', Blocks.CAULDRON.getDefaultState());
-			palette.put('f', Blocks.FURNACE.getDefaultState());
-			palette.put('C', Blocks.CHEST.getDefaultState());
-			palette.put('F', Blocks.OAK_FENCE.getDefaultState());
-			palette.put('N', Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH));
-			palette.put('S', Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.SOUTH));
-			palette.put('L', Blocks.LOG.getDefaultState());
-			// palette.put('T', Blocks.TORCH.getDefaultState());
-			palette.put('s', Blocks.WOODEN_SLAB.getDefaultState());
-			palette.put('D', Blocks.OAK_DOOR.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH));
+			/*
+			 * palette.put('-', Blocks.AIR.getDefaultState()); palette.put('W',
+			 * Blocks.PLANKS.getDefaultState()); palette.put('p',
+			 * Blocks.WOODEN_PRESSURE_PLATE.getDefaultState()); palette.put('G',
+			 * Blocks.GLASS_PANE.getDefaultState()); // palette.put('b',
+			 * Blocks.BED.getDefaultState()); palette.put('B',
+			 * Blocks.STONEBRICK.getDefaultState()); palette.put('c',
+			 * Blocks.CAULDRON.getDefaultState()); palette.put('f',
+			 * Blocks.FURNACE.getDefaultState()); palette.put('C',
+			 * Blocks.CHEST.getDefaultState()); palette.put('F',
+			 * Blocks.OAK_FENCE.getDefaultState()); palette.put('N',
+			 * Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.
+			 * FACING, EnumFacing.NORTH)); palette.put('S',
+			 * Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.
+			 * FACING, EnumFacing.SOUTH)); palette.put('L',
+			 * Blocks.LOG.getDefaultState()); // palette.put('T',
+			 * Blocks.TORCH.getDefaultState()); palette.put('s',
+			 * Blocks.WOODEN_SLAB.getDefaultState()); palette.put('D',
+			 * Blocks.OAK_DOOR.getDefaultState().withProperty(BlockStairs.
+			 * FACING, EnumFacing.NORTH));
+			 */
 
 		}
 

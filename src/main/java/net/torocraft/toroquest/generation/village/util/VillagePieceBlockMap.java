@@ -15,25 +15,28 @@ import net.minecraft.world.gen.structure.StructureVillagePieces;
 
 public abstract class VillagePieceBlockMap extends StructureVillagePieces.Village {
 
-	public static final Map<Character, IBlockState> DEFAULT_PALLETTE;
+	public static final Map<String, IBlockState> DEFAULT_PALLETTE;
 	static {
-		DEFAULT_PALLETTE = new HashMap<Character, IBlockState>();
-		DEFAULT_PALLETTE.put('-', Blocks.AIR.getDefaultState());
-		DEFAULT_PALLETTE.put('C', Blocks.COBBLESTONE.getDefaultState());
-		DEFAULT_PALLETTE.put('D', Blocks.DIRT.getDefaultState());
-		DEFAULT_PALLETTE.put('B', Blocks.STONEBRICK.getDefaultState());
-		DEFAULT_PALLETTE.put('s', Blocks.STONE.getDefaultState());
-		DEFAULT_PALLETTE.put('P', Blocks.PLANKS.getDefaultState());
-		DEFAULT_PALLETTE.put('F', Blocks.OAK_FENCE.getDefaultState());
-		DEFAULT_PALLETTE.put('L', Blocks.LOG.getDefaultState());
-		DEFAULT_PALLETTE.put('l', Blocks.LADDER.getDefaultState());
-		DEFAULT_PALLETTE.put('$', Blocks.STONE_SLAB.getDefaultState());
-		DEFAULT_PALLETTE.put('G', Blocks.GLASS_PANE.getDefaultState());
-		DEFAULT_PALLETTE.put('g', Blocks.GLOWSTONE.getDefaultState());
-		DEFAULT_PALLETTE.put('N', Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH));
-		DEFAULT_PALLETTE.put('S', Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.SOUTH));
-		DEFAULT_PALLETTE.put('E', Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.EAST));
-		DEFAULT_PALLETTE.put('W', Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.WEST));
+		DEFAULT_PALLETTE = new HashMap<String, IBlockState>();
+		DEFAULT_PALLETTE.put("--", Blocks.AIR.getDefaultState());
+		DEFAULT_PALLETTE.put("Cs", Blocks.COBBLESTONE.getDefaultState());
+		DEFAULT_PALLETTE.put("Dr", Blocks.DIRT.getDefaultState());
+		DEFAULT_PALLETTE.put("Sb", Blocks.STONEBRICK.getDefaultState());
+		DEFAULT_PALLETTE.put("So", Blocks.STONE.getDefaultState());
+		DEFAULT_PALLETTE.put("Pw", Blocks.PLANKS.getDefaultState());
+		DEFAULT_PALLETTE.put("Fw", Blocks.OAK_FENCE.getDefaultState());
+		DEFAULT_PALLETTE.put("Lg", Blocks.LOG.getDefaultState());
+		DEFAULT_PALLETTE.put("l^", Blocks.LADDER.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH));
+		DEFAULT_PALLETTE.put("lv", Blocks.LADDER.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.SOUTH));
+		DEFAULT_PALLETTE.put("l>", Blocks.LADDER.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.EAST));
+		DEFAULT_PALLETTE.put("l<", Blocks.LADDER.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.WEST));
+		DEFAULT_PALLETTE.put("Ss", Blocks.STONE_SLAB.getDefaultState());
+		DEFAULT_PALLETTE.put("Gp", Blocks.GLASS_PANE.getDefaultState());
+		DEFAULT_PALLETTE.put("Gs", Blocks.GLOWSTONE.getDefaultState());
+		DEFAULT_PALLETTE.put("S^", Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH));
+		DEFAULT_PALLETTE.put("Sv", Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.SOUTH));
+		DEFAULT_PALLETTE.put("S>", Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.EAST));
+		DEFAULT_PALLETTE.put("S<", Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.WEST));
 	}
 
 	protected final String name;
@@ -60,7 +63,7 @@ public abstract class VillagePieceBlockMap extends StructureVillagePieces.Villag
 			boundingBox.offset(0, averageGroundLvl - boundingBox.maxY + boundingBox.getYSize() - 1, 0);
 		}
 
-		Map<Character, IBlockState> palette = getBiomeSpecificPalette();
+		Map<String, IBlockState> palette = getBiomeSpecificPalette();
 
 		new BlockMapBuilder(name) {
 			@Override
@@ -77,21 +80,21 @@ public abstract class VillagePieceBlockMap extends StructureVillagePieces.Villag
 		return true;
 	}
 
-	private Map<Character, IBlockState> getBiomeSpecificPalette() {
+	private Map<String, IBlockState> getBiomeSpecificPalette() {
 
-		Map<Character, IBlockState> palette = new HashMap<Character, IBlockState>();
+		Map<String, IBlockState> palette = new HashMap<String, IBlockState>();
 		palette.putAll(DEFAULT_PALLETTE);
 
 		alterPalette(palette);
 
-		for (Entry<Character, IBlockState> e : palette.entrySet()) {
+		for (Entry<String, IBlockState> e : palette.entrySet()) {
 			e.setValue(getBiomeSpecificBlockState(e.getValue()));
 		}
 
 		return palette;
 	}
 
-	protected abstract void alterPalette(Map<Character, IBlockState> palette);
+	protected abstract void alterPalette(Map<String, IBlockState> palette);
 
 	protected int chooseProfession(int villagersSpawnedIn, int currentVillagerProfession) {
 		return 1;

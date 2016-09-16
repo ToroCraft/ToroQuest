@@ -18,6 +18,7 @@ item.torch_arrow.name=Torch Arrow
 entity.toroquest.mage.name=Mage
 entity.toroquest.friendly_mage.name=Mage
 entity.toroquest.toro.name=Toro
+entity.toroquest.villageLord.name=Village Lord
 civilization.earth.name=Terra
 civilization.wind.name=Gustaberg
 civilization.fire.name=Lumens

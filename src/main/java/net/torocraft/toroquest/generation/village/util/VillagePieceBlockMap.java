@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import net.minecraft.block.BlockBed;
+import net.minecraft.block.BlockChest;
+import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -20,6 +23,7 @@ public abstract class VillagePieceBlockMap extends StructureVillagePieces.Villag
 		DEFAULT_PALLETTE = new HashMap<String, IBlockState>();
 		DEFAULT_PALLETTE.put("--", Blocks.AIR.getDefaultState());
 		DEFAULT_PALLETTE.put("Cs", Blocks.COBBLESTONE.getDefaultState());
+		DEFAULT_PALLETTE.put("Wa", Blocks.WATER.getDefaultState());
 		DEFAULT_PALLETTE.put("Dr", Blocks.DIRT.getDefaultState());
 		DEFAULT_PALLETTE.put("Sb", Blocks.STONEBRICK.getDefaultState());
 		DEFAULT_PALLETTE.put("So", Blocks.STONE.getDefaultState());
@@ -35,8 +39,24 @@ public abstract class VillagePieceBlockMap extends StructureVillagePieces.Villag
 		DEFAULT_PALLETTE.put("Gs", Blocks.GLOWSTONE.getDefaultState());
 		DEFAULT_PALLETTE.put("Sv", Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH));
 		DEFAULT_PALLETTE.put("S^", Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.SOUTH));
-		DEFAULT_PALLETTE.put("S>", Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.EAST));
-		DEFAULT_PALLETTE.put("S<", Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.WEST));
+		DEFAULT_PALLETTE.put("S<", Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.EAST));
+		DEFAULT_PALLETTE.put("S>", Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.WEST));
+
+		DEFAULT_PALLETTE.put("bv", Blocks.BED.getDefaultState().withProperty(BlockBed.FACING, EnumFacing.NORTH));
+		DEFAULT_PALLETTE.put("b^", Blocks.BED.getDefaultState().withProperty(BlockBed.FACING, EnumFacing.SOUTH));
+		DEFAULT_PALLETTE.put("b>", Blocks.BED.getDefaultState().withProperty(BlockBed.FACING, EnumFacing.EAST));
+		DEFAULT_PALLETTE.put("b<", Blocks.BED.getDefaultState().withProperty(BlockBed.FACING, EnumFacing.WEST));
+
+		DEFAULT_PALLETTE.put("dv", Blocks.OAK_DOOR.getDefaultState().withProperty(BlockBed.FACING, EnumFacing.NORTH));
+		DEFAULT_PALLETTE.put("d^", Blocks.OAK_DOOR.getDefaultState().withProperty(BlockBed.FACING, EnumFacing.SOUTH));
+		DEFAULT_PALLETTE.put("d>", Blocks.OAK_DOOR.getDefaultState().withProperty(BlockBed.FACING, EnumFacing.EAST));
+		DEFAULT_PALLETTE.put("d<", Blocks.OAK_DOOR.getDefaultState().withProperty(BlockBed.FACING, EnumFacing.WEST));
+
+		DEFAULT_PALLETTE.put("cv", Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.NORTH));
+		DEFAULT_PALLETTE.put("c^", Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH));
+		DEFAULT_PALLETTE.put("c>", Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST));
+		DEFAULT_PALLETTE.put("c<", Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST));
+
 	}
 
 	protected final String name;
@@ -48,14 +68,13 @@ public abstract class VillagePieceBlockMap extends StructureVillagePieces.Villag
 		this.boundingBox = bounds;
 	}
 
-	/**
-	 * second Part of Structure generating, this for example places Spiderwebs,
-	 * Mob Spawners, it closes Mineshafts at the end, it adds Fences...
-	 */
+	protected boolean specialBlockHandling(World world, String c, int x, int y, int z) {
+		return false;
+	}
 
-	public boolean addComponentParts(final World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {
+	public boolean addComponentParts(final World world, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {
 		if (averageGroundLvl < 0) {
-			averageGroundLvl = this.getAverageGroundLevel(worldIn, structureBoundingBoxIn);
+			averageGroundLvl = this.getAverageGroundLevel(world, structureBoundingBoxIn);
 
 			if (averageGroundLvl < 0) {
 				return true;
@@ -68,12 +87,17 @@ public abstract class VillagePieceBlockMap extends StructureVillagePieces.Villag
 		new BlockMapBuilder(name) {
 			@Override
 			protected void setBlockState(IBlockState block, int x, int y, int z) {
-				VillagePieceBlockMap.this.setBlockState(worldIn, block, x, y, z, boundingBox);
+				VillagePieceBlockMap.this.setBlockState(world, block, x, y, z, boundingBox);
 			}
 
 			@Override
 			protected void replaceAirAndLiquidDownwards(IBlockState block, int x, int y, int z) {
-				VillagePieceBlockMap.this.replaceAirAndLiquidDownwards(worldIn, block, x, y, z, boundingBox);
+				VillagePieceBlockMap.this.replaceAirAndLiquidDownwards(world, block, x, y, z, boundingBox);
+			}
+
+			@Override
+			protected boolean specialBlockHandling(String c, int x, int y, int z) {
+				return VillagePieceBlockMap.this.specialBlockHandling(world, c, x, y, z);
 			}
 		}.build(palette);
 
@@ -92,6 +116,30 @@ public abstract class VillagePieceBlockMap extends StructureVillagePieces.Villag
 		}
 
 		return palette;
+	}
+
+	protected IBlockState getBiomeSpecificBlockState(IBlockState in) {
+		in = super.getBiomeSpecificBlockState(in);
+		if (in.getBlock() instanceof BlockDoor) {
+			in = biomeSpecificDoor(in);
+		}
+		return in;
+	}
+
+	protected IBlockState biomeSpecificDoor(IBlockState in) {
+		BlockDoor newBlock;
+		switch (this.field_189928_h) {
+		case 2:
+			newBlock = Blocks.ACACIA_DOOR;
+			break;
+		case 3:
+			newBlock = Blocks.SPRUCE_DOOR;
+			break;
+		default:
+			newBlock = Blocks.OAK_DOOR;
+			break;
+		}
+		return newBlock.getDefaultState().withProperty(BlockBed.FACING, in.getValue(BlockDoor.FACING));
 	}
 
 	protected abstract void alterPalette(Map<String, IBlockState> palette);

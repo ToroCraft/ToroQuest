@@ -196,7 +196,7 @@ public class MageTowerGenerator extends WorldGenerator {
 			}
 		}
 
-		placeSpikes(world, pos);
+		// placeSpikes(world, pos);
 
 		for (BlockPos p : spawners) {
 			placeSpawner(world, p.add(pos), randomMob(rand));

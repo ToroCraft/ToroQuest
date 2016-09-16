@@ -47,13 +47,8 @@ public class VillageHandlerTrophy implements IVillageCreationHandler {
 	public static class VillagePieceTrophy extends VillagePieceBlockMap {
 
 		public static VillagePieceTrophy createPiece(StructureVillagePieces.Start start, List<StructureComponent> structures, Random rand, int x, int y, int z, EnumFacing facing, int p_175850_7_) {
-
 			BlockPos size = new BlockMapMeasurer(NAME).measure();
-
-			System.out.println("*** Measured [" + NAME + "] to be " + size);
-
 			StructureBoundingBox bounds = StructureBoundingBox.getComponentToAddBoundingBox(x, y, z, 0, 0, 0, size.getX(), size.getY(), size.getZ(), facing);
-
 			return canVillageGoDeeper(bounds) && StructureComponent.findIntersecting(structures, bounds) == null ? new VillagePieceTrophy(start, p_175850_7_, rand, bounds, facing) : null;
 		}
 

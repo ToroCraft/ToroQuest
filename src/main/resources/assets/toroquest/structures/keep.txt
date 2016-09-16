@@ -1,14 +1,14 @@
 SbCsCsCsSb        SbCsCsCsSb
-CsDrDrDrCsS^S^S^S^CsDrDrDrCs
-CsDrDrDrCsCsCsCsCsCsDrDrDrCs
-CsDrDrDrDrDrDrDrDrDrDrDrDrCs
-SbCsCsDrDrDrDrDrDrDrDrCsCsSb
-    CsDrDrDrDrDrDrDrDrCs
-    CsDrDrDrDrDrDrDrDrCs
-SbCsCsDrDrDrDrDrDrDrDrCsCsSb
-CsDrDrDrDrDrDrDrDrDrDrDrDrCs
-CsDrDrDrCsCsCsCsCsCsDrDrDrCs
 CsDrDrDrCsSvSvSvSvCsDrDrDrCs
+CsDrDrDrCsCsCsCsCsCsDrDrDrCs
+CsDrDrDrDrDrDrDrDrDrDrDrDrCs
+SbCsCsDrDrDrDrDrDrDrDrCsCsSb
+    CsDrDrDrDrDrDrDrDrCs
+    CsDrDrDrDrDrDrDrDrCs
+SbCsCsDrDrDrDrDrDrDrDrCsCsSb
+CsDrDrDrDrDrDrDrDrDrDrDrDrCs
+CsDrDrDrCsCsCsCsCsCsDrDrDrCs
+CsDrDrDrCsS^S^S^S^CsDrDrDrCs
 SbCsCsCsSb        SbCsCsCsSb
 ######################################
 SbCsCsCsSb        SbCsCsCsSb
@@ -141,31 +141,31 @@ Cs----l>CsFwFwFwFwCsl<----Cs
 Cs------Cs        Cs------Cs
 SbCsCsCsSb        SbCsCsCsSb
 ######################################
-SbCsCsCsSb        SbCsCsCsSb
+SbCsGpCsSb        SbCsGpCsSb
 Cs------Cs        Cs------Cs
-Cs----l>Cs--------Csl<----Cs
+Gp----l>Cs--------Csl<----Gp
 Cs------------------------Cs
 SbCsCsCsSb--------SbCsCsCsSb
 ----------------------------
 ----------------------------
 SbCsCsCsSb--------SbCsCsCsSb
 Cs------------------------Cs
-Cs----l>Cs--------Csl<----Cs
+Gp----l>Cs--------Csl<----Gp
 Cs------Cs        Cs------Cs
-SbCsCsCsSb        SbCsCsCsSb
+SbCsGpCsSb        SbCsGpCsSb
 ######################################
-SbCsGpCsSb        SbCsGpCsSb
+SbCsCsCsSb        SbCsCsCsSb
 Cs------Cs        Cs------Cs
-Gp----l>Cs--------Csl<----Gp
+Cs----l>Cs--------Csl<----Cs
 Cs------Cs--------Cs------Cs
 SbCsCsCsSb--------SbCsCsCsSb
 ----------------------------
 ----------------------------
 SbCsCsCsSb--------SbCsCsCsSb
 Cs------Cs--------Cs------Cs
-Gp----l>Cs--------Csl<----Gp
+Cs----l>Cs--------Csl<----Cs
 Cs------Cs        Cs------Cs
-SbCsGpCsSb        SbCsGpCsSb
+SbCsCsCsSb        SbCsCsCsSb
 ######################################
 SbSbSbSbSb        SbSbSbSbSb
 SbPwPwPwSb        SbPwPwPwSb

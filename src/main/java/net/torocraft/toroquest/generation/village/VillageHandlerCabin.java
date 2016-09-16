@@ -50,8 +50,6 @@ public class VillageHandlerCabin implements IVillageCreationHandler {
 
 			BlockPos size = new BlockMapMeasurer(NAME).measure();
 
-			System.out.println("*** Measured [" + NAME + "] to be " + size);
-
 			StructureBoundingBox bounds = StructureBoundingBox.getComponentToAddBoundingBox(x, y, z, 0, 0, 0, size.getX(), size.getY(), size.getZ(), facing);
 
 			return canVillageGoDeeper(bounds) && StructureComponent.findIntersecting(structures, bounds) == null ? new VillagePieceCabin(start, p_175850_7_, rand, bounds, facing) : null;

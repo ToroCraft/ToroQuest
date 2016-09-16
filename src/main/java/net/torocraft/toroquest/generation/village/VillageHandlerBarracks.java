@@ -33,7 +33,7 @@ public class VillageHandlerBarracks implements IVillageCreationHandler {
 
 	@Override
 	public PieceWeight getVillagePieceWeight(Random random, int i) {
-		return new PieceWeight(VillagePieceBarracks.class, 30, 10);
+		return new PieceWeight(VillagePieceBarracks.class, 30, 1);
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class VillageHandlerBarracks implements IVillageCreationHandler {
 
 		@Override
 		protected void alterPalette(Map<String, IBlockState> palette) {
-			// palette.put(" ", EntityArmorStand);
+
 		}
 
 	}

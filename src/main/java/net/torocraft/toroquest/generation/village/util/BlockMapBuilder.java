@@ -6,6 +6,7 @@ import java.util.Map;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockBed.EnumPartType;
 import net.minecraft.block.BlockDoor;
+import net.minecraft.block.BlockStairs;
 import net.minecraft.block.state.IBlockState;
 
 public abstract class BlockMapBuilder extends BlockMapBase {
@@ -80,13 +81,17 @@ public abstract class BlockMapBuilder extends BlockMapBase {
 			return;
 		}
 
-		if (y == 0) {
+		if (y == 0 && blockIsRepeatable(block)) {
 			replaceAirAndLiquidDownwards(block, x, y, z);
 		} else {
 			setBlockState(block, x, y, z);
 			handleExtraBedBlock(block, c);
 			handleExtraDoorBlock(block, c);
 		}
+	}
+
+	private boolean blockIsRepeatable(IBlockState block) {
+		return !(block instanceof BlockStairs || block instanceof BlockDoor);
 	}
 
 	private void handleExtraDoorBlock(IBlockState block, String c) {

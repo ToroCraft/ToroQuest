@@ -1,99 +1,99 @@
-      Wp
-CsCsCsCsCsCsCs
-CsDrDrDrDrDrCs
-CsDrDrDrDrDrCs
-CsDrDrDrDrDrCs
-CsDrDrDrDrDrCs
-CsDrDrDrDrDrCs
-CsDrDrDrDrDrCs
-CsDrDrDrDrDrCs
-CsDrDrDrDrDrCs
-CsDrDrDrDrDrCs
-CsDrDrDrDrDrCs
-CsCsCsCsCsCsCs
-      Wp
+        Wp
+  CsCsCsCsCsCsCs
+  CsDrDrDrDrDrCs
+  CsDrDrDrDrDrCs
+WpCsDrDrDrDrDrCsWp
+  CsDrDrDrDrDrCs
+  CsDrDrDrDrDrCs
+  CsDrDrDrDrDrCs
+  CsDrDrDrDrDrCs
+  CsDrDrDrDrDrCs
+  CsDrDrDrDrDrCs
+  CsDrDrDrDrDrCs
+  CsCsCsCsCsCsCs
+        Wp
 ######################################
-      Sv
-CsCsCsCsCsCsCs
-CsCsCsCsCsCsCs
-CsCsCsCsCsCsCs
-CsCsCsCsCsCsCs
-CsCsCsCsCsCsCs
-CsCsCsCsCsCsCs
-CsCsCsCsCsCsCs
-CsCsCsCsCsCsCs
-CsCsCsCsCsCsCs
-CsCsCsCsCsCsCs
-CsCsCsCsCsCsCs
-CsCsCsCsCsCsCs
-      S^
+        Sv
+  CsCsCsCsCsCsCs
+  CsCsCsCsCsCsCs
+  CsCsCsCsCsCsCs
+S>CsCsCsCsCsCsCsS<
+  CsCsCsCsCsCsCs
+  CsCsCsCsCsCsCs
+  CsCsCsCsCsCsCs
+  CsCsCsCsCsCsCs
+  CsCsCsCsCsCsCs
+  CsCsCsCsCsCsCs
+  CsCsCsCsCsCsCs
+  CsCsCsCsCsCsCs
+        S^
 ######################################
-
-CsPwPwdvPwPwCs
-Pwxxxx--xxxxPw
-Pw----------Pw
-d>----------d<
-Pwl<------l>Pw
-Pwc^c^--c^c^Pw
-PwPwPw--PwPwPw
-Pw  b<--b>  Pw
-Pw  b<--b>  Pw
-Pw  b<--b>  Pw
-Pw  b<--b>  Pw
-CsPwPwd^PwPwCs
+  
+  CsPwPwdvPwPwCs
+  Pwxxxx--xxxxPw
+  Pw----------Pw
+  d>----------d<
+  Pwl<------l>Pw
+  Pwc^c^--c^c^Pw
+  PwPwPw--PwPwPw
+  Pw  b<--b>  Pw
+  Pw  b<--b>  Pw
+  Pw  b<--b>  Pw
+  Pw  b<--b>  Pw
+  CsPwPwd^PwPwCs
 ######################################
-
-CsPwPw  PwPwCs
-Pw----------Pw
-Pw----------Pw
-  ----------  
-Pwl<------l>Pw
-Pw----------Pw
-PwPwPw--PwPwPw
-Pw----------Pw
-Pw----------Pw
-Pw----------Pw
-Pw----------Pw
-CsPwPw  PwPwCs
+  
+  CsPwPw  PwPwCs
+  Pw----------Pw
+  Pw----------Pw
+    ----------  
+  Pwl<------l>Pw
+  Pw----------Pw
+  PwPwPw--PwPwPw
+  Pw----------Pw
+  Pw----------Pw
+  Pw----------Pw
+  Pw----------Pw
+  CsPwPw  PwPwCs
 ######################################
-
-CsPwPwPwPwPwCs
-Pw----------Pw
-Pw----------Pw
-Pw----------Pw
-Pwl<------l>Pw
-Pw----------Pw
-PwPwPw--PwPwPw
-Pw----------Pw
-Pw----------Pw
-Pw----------Pw
-Pw----------Pw
-CsPwPwPwPwPwCs
+  
+  CsPwPwPwPwPwCs
+  Pw----tv----Pw
+  Pw----------Pw
+  Pwt>------t<Pw
+  Pwl<------l>Pw
+  Pw----------Pw
+  PwPwPw--PwPwPw
+  Pw----------Pw
+  Pwt>------t<Pw
+  Pwt>------t<Pw
+  Pw----------Pw
+  CsPwPwPwPwPwCs
+#######################################
+  
+  LgLgLgLgLgLgLg
+  LgPwPwPwPwPwLg
+  LgPwPwPwPwPwLg
+  LgPwPwPwPwPwLg
+  Lgl<PwPwPwl>Lg
+  LgPwPwPwPwPwLg
+  LgPwPwPwPwPwLg
+  LgPwPwPwPwPwLg
+  LgPwPwPwPwPwLg
+  LgPwPwPwPwPwLg
+  LgPwPwPwPwPwLg
+  LgLgLgLgLgLgLg
 ######################################
-
-LgLgLgLgLgLgLg
-LgPwPwPwPwPwLg
-LgPwPwPwPwPwLg
-LgPwPwPwPwPwLg
-Lgl<PwPwPwl>Lg
-LgPwPwPwPwPwLg
-LgPwPwPwPwPwLg
-LgPwPwPwPwPwLg
-LgPwPwPwPwPwLg
-LgPwPwPwPwPwLg
-LgPwPwPwPwPwLg
-LgLgLgLgLgLgLg
-######################################
-
-FwFwFwFwFwFwFw
-Fw----------Fw
-Fw----------Fw
-Fw----------Fw
-Fw----------Fw
-Fw----------Fw
-Fw----------Fw
-Fw----------Fw
-Fw----------Fw
-Fw----------Fw
-Fw----------Fw
-FwFwFwFwFwFwFw
+  
+  FwFwFwFwFwFwFw
+  Fw----------Fw
+  Fw----------Fw
+  Fw----------Fw
+  Fw----------Fw
+  Fw----------Fw
+  Fw----------Fw
+  Fw----------Fw
+  Fw----------Fw
+  Fw----------Fw
+  Fw----------Fw
+  FwFwFwFwFwFwFw

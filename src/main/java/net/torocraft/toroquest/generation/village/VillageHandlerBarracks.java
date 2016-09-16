@@ -33,7 +33,7 @@ public class VillageHandlerBarracks implements IVillageCreationHandler {
 
 	@Override
 	public PieceWeight getVillagePieceWeight(Random random, int i) {
-		return new PieceWeight(VillagePieceBarracks.class, 30, 1);
+		return new PieceWeight(VillagePieceBarracks.class, 30, 10);
 	}
 
 	@Override

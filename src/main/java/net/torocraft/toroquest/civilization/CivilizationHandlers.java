@@ -54,7 +54,7 @@ public class CivilizationHandlers {
 
 		tag.setInteger("rep_" + civ, rep);
 
-		chat(player, "Your rep for [" + civ + "] is now [" + rep + "]");
+		chat(player, "Your rep for [" + civ.getLocalizedName() + "] is now [" + rep + "]");
 	}
 
 	public int getPlayerRep(EntityPlayer player, Civilization civ) {

@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -57,7 +58,7 @@ public class CivilizationHandlers {
 		chat(player, "Your rep for [" + civ.getLocalizedName() + "] is now [" + rep + "]");
 	}
 
-	public int getPlayerRep(EntityPlayer player, Civilization civ) {
+	public static int getPlayerRep(EntityPlayer player, Civilization civ) {
 		try {
 			return getToroQuestPlayerDataTag(player).getInteger("rep_" + civ);
 		} catch (Exception e) {
@@ -65,7 +66,7 @@ public class CivilizationHandlers {
 		}
 	}
 
-	private NBTTagCompound getToroQuestPlayerDataTag(EntityPlayer player) {
+	private static NBTTagCompound getToroQuestPlayerDataTag(EntityPlayer player) {
 		NBTTagCompound tag = (NBTTagCompound) player.getEntityData().getTag("toroquest");
 		if (tag == null) {
 			tag = new NBTTagCompound();
@@ -141,9 +142,12 @@ public class CivilizationHandlers {
 	}
 
 	private Civilization queryCurrentCiv(EntityEvent.EnteringChunk event, EntityPlayerMP player) {
-		CivilizationsWorldSaveData civData = CivilizationsWorldSaveData.get(player.getEntityWorld());
-		Civilization civ = civData.getCivilationAt(event.getNewChunkX(), event.getNewChunkZ());
-		return civ;
+		return getCivilizationAt(player.getEntityWorld(), event.getNewChunkX(), event.getNewChunkZ());
+	}
+
+	public static Civilization getCivilizationAt(World world, int chunkX, int chunkZ) {
+		CivilizationsWorldSaveData civData = CivilizationsWorldSaveData.get(world);
+		return civData.getCivilationAt(chunkX, chunkZ);
 	}
 
 	private void chat(EntityPlayer player, String message) {

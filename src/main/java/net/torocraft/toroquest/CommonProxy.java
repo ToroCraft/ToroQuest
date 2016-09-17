@@ -12,6 +12,8 @@ import net.torocraft.toroquest.entities.ToroQuestEntities;
 import net.torocraft.toroquest.generation.WorldGenMageTowerPlacer;
 import net.torocraft.toroquest.generation.WorldGenMonolithPlacer;
 import net.torocraft.toroquest.generation.village.VillageHandlerBarracks;
+import net.torocraft.toroquest.generation.village.VillageHandlerGuardTower;
+import net.torocraft.toroquest.generation.village.VillageHandlerGuardTower2;
 import net.torocraft.toroquest.generation.village.VillageHandlerKeep;
 import net.torocraft.toroquest.generation.village.VillageHandlerShop;
 import net.torocraft.toroquest.generation.village.VillageHandlerTrophy;
@@ -26,6 +28,8 @@ public class CommonProxy {
 		VillageHandlerKeep.init();
 		VillageHandlerTrophy.init();
 		VillageHandlerShop.init();
+		VillageHandlerGuardTower.init();
+		VillageHandlerGuardTower2.init();
 		VillageHandlerBarracks.init();
 	}
 

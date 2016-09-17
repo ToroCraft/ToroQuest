@@ -7,5 +7,6 @@ public class ToroQuestEntities {
 		EntityFriendlyMage.init(id++);
 		EntityMonolithEye.init(id++);
 		EntityToro.init(id++);
+		EntityVillageLord.init(id++);
 	}
 }

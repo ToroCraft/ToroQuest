@@ -1,7 +1,5 @@
 package net.torocraft.toroquest.entities;
 
-import java.util.Calendar;
-
 import javax.annotation.Nullable;
 
 import net.minecraft.client.renderer.entity.Render;
@@ -9,23 +7,16 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.monster.EntityIronGolem;
-import net.minecraft.entity.monster.EntityPigZombie;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -63,35 +54,12 @@ public class EntityGuard extends EntityToroNpc {
 	}
 
 	protected void initEntityAI() {
-		/// zombieAi();
 
+		tasks.addTask(2, new EntityAIAttackMelee(this, 0.6D, false));
 		tasks.addTask(7, new EntityAIWander(this, 0.5D));
-		// tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class,
-		// 8.0F));
-		// tasks.addTask(8, new EntityAILookIdle(this));
-		applyEntityAI();
-	}
 
-	protected void zombieAi() {
-		this.tasks.addTask(0, new EntityAISwimming(this));
-		// this.tasks.addTask(2, new EntityAIZombieAttack(this, 1.0D, false));
-		this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 1.0D));
-		this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
-		this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-		this.tasks.addTask(8, new EntityAILookIdle(this));
-	}
+		targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityGuard.class, true));
 
-	protected void applyEntityAI() {
-
-		// zombieAttack();
-	}
-
-	protected void zombieAttack() {
-		this.tasks.addTask(6, new EntityAIMoveThroughVillage(this, 1.0D, false));
-		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[] { EntityPigZombie.class }));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityIronGolem.class, true));
 	}
 
 	protected void entityInit() {
@@ -121,6 +89,24 @@ public class EntityGuard extends EntityToroNpc {
 		super.onUpdate();
 	}
 
+	public void onUpdate_OFF() {
+		super.onUpdate();
+
+		// this.renderOffsetY = 0.0F;
+		super.onUpdate();
+		this.prevLimbSwingAmount = this.limbSwingAmount;
+		double d0 = this.posX - this.prevPosX;
+		double d1 = this.posZ - this.prevPosZ;
+		float f = MathHelper.sqrt_double(d0 * d0 + d1 * d1) * 4.0F;
+
+		if (f > 1.0F) {
+			f = 1.0F;
+		}
+
+		this.limbSwingAmount += (f - this.limbSwingAmount) * 0.4F;
+		this.limbSwing += this.limbSwingAmount;
+	}
+
 	public boolean attackEntityAsMob(Entity victum) {
 
 		if (!super.attackEntityAsMob(victum)) {
@@ -144,18 +130,18 @@ public class EntityGuard extends EntityToroNpc {
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
 		livingdata = super.onInitialSpawn(difficulty, livingdata);
 
-		this.setCanPickUpLoot(true);
-		this.setEquipmentBasedOnDifficulty(difficulty);
-		this.setEnchantmentBasedOnDifficulty(difficulty);
+		setCanPickUpLoot(true);
+		setEquipmentBasedOnDifficulty(difficulty);
+		setEnchantmentBasedOnDifficulty(difficulty);
 
-		if (this.getItemStackFromSlot(EntityEquipmentSlot.HEAD) == null) {
-			Calendar calendar = this.worldObj.getCurrentDate();
+		setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.DIAMOND_SWORD, 1));
+		setHeldItem(EnumHand.OFF_HAND, new ItemStack(Items.SHIELD, 1));
 
-			if (calendar.get(2) + 1 == 10 && calendar.get(5) == 31 && this.rand.nextFloat() < 0.25F) {
-				this.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(this.rand.nextFloat() < 0.1F ? Blocks.LIT_PUMPKIN : Blocks.PUMPKIN));
-				this.inventoryArmorDropChances[EntityEquipmentSlot.HEAD.getIndex()] = 0.0F;
-			}
-		}
+		setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(Items.DIAMOND_HELMET, 1));
+		setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(Items.DIAMOND_BOOTS, 1));
+		setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(Items.DIAMOND_LEGGINGS, 1));
+		setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(Items.DIAMOND_CHESTPLATE, 1));
+
 
 		return livingdata;
 	}

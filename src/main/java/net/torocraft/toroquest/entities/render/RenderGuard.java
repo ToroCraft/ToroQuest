@@ -14,6 +14,9 @@ import net.minecraft.client.renderer.entity.layers.LayerCustomHead;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerVillagerArmor;
+import net.minecraft.item.EnumAction;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -69,7 +72,69 @@ public class RenderGuard extends RenderBiped<EntityGuard> {
 	 */
 	public void doRender(EntityGuard entity, double x, double y, double z, float entityYaw, float partialTicks) {
 		this.swapArmor(entity);
+		this.setModelVisibilities(entity);
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
+	}
+
+	private void setModelVisibilities(EntityGuard clientPlayer) {
+		ModelGuard modelplayer = (ModelGuard) this.getMainModel();
+
+		ItemStack itemstack = clientPlayer.getHeldItemMainhand();
+		ItemStack itemstack1 = clientPlayer.getHeldItemOffhand();
+		modelplayer.setInvisible(true);
+
+		// modelplayer.bipedHeadwear.showModel =
+		// clientPlayer.isWearing(EnumPlayerModelParts.HAT);
+		/*
+		 * modelplayer.bipedBodyWear.showModel =
+		 * clientPlayer.isWearing(EnumPlayerModelParts.JACKET);
+		 * modelplayer.bipedLeftLegwear.showModel =
+		 * clientPlayer.isWearing(EnumPlayerModelParts.LEFT_PANTS_LEG);
+		 * modelplayer.bipedRightLegwear.showModel =
+		 * clientPlayer.isWearing(EnumPlayerModelParts.RIGHT_PANTS_LEG);
+		 * modelplayer.bipedLeftArmwear.showModel =
+		 * clientPlayer.isWearing(EnumPlayerModelParts.LEFT_SLEEVE);
+		 * modelplayer.bipedRightArmwear.showModel =
+		 * clientPlayer.isWearing(EnumPlayerModelParts.RIGHT_SLEEVE);
+		 */
+		modelplayer.isSneak = clientPlayer.isSneaking();
+		ModelBiped.ArmPose modelbiped$armpose = ModelBiped.ArmPose.EMPTY;
+		ModelBiped.ArmPose modelbiped$armpose1 = ModelBiped.ArmPose.EMPTY;
+
+		if (itemstack != null) {
+			modelbiped$armpose = ModelBiped.ArmPose.ITEM;
+
+			if (clientPlayer.getItemInUseCount() > 0) {
+				EnumAction enumaction = itemstack.getItemUseAction();
+
+				if (enumaction == EnumAction.BLOCK) {
+					modelbiped$armpose = ModelBiped.ArmPose.BLOCK;
+				} else if (enumaction == EnumAction.BOW) {
+					modelbiped$armpose = ModelBiped.ArmPose.BOW_AND_ARROW;
+				}
+			}
+		}
+
+		if (itemstack1 != null) {
+			modelbiped$armpose1 = ModelBiped.ArmPose.ITEM;
+
+			if (clientPlayer.getItemInUseCount() > 0) {
+				EnumAction enumaction1 = itemstack1.getItemUseAction();
+
+				if (enumaction1 == EnumAction.BLOCK) {
+					modelbiped$armpose1 = ModelBiped.ArmPose.BLOCK;
+				}
+			}
+		}
+
+		if (clientPlayer.getPrimaryHand() == EnumHandSide.RIGHT) {
+			modelplayer.rightArmPose = modelbiped$armpose;
+			modelplayer.leftArmPose = modelbiped$armpose1;
+		} else {
+			modelplayer.rightArmPose = modelbiped$armpose1;
+			modelplayer.leftArmPose = modelbiped$armpose;
+		}
+
 	}
 
 	/**

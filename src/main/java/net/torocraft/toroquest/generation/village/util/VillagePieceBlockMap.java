@@ -79,6 +79,10 @@ public abstract class VillagePieceBlockMap extends StructureVillagePieces.Villag
 		return false;
 	}
 
+	protected int getYOffset() {
+		return 0;
+	}
+
 	public boolean addComponentParts(final World world, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {
 		if (averageGroundLvl < 0) {
 			averageGroundLvl = this.getAverageGroundLevel(world, structureBoundingBoxIn);
@@ -86,7 +90,7 @@ public abstract class VillagePieceBlockMap extends StructureVillagePieces.Villag
 			if (averageGroundLvl < 0) {
 				return true;
 			}
-			boundingBox.offset(0, averageGroundLvl - boundingBox.maxY + boundingBox.getYSize() - 1, 0);
+			boundingBox.offset(0, averageGroundLvl - boundingBox.maxY + boundingBox.getYSize() - 1 + getYOffset(), 0);
 		}
 
 		Map<String, IBlockState> palette = getBiomeSpecificPalette();

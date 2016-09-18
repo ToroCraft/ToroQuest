@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 import javax.annotation.Nullable;
 
+import com.google.common.base.Predicate;
+
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -20,6 +22,7 @@ import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.boss.EntityDragonPart;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -59,7 +62,7 @@ public class EntityGuard extends EntityToroNpc {
 	public static String NAME = "guard";
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(EntityGuard.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0x3f3024, 0xe0d6b9);
+		EntityRegistry.registerModEntity(EntityGuard.class, NAME, entityId, ToroQuest.INSTANCE, 80, 2, true, 0x3f3024, 0xe0d6b9);
 	}
 
 	public static void registerRenders() {
@@ -85,17 +88,23 @@ public class EntityGuard extends EntityToroNpc {
 	private EntityAIMoveIntoArea areaAI;
 
 	protected void initEntityAI() {
-		areaAI = new EntityAIMoveIntoArea(this, 1D, 10);
+
+		areaAI = new EntityAIMoveIntoArea(this, 0.5D, 30);
 
 		tasks.addTask(0, new EntityAISwimming(this));
 		tasks.addTask(2, new EntityAIAttackMelee(this, 0.6D, false));
 		tasks.addTask(4, areaAI);
-		tasks.addTask(7, new EntityAIWander(this, 0.25D));
+		tasks.addTask(7, new EntityAIWander(this, 0.35D));
 		tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		tasks.addTask(8, new EntityAILookIdle(this));
-
+		
 		targetTasks.addTask(2, new EntityAINearestAttackableCivTarget(this));
-		targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityMob.class, false));
+		targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityMob.class, 10, false, false,  new Predicate<EntityMob>() {
+			@Override
+			public boolean apply(EntityMob target) {
+				return !(target instanceof EntityCreeper);
+			}
+		}));
 
 	}
 
@@ -359,7 +368,8 @@ public class EntityGuard extends EntityToroNpc {
 		setEquipmentBasedOnDifficulty(difficulty);
 		setEnchantmentBasedOnDifficulty(difficulty);
 
-		setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.STICK, 1));
+		setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.DIAMOND_SWORD, 1));
+
 		setHeldItem(EnumHand.OFF_HAND, new ItemStack(Items.SHIELD, 1));
 
 		setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(Items.DIAMOND_HELMET, 1));

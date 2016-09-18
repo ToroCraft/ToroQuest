@@ -55,8 +55,11 @@ public class EntityToroNpc extends EntityCreature {
 		super.entityInit();
 		this.dataManager.register(CIV, "");
 
+	}
 
-
+	@Override
+	protected boolean canDespawn() {
+		return false;
 	}
 
 	public Civilization getCivilization() {

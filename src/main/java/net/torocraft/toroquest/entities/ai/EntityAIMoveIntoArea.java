@@ -40,6 +40,7 @@ public class EntityAIMoveIntoArea extends EntityAIBase {
 	public void setCenter(int centerX, int centerZ) {
 		this.centerX = centerX;
 		this.centerZ = centerZ;
+		enable();
 	}
 
 	public boolean shouldExecute() {

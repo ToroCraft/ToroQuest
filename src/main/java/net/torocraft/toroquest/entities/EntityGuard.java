@@ -369,15 +369,18 @@ public class EntityGuard extends EntityToroNpc {
 		setEnchantmentBasedOnDifficulty(difficulty);
 
 		setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.DIAMOND_SWORD, 1));
-
 		setHeldItem(EnumHand.OFF_HAND, new ItemStack(Items.SHIELD, 1));
 
+		// addArmor();
+
+		return livingdata;
+	}
+
+	protected void addArmor() {
 		setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(Items.DIAMOND_HELMET, 1));
 		setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(Items.DIAMOND_BOOTS, 1));
 		setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(Items.DIAMOND_LEGGINGS, 1));
 		setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(Items.DIAMOND_CHESTPLATE, 1));
-
-		return livingdata;
 	}
 
 	protected final void setSize(float width, float height) {

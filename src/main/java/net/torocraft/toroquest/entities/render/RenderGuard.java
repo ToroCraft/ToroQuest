@@ -20,13 +20,14 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.entities.EntityGuard;
 import net.torocraft.toroquest.entities.model.ModelGuard;
 
 @SideOnly(Side.CLIENT)
 public class RenderGuard extends RenderBiped<EntityGuard> {
 
-	private static final ResourceLocation ZOMBIE_TEXTURES = new ResourceLocation("textures/entity/zombie/zombie.png");
+	private static final ResourceLocation TEXTURES = new ResourceLocation(ToroQuest.MODID + ":textures/entity/guard/guard.png");
 
 	private final ModelBiped defaultModel;
 	private final ModelZombieVillager zombieVillagerModel;
@@ -142,7 +143,7 @@ public class RenderGuard extends RenderBiped<EntityGuard> {
 	 * unless you call Render.bindEntityTexture.
 	 */
 	protected ResourceLocation getEntityTexture(EntityGuard entity) {
-		return ZOMBIE_TEXTURES;
+		return TEXTURES;
 
 	}
 

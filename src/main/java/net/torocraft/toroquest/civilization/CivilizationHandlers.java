@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData.Border;
 import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData.Civilization;
 
 public class CivilizationHandlers {
@@ -147,7 +148,12 @@ public class CivilizationHandlers {
 
 	public static Civilization getCivilizationAt(World world, int chunkX, int chunkZ) {
 		CivilizationsWorldSaveData civData = CivilizationsWorldSaveData.get(world);
-		return civData.getCivilationAt(chunkX, chunkZ);
+		return civData.getCivilizationAt(chunkX, chunkZ);
+	}
+
+	public static Border getCivilizationBorderAt(World world, int chunkX, int chunkZ) {
+		CivilizationsWorldSaveData civData = CivilizationsWorldSaveData.get(world);
+		return civData.getCivilizationBorderAt(chunkX, chunkZ);
 	}
 
 	private void chat(EntityPlayer player, String message) {

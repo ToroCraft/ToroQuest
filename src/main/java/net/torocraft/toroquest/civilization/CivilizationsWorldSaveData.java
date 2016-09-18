@@ -27,7 +27,7 @@ public class CivilizationsWorldSaveData extends WorldSavedData {
 		super(name);
 	}
 
-	public Civilization getCivilationAt(Integer chunkX, Integer chunkZ) {
+	public Border getCivilizationBorderAt(Integer chunkX, Integer chunkZ) {
 		Collection<Border> inBorders = null;
 
 		try {
@@ -44,23 +44,31 @@ public class CivilizationsWorldSaveData extends WorldSavedData {
 
 		if (inBorders.size() == 1) {
 			for (Border border : inBorders) {
-				return border.civilization;
+				return border;
 			}
 		}
 
 		TreeMap<Double, Border> bordersByDistance = new TreeMap<Double, CivilizationsWorldSaveData.Border>();
 
 		for (Border border : inBorders) {
-			bordersByDistance.put(border.distanceSq(chunkX, chunkZ), border);
+			bordersByDistance.put(border.chunkDistanceSq(chunkX, chunkZ), border);
 		}
 
 		Border border = bordersByDistance.firstEntry().getValue();
 
 		if (border != null) {
-			return border.civilization;
+			return border;
 		}
 
 		return null;
+	}
+
+	public Civilization getCivilizationAt(Integer chunkX, Integer chunkZ) {
+		Border border = getCivilizationBorderAt(chunkX, chunkZ);
+		if (border == null) {
+			return null;
+		}
+		return border.civilization;
 	}
 
 	public void registerBorder(int chunkX, int chunkZ, Civilization civ) {
@@ -136,7 +144,7 @@ public class CivilizationsWorldSaveData extends WorldSavedData {
 			return c;
 		}
 
-		public double distanceSq(int toChunkX, int toChunkZ) {
+		public double chunkDistanceSq(int toChunkX, int toChunkZ) {
 			double dx = (double) chunkX - toChunkX;
 			double dz = (double) chunkZ - toChunkZ;
 			return dx * dx + dz * dz;

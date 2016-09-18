@@ -12,7 +12,7 @@ public class CivilizationGeneratorHandlers {
 			return;
 		}
 		CivilizationsWorldSaveData civData = CivilizationsWorldSaveData.get(event.getWorld());
-		Civilization civ = civData.getCivilationAt(event.getChunkX(), event.getChunkZ());
+		Civilization civ = civData.getCivilizationAt(event.getChunkX(), event.getChunkZ());
 		if (civ != null) {
 			return;
 		}

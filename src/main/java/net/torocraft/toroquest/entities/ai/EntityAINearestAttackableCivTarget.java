@@ -88,14 +88,11 @@ public class EntityAINearestAttackableCivTarget extends EntityAITarget {
 			return false;
 		}
 
-		/*
-		 * if (shouldExecuteNonPlayer()) { System.out.println(
-		 * "EntityAINearestAttackableCivTarget: atttacking player: " +
-		 * targetEntity.getName()); return true; }
-		 */
+		if (shouldExecuteNonPlayer()) {
+			return true;
+		}
 
 		if (shouldExecutePlayer()) {
-			System.out.println("EntityAINearestAttackableCivTarget: atttacking player: " + targetEntity.getName());
 			return true;
 		}
 

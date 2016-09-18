@@ -15,7 +15,6 @@ import net.minecraft.entity.IEntityMultiPart;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
@@ -43,7 +42,10 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.civilization.CivilizationHandlers;
+import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData.Border;
 import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData.Civilization;
+import net.torocraft.toroquest.entities.ai.EntityAIMoveIntoArea;
 import net.torocraft.toroquest.entities.ai.EntityAINearestAttackableCivTarget;
 import net.torocraft.toroquest.entities.render.RenderGuard;
 
@@ -80,10 +82,14 @@ public class EntityGuard extends EntityToroNpc {
 		Arrays.fill(inventoryHandsDropChances, 0.25F);
 	}
 
+	private EntityAIMoveIntoArea areaAI;
+
 	protected void initEntityAI() {
+		areaAI = new EntityAIMoveIntoArea(this, 1D, 10);
 
 		tasks.addTask(0, new EntityAISwimming(this));
 		tasks.addTask(2, new EntityAIAttackMelee(this, 0.6D, false));
+		tasks.addTask(4, areaAI);
 		tasks.addTask(7, new EntityAIWander(this, 0.25D));
 		tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		tasks.addTask(8, new EntityAILookIdle(this));
@@ -93,21 +99,16 @@ public class EntityGuard extends EntityToroNpc {
 
 	}
 
-	public static class GuardAIMoveTowardsRestriction extends EntityAIMoveTowardsRestriction {
 
-		private final EntityGuard guard;
+	@Override
+	public void setCivilization(Civilization civ) {
+		super.setCivilization(civ);
 
-		public GuardAIMoveTowardsRestriction(EntityGuard guard, double speedIn) {
-			super(guard, speedIn);
-			this.guard = guard;
-		}
-
-		@Override
-		public boolean shouldExecute() {
-			if (guard.getAttackingEntity() != null) {
-				return false;
+		if (areaAI != null) {
+			Border border = CivilizationHandlers.getCivilizationBorderAt(worldObj, (int) posX / 16, (int) posZ / 16);
+			if (border != null) {
+				areaAI.setCenter(border.chunkX * 16, border.chunkZ * 16);
 			}
-			return super.shouldExecute();
 		}
 
 	}

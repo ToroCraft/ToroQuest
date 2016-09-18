@@ -52,7 +52,7 @@ public class VillageHandlerShop implements IVillageCreationHandler {
 
 		@Override
 		protected int getYOffset() {
-			return -1;
+			return -2;
 		}
 
 		public static VillagePieceShop createPiece(StructureVillagePieces.Start start, List<StructureComponent> structures, Random rand, int x, int y,

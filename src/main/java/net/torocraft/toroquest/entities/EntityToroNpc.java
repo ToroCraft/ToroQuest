@@ -22,14 +22,17 @@ import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.torocraft.toroquest.civilization.CivilizationHandlers;
+import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData.Civilization;
 
 public class EntityToroNpc extends EntityCreature {
 
-	protected static final DataParameter<String> CIV = EntityDataManager.<String>createKey(EntityEnderman.class, DataSerializers.STRING);
+	private static final DataParameter<String> CIV = EntityDataManager.<String>createKey(EntityEnderman.class, DataSerializers.STRING);
 
-	public EntityToroNpc(World worldIn) {
+	public EntityToroNpc(World worldIn, Civilization civ) {
 		super(worldIn);
 		this.experienceValue = 5;
+		setCivilization(civ);
 	}
 
 	public static void registerFixesMonster(DataFixer fixer) {
@@ -40,9 +43,32 @@ public class EntityToroNpc extends EntityCreature {
 		return SoundCategory.HOSTILE;
 	}
 
+	public void setCivilization(Civilization civ) {
+		if (civ == null) {
+			dataManager.set(CIV, "");
+		} else {
+			dataManager.set(CIV, civ.toString());
+		}
+	}
+
 	protected void entityInit() {
 		super.entityInit();
 		this.dataManager.register(CIV, "");
+
+
+
+	}
+
+	public Civilization getCivilization() {
+		return enumCiv(dataManager.get(CIV));
+	}
+
+	private Civilization enumCiv(String s) {
+		try {
+			return Civilization.valueOf(s);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	/**
@@ -59,6 +85,18 @@ public class EntityToroNpc extends EntityCreature {
 		}
 
 		super.onLivingUpdate();
+
+		pledgeAllegianceIfUnaffiliated();
+
+	}
+
+	private void pledgeAllegianceIfUnaffiliated() {
+		if (worldObj.isRemote || worldObj.getTotalWorldTime() % 80L != 0L || getCivilization() != null) {
+			return;
+		}
+		Civilization civ = CivilizationHandlers.getCivilizationAt(worldObj, (int) posX / 16, (int) posZ / 16);
+		System.out.println("EntityToroNpc.entityInit(): pos[x" + posX + " z" + posZ + "] set civ to " + civ);
+		setCivilization(civ);
 	}
 
 	/**

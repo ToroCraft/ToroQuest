@@ -22,14 +22,15 @@ import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.torocraft.toroquest.civilization.CivilizationHandlers;
-import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData.Civilization;
+import net.torocraft.toroquest.civilization.CivilizationType;
+import net.torocraft.toroquest.civilization.CivilizationUtil;
+import net.torocraft.toroquest.civilization.Province;
 
 public class EntityToroNpc extends EntityCreature {
 
 	private static final DataParameter<String> CIV = EntityDataManager.<String>createKey(EntityEnderman.class, DataSerializers.STRING);
 
-	public EntityToroNpc(World worldIn, Civilization civ) {
+	public EntityToroNpc(World worldIn, CivilizationType civ) {
 		super(worldIn);
 		this.experienceValue = 5;
 		setCivilization(civ);
@@ -43,29 +44,33 @@ public class EntityToroNpc extends EntityCreature {
 		return SoundCategory.HOSTILE;
 	}
 
-	public void setCivilization(Civilization civ) {
+	public void setCivilization(CivilizationType civ) {
 		if (civ == null) {
 			dataManager.set(CIV, "");
 		} else {
 			dataManager.set(CIV, civ.toString());
 		}
+		dataManager.setDirty(CIV);
 	}
 
 	protected void entityInit() {
 		super.entityInit();
 		this.dataManager.register(CIV, "");
 
-
-
 	}
 
-	public Civilization getCivilization() {
+	@Override
+	protected boolean canDespawn() {
+		return false;
+	}
+
+	public CivilizationType getCivilization() {
 		return enumCiv(dataManager.get(CIV));
 	}
 
-	private Civilization enumCiv(String s) {
+	private CivilizationType enumCiv(String s) {
 		try {
-			return Civilization.valueOf(s);
+			return CivilizationType.valueOf(s);
 		} catch (Exception e) {
 			return null;
 		}
@@ -94,9 +99,13 @@ public class EntityToroNpc extends EntityCreature {
 		if (worldObj.isRemote || worldObj.getTotalWorldTime() % 80L != 0L || getCivilization() != null) {
 			return;
 		}
-		Civilization civ = CivilizationHandlers.getCivilizationAt(worldObj, (int) posX / 16, (int) posZ / 16);
-		System.out.println("EntityToroNpc.entityInit(): pos[x" + posX + " z" + posZ + "] set civ to " + civ);
-		setCivilization(civ);
+		Province civ = CivilizationUtil.getProvinceAt(worldObj, (int) posX / 16, (int) posZ / 16);
+
+		if (civ == null || civ.civilization == null) {
+			return;
+		}
+
+		setCivilization(civ.civilization);
 	}
 
 	/**

@@ -1,10 +1,12 @@
 package net.torocraft.toroquest.civilization;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.TreeMap;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
@@ -12,78 +14,91 @@ import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.storage.MapStorage;
 import net.torocraft.toroquest.ToroQuest;
 
-public class CivilizationsWorldSaveData extends WorldSavedData {
+public class CivilizationsWorldSaveData extends WorldSavedData implements CivilizationDataAccessor {
 
 	private static final String DATA_NAME = ToroQuest.MODID + "_civilizations";
 	private static final int RADIUS = 12;
+	public World world;
 
-	private TreeMap<Integer, TreeMap<Integer, Border>> borders = new TreeMap<Integer, TreeMap<Integer, Border>>();
+	private TreeMap<Integer, TreeMap<Integer, Province>> borders = new TreeMap<Integer, TreeMap<Integer, Province>>();
 
 	public CivilizationsWorldSaveData() {
 		super(DATA_NAME);
 	}
 
-	public CivilizationsWorldSaveData(String name) {
-		super(name);
-	}
+	@Override
+	public Province atLocation(final int chunkX, final int chunkZ) {
 
-	public Border getCivilizationBorderAt(Integer chunkX, Integer chunkZ) {
-		Collection<Border> inBorders = null;
 
-		try {
-			for (TreeMap<Integer, Border> zValues : borders.subMap(chunkX - RADIUS, chunkX + RADIUS).values()) {
-				inBorders = zValues.subMap(chunkZ - RADIUS, chunkZ + RADIUS).values();
-			}
-		} catch (Exception e) {
+		Collection<Province> provinces = rangeQueryOnProvinces(chunkX, chunkZ);
+
+		if (provinces == null || provinces.size() < 1) {
 			return null;
 		}
 
-		if (inBorders == null || inBorders.size() < 1) {
-			return null;
-		}
-
-		if (inBorders.size() == 1) {
-			for (Border border : inBorders) {
+		if (provinces.size() == 1) {
+			for (Province border : provinces) {
 				return border;
 			}
 		}
 
-		TreeMap<Double, Border> bordersByDistance = new TreeMap<Double, CivilizationsWorldSaveData.Border>();
+		List<Province> list = new ArrayList<Province>(provinces);
 
-		for (Border border : inBorders) {
-			bordersByDistance.put(border.chunkDistanceSq(chunkX, chunkZ), border);
-		}
+		Collections.sort(list, new Comparator<Province>() {
+			@Override
+			public int compare(Province a, Province b) {
+				double d0 = chunkDistanceSq(chunkX, chunkZ, a.chunkX, a.chunkZ);
+				double d1 = chunkDistanceSq(chunkX, chunkZ, b.chunkX, b.chunkZ);
+				return d0 < d1 ? -1 : (d0 > d1 ? 1 : 0);
+			}
+		});
 
-		Border border = bordersByDistance.firstEntry().getValue();
+		return list.get(0);
 
-		if (border != null) {
-			return border;
-		}
-
-		return null;
 	}
 
-	public Civilization getCivilizationAt(Integer chunkX, Integer chunkZ) {
-		Border border = getCivilizationBorderAt(chunkX, chunkZ);
-		if (border == null) {
+	public int chunkDistanceSq(int aX, int aZ, int bX, int bZ) {
+		int x = aX - bX;
+		int z = aZ - bZ;
+		return x * x + z * z;
+	}
+
+	protected Collection<Province> rangeQueryOnProvinces(int chunkX, int chunkZ) {
+		try {
+			for (TreeMap<Integer, Province> zValues : borders.subMap(chunkX - RADIUS, chunkX + RADIUS).values()) {
+				return zValues.subMap(chunkZ - RADIUS, chunkZ + RADIUS).values();
+			}
+			return null;
+		} catch (Exception e) {
 			return null;
 		}
-		return border.civilization;
 	}
 
-	public void registerBorder(int chunkX, int chunkZ, Civilization civ) {
-		Border border = new Border();
-		border.chunkX = chunkX;
-		border.chunkZ = chunkZ;
-		border.civilization = civ;
-		addBorder(border);
+
+	@Override
+	public Province register(int chunkX, int chunkZ) {
+		
+		Province nearbyProvice = atLocation(chunkX, chunkZ);
+		
+		Province province = new Province();
+		province.chunkX = chunkX;
+		province.chunkZ = chunkZ;
+		
+		if(nearbyProvice != null && nearbyProvice.civilization != null){
+			province.civilization = nearbyProvice.civilization;
+		}else {
+			province.civilization = CivilizationType.values()[world.rand.nextInt(CivilizationType.values().length)];
+		}
+		
+		addBorder(province);
 		markDirty();
+		return province;
 	}
 
-	protected void addBorder(Border border) {
+	private void addBorder(Province border) {
 		System.out.println("Loading Civ Border X[" + border.chunkX + "] Z[" + border.chunkZ + "] CIV[" + border.civilization + "]");
 		if (borders.get(border.chunkX) == null) {
-			borders.put(border.chunkX, new TreeMap<Integer, Border>());
+			borders.put(border.chunkX, new TreeMap<Integer, Province>());
 		}
 		borders.get(border.chunkX).put(border.chunkZ, border);
 	}
@@ -97,7 +112,7 @@ public class CivilizationsWorldSaveData extends WorldSavedData {
 			list = new NBTTagList();
 		}
 		for (int i = 0; i < list.tagCount(); i++) {
-			Border border = new Border();
+			Province border = new Province();
 			border.readNBT(list.getCompoundTagAt(i));
 			addBorder(border);
 		}
@@ -106,8 +121,8 @@ public class CivilizationsWorldSaveData extends WorldSavedData {
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound t) {
 		NBTTagList list = new NBTTagList();
-		for (TreeMap<Integer, Border> sub : borders.values()) {
-			for (Border border : sub.values()) {
+		for (TreeMap<Integer, Province> sub : borders.values()) {
+			for (Province border : sub.values()) {
 				list.appendTag(border.writeNBT());
 			}
 		}
@@ -115,75 +130,17 @@ public class CivilizationsWorldSaveData extends WorldSavedData {
 		return t;
 	}
 
-	public static CivilizationsWorldSaveData get(World world) {
+
+
+	public static CivilizationDataAccessor get(World world) {
 		MapStorage storage = world.getMapStorage();
 		CivilizationsWorldSaveData instance = (CivilizationsWorldSaveData) storage.getOrLoadData(CivilizationsWorldSaveData.class, DATA_NAME);
 		if (instance == null) {
 			instance = new CivilizationsWorldSaveData();
 			storage.setData(DATA_NAME, instance);
 		}
+		instance.world = world;
 		return instance;
 	}
-
-	public static class Border {
-		public int chunkX;
-		public int chunkZ;
-		public Civilization civilization;
-
-		public void readNBT(NBTTagCompound c) {
-			chunkX = c.getInteger("chunkX");
-			chunkZ = c.getInteger("chunkZ");
-			civilization = Civilization.valueOf(c.getString("civilization"));
-		}
-
-		public NBTBase writeNBT() {
-			NBTTagCompound c = new NBTTagCompound();
-			c.setString("civilization", civilization.toString());
-			c.setInteger("chunkX", chunkX);
-			c.setInteger("chunkZ", chunkZ);
-			return c;
-		}
-
-		public double chunkDistanceSq(int toChunkX, int toChunkZ) {
-			double dx = (double) chunkX - toChunkX;
-			double dz = (double) chunkZ - toChunkZ;
-			return dx * dx + dz * dz;
-		}
-	}
-
-	public static enum Civilization {
-		EARTH, WIND, FIRE, MOON, SUN;
-		public String getUnlocalizedName() {
-			return "civilization." + this.toString().toLowerCase() + ".name";
-		}
-
-		public String getLocalizedName() {
-			return I18n.format(getUnlocalizedName(), new Object[0]);
-		}
-
-		public String getFriendlyEnteringMessage() {
-			return I18n.format("civilization.entering.friendly", getLocalizedName());
-		}
-
-		public String getNeutralEnteringMessage() {
-			return I18n.format("civilization.entering.neutral", getLocalizedName());
-		}
-
-		public String getHostileEnteringMessage() {
-			return I18n.format("civilization.entering.hostile", getLocalizedName());
-		}
-
-		public String getFriendlyLeavingMessage() {
-			return I18n.format("civilization.leaving.friendly", getLocalizedName());
-		}
-
-		public String getNeutralLeavingMessage() {
-			return I18n.format("civilization.leaving.neutral", getLocalizedName());
-		}
-
-		public String getHostileLeavingMessage() {
-			return I18n.format("civilization.leaving.hostile", getLocalizedName());
-		}
-	};
 
 }

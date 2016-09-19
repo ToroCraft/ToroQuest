@@ -15,8 +15,8 @@ import net.minecraft.entity.ai.EntityAITarget;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.torocraft.toroquest.civilization.CivilizationHandlers;
-import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData.Civilization;
+import net.torocraft.toroquest.civilization.CivilizationType;
+import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.entities.EntityToroNpc;
 
 public class EntityAINearestAttackableCivTarget extends EntityAITarget {
@@ -69,13 +69,13 @@ public class EntityAINearestAttackableCivTarget extends EntityAITarget {
 
 		EntityToroNpc npc = (EntityToroNpc) EntityAINearestAttackableCivTarget.this.taskOwner;
 
-		Civilization civ = npc.getCivilization();
+		CivilizationType civ = npc.getCivilization();
 
 		if (civ == null) {
 			return false;
 		}
 
-		int rep = CivilizationHandlers.getPlayerRep(target, civ);
+		int rep = CivilizationUtil.getPlayerReputation(target, civ);
 
 		return rep < -10;
 	}
@@ -117,10 +117,10 @@ public class EntityAINearestAttackableCivTarget extends EntityAITarget {
 		} else {
 			Collections.sort(list, this.theNearestAttackableTargetSorter);
 
-			Civilization ownerCiv = taskOwner.getCivilization();
+			CivilizationType ownerCiv = taskOwner.getCivilization();
 
 			for (EntityToroNpc npc : list) {
-				Civilization npcCiv = npc.getCivilization();
+				CivilizationType npcCiv = npc.getCivilization();
 				if (npcCiv != null && !npcCiv.equals(ownerCiv)) {
 					targetEntity = npc;
 					System.out.println("EntityAINearestAttackableCivTarget: attacking npc: " + targetEntity.getName());

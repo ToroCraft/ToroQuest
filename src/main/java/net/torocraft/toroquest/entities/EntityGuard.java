@@ -45,9 +45,9 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
-import net.torocraft.toroquest.civilization.CivilizationHandlers;
-import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData.Border;
-import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData.Civilization;
+import net.torocraft.toroquest.civilization.CivilizationType;
+import net.torocraft.toroquest.civilization.CivilizationUtil;
+import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.entities.ai.EntityAIMoveIntoArea;
 import net.torocraft.toroquest.entities.ai.EntityAINearestAttackableCivTarget;
 import net.torocraft.toroquest.entities.render.RenderGuard;
@@ -78,7 +78,7 @@ public class EntityGuard extends EntityToroNpc {
 		this(worldIn, null);
 	}
 
-	public EntityGuard(World worldIn, Civilization civ) {
+	public EntityGuard(World worldIn, CivilizationType civ) {
 		super(worldIn, civ);
 		setSize(0.6F, 1.95F);
 		Arrays.fill(inventoryArmorDropChances, 0.25F);
@@ -110,11 +110,11 @@ public class EntityGuard extends EntityToroNpc {
 
 
 	@Override
-	public void setCivilization(Civilization civ) {
+	public void setCivilization(CivilizationType civ) {
 		super.setCivilization(civ);
 
 		if (areaAI != null) {
-			Border border = CivilizationHandlers.getCivilizationBorderAt(worldObj, (int) posX / 16, (int) posZ / 16);
+			Province border = CivilizationUtil.getProvinceAt(worldObj, (int) posX / 16, (int) posZ / 16);
 			if (border != null) {
 				areaAI.setCenter(border.chunkX * 16, border.chunkZ * 16);
 			}

@@ -24,22 +24,31 @@ public class CivilizationOverlayHandler {
 		Province civ = CivilizationUtil.getPlayerCurrentProvince(player);
 
 		if (event.getType() == ElementType.HEALTH) {
-
-			if (civ != null)
-				drawCivilizationOverlay(width, height, civ);
+			//			if (civ != null)
+			drawCivilizationOverlay(width, height, civ);
 		}
 	}
 
 	private void drawCivilizationOverlay(int width, int height, Province civ) {
 		int left = width / 2 - 8;
-		int top = height / 2 + 20;
+		int top = height - 48;
+
+		ToroUtils.drawOverlayIcon(left, top + 4, 0, 1);
+		if (civ == null) {
+			ToroUtils.drawOverlayIcon(left, top, 0, 0);
+			return;
+		}
 
 		if (civ.civilization.toString().equals(CivilizationType.EARTH)) {
+			ToroUtils.drawOverlayIcon(left, top, 0, 0);
+		} else if (civ.civilization.toString().equals(CivilizationType.WIND)) {
 			ToroUtils.drawOverlayIcon(left, top, 1, 0);
 		} else if (civ.civilization.toString().equals(CivilizationType.FIRE)) {
-			ToroUtils.drawOverlayIcon(left, top, 1, 0);
-		} else {
-			ToroUtils.drawOverlayIcon(left, top, 0, 0);
+			ToroUtils.drawOverlayIcon(left, top, 2, 0);
+		} else if (civ.civilization.toString().equals(CivilizationType.MOON)) {
+			ToroUtils.drawOverlayIcon(left, top, 3, 0);
+		} else if (civ.civilization.toString().equals(CivilizationType.SUN)) {
+			ToroUtils.drawOverlayIcon(left, top, 4, 0);
 		}
 	}
 

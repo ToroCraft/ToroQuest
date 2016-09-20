@@ -2,14 +2,36 @@ package net.torocraft.toroquest.util;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
 
 public class ToroUtils {
 
-	private static final float TEXTURE_HEIGHT_SCALER = 1F / 256F;
-	private static final float TEXTURE_WIDTH_SCALER = 1F / 256F;
+	public static final ResourceLocation OVERLAY = new ResourceLocation("toroquest:textures/icons/overlay.png");
+
+	public static final float TEXTURE_HEIGHT_SCALER = 1F / 256F;
+	public static final float TEXTURE_WIDTH_SCALER = 1F / 256F;
+
+	public static final int DEFAULT_ICON_TEXTURE_WIDTH = 16;
+	public static final int DEFAULT_ICON_TEXTURE_HEIGTH = 16;
+
+	public static void drawOverlayIcon(int left, int top, int horizontalIconIndex, int verrticalIconIndex) {
+		Minecraft.getMinecraft().getTextureManager().bindTexture(OVERLAY);
+		GlStateManager.disableDepth();
+		GlStateManager.enableBlend();
+
+		ToroUtils.drawTexturedModalRect(left, top, horizontalIconIndex * DEFAULT_ICON_TEXTURE_WIDTH, verrticalIconIndex * DEFAULT_ICON_TEXTURE_HEIGTH,
+				DEFAULT_ICON_TEXTURE_WIDTH, DEFAULT_ICON_TEXTURE_HEIGTH);
+
+		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+		GlStateManager.disableBlend();
+		GlStateManager.enableDepth();
+	}
 
 	public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
 		Tessellator tessellator = Tessellator.getInstance();

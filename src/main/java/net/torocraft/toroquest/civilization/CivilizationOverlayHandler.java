@@ -1,7 +1,5 @@
 package net.torocraft.toroquest.civilization;
 
-import java.util.Random;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
@@ -12,19 +10,25 @@ import net.torocraft.toroquest.util.ToroUtils;
 
 public class CivilizationOverlayHandler {
 
-	private final Random random = new Random();
-	private final Minecraft minecraft = Minecraft.getMinecraft();
+	private final Minecraft mc = Minecraft.getMinecraft();
 
 	@SubscribeEvent
 	public void onPostRenderOverlay(RenderGameOverlayEvent.Pre event) {
 		ScaledResolution resolution = event.getResolution();
 		int width = resolution.getScaledWidth();
 		int height = resolution.getScaledHeight();
-		EntityPlayerSP player = minecraft.thePlayer;
+		EntityPlayerSP player = mc.thePlayer;
 		Province civ = CivilizationUtil.getPlayerCurrentProvince(player);
 
 		if (event.getType() == ElementType.HEALTH) {
 			//			if (civ != null)
+			/*
+						if (civ != null) {
+							System.out.println(civ.civilization.toString());
+						} else {
+							System.out.println("Civ NULL");
+						}
+			*/
 			drawCivilizationOverlay(width, height, civ);
 		}
 	}
@@ -33,22 +37,20 @@ public class CivilizationOverlayHandler {
 		int left = width / 2 - 8;
 		int top = height - 48;
 
-		ToroUtils.drawOverlayIcon(left, top + 4, 0, 1);
 		if (civ == null) {
-			ToroUtils.drawOverlayIcon(left, top, 0, 0);
 			return;
 		}
-
+		ToroUtils.drawOverlayIcon(mc, left, top + 4, 0, 1);
 		if (civ.civilization.toString().equals(CivilizationType.EARTH)) {
-			ToroUtils.drawOverlayIcon(left, top, 0, 0);
+			ToroUtils.drawOverlayIcon(mc, left, top, 0, 0);
 		} else if (civ.civilization.toString().equals(CivilizationType.WIND)) {
-			ToroUtils.drawOverlayIcon(left, top, 1, 0);
+			ToroUtils.drawOverlayIcon(mc, left, top, 1, 0);
 		} else if (civ.civilization.toString().equals(CivilizationType.FIRE)) {
-			ToroUtils.drawOverlayIcon(left, top, 2, 0);
+			ToroUtils.drawOverlayIcon(mc, left, top, 2, 0);
 		} else if (civ.civilization.toString().equals(CivilizationType.MOON)) {
-			ToroUtils.drawOverlayIcon(left, top, 3, 0);
+			ToroUtils.drawOverlayIcon(mc, left, top, 3, 0);
 		} else if (civ.civilization.toString().equals(CivilizationType.SUN)) {
-			ToroUtils.drawOverlayIcon(left, top, 4, 0);
+			ToroUtils.drawOverlayIcon(mc, left, top, 4, 0);
 		}
 	}
 

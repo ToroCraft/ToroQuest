@@ -4,17 +4,13 @@ import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.torocraft.toroquest.util.ToroUtils;
 
 public class CivilizationOverlayHandler {
-	public static final ResourceLocation OVERLAY = new ResourceLocation("toroquest:textures/icons/civilization.png");
 
 	private final Random random = new Random();
 	private final Minecraft minecraft = Minecraft.getMinecraft();
@@ -24,29 +20,36 @@ public class CivilizationOverlayHandler {
 		ScaledResolution resolution = event.getResolution();
 		int width = resolution.getScaledWidth();
 		int height = resolution.getScaledHeight();
-		EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+		EntityPlayerSP player = minecraft.thePlayer;
+		Province civ = CivilizationUtil.getPlayerCurrentProvince(player);
 
 		if (event.getType() == ElementType.HEALTH) {
-
-			if (minecraft.playerController.gameIsSurvivalOrAdventure()) {
-				//drawCivilizationOverlay(width, height, null);
-			}
+			//			if (civ != null)
+			drawCivilizationOverlay(width, height, civ);
 		}
 	}
 
-	private void drawCivilizationOverlay(int width, int height, CivilizationType civ) {
-		minecraft.getTextureManager().bindTexture(OVERLAY);
-		GlStateManager.disableDepth();
-		GlStateManager.enableBlend();
-		int left = width / 2 - 5;
-		int top = height / 2 + 40;
-		int textureIndex = 1;
+	private void drawCivilizationOverlay(int width, int height, Province civ) {
+		int left = width / 2 - 8;
+		int top = height - 48;
 
-		ToroUtils.drawTexturedModalRect(left, top, textureIndex * 16, 0, 16, 16);
+		ToroUtils.drawOverlayIcon(left, top + 4, 0, 1);
+		if (civ == null) {
+			ToroUtils.drawOverlayIcon(left, top, 0, 0);
+			return;
+		}
 
-		minecraft.getTextureManager().bindTexture(Gui.ICONS);
-		GlStateManager.disableBlend();
-		GlStateManager.enableDepth();
+		if (civ.civilization.toString().equals(CivilizationType.EARTH)) {
+			ToroUtils.drawOverlayIcon(left, top, 0, 0);
+		} else if (civ.civilization.toString().equals(CivilizationType.WIND)) {
+			ToroUtils.drawOverlayIcon(left, top, 1, 0);
+		} else if (civ.civilization.toString().equals(CivilizationType.FIRE)) {
+			ToroUtils.drawOverlayIcon(left, top, 2, 0);
+		} else if (civ.civilization.toString().equals(CivilizationType.MOON)) {
+			ToroUtils.drawOverlayIcon(left, top, 3, 0);
+		} else if (civ.civilization.toString().equals(CivilizationType.SUN)) {
+			ToroUtils.drawOverlayIcon(left, top, 4, 0);
+		}
 	}
 
 }

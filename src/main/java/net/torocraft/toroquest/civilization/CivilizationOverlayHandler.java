@@ -11,7 +11,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData.Civilization;
 import net.torocraft.toroquest.util.ToroUtils;
 
 public class CivilizationOverlayHandler {
@@ -35,7 +34,7 @@ public class CivilizationOverlayHandler {
 		}
 	}
 
-	private void drawCivilizationOverlay(int width, int height, Civilization civ) {
+	private void drawCivilizationOverlay(int width, int height, CivilizationType civ) {
 		minecraft.getTextureManager().bindTexture(OVERLAY);
 		GlStateManager.disableDepth();
 		GlStateManager.enableBlend();

@@ -61,6 +61,9 @@ public class VillageHandlerGuardTower implements IVillageCreationHandler {
 			super(NAME, start, type, rand, bounds, facing);
 		}
 
+		public VillagePieceGuardTower() {
+		}
+
 		@Override
 		protected void alterPalette(Map<String, IBlockState> palette) {
 			palette.put("Td", Blocks.TRAPDOOR.getDefaultState());

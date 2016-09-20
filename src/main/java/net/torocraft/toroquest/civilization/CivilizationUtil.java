@@ -26,28 +26,48 @@ public class CivilizationUtil {
 			return;
 		}
 
+		try {
+			System.out.println("prev [" + prev.civilization + "][" + prev.chunkX + "][" + prev.chunkZ + "]");
+			System.out.println("curr [" + curr.civilization + "][" + curr.chunkX + "][" + curr.chunkZ + "]");
+		} catch (Exception e) {
+
+		}
+
 		if (prev != null) {
-			MinecraftForge.EVENT_BUS.register(new ProvinceEvent.Leave(player, prev));
+			System.out.println("ProvinceEvent.Leave [" + prev.civilization + "]");
+			MinecraftForge.EVENT_BUS.post(new ProvinceEvent.Leave(player, prev));
 		}
 
 		if (curr != null) {
+			System.out.println("ProvinceEvent.Enter [" + curr.civilization + "]");
 			getToroQuestPlayerDataTag(player).setTag("inciv", curr.writeNBT());
-			MinecraftForge.EVENT_BUS.register(new ProvinceEvent.Leave(player, curr));
+			MinecraftForge.EVENT_BUS.post(new ProvinceEvent.Enter(player, curr));
 		} else {
 			getToroQuestPlayerDataTag(player).removeTag("inciv");
 		}
 	}
 
 	private static boolean equals(Province a, Province b) {
-		if (a == null && b == null) {
+
+		CivilizationType civA = getCivilization(a);
+		CivilizationType civB = getCivilization(b);
+
+		if (civA == null && civB == null) {
 			return true;
 		}
 
-		if (a == null || b == null) {
+		if (civA == null || civB == null) {
 			return false;
 		}
 
-		return a.equals(b);
+		return civA.equals(civB);
+	}
+
+	private static CivilizationType getCivilization(Province a) {
+		if (a == null) {
+			return null;
+		}
+		return a.civilization;
 	}
 
 	public static int getPlayerReputation(EntityPlayer player, CivilizationType civ) {
@@ -72,7 +92,7 @@ public class CivilizationUtil {
 		}
 		int newAmount = getPlayerReputation(player, civ.civilization) + amount;
 		setPlayerReputation(player, civ.civilization, newAmount);
-		MinecraftForge.EVENT_BUS.register(new ProvinceEvent.ReputationChange(player, civ, newAmount));
+		MinecraftForge.EVENT_BUS.post(new ProvinceEvent.ReputationChange(player, civ, newAmount));
 	}
 
 	private static NBTTagCompound getToroQuestPlayerDataTag(EntityPlayer player) {

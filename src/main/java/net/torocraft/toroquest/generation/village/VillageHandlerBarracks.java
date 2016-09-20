@@ -55,6 +55,10 @@ public class VillageHandlerBarracks implements IVillageCreationHandler {
 			return canVillageGoDeeper(bounds) && StructureComponent.findIntersecting(structures, bounds) == null ? new VillagePieceBarracks(start, p_175850_7_, rand, bounds, facing) : null;
 		}
 
+		public VillagePieceBarracks() {
+			super();
+		}
+
 		public VillagePieceBarracks(Start start, int type, Random rand, StructureBoundingBox bounds, EnumFacing facing) {
 			super(NAME, start, type, rand, bounds, facing);
 		}

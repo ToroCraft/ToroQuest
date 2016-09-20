@@ -66,13 +66,17 @@ public abstract class VillagePieceBlockMap extends StructureVillagePieces.Villag
 
 	}
 
-	protected final String name;
+	protected String name;
 
 	public VillagePieceBlockMap(String name, StructureVillagePieces.Start start, int type, Random rand, StructureBoundingBox bounds, EnumFacing facing) {
 		super(start, type);
 		this.name = name;
 		this.setCoordBaseMode(facing);
 		this.boundingBox = bounds;
+	}
+
+	public VillagePieceBlockMap() {
+
 	}
 
 	protected boolean specialBlockHandling(World world, String c, int x, int y, int z) {

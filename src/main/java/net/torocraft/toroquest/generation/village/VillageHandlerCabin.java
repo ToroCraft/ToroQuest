@@ -59,6 +59,9 @@ public class VillageHandlerCabin implements IVillageCreationHandler {
 			super(NAME, start, type, rand, bounds, facing);
 		}
 
+		public VillagePieceCabin() {
+		}
+
 		@Override
 		protected void alterPalette(Map<String, IBlockState> palette) {
 			palette.clear();

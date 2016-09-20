@@ -56,6 +56,9 @@ public class VillageHandlerTrophy implements IVillageCreationHandler {
 			super(NAME, start, type, rand, bounds, facing);
 		}
 
+		public VillagePieceTrophy() {
+		}
+
 		@Override
 		protected void alterPalette(Map<String, IBlockState> palette) {
 

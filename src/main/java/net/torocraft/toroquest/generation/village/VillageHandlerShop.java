@@ -33,7 +33,7 @@ public class VillageHandlerShop implements IVillageCreationHandler {
 
 	@Override
 	public PieceWeight getVillagePieceWeight(Random random, int i) {
-		return new PieceWeight(VillagePieceShop.class, 30, 10);
+		return new PieceWeight(VillagePieceShop.class, 30, 2);
 	}
 
 	@Override
@@ -66,6 +66,9 @@ public class VillageHandlerShop implements IVillageCreationHandler {
 
 		public VillagePieceShop(Start start, int type, Random rand, StructureBoundingBox bounds, EnumFacing facing) {
 			super(NAME, start, type, rand, bounds, facing);
+		}
+
+		public VillagePieceShop() {
 		}
 
 		@Override

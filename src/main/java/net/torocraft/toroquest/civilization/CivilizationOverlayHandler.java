@@ -7,7 +7,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
-import net.torocraft.toroquest.util.ToroUtils;
+import net.torocraft.toroquest.util.ToroGuiUtils;
 
 public class CivilizationOverlayHandler {
 
@@ -41,17 +41,17 @@ public class CivilizationOverlayHandler {
 		if (civ == null) {
 			return;
 		}
-		ToroUtils.drawOverlayIcon(mc, left, top + 4, 0, 1);
+		ToroGuiUtils.drawOverlayIcon(mc, left, top + 4, 0, 1);
 		if (civ.civilization.toString().equals(CivilizationType.EARTH)) {
-			ToroUtils.drawOverlayIcon(mc, left, top, 0, 0);
+			ToroGuiUtils.drawOverlayIcon(mc, left, top, 0, 0);
 		} else if (civ.civilization.toString().equals(CivilizationType.WIND)) {
-			ToroUtils.drawOverlayIcon(mc, left, top, 1, 0);
+			ToroGuiUtils.drawOverlayIcon(mc, left, top, 1, 0);
 		} else if (civ.civilization.toString().equals(CivilizationType.FIRE)) {
-			ToroUtils.drawOverlayIcon(mc, left, top, 2, 0);
+			ToroGuiUtils.drawOverlayIcon(mc, left, top, 2, 0);
 		} else if (civ.civilization.toString().equals(CivilizationType.MOON)) {
-			ToroUtils.drawOverlayIcon(mc, left, top, 3, 0);
+			ToroGuiUtils.drawOverlayIcon(mc, left, top, 3, 0);
 		} else if (civ.civilization.toString().equals(CivilizationType.SUN)) {
-			ToroUtils.drawOverlayIcon(mc, left, top, 4, 0);
+			ToroGuiUtils.drawOverlayIcon(mc, left, top, 4, 0);
 		}
 	}
 

@@ -39,17 +39,21 @@ public class VillageHandlerKeep implements IVillageCreationHandler {
 	}
 
 	@Override
-	public Village buildComponent(PieceWeight villagePiece, Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
+	public Village buildComponent(PieceWeight villagePiece, Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3,
+			EnumFacing facing, int p5) {
 		return VillagePieceKeep.createPiece(startPiece, pieces, random, p1, p2, p3, facing, p5);
 
 	}
 
 	public static class VillagePieceKeep extends VillagePieceBlockMap {
 
-		public static VillagePieceKeep createPiece(StructureVillagePieces.Start start, List<StructureComponent> structures, Random rand, int x, int y, int z, EnumFacing facing, int p_175850_7_) {
+		public static VillagePieceKeep createPiece(StructureVillagePieces.Start start, List<StructureComponent> structures, Random rand, int x, int y,
+				int z, EnumFacing facing, int p_175850_7_) {
 			BlockPos size = new BlockMapMeasurer(NAME).measure();
-			StructureBoundingBox bounds = StructureBoundingBox.getComponentToAddBoundingBox(x, y, z, 0, 0, 0, size.getX(), size.getY(), size.getZ(), facing);
-			return canVillageGoDeeper(bounds) && StructureComponent.findIntersecting(structures, bounds) == null ? new VillagePieceKeep(start, p_175850_7_, rand, bounds, facing) : null;
+			StructureBoundingBox bounds = StructureBoundingBox.getComponentToAddBoundingBox(x, y, z, 0, 0, 0, size.getX(), size.getY(), size.getZ(),
+					facing);
+			return canVillageGoDeeper(bounds) && StructureComponent.findIntersecting(structures, bounds) == null
+					? new VillagePieceKeep(start, p_175850_7_, rand, bounds, facing) : null;
 		}
 
 		public VillagePieceKeep(Start start, int type, Random rand, StructureBoundingBox bounds, EnumFacing facing) {

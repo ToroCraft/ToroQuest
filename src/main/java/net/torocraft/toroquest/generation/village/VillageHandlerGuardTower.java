@@ -8,6 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
@@ -17,6 +18,7 @@ import net.minecraft.world.gen.structure.StructureVillagePieces.Start;
 import net.minecraft.world.gen.structure.StructureVillagePieces.Village;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry.IVillageCreationHandler;
+import net.torocraft.toroquest.entities.EntityGuard;
 import net.torocraft.toroquest.generation.village.util.BlockMapMeasurer;
 import net.torocraft.toroquest.generation.village.util.VillagePieceBlockMap;
 
@@ -62,6 +64,30 @@ public class VillageHandlerGuardTower implements IVillageCreationHandler {
 		}
 
 		public VillagePieceGuardTower() {
+		}
+
+		@Override
+		protected boolean specialBlockHandling(World world, String c, int x, int y, int z) {
+			if (!c.equals("xx")) {
+				return false;
+			}
+
+			setBlockState(world, Blocks.AIR.getDefaultState(), x, y, z, boundingBox);
+
+			int j = this.getXWithOffset(x, z);
+			int k = this.getYWithOffset(y);
+			int l = this.getZWithOffset(x, z);
+
+			/*
+			 * if (!structurebb.isVecInside(new BlockPos(j, k, l))) { return; }
+			 */
+
+			EntityGuard guard = new EntityGuard(world);
+			guard.setLocationAndAngles(j + 0.5D, k, l + 0.5D, 90F, 0.0F);
+			world.spawnEntityInWorld(guard);
+
+			return true;
+
 		}
 
 		@Override

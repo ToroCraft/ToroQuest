@@ -65,7 +65,7 @@ LgPwlvPwLg
 LgLgLgLgLg
 #####################
 FwFwFwFwFw
-Fw------Fw
+Fwxx----Fw
 Fw------Fw
 Fw--Td--Fw
 FwFwFwFwFw

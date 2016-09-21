@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.torocraft.toroquest.block.ToroQuestBlocks;
 import net.torocraft.toroquest.civilization.CivilizationGeneratorHandlers;
 import net.torocraft.toroquest.civilization.CivilizationHandlers;
+import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.crafting.ToroQuestRecipes;
 import net.torocraft.toroquest.entities.ToroQuestEntities;
 import net.torocraft.toroquest.generation.WorldGenMageTowerPlacer;
@@ -17,10 +18,13 @@ import net.torocraft.toroquest.generation.village.VillageHandlerKeep;
 import net.torocraft.toroquest.generation.village.VillageHandlerShop;
 import net.torocraft.toroquest.generation.village.VillageHandlerTrophy;
 import net.torocraft.toroquest.item.ToroQuestItems;
+import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 
 public class CommonProxy {
 
 	public void preInit(FMLPreInitializationEvent e) {
+		PlayerCivilizationCapabilityImpl.register();
+		ToroQuestPacketHandler.init();
 		MinecraftForge.TERRAIN_GEN_BUS.register(new CivilizationGeneratorHandlers());
 		MinecraftForge.EVENT_BUS.register(new EventHandlers());
 		MinecraftForge.EVENT_BUS.register(new CivilizationHandlers());

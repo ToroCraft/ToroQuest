@@ -6,6 +6,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.util.ToroUtils;
 
 public class CivilizationOverlayHandler {
@@ -18,7 +19,7 @@ public class CivilizationOverlayHandler {
 		int width = resolution.getScaledWidth();
 		int height = resolution.getScaledHeight();
 		EntityPlayerSP player = mc.thePlayer;
-		Province civ = CivilizationUtil.getPlayerCurrentProvince(player);
+		Province civ = PlayerCivilizationCapabilityImpl.get(player).getPlayerInCivilization();
 
 		if (event.getType() == ElementType.HEALTH) {
 			//			if (civ != null)

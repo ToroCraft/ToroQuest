@@ -1,6 +1,5 @@
 package net.torocraft.toroquest.civilization;
 
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class Province {
@@ -57,7 +56,7 @@ public class Province {
 		area = xLength * zLength;
 	}
 
-	public NBTBase writeNBT() {
+	public NBTTagCompound writeNBT() {
 		NBTTagCompound c = new NBTTagCompound();
 		c.setString("civilization", s(civilization));
 		c.setInteger("chunkX", chunkX);

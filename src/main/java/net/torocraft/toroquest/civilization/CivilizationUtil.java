@@ -4,22 +4,32 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 
 public class CivilizationUtil {
 
-	public static Province getPlayerCurrentProvince(EntityPlayer player) {
-		try {
-			Province provice = new Province();
-			provice.readNBT((NBTTagCompound) getToroQuestPlayerDataTag(player).getTag("inciv"));
-			return provice;
-		} catch (Exception e) {
-			return null;
+
+	public static void setPlayerChunk(EntityPlayer player, int chunkX, int chunkZ) {
+		Province prev = PlayerCivilizationCapabilityImpl.get(player).getPlayerInCivilization();
+		Province curr = CivilizationUtil.getProvinceAt(player.worldObj, player.chunkCoordX, player.chunkCoordZ);
+
+		if (equals(prev, curr)) {
+			return;
+		}
+
+		if (prev != null) {
+			MinecraftForge.EVENT_BUS.post(new ProvinceEvent.Leave(player, prev));
+		}
+
+		if (curr != null) {
+			PlayerCivilizationCapabilityImpl.get(player).setPlayerInCivilization(curr);
+			MinecraftForge.EVENT_BUS.post(new ProvinceEvent.Enter(player, curr));
 		}
 	}
 
-	public static void setPlayerChunk(EntityPlayer player, int chunkX, int chunkZ) {
+	public static void setPlayerChunk_OLD(EntityPlayer player, int chunkX, int chunkZ) {
 
-		Province prev = CivilizationUtil.getPlayerCurrentProvince(player);
+		Province prev = PlayerCivilizationCapabilityImpl.get(player).getPlayerInCivilization();
 		Province curr = CivilizationUtil.getProvinceAt(player.worldObj, player.chunkCoordX, player.chunkCoordZ);
 
 		if (equals(prev, curr)) {
@@ -95,6 +105,7 @@ public class CivilizationUtil {
 		MinecraftForge.EVENT_BUS.post(new ProvinceEvent.ReputationChange(player, civ, newAmount));
 	}
 
+	@Deprecated
 	private static NBTTagCompound getToroQuestPlayerDataTag(EntityPlayer player) {
 		NBTTagCompound tag = (NBTTagCompound) player.getEntityData().getTag("toroquest");
 		if (tag == null) {

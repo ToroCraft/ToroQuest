@@ -6,13 +6,46 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapability;
+import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.EntityToroNpc;
 
 public class CivilizationHandlers {
+	
+	@SubscribeEvent
+	public void onEntityLoad(final AttachCapabilitiesEvent.Entity event) {
+
+		if (!(event.getEntity() instanceof EntityPlayer)) {
+			return;
+		}
+
+		event.addCapability(new ResourceLocation(ToroQuest.MODID, "playerCivilization"), new ICapabilityProvider() {
+			@Override
+			public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+				System.out.println("has cap INSTANCE: " + PlayerCivilizationCapabilityImpl.INSTANCE);
+				return PlayerCivilizationCapabilityImpl.INSTANCE != null && capability == PlayerCivilizationCapabilityImpl.INSTANCE;
+			}
+			
+			@Override
+			public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+				EntityPlayer player = (EntityPlayer) event.getEntity();
+				PlayerCivilizationCapability instance = new PlayerCivilizationCapabilityImpl(player);
+				System.out.println("Attaching capability to " + player.getName() + " INSTANCE: " + PlayerCivilizationCapabilityImpl.INSTANCE);
+				return PlayerCivilizationCapabilityImpl.INSTANCE.cast(instance);
+			}
+		});
+	}
 
 
 	@SubscribeEvent
@@ -29,7 +62,7 @@ public class CivilizationHandlers {
 			return;
 		}
 
-		Province province = CivilizationUtil.getPlayerCurrentProvince(player);
+		Province province = PlayerCivilizationCapabilityImpl.get(player).getPlayerInCivilization();
 		CivilizationUtil.adjustPlayerReputation(player, province, getRepuationAdjustmentFor(victum, province));
 
 	}

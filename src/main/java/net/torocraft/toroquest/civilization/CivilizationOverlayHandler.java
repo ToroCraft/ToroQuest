@@ -38,19 +38,20 @@ public class CivilizationOverlayHandler {
 		int left = width / 2 - 8;
 		int top = height - 48;
 
-		if (civ == null) {
+		if (civ == null || civ.civilization == null) {
 			return;
 		}
+
 		ToroGuiUtils.drawOverlayIcon(mc, left, top + 4, 0, 1);
-		if (civ.civilization.toString().equals(CivilizationType.EARTH)) {
+		if (civ.civilization.equals(CivilizationType.EARTH)) {
 			ToroGuiUtils.drawOverlayIcon(mc, left, top, 0, 0);
-		} else if (civ.civilization.toString().equals(CivilizationType.WIND)) {
+		} else if (civ.civilization.equals(CivilizationType.WIND)) {
 			ToroGuiUtils.drawOverlayIcon(mc, left, top, 1, 0);
-		} else if (civ.civilization.toString().equals(CivilizationType.FIRE)) {
+		} else if (civ.civilization.equals(CivilizationType.FIRE)) {
 			ToroGuiUtils.drawOverlayIcon(mc, left, top, 2, 0);
-		} else if (civ.civilization.toString().equals(CivilizationType.MOON)) {
+		} else if (civ.civilization.equals(CivilizationType.MOON)) {
 			ToroGuiUtils.drawOverlayIcon(mc, left, top, 3, 0);
-		} else if (civ.civilization.toString().equals(CivilizationType.SUN)) {
+		} else if (civ.civilization.equals(CivilizationType.SUN)) {
 			ToroGuiUtils.drawOverlayIcon(mc, left, top, 4, 0);
 		}
 	}

@@ -57,8 +57,6 @@ public class MessagePlayerCivilizationSetInCiv implements IMessage {
 
 		void processMessage(MessagePlayerCivilizationSetInCiv message, EntityPlayerSP player) {
 			PlayerCivilizationCapabilityImpl.get(player).setPlayerInCivilization(message.province);
-			System.out.println("got packet civ: " + s(message.province));
-			return;
 		}
 
 		private String s(Province civ) {

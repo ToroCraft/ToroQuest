@@ -22,4 +22,6 @@ public interface PlayerCivilizationCapability {
 
 	void readNBT(NBTBase c);
 
+	void updatePlayerLocation();
+
 }

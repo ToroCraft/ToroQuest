@@ -16,7 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.torocraft.toroquest.civilization.CivilizationType;
-import net.torocraft.toroquest.civilization.CivilizationUtil;
+import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.EntityToroNpc;
 
 public class EntityAINearestAttackableCivTarget extends EntityAITarget {
@@ -75,7 +75,7 @@ public class EntityAINearestAttackableCivTarget extends EntityAITarget {
 			return false;
 		}
 
-		int rep = CivilizationUtil.getPlayerReputation(target, civ);
+		int rep = PlayerCivilizationCapabilityImpl.get(target).getPlayerReputation(civ);
 
 		return rep < -10;
 	}

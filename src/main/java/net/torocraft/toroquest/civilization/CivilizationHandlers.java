@@ -78,7 +78,12 @@ public class CivilizationHandlers {
 		}
 
 		Province province = PlayerCivilizationCapabilityImpl.get(player).getPlayerInCivilization();
-		CivilizationUtil.adjustPlayerReputation(player, province, getRepuationAdjustmentFor(victum, province));
+
+		if (province == null || province.civilization == null) {
+			return;
+		}
+
+		PlayerCivilizationCapabilityImpl.get(player).adjustPlayerReputation(province.civilization, getRepuationAdjustmentFor(victum, province));
 
 	}
 
@@ -119,27 +124,34 @@ public class CivilizationHandlers {
 			return;
 		}
 		EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
-
-		CivilizationUtil.setPlayerChunk(player, player.chunkCoordX, player.chunkCoordZ);
+		PlayerCivilizationCapabilityImpl.get(player).updatePlayerLocation();
 	}
 
 	@SubscribeEvent
-	public void handleLeaveProvince(ProvinceEvent.ReputationChange event) {
-		chat(event.getEntityPlayer(), "Reputation with " + event.getProvince().civilization.getLocalizedName() + " is now " + event.getReputation());
+	public void handleLeaveProvince(CivilizationEvent.ReputationChange event) {
+		chat(event.getEntityPlayer(), "Reputation with " + civName(event) + " is now " + event.getReputation());
+	}
+
+	protected String civName(CivilizationEvent.ReputationChange event) {
+		try {
+			return event.getCivilization().getLocalizedName();
+		} catch (Exception e) {
+			return "NULL";
+		}
 	}
 
 	@SubscribeEvent
-	public void handleEnterProvince(ProvinceEvent.Enter event) {
-		chat(event.getEntityPlayer(), enteringMessage(event.getEntityPlayer(), event.getProvince().civilization));
+	public void handleEnterProvince(CivilizationEvent.Enter event) {
+		chat(event.getEntityPlayer(), enteringMessage(event.getEntityPlayer(), event.getCivilization()));
 	}
 
 	@SubscribeEvent
-	public void handleLeaveProvince(ProvinceEvent.Leave event) {
-		chat(event.getEntityPlayer(), leavingMessage(event.getEntityPlayer(), event.getProvince().civilization));
+	public void handleLeaveProvince(CivilizationEvent.Leave event) {
+		chat(event.getEntityPlayer(), leavingMessage(event.getEntityPlayer(), event.getCivilization()));
 	}
 
 	private String leavingMessage(EntityPlayer player, CivilizationType civ) {
-		int rep = CivilizationUtil.getPlayerReputation(player, civ);
+		int rep = PlayerCivilizationCapabilityImpl.get(player).getPlayerReputation(civ);
 		if (rep >= 10) {
 			return civ.getFriendlyLeavingMessage();
 		} else if (rep <= -10) {
@@ -150,7 +162,7 @@ public class CivilizationHandlers {
 	}
 
 	private String enteringMessage(EntityPlayer player, CivilizationType civ) {
-		int rep = CivilizationUtil.getPlayerReputation(player, civ);
+		int rep = PlayerCivilizationCapabilityImpl.get(player).getPlayerReputation(civ);
 		if (rep >= 10) {
 			return civ.getFriendlyEnteringMessage();
 		} else if (rep <= -10) {

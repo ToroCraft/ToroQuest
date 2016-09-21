@@ -11,14 +11,18 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.torocraft.toroquest.civilization.CivilizationEvent;
 import net.torocraft.toroquest.civilization.CivilizationType;
+import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 import net.torocraft.toroquest.network.message.MessagePlayerCivilizationSetInCiv;
+import net.torocraft.toroquest.network.message.MessageSetPlayerReputation;
 
 public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapability {
 
@@ -40,6 +44,10 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 			return;
 		}
 		reputations.put(civ, amount);
+		if (!player.getEntityWorld().isRemote) {
+			ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetPlayerReputation(civ, amount), (EntityPlayerMP) player);
+			MinecraftForge.EVENT_BUS.post(new CivilizationEvent.ReputationChange(player, civ, amount));
+		}
 	}
 
 	@Override
@@ -50,7 +58,7 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		if (reputations.get(civ) == null) {
 			reputations.put(civ, 0);
 		}
-		reputations.put(civ, reputations.get(civ) + amount);
+		setPlayerReputation(civ, reputations.get(civ) + amount);
 	}
 
 	@Override
@@ -59,12 +67,56 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	}
 
 	@Override
+	public void updatePlayerLocation() {
+		Province prev = inCiv;
+		Province curr = CivilizationUtil.getProvinceAt(player.worldObj, player.chunkCoordX, player.chunkCoordZ);
+
+		if (equals(prev, curr)) {
+			return;
+		}
+
+		setPlayerInCivilization(curr);
+
+		if (!player.getEntityWorld().isRemote) {
+			ToroQuestPacketHandler.INSTANCE.sendTo(new MessagePlayerCivilizationSetInCiv(inCiv), (EntityPlayerMP) player);
+		}
+
+		if (prev != null) {
+			MinecraftForge.EVENT_BUS.post(new CivilizationEvent.Leave(player, prev.civilization));
+		}
+
+		if (curr != null) {
+			PlayerCivilizationCapabilityImpl.get(player).setPlayerInCivilization(curr);
+			MinecraftForge.EVENT_BUS.post(new CivilizationEvent.Enter(player, curr.civilization));
+		}
+	}
+
+	@Override
 	public void setPlayerInCivilization(Province civ) {
 		inCiv = civ;
-		if (!player.getEntityWorld().isRemote) {
-			System.out.println("Transmit setPlayerInCivilization [" + s(civ) + "]");
-			ToroQuestPacketHandler.INSTANCE.sendTo(new MessagePlayerCivilizationSetInCiv(civ), (EntityPlayerMP) player);
+	}
+
+	private static boolean equals(Province a, Province b) {
+
+		CivilizationType civA = getCivilization(a);
+		CivilizationType civB = getCivilization(b);
+
+		if (civA == null && civB == null) {
+			return true;
 		}
+
+		if (civA == null || civB == null) {
+			return false;
+		}
+
+		return civA.equals(civB);
+	}
+
+	private static CivilizationType getCivilization(Province a) {
+		if (a == null) {
+			return null;
+		}
+		return a.civilization;
 	}
 
 	private String s(Province civ) {
@@ -91,7 +143,7 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		return c;
 	}
 
-	private String s(CivilizationType civ) {
+	private static String s(CivilizationType civ) {
 		try {
 			return civ.toString();
 		} catch (Exception e) {
@@ -105,15 +157,15 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 			if (rep.getValue() == null || rep.getKey() == null) {
 				continue;
 			}
-			repList.appendTag(buildNBTReputationListItem(rep));
+			repList.appendTag(buildNBTReputationListItem(rep.getKey(), rep.getValue()));
 		}
 		return repList;
 	}
 
-	private NBTBase buildNBTReputationListItem(Entry<CivilizationType, Integer> rep) {
+	public static NBTTagCompound buildNBTReputationListItem(CivilizationType civ, int rep) {
 		NBTTagCompound c = new NBTTagCompound();
-		c.setString("civ", s(rep.getKey()));
-		c.setInteger("amount", rep.getValue());
+		c.setString("civ", s(civ));
+		c.setInteger("amount", rep);
 		return c;
 	}
 
@@ -135,8 +187,6 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		} else {
 			inCiv = null;
 		}
-
-		System.out.println("*** Loaded Cap: " + toString());
 	}
 
 	private Map<CivilizationType, Integer> readNBTReputationList(NBTBase tag) {
@@ -166,13 +216,12 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	}
 
 	public static void register() {
-		CapabilityManager.INSTANCE.register(PlayerCivilizationCapability.class, new PlayerCivilizationStorage(),
-				new Callable<PlayerCivilizationCapability>() {
-					@Override
-					public PlayerCivilizationCapability call() throws Exception {
-						return null;
-					}
-				});
+		CapabilityManager.INSTANCE.register(PlayerCivilizationCapability.class, new PlayerCivilizationStorage(), new Callable<PlayerCivilizationCapability>() {
+			@Override
+			public PlayerCivilizationCapability call() throws Exception {
+				return null;
+			}
+		});
 	}
 
 	private int i(Integer integer) {
@@ -194,8 +243,7 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		}
 
 		@Override
-		public void readNBT(Capability<PlayerCivilizationCapability> capability, PlayerCivilizationCapability instance, EnumFacing side,
-				NBTBase nbt) {
+		public void readNBT(Capability<PlayerCivilizationCapability> capability, PlayerCivilizationCapability instance, EnumFacing side, NBTBase nbt) {
 			instance.readNBT(nbt);
 		}
 

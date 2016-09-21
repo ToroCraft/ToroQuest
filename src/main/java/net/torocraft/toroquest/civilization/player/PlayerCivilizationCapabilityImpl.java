@@ -3,6 +3,7 @@ package net.torocraft.toroquest.civilization.player;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Callable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -60,11 +61,6 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	@Override
 	public void setPlayerInCivilization(Province civ) {
 		inCiv = civ;
-
-		if (player == null) {
-			return;
-		}
-
 		if (!player.getEntityWorld().isRemote) {
 			System.out.println("Transmit setPlayerInCivilization [" + s(civ) + "]");
 			ToroQuestPacketHandler.INSTANCE.sendTo(new MessagePlayerCivilizationSetInCiv(civ), (EntityPlayerMP) player);
@@ -158,9 +154,6 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 
 	@Override
 	public String toString() {
-		if (player == null) {
-			return "Player Civilization Info NULL PLAYER";
-		}
 		return "Player Civilization Info: " + player.getName() + ": IN_CIV[" + inCiv + "]";
 	}
 
@@ -173,18 +166,12 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	}
 
 	public static void register() {
-		System.out.println("registering cap");
-
-		CapabilityManager.INSTANCE.register(PlayerCivilizationCapability.class, new PlayerCivilizationStorage(), PlayerCivilizationCapabilityImpl.class);
-		/*
-		 * CapabilityManager.INSTANCE.register(PlayerCivilizationCapability.
-		 * class, new PlayerCivilizationStorage(), new
-		 * Callable<PlayerCivilizationCapability>() {
-		 * 
-		 * @Override public PlayerCivilizationCapability call() throws Exception
-		 * { return null; } });
-		 */
-		System.out.println("value of instance: " + PlayerCivilizationCapabilityImpl.INSTANCE);
+		CapabilityManager.INSTANCE.register(PlayerCivilizationCapability.class, new PlayerCivilizationStorage(), new Callable<PlayerCivilizationCapability>() {
+			@Override
+			public PlayerCivilizationCapability call() throws Exception {
+				return null;
+			}
+		});
 	}
 
 	private int i(Integer integer) {

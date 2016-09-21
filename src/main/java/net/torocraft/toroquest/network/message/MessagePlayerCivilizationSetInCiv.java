@@ -1,8 +1,8 @@
 package net.torocraft.toroquest.network.message;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -39,29 +39,31 @@ public class MessagePlayerCivilizationSetInCiv implements IMessage {
 
 		@Override
 		public IMessage onMessage(final MessagePlayerCivilizationSetInCiv message, MessageContext ctx) {
-			if (ctx.side != Side.SERVER) {
+			if (ctx.side != Side.CLIENT) {
 				return null;
 			}
-
-			System.out.println("NETWORK THREAD got packet civ: " + s(message.province));
 
 			final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 			if (player == null) {
 				return null;
 			}
-			final WorldServer worldServer = player.getServerWorld();
-			worldServer.addScheduledTask(new Runnable() {
+
+
+			Minecraft minecraft = Minecraft.getMinecraft();
+			minecraft.addScheduledTask(new Runnable() {
 				@Override
 				public void run() {
-					processMessage(message, player);
+					processMessage(message, null);
 				}
 			});
+
 			return null;
 		}
 
 		void processMessage(MessagePlayerCivilizationSetInCiv message, EntityPlayerMP player) {
 			PlayerCivilizationCapabilityImpl.get(player).setPlayerInCivilization(message.province);
 			System.out.println("got packet civ: " + s(message.province));
+			return;
 		}
 
 		private String s(Province civ) {
@@ -71,4 +73,5 @@ public class MessagePlayerCivilizationSetInCiv implements IMessage {
 			return civ.toString();
 		}
 	}
+
 }

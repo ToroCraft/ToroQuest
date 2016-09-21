@@ -10,6 +10,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -29,24 +30,38 @@ public class CivilizationHandlers {
 			return;
 		}
 
-		event.addCapability(new ResourceLocation(ToroQuest.MODID, "playerCivilization"), new ICapabilityProvider() {
-			@Override
-			public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-				System.out.println("has cap INSTANCE: " + PlayerCivilizationCapabilityImpl.INSTANCE);
-				return PlayerCivilizationCapabilityImpl.INSTANCE != null && capability == PlayerCivilizationCapabilityImpl.INSTANCE;
-			}
-			
-			@Override
-			public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		try {
+			System.out.println("loading cap to player: " + ((EntityPlayer) event.getEntity()).getName());
+		} catch (Exception e) {
+			System.out.println("loading cap to player [" + event.getEntity().getClass().getName() + "]");
+		}
 
-				EntityPlayer player = (EntityPlayer) event.getEntity();
-				PlayerCivilizationCapability instance = new PlayerCivilizationCapabilityImpl(player);
-				System.out.println("Attaching capability to " + player.getName() + " INSTANCE: " + PlayerCivilizationCapabilityImpl.INSTANCE);
-				return PlayerCivilizationCapabilityImpl.INSTANCE.cast(instance);
-			}
-		});
+		event.addCapability(new ResourceLocation(ToroQuest.MODID, "playerCivilization"), new PlayerCivilizationCapabilityProvider((EntityPlayer) event.getEntity()));
 	}
 
+	public static class PlayerCivilizationCapabilityProvider implements ICapabilityProvider {
+
+		@CapabilityInject(PlayerCivilizationCapability.class)
+		public static final Capability<PlayerCivilizationCapability> CAP = null;
+
+		private final EntityPlayer player;
+		private PlayerCivilizationCapability instance;
+
+		public PlayerCivilizationCapabilityProvider(EntityPlayer player) {
+			this.player = player;
+			instance = new PlayerCivilizationCapabilityImpl(player);
+		}
+
+		@Override
+		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+			return capability == CAP;
+		}
+
+		@Override
+		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+			return PlayerCivilizationCapabilityImpl.INSTANCE.cast(instance);
+		}
+	}
 
 	@SubscribeEvent
 	public void checkKillsInCivilization(LivingDeathEvent event) {

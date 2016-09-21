@@ -22,6 +22,6 @@ public interface PlayerCivilizationCapability {
 
 	void readNBT(NBTBase c);
 
-	void updatePlayerLocation();
+	void updatePlayerLocation(int chunkX, int chunkZ);
 
 }

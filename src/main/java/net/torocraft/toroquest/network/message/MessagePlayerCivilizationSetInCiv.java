@@ -3,6 +3,7 @@ package net.torocraft.toroquest.network.message;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -31,7 +32,11 @@ public class MessagePlayerCivilizationSetInCiv implements IMessage {
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		ByteBufUtils.writeTag(buf, province.writeNBT());
+		if (province == null) {
+			ByteBufUtils.writeTag(buf, new NBTTagCompound());
+		} else {
+			ByteBufUtils.writeTag(buf, province.writeNBT());
+		}
 	}
 
 	public static class Handler implements IMessageHandler<MessagePlayerCivilizationSetInCiv, IMessage> {

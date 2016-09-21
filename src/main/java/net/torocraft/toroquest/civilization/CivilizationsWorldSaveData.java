@@ -59,7 +59,6 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 		});
 
 		return list.get(0);
-
 	}
 
 	public int chunkDistanceSq(int aX, int aZ, int bX, int bZ) {
@@ -83,7 +82,7 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 		List<Province> subset = new ArrayList<Province>();
 
 		for (Province p : provinces) {
-			if (p.chunkX > lowerX && p.chunkX < upperX && p.chunkZ > lowerZ && p.chunkZ < upperZ) {
+			if (p.chunkX >= lowerX && p.chunkX <= upperX && p.chunkZ >= lowerZ && p.chunkZ <= upperZ) {
 				subset.add(p);
 			}
 		}

@@ -5,6 +5,7 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -15,6 +16,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapability;
@@ -22,7 +24,41 @@ import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityI
 import net.torocraft.toroquest.entities.EntityToroNpc;
 
 public class CivilizationHandlers {
-	
+
+	@SubscribeEvent
+	public void onDeath(PlayerEvent.Clone event) {
+		if (!event.isWasDeath()) {
+			return;
+		}
+
+		PlayerCivilizationCapability newCap = PlayerCivilizationCapabilityImpl.get(event.getEntityPlayer());
+		PlayerCivilizationCapability oringialCap = PlayerCivilizationCapabilityImpl.get(event.getOriginal());
+
+		if (newCap == null || oringialCap == null) {
+			return;
+		}
+
+		newCap.readNBT(oringialCap.writeNBT());
+	}
+
+	@SubscribeEvent
+	public void onSave(PlayerEvent.SaveToFile event) {
+		PlayerCivilizationCapability cap = PlayerCivilizationCapabilityImpl.get(event.getEntityPlayer());
+		if (cap == null) {
+			return;
+		}
+		event.getEntityPlayer().getEntityData().setTag(ToroQuest.MODID + ".playerCivilization", cap.writeNBT());
+	}
+
+	@SubscribeEvent
+	public void onLoad(PlayerEvent.LoadFromFile event) {
+		PlayerCivilizationCapability cap = PlayerCivilizationCapabilityImpl.get(event.getEntityPlayer());
+		if (cap == null) {
+			return;
+		}
+		cap.readNBT((NBTTagCompound) event.getEntityPlayer().getEntityData().getTag(ToroQuest.MODID + ".playerCivilization"));
+	}
+
 	@SubscribeEvent
 	public void onEntityLoad(final AttachCapabilitiesEvent.Entity event) {
 
@@ -124,7 +160,7 @@ public class CivilizationHandlers {
 			return;
 		}
 		EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
-		PlayerCivilizationCapabilityImpl.get(player).updatePlayerLocation();
+		PlayerCivilizationCapabilityImpl.get(player).updatePlayerLocation(event.getNewChunkX(), event.getNewChunkZ());
 	}
 
 	@SubscribeEvent

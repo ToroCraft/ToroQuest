@@ -67,9 +67,9 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	}
 
 	@Override
-	public void updatePlayerLocation() {
+	public void updatePlayerLocation(int chunkX, int chunkZ) {
 		Province prev = inCiv;
-		Province curr = CivilizationUtil.getProvinceAt(player.worldObj, player.chunkCoordX, player.chunkCoordZ);
+		Province curr = CivilizationUtil.getProvinceAt(player.worldObj, chunkX, chunkZ);
 
 		if (equals(prev, curr)) {
 			return;

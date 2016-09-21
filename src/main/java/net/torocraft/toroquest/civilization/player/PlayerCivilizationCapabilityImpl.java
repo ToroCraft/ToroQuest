@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -16,6 +17,8 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.Province;
+import net.torocraft.toroquest.network.ToroQuestPacketHandler;
+import net.torocraft.toroquest.network.message.MessagePlayerCivilizationSetInCiv;
 
 public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapability {
 
@@ -60,7 +63,7 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		inCiv = civ;
 		if (!player.getEntityWorld().isRemote) {
 			System.out.println("Transmit setPlayerInCivilization [" + s(civ) + "]");
-			//			ToroQuestPacketHandler.INSTANCE.sendTo(new MessagePlayerCivilizationSetInCiv(civ), (EntityPlayerMP) player);
+			ToroQuestPacketHandler.INSTANCE.sendTo(new MessagePlayerCivilizationSetInCiv(civ), (EntityPlayerMP) player);
 		}
 	}
 

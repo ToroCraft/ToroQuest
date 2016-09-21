@@ -2,7 +2,7 @@ package net.torocraft.toroquest.network.message;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -29,7 +29,6 @@ public class MessagePlayerCivilizationSetInCiv implements IMessage {
 		province.readNBT(ByteBufUtils.readTag(buf));
 	}
 
-
 	@Override
 	public void toBytes(ByteBuf buf) {
 		ByteBufUtils.writeTag(buf, province.writeNBT());
@@ -43,24 +42,20 @@ public class MessagePlayerCivilizationSetInCiv implements IMessage {
 				return null;
 			}
 
-			final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-			if (player == null) {
-				return null;
-			}
-
-
 			Minecraft minecraft = Minecraft.getMinecraft();
+			final EntityPlayerSP player = minecraft.thePlayer;
+
 			minecraft.addScheduledTask(new Runnable() {
 				@Override
 				public void run() {
-					processMessage(message, null);
+					processMessage(message, player);
 				}
 			});
 
 			return null;
 		}
 
-		void processMessage(MessagePlayerCivilizationSetInCiv message, EntityPlayerMP player) {
+		void processMessage(MessagePlayerCivilizationSetInCiv message, EntityPlayerSP player) {
 			PlayerCivilizationCapabilityImpl.get(player).setPlayerInCivilization(message.province);
 			System.out.println("got packet civ: " + s(message.province));
 			return;

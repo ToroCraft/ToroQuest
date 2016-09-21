@@ -104,7 +104,7 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 
 	@Override
 	public synchronized Province register(int chunkX, int chunkZ) {
-		System.out.println("register [" + chunkX + "][" + chunkZ + "]");
+		// System.out.println("register [" + chunkX + "][" + chunkZ + "]");
 		Province province = atLocation(chunkX, chunkZ);
 
 		if (province != null) {
@@ -141,12 +141,18 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 
 	private synchronized void updateExistingProvince(Province province, int chunkX, int chunkZ) {
 		province.addToBoundsAndRecenter(chunkX, chunkZ);
-		System.out.println("UPDATED newX[" + chunkX + "] newZ[" + chunkZ + "] Province X[" + province.chunkX + "] Z[" + province.chunkZ + "] CIV[" + province.civilization + "] AREA[" + province.area + "] x[" + province.xLength + "] z["
-				+ province.zLength + "]");
+		// System.out.println("UPDATED newX[" + chunkX + "] newZ[" + chunkZ + "]
+		// Province X[" + province.chunkX + "] Z[" + province.chunkZ + "] CIV["
+		// + province.civilization + "] AREA[" + province.area + "] x[" +
+		// province.xLength + "] z["
+		// + province.zLength + "]");
 	}
 
 	private synchronized void addProvinceToSaveData(Province province) {
-		System.out.println("NEW Province X[" + province.chunkX + "] Z[" + province.chunkZ + "] CIV[" + province.civilization + "] AREA[" + province.area + "] x[" + province.xLength + "] z[" + province.zLength + "]");
+		// System.out.println("NEW Province X[" + province.chunkX + "] Z[" +
+		// province.chunkZ + "] CIV[" + province.civilization + "] AREA[" +
+		// province.area + "] x[" + province.xLength + "] z[" + province.zLength
+		// + "]");
 		provinces.add(province);
 		addProvinceToTreeMap(province);
 	}

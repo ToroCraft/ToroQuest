@@ -178,12 +178,14 @@ public class CivilizationHandlers {
 
 	@SubscribeEvent
 	public void handleEnterProvince(CivilizationEvent.Enter event) {
-		chat(event.getEntityPlayer(), enteringMessage(event.getEntityPlayer(), event.getCivilization()));
+		// chat(event.getEntityPlayer(),
+		// enteringMessage(event.getEntityPlayer(), event.getCivilization()));
 	}
 
 	@SubscribeEvent
 	public void handleLeaveProvince(CivilizationEvent.Leave event) {
-		chat(event.getEntityPlayer(), leavingMessage(event.getEntityPlayer(), event.getCivilization()));
+		// chat(event.getEntityPlayer(), leavingMessage(event.getEntityPlayer(),
+		// event.getCivilization()));
 	}
 
 	private String leavingMessage(EntityPlayer player, CivilizationType civ) {

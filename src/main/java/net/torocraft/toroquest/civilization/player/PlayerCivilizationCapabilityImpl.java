@@ -20,6 +20,7 @@ import net.torocraft.toroquest.civilization.CivilizationEvent;
 import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
+import net.torocraft.toroquest.civilization.ReputationLevel;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 import net.torocraft.toroquest.network.message.MessagePlayerCivilizationSetInCiv;
 import net.torocraft.toroquest.network.message.MessageSetPlayerReputation;
@@ -59,6 +60,11 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 			reputations.put(civ, 0);
 		}
 		setPlayerReputation(civ, reputations.get(civ) + amount);
+	}
+
+	@Override
+	public ReputationLevel getReputationLevel(CivilizationType civ) {
+		return ReputationLevel.fromReputation(getPlayerReputation(civ));
 	}
 
 	@Override
@@ -216,12 +222,13 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	}
 
 	public static void register() {
-		CapabilityManager.INSTANCE.register(PlayerCivilizationCapability.class, new PlayerCivilizationStorage(), new Callable<PlayerCivilizationCapability>() {
-			@Override
-			public PlayerCivilizationCapability call() throws Exception {
-				return null;
-			}
-		});
+		CapabilityManager.INSTANCE.register(PlayerCivilizationCapability.class, new PlayerCivilizationStorage(),
+				new Callable<PlayerCivilizationCapability>() {
+					@Override
+					public PlayerCivilizationCapability call() throws Exception {
+						return null;
+					}
+				});
 	}
 
 	private int i(Integer integer) {
@@ -243,7 +250,8 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		}
 
 		@Override
-		public void readNBT(Capability<PlayerCivilizationCapability> capability, PlayerCivilizationCapability instance, EnumFacing side, NBTBase nbt) {
+		public void readNBT(Capability<PlayerCivilizationCapability> capability, PlayerCivilizationCapability instance, EnumFacing side,
+				NBTBase nbt) {
 			instance.readNBT(nbt);
 		}
 

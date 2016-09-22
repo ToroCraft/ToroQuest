@@ -15,44 +15,48 @@ public class CivilizationOverlayHandler {
 
 	@SubscribeEvent
 	public void onPostRenderOverlay(RenderGameOverlayEvent.Pre event) {
-		ScaledResolution resolution = event.getResolution();
-		int width = resolution.getScaledWidth();
-		int height = resolution.getScaledHeight();
-		EntityPlayerSP player = mc.thePlayer;
-		Province civ = PlayerCivilizationCapabilityImpl.get(player).getPlayerInCivilization();
-
-		if (event.getType() == ElementType.HEALTH) {
-			//			if (civ != null)
-			/*
-						if (civ != null) {
-							System.out.println(civ.civilization.toString());
-						} else {
-							System.out.println("Civ NULL");
-						}
-			*/
-			drawCivilizationOverlay(width, height, civ);
+		if (event.getType() != ElementType.HOTBAR) {
+			return;
 		}
+		ScaledResolution resolution = event.getResolution();
+		drawCivilizationOverlay(resolution.getScaledWidth(), resolution.getScaledHeight());
 	}
 
-	private void drawCivilizationOverlay(int width, int height, Province civ) {
+	private void drawCivilizationOverlay(int width, int height) {
 		int left = width / 2 - 8;
 		int top = height - 48;
+
+		EntityPlayerSP player = mc.thePlayer;
+		Province civ = PlayerCivilizationCapabilityImpl.get(player).getPlayerInCivilization();
 
 		if (civ == null || civ.civilization == null) {
 			return;
 		}
 
+		drawCurrentCivilizationIcon(left, top, civ);
+	}
+
+	private void drawCurrentCivilizationIcon(int left, int top, Province civ) {
 		ToroGuiUtils.drawOverlayIcon(mc, left, top + 4, 0, 1);
-		if (civ.civilization.equals(CivilizationType.EARTH)) {
-			ToroGuiUtils.drawOverlayIcon(mc, left, top, 0, 0);
-		} else if (civ.civilization.equals(CivilizationType.WIND)) {
-			ToroGuiUtils.drawOverlayIcon(mc, left, top, 1, 0);
-		} else if (civ.civilization.equals(CivilizationType.FIRE)) {
-			ToroGuiUtils.drawOverlayIcon(mc, left, top, 2, 0);
-		} else if (civ.civilization.equals(CivilizationType.MOON)) {
-			ToroGuiUtils.drawOverlayIcon(mc, left, top, 3, 0);
-		} else if (civ.civilization.equals(CivilizationType.SUN)) {
-			ToroGuiUtils.drawOverlayIcon(mc, left, top, 4, 0);
+		ToroGuiUtils.drawOverlayIcon(mc, left, top, iconIndex(civ.civilization), 0);
+	}
+
+	private int iconIndex(CivilizationType civ) {
+		switch (civ) {
+		case EARTH:
+			return 0;
+		case FIRE:
+			return 1;
+		case MOON:
+			return 2;
+		case SUN:
+			return 3;
+		case WATER:
+			return 4;
+		case WIND:
+			return 5;
+		default:
+			return 0;
 		}
 	}
 

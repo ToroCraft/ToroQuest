@@ -53,7 +53,7 @@ public class LayerCape implements LayerRenderer<EntityLivingBase> {
 		float f1 = (float) 1 * 10.0F;
 		f1 = MathHelper.clamp_float(f1, -6.0F, 32.0F);
 		float f2 = 0F;// (float) (d0 * d3 + d2 * d4) * 100.0F;
-		float f3 = (float) (1 * d4 - 1 * d3) * 100.0F;
+		float f3 = (float) (d4 - d3) * 100.0F;
 
 		if (f2 < 0.0F) {
 			f2 = 0.0F;
@@ -73,6 +73,7 @@ public class LayerCape implements LayerRenderer<EntityLivingBase> {
 		GlStateManager.rotate(f3 / 2.0F, 0.0F, 0.0F, 1.0F);
 		GlStateManager.rotate(-f3 / 2.0F, 0.0F, 1.0F, 0.0F);
 		GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+
 		((ModelGuard) playerRenderer.getMainModel()).renderCape(0.0625F);
 		GlStateManager.popMatrix();
 	}

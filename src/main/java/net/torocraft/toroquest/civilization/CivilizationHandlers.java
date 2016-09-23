@@ -22,10 +22,10 @@ import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapability;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.EntityToroNpc;
-import net.torocraft.toroquest.util.TaskRunner;
+import net.torocraft.toroquest.network.ToroQuestPacketHandler;
+import net.torocraft.toroquest.network.message.MessageRequestPlayerCivilizationSync;
 
 public class CivilizationHandlers {
-
 
 	@SubscribeEvent
 	public void handleReputationChange(CivilizationEvent.ReputationChange event) {
@@ -39,24 +39,6 @@ public class CivilizationHandlers {
 
 	@SubscribeEvent
 	public void handleLeaveProvince(CivilizationEvent.Leave event) {
-
-	}
-
-	public static class SyncPlayerCivilizationCapabilityTask implements Runnable {
-
-		private final EntityPlayer player;
-
-		public SyncPlayerCivilizationCapabilityTask(EntityPlayer player) {
-			this.player = player;
-			if (player == null) {
-				throw new NullPointerException("NULL player");
-			}
-		}
-
-		@Override
-		public void run() {
-			PlayerCivilizationCapabilityImpl.get(player).syncClient();
-		}
 
 	}
 
@@ -77,8 +59,6 @@ public class CivilizationHandlers {
 		}
 
 		newCap.readNBT(oringialCap.writeNBT());
-		TaskRunner.queueTask(new SyncPlayerCivilizationCapabilityTask(event.getEntityPlayer()), 1);
-		// FIXME causes exception newCap.syncClient();
 	}
 
 	@SubscribeEvent
@@ -104,8 +84,6 @@ public class CivilizationHandlers {
 			return;
 		}
 		cap.readNBT((NBTTagCompound) event.getEntityPlayer().getEntityData().getTag(ToroQuest.MODID + ".playerCivilization"));
-		TaskRunner.queueTask(new SyncPlayerCivilizationCapabilityTask(event.getEntityPlayer()), 1);
-		// FIXME causes exception cap.syncClient();
 	}
 
 	@SubscribeEvent
@@ -114,7 +92,16 @@ public class CivilizationHandlers {
 			return;
 		}
 
-		event.addCapability(new ResourceLocation(ToroQuest.MODID, "playerCivilization"), new PlayerCivilizationCapabilityProvider((EntityPlayer) event.getEntity()));
+		System.out.println("****** AttachCapabilitiesEvent ");
+
+		EntityPlayer player = (EntityPlayer) event.getEntity();
+
+		event.addCapability(new ResourceLocation(ToroQuest.MODID, "playerCivilization"), new PlayerCivilizationCapabilityProvider(player));
+
+		if (player.getEntityWorld().isRemote) {
+			System.out.println("*********************************** AttachCapabilitiesEvent send sync request from client");
+			ToroQuestPacketHandler.INSTANCE.sendToServer(new MessageRequestPlayerCivilizationSync());
+		}
 	}
 
 	public static class PlayerCivilizationCapabilityProvider implements ICapabilityProvider {

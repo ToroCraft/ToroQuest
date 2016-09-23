@@ -22,6 +22,8 @@ public interface PlayerCivilizationCapability {
 
 	NBTTagCompound writeNBT();
 
+	void syncClient();
+
 	void readNBT(NBTBase c);
 
 	void updatePlayerLocation(int chunkX, int chunkZ);

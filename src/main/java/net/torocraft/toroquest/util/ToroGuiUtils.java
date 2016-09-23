@@ -3,7 +3,6 @@ package net.torocraft.toroquest.util;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -20,6 +19,7 @@ public class ToroGuiUtils {
 	public static final int DEFAULT_ICON_TEXTURE_HEIGTH = 16;
 
 	public static void drawOverlayIcon(Minecraft mc, int left, int top, int horizontalIconIndex, int verrticalIconIndex) {
+		// GlStateManager.pushMatrix();
 		mc.getTextureManager().bindTexture(ICONS);
 		GlStateManager.disableDepth();
 		GlStateManager.enableBlend();
@@ -27,9 +27,19 @@ public class ToroGuiUtils {
 		ToroGuiUtils.drawTexturedModalRect(left, top, horizontalIconIndex * DEFAULT_ICON_TEXTURE_WIDTH, verrticalIconIndex * DEFAULT_ICON_TEXTURE_HEIGTH,
 				DEFAULT_ICON_TEXTURE_WIDTH, DEFAULT_ICON_TEXTURE_HEIGTH);
 
-		mc.getTextureManager().bindTexture(Gui.ICONS);
-		GlStateManager.disableBlend();
-		GlStateManager.enableDepth();
+		// GlStateManager.popMatrix();
+	}
+
+	public static void drawOverlayIcon(Minecraft mc, int x, int y, int textureX, int textureY, int width, int height) {
+		// GlStateManager.pushMatrix();
+
+		mc.getTextureManager().bindTexture(ICONS);
+		GlStateManager.disableDepth();
+		GlStateManager.enableBlend();
+
+		ToroGuiUtils.drawTexturedModalRect(x, y, textureX, textureY, width, height);
+
+		// GlStateManager.popMatrix();
 	}
 
 	public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
@@ -45,4 +55,5 @@ public class ToroGuiUtils {
 		worldrenderer.pos(x + 0, y + 0, 0.0D).tex((textureX + 0) * TEXTURE_HEIGHT_SCALER, (textureY + 0) * TEXTURE_WIDTH_SCALER).endVertex();
 		tessellator.draw();
 	}
+
 }

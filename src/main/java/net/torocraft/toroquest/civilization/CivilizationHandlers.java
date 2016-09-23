@@ -25,6 +25,22 @@ import net.torocraft.toroquest.entities.EntityToroNpc;
 
 public class CivilizationHandlers {
 
+
+	@SubscribeEvent
+	public void handleReputationChange(CivilizationEvent.ReputationChange event) {
+
+	}
+
+	@SubscribeEvent
+	public void handleEnterProvince(CivilizationEvent.Enter event) {
+
+	}
+
+	@SubscribeEvent
+	public void handleLeaveProvince(CivilizationEvent.Leave event) {
+
+	}
+
 	@SubscribeEvent
 	public void onDeath(PlayerEvent.Clone event) {
 		if (!event.isWasDeath()) {
@@ -39,6 +55,7 @@ public class CivilizationHandlers {
 		}
 
 		newCap.readNBT(oringialCap.writeNBT());
+		// FIXME causes exception newCap.syncClient();
 	}
 
 	@SubscribeEvent
@@ -57,19 +74,13 @@ public class CivilizationHandlers {
 			return;
 		}
 		cap.readNBT((NBTTagCompound) event.getEntityPlayer().getEntityData().getTag(ToroQuest.MODID + ".playerCivilization"));
+		// FIXME causes exception cap.syncClient();
 	}
 
 	@SubscribeEvent
 	public void onEntityLoad(final AttachCapabilitiesEvent.Entity event) {
-
 		if (!(event.getEntity() instanceof EntityPlayer)) {
 			return;
-		}
-
-		try {
-			System.out.println("loading cap to player: " + ((EntityPlayer) event.getEntity()).getName());
-		} catch (Exception e) {
-			System.out.println("loading cap to player [" + event.getEntity().getClass().getName() + "]");
 		}
 
 		event.addCapability(new ResourceLocation(ToroQuest.MODID, "playerCivilization"), new PlayerCivilizationCapabilityProvider((EntityPlayer) event.getEntity()));
@@ -161,31 +172,6 @@ public class CivilizationHandlers {
 		}
 		EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
 		PlayerCivilizationCapabilityImpl.get(player).updatePlayerLocation(event.getNewChunkX(), event.getNewChunkZ());
-	}
-
-	@SubscribeEvent
-	public void handleLeaveProvince(CivilizationEvent.ReputationChange event) {
-		chat(event.getEntityPlayer(), "Reputation with " + civName(event) + " is now " + event.getReputation());
-	}
-
-	protected String civName(CivilizationEvent.ReputationChange event) {
-		try {
-			return event.getCivilization().getLocalizedName();
-		} catch (Exception e) {
-			return "NULL";
-		}
-	}
-
-	@SubscribeEvent
-	public void handleEnterProvince(CivilizationEvent.Enter event) {
-		// chat(event.getEntityPlayer(),
-		// enteringMessage(event.getEntityPlayer(), event.getCivilization()));
-	}
-
-	@SubscribeEvent
-	public void handleLeaveProvince(CivilizationEvent.Leave event) {
-		// chat(event.getEntityPlayer(), leavingMessage(event.getEntityPlayer(),
-		// event.getCivilization()));
 	}
 
 	private String leavingMessage(EntityPlayer player, CivilizationType civ) {

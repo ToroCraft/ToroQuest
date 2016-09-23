@@ -63,6 +63,23 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	}
 
 	@Override
+	public void syncClient() {
+		if (!player.getEntityWorld().isRemote) {
+			System.out.println("************* SYNC");
+
+			ToroQuestPacketHandler.INSTANCE.sendTo(new MessagePlayerCivilizationSetInCiv(inCiv), (EntityPlayerMP) player);
+
+			/*
+			 * for (Entry<CivilizationType, Integer> entry :
+			 * reputations.entrySet()) {
+			 * ToroQuestPacketHandler.INSTANCE.sendTo(new
+			 * MessageSetPlayerReputation(entry.getKey(), entry.getValue()),
+			 * (EntityPlayerMP) player); }
+			 */
+		}
+	}
+
+	@Override
 	public ReputationLevel getReputationLevel(CivilizationType civ) {
 		return ReputationLevel.fromReputation(getPlayerReputation(civ));
 	}
@@ -222,13 +239,12 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	}
 
 	public static void register() {
-		CapabilityManager.INSTANCE.register(PlayerCivilizationCapability.class, new PlayerCivilizationStorage(),
-				new Callable<PlayerCivilizationCapability>() {
-					@Override
-					public PlayerCivilizationCapability call() throws Exception {
-						return null;
-					}
-				});
+		CapabilityManager.INSTANCE.register(PlayerCivilizationCapability.class, new PlayerCivilizationStorage(), new Callable<PlayerCivilizationCapability>() {
+			@Override
+			public PlayerCivilizationCapability call() throws Exception {
+				return null;
+			}
+		});
 	}
 
 	private int i(Integer integer) {
@@ -250,8 +266,7 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		}
 
 		@Override
-		public void readNBT(Capability<PlayerCivilizationCapability> capability, PlayerCivilizationCapability instance, EnumFacing side,
-				NBTBase nbt) {
+		public void readNBT(Capability<PlayerCivilizationCapability> capability, PlayerCivilizationCapability instance, EnumFacing side, NBTBase nbt) {
 			instance.readNBT(nbt);
 		}
 

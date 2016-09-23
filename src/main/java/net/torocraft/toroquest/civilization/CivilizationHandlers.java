@@ -22,6 +22,7 @@ import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapability;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.EntityToroNpc;
+import net.torocraft.toroquest.util.TaskRunner;
 
 public class CivilizationHandlers {
 
@@ -41,8 +42,29 @@ public class CivilizationHandlers {
 
 	}
 
+	public static class SyncPlayerCivilizationCapabilityTask implements Runnable {
+
+		private final EntityPlayer player;
+
+		public SyncPlayerCivilizationCapabilityTask(EntityPlayer player) {
+			this.player = player;
+			if (player == null) {
+				throw new NullPointerException("NULL player");
+			}
+		}
+
+		@Override
+		public void run() {
+			PlayerCivilizationCapabilityImpl.get(player).syncClient();
+		}
+
+	}
+
 	@SubscribeEvent
 	public void onDeath(PlayerEvent.Clone event) {
+		if (event.getEntityPlayer().getEntityWorld().isRemote) {
+			return;
+		}
 		if (!event.isWasDeath()) {
 			return;
 		}
@@ -55,11 +77,15 @@ public class CivilizationHandlers {
 		}
 
 		newCap.readNBT(oringialCap.writeNBT());
+		TaskRunner.queueTask(new SyncPlayerCivilizationCapabilityTask(event.getEntityPlayer()), 1);
 		// FIXME causes exception newCap.syncClient();
 	}
 
 	@SubscribeEvent
 	public void onSave(PlayerEvent.SaveToFile event) {
+		if (event.getEntityPlayer().getEntityWorld().isRemote) {
+			return;
+		}
 		PlayerCivilizationCapability cap = PlayerCivilizationCapabilityImpl.get(event.getEntityPlayer());
 		if (cap == null) {
 			return;
@@ -69,11 +95,16 @@ public class CivilizationHandlers {
 
 	@SubscribeEvent
 	public void onLoad(PlayerEvent.LoadFromFile event) {
+		if (event.getEntityPlayer().getEntityWorld().isRemote) {
+			return;
+		}
+
 		PlayerCivilizationCapability cap = PlayerCivilizationCapabilityImpl.get(event.getEntityPlayer());
 		if (cap == null) {
 			return;
 		}
 		cap.readNBT((NBTTagCompound) event.getEntityPlayer().getEntityData().getTag(ToroQuest.MODID + ".playerCivilization"));
+		TaskRunner.queueTask(new SyncPlayerCivilizationCapabilityTask(event.getEntityPlayer()), 1);
 		// FIXME causes exception cap.syncClient();
 	}
 

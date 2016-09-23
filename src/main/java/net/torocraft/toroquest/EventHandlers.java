@@ -13,9 +13,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.torocraft.toroquest.entities.EntityToro;
+import net.torocraft.toroquest.util.TaskRunner;
 
 public class EventHandlers {
+
+	@SubscribeEvent
+	public void handleWorldTick(WorldTickEvent event) {
+		TaskRunner.run();
+	}
 
 	@SubscribeEvent
 	public void spawnToroWhenCowPackSpawns(EntityJoinWorldEvent event) {

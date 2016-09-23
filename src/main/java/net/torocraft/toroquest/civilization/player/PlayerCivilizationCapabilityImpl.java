@@ -65,17 +65,10 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	@Override
 	public void syncClient() {
 		if (!player.getEntityWorld().isRemote) {
-			System.out.println("************* SYNC");
-
 			ToroQuestPacketHandler.INSTANCE.sendTo(new MessagePlayerCivilizationSetInCiv(inCiv), (EntityPlayerMP) player);
-
-			/*
-			 * for (Entry<CivilizationType, Integer> entry :
-			 * reputations.entrySet()) {
-			 * ToroQuestPacketHandler.INSTANCE.sendTo(new
-			 * MessageSetPlayerReputation(entry.getKey(), entry.getValue()),
-			 * (EntityPlayerMP) player); }
-			 */
+			for (Entry<CivilizationType, Integer> entry : reputations.entrySet()) {
+				ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetPlayerReputation(entry.getKey(), entry.getValue()), (EntityPlayerMP) player);
+			}
 		}
 	}
 
@@ -255,6 +248,9 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	}
 
 	public static PlayerCivilizationCapability get(EntityPlayer player) {
+		if (player == null) {
+			throw new NullPointerException("NULL player");
+		}
 		return player.getCapability(PlayerCivilizationCapabilityImpl.INSTANCE, null);
 	}
 

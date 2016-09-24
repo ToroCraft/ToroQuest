@@ -27,7 +27,7 @@ public class RenderGuard extends RenderBiped<EntityGuard> {
 	private static final ResourceLocation TEXTURES = new ResourceLocation(ToroQuest.MODID + ":textures/entity/guard/guard.png");
 	private static final ResourceLocation CAPETEXTURE = new ResourceLocation("textures/entity/zombie_villager/zombie_villager.png");
 
-	private final ModelBiped defaultModel;
+	private final ModelGuard defaultModel;
 
 	private final List<LayerRenderer<EntityGuard>> defaultLayers;
 
@@ -35,7 +35,7 @@ public class RenderGuard extends RenderBiped<EntityGuard> {
 		super(renderManagerIn, new ModelGuard(), 0.5F, 1.0F);
 
 		LayerRenderer<?> layerrenderer = (LayerRenderer) this.layerRenderers.get(0);
-		defaultModel = this.modelBipedMain;
+		defaultModel = (ModelGuard) modelBipedMain;
 
 		addLayer(new LayerHeldItem(this));
 
@@ -71,6 +71,12 @@ public class RenderGuard extends RenderBiped<EntityGuard> {
 	public void doRender(EntityGuard entity, double x, double y, double z, float entityYaw, float partialTicks) {
 		this.swapArmor(entity);
 		this.setModelVisibilities(entity);
+
+
+		// if (entity.ticksExisted % 30 == 0) {
+			defaultModel.setCivilization(entity.getCivilization());
+		// }
+
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
 	}
 

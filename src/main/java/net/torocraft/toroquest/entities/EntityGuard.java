@@ -89,6 +89,10 @@ public class EntityGuard extends EntityToroNpc {
 
 	protected void initEntityAI() {
 
+		if (true) {
+			return;
+		}
+
 		areaAI = new EntityAIMoveIntoArea(this, 0.5D, 30);
 
 		tasks.addTask(0, new EntityAISwimming(this));

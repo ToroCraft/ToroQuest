@@ -70,7 +70,8 @@ public class EntityToroNpc extends EntityCreature {
 
 	private CivilizationType enumCiv(String s) {
 		try {
-			return CivilizationType.valueOf(s);
+			CivilizationType civ = CivilizationType.valueOf(s);
+			return civ;
 		} catch (Exception e) {
 			return null;
 		}
@@ -99,11 +100,14 @@ public class EntityToroNpc extends EntityCreature {
 		if (worldObj.isRemote || worldObj.getTotalWorldTime() % 80L != 0L || getCivilization() != null) {
 			return;
 		}
+
 		Province civ = CivilizationUtil.getProvinceAt(worldObj, (int) posX / 16, (int) posZ / 16);
 
 		if (civ == null || civ.civilization == null) {
 			return;
 		}
+
+		System.out.println("pledgeAllegianceIfUnaffiliated() -> " + civ.civilization);
 
 		setCivilization(civ.civilization);
 	}

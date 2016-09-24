@@ -30,7 +30,6 @@ public class MessageSetPlayerReputation implements IMessage {
 	public void fromBytes(ByteBuf buf) {
 		amount = buf.readInt();
 		civ = e(ByteBufUtils.readUTF8String(buf));
-
 	}
 
 	@Override
@@ -52,7 +51,6 @@ public class MessageSetPlayerReputation implements IMessage {
 			final EntityPlayerSP player = minecraft.thePlayer;
 
 			if (player == null) {
-				System.out.println("************* EntityPlayerSP was NULL on the client, unable to handle recived packet!");
 				return null;
 			}
 

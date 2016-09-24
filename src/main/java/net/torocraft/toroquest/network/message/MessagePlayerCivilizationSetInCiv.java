@@ -51,7 +51,6 @@ public class MessagePlayerCivilizationSetInCiv implements IMessage {
 			final EntityPlayerSP player = minecraft.thePlayer;
 
 			if (player == null) {
-				System.out.println("************* EntityPlayerSP was NULL on the client, unable to handle recived packet!");
 				return null;
 			}
 

@@ -13,19 +13,29 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
-import net.minecraftforge.fml.relauncher.Side;
 import net.torocraft.toroquest.entities.EntityToro;
+import net.torocraft.toroquest.network.ToroQuestPacketHandler;
+import net.torocraft.toroquest.network.message.MessageRequestPlayerCivilizationSync;
 import net.torocraft.toroquest.util.TaskRunner;
 
 public class EventHandlers {
 
+
 	@SubscribeEvent
-	// public void handleWorldTick(PlayerTickEvent event) {
 	public void handleWorldTick(WorldTickEvent event) {
-		if (event.side.equals(Side.SERVER) && event.phase.equals(Phase.END)) {
-			TaskRunner.run();
+
+	}
+
+	@SubscribeEvent
+	public void handleWorldTick2(ClientTickEvent event) {
+		TaskRunner.run();
+	}
+
+	public static class SyncTask implements Runnable {
+		public void run() {
+			ToroQuestPacketHandler.INSTANCE.sendToServer(new MessageRequestPlayerCivilizationSync());
 		}
 	}
 

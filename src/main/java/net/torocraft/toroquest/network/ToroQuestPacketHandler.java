@@ -10,7 +10,7 @@ import net.torocraft.toroquest.network.message.MessageSetPlayerReputation;
 
 public class ToroQuestPacketHandler {
 
-	public static int messageId = 1;
+	public static int messageId = 15;
 
 	public static SimpleNetworkWrapper INSTANCE = null;
 

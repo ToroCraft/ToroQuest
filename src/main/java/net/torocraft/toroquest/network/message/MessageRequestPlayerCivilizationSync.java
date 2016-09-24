@@ -32,12 +32,9 @@ public class MessageRequestPlayerCivilizationSync implements IMessage {
 
 		@Override
 		public IMessage onMessage(final MessageRequestPlayerCivilizationSync message, MessageContext ctx) {
-			System.out.println("********* client requested sync, checking side");
 			if (ctx.side != Side.SERVER) {
 				return null;
 			}
-
-			System.out.println("********* client requested sync, loading player");
 
 			final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 
@@ -50,7 +47,6 @@ public class MessageRequestPlayerCivilizationSync implements IMessage {
 			worldServer.addScheduledTask(new Runnable() {
 				@Override
 				public void run() {
-					System.out.println("********* client requested sync, syncing now");
 					PlayerCivilizationCapabilityImpl.get(player).syncClient();
 				}
 			});

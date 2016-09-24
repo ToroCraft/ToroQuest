@@ -18,12 +18,12 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.torocraft.toroquest.EventHandlers.SyncTask;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapability;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.EntityToroNpc;
-import net.torocraft.toroquest.network.ToroQuestPacketHandler;
-import net.torocraft.toroquest.network.message.MessageRequestPlayerCivilizationSync;
+import net.torocraft.toroquest.util.TaskRunner;
 
 public class CivilizationHandlers {
 
@@ -91,16 +91,14 @@ public class CivilizationHandlers {
 		if (!(event.getEntity() instanceof EntityPlayer)) {
 			return;
 		}
-
-		System.out.println("****** AttachCapabilitiesEvent ");
-
 		EntityPlayer player = (EntityPlayer) event.getEntity();
-
 		event.addCapability(new ResourceLocation(ToroQuest.MODID, "playerCivilization"), new PlayerCivilizationCapabilityProvider(player));
+		syncClientCapability(player);
+	}
 
+	private void syncClientCapability(EntityPlayer player) {
 		if (player.getEntityWorld().isRemote) {
-			System.out.println("*********************************** AttachCapabilitiesEvent send sync request from client");
-			ToroQuestPacketHandler.INSTANCE.sendToServer(new MessageRequestPlayerCivilizationSync());
+			TaskRunner.queueTask(new SyncTask(), 30);
 		}
 	}
 

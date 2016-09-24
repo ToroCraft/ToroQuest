@@ -123,7 +123,6 @@ public class EntityAINearestAttackableCivTarget extends EntityAITarget {
 				CivilizationType npcCiv = npc.getCivilization();
 				if (npcCiv != null && !npcCiv.equals(ownerCiv)) {
 					targetEntity = npc;
-					System.out.println("EntityAINearestAttackableCivTarget: attacking npc: " + targetEntity.getName());
 					return true;
 				}
 			}

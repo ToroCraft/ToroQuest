@@ -88,30 +88,22 @@ public class EntityGuard extends EntityToroNpc {
 	private EntityAIMoveIntoArea areaAI;
 
 	protected void initEntityAI() {
-
-		if (true) {
-			return;
-		}
-
 		areaAI = new EntityAIMoveIntoArea(this, 0.5D, 30);
-
 		tasks.addTask(0, new EntityAISwimming(this));
 		tasks.addTask(2, new EntityAIAttackMelee(this, 0.6D, false));
 		tasks.addTask(4, areaAI);
 		tasks.addTask(7, new EntityAIWander(this, 0.35D));
 		tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		tasks.addTask(8, new EntityAILookIdle(this));
-		
+
 		targetTasks.addTask(2, new EntityAINearestAttackableCivTarget(this));
-		targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityMob.class, 10, false, false,  new Predicate<EntityMob>() {
+		targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityMob.class, 10, false, false, new Predicate<EntityMob>() {
 			@Override
 			public boolean apply(EntityMob target) {
 				return !(target instanceof EntityCreeper);
 			}
 		}));
-
 	}
-
 
 	@Override
 	public void setCivilization(CivilizationType civ) {

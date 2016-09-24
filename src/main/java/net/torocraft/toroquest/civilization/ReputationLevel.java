@@ -14,7 +14,7 @@ public enum ReputationLevel {
 		}
 
 		if (rep <= -10) {
-			return ReputationLevel.ENEMY;
+			return ReputationLevel.OUTCAST;
 		}
 
 		if (rep < 10) {

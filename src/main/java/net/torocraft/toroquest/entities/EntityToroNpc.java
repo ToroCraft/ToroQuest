@@ -97,11 +97,20 @@ public class EntityToroNpc extends EntityCreature {
 	}
 
 	private void pledgeAllegianceIfUnaffiliated() {
-		if (worldObj.isRemote || worldObj.getTotalWorldTime() % 80L != 0L || getCivilization() != null) {
+
+		if (worldObj.getTotalWorldTime() % 80L != 0L) {
 			return;
 		}
 
-		Province civ = CivilizationUtil.getProvinceAt(worldObj, (int) posX / 16, (int) posZ / 16);
+		if (getCivilization() != null) {
+			return;
+		}
+
+		if (worldObj.isRemote) {
+			return;
+		}
+
+		Province civ = CivilizationUtil.getProvinceAt(worldObj, chunkCoordX, chunkCoordZ);
 
 		if (civ == null || civ.civilization == null) {
 			return;

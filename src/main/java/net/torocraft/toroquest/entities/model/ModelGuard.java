@@ -12,7 +12,8 @@ import net.torocraft.toroquest.civilization.CivilizationType;
 @SideOnly(Side.CLIENT)
 public class ModelGuard extends ModelBiped {
 
-	private ModelRenderer bipedCape;
+	private ModelRenderer[] capes = new ModelRenderer[CivilizationType.values().length];
+
 	private final float modelSize;
 	private final float yOffset = 0f;
 
@@ -20,7 +21,6 @@ public class ModelGuard extends ModelBiped {
 	private boolean capeAniUp = true;
 
 	private CivilizationType civ;
-	private CivilizationType prevCiv;
 
 	private static final float DEFAULT_CAPE_ANGLE = 0.08f;
 
@@ -30,13 +30,13 @@ public class ModelGuard extends ModelBiped {
 
 	public ModelGuard(float modelSize) {
 		super(modelSize, 0, 64, 64);
-
 		this.modelSize = modelSize;
-
+		for (CivilizationType civ : CivilizationType.values()) {
+			buildCape(civ);
+		}
 	}
 
 	public void setCivilization(CivilizationType civ) {
-		prevCiv = this.civ;
 		this.civ = civ;
 	}
 
@@ -46,83 +46,59 @@ public class ModelGuard extends ModelBiped {
 		return CivilizationType.values()[rand.nextInt(CivilizationType.values().length)];
 	}
 
-	protected void buildCape() {
-		bipedCape = new ModelRenderer(this, 0, 0);
-		bipedCape.setTextureSize(64, 64);
-		setCapeTexture();
-		bipedCape.addBox(-4.5F, 0.0F, 0F, 9, 14, 1, modelSize);
-		bipedCape.setRotationPoint(0, 0, 0);
-
-		bipedCape.offsetZ = 0.17f;
-		bipedCape.offsetY = +0.05f;
-		bipedCape.rotateAngleX = DEFAULT_CAPE_ANGLE;
-		bipedBody.addChild(bipedCape);
-	}
-
-	protected void setCapeTexture() {
-		bipedCape.isHidden = false;
-		bipedCape.setTextureOffset(0, 32);
-		System.out.println("setCapeTexture()  " + civ);
-
-		if (civ == null) {
-			bipedCape.isHidden = true;
-			return;
-		}
-
-		bipedCape.setTextureSize(64, 64);
-
+	protected void buildCape(CivilizationType civ) {
+		ModelRenderer cape = new ModelRenderer(this, 0, 32);
+		cape.setTextureSize(64, 64);
 		switch (civ) {
 		case SUN:
-			bipedCape.setTextureOffset(0, 32);
+			cape.setTextureOffset(0, 32);
 			break;
 		case EARTH:
-			bipedCape.setTextureOffset(20, 32);
+			cape.setTextureOffset(20, 32);
 			break;
 		case WATER:
-			bipedCape.setTextureOffset(40, 32);
+			cape.setTextureOffset(40, 32);
 			break;
 		case WIND:
-			bipedCape.setTextureOffset(0, 47);
+			cape.setTextureOffset(0, 47);
 			break;
 		case MOON:
-			bipedCape.setTextureOffset(20, 47);
+			cape.setTextureOffset(20, 47);
 			break;
 		case FIRE:
-			bipedCape.setTextureOffset(40, 47);
+			cape.setTextureOffset(40, 47);
 			break;
 		default:
-
-			bipedCape.isHidden = true;
+			cape.setTextureOffset(0, 32);
 			break;
 		}
+		cape.addBox(-4.5F, 0.0F, 0F, 9, 14, 1, modelSize);
+		cape.setRotationPoint(0, 0, 0);
+		cape.offsetZ = 0.17f;
+		cape.offsetY = +0.05f;
+		cape.rotateAngleX = DEFAULT_CAPE_ANGLE;
+		bipedBody.addChild(cape);
+		cape.isHidden = true;
+		capes[civ.ordinal()] = cape;
 	}
+
 
 	private static final float MAX_CAPE_ANI = 0.07f;
 
+
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
 		super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
-
-		if (civ != null && !civ.equals(prevCiv)) {
-			System.out.println("building cape for " + civ);
-			buildCape();
-		}
-
 		capeAnimation(entityIn);
-
 	}
 
 	protected void capeAnimation(Entity entityIn) {
-
-		if (bipedCape == null) {
+		if (civ == null) {
 			return;
 		}
 
-		float speed = (float) (entityIn.motionX * entityIn.motionX + entityIn.motionZ * entityIn.motionZ);
+		showCurrentCape();
 
-		if (speed < 0.01) {
-			bipedCape.rotateAngleX = DEFAULT_CAPE_ANGLE;
-			// return;
-		}
+		float speed = (float) (entityIn.motionX * entityIn.motionX + entityIn.motionZ * entityIn.motionZ);
 
 		float rot = speed * 40;
 
@@ -145,11 +121,13 @@ public class ModelGuard extends ModelBiped {
 
 		rot += capeAni;
 
-		bipedCape.rotateAngleX = rot;
+		capes[civ.ordinal()].rotateAngleX = rot;
 	}
 
-	public void renderCape(float scale) {
-		this.bipedCape.render(scale);
+	private void showCurrentCape() {
+		for (ModelRenderer cape : capes) {
+			cape.isHidden = true;
+		}
+		capes[civ.ordinal()].isHidden = false;
 	}
-
 }

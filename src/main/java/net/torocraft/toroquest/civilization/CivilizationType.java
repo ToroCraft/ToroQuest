@@ -3,7 +3,7 @@ package net.torocraft.toroquest.civilization;
 import net.minecraft.client.resources.I18n;
 
 public enum CivilizationType {
-	EARTH, WIND, FIRE, MOON, SUN;
+	EARTH, WIND, FIRE, WATER, MOON, SUN;
 	public String getUnlocalizedName() {
 		return "civilization." + this.toString().toLowerCase() + ".name";
 	}

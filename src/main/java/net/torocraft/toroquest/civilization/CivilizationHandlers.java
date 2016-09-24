@@ -18,15 +18,35 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.torocraft.toroquest.EventHandlers.SyncTask;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapability;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.EntityToroNpc;
+import net.torocraft.toroquest.util.TaskRunner;
 
 public class CivilizationHandlers {
 
 	@SubscribeEvent
+	public void handleReputationChange(CivilizationEvent.ReputationChange event) {
+
+	}
+
+	@SubscribeEvent
+	public void handleEnterProvince(CivilizationEvent.Enter event) {
+
+	}
+
+	@SubscribeEvent
+	public void handleLeaveProvince(CivilizationEvent.Leave event) {
+
+	}
+
+	@SubscribeEvent
 	public void onDeath(PlayerEvent.Clone event) {
+		if (event.getEntityPlayer().getEntityWorld().isRemote) {
+			return;
+		}
 		if (!event.isWasDeath()) {
 			return;
 		}
@@ -43,6 +63,9 @@ public class CivilizationHandlers {
 
 	@SubscribeEvent
 	public void onSave(PlayerEvent.SaveToFile event) {
+		if (event.getEntityPlayer().getEntityWorld().isRemote) {
+			return;
+		}
 		PlayerCivilizationCapability cap = PlayerCivilizationCapabilityImpl.get(event.getEntityPlayer());
 		if (cap == null) {
 			return;
@@ -52,6 +75,10 @@ public class CivilizationHandlers {
 
 	@SubscribeEvent
 	public void onLoad(PlayerEvent.LoadFromFile event) {
+		if (event.getEntityPlayer().getEntityWorld().isRemote) {
+			return;
+		}
+
 		PlayerCivilizationCapability cap = PlayerCivilizationCapabilityImpl.get(event.getEntityPlayer());
 		if (cap == null) {
 			return;
@@ -61,18 +88,18 @@ public class CivilizationHandlers {
 
 	@SubscribeEvent
 	public void onEntityLoad(final AttachCapabilitiesEvent.Entity event) {
-
 		if (!(event.getEntity() instanceof EntityPlayer)) {
 			return;
 		}
+		EntityPlayer player = (EntityPlayer) event.getEntity();
+		event.addCapability(new ResourceLocation(ToroQuest.MODID, "playerCivilization"), new PlayerCivilizationCapabilityProvider(player));
+		syncClientCapability(player);
+	}
 
-		try {
-			System.out.println("loading cap to player: " + ((EntityPlayer) event.getEntity()).getName());
-		} catch (Exception e) {
-			System.out.println("loading cap to player [" + event.getEntity().getClass().getName() + "]");
+	private void syncClientCapability(EntityPlayer player) {
+		if (player.getEntityWorld().isRemote) {
+			TaskRunner.queueTask(new SyncTask(), 30);
 		}
-
-		event.addCapability(new ResourceLocation(ToroQuest.MODID, "playerCivilization"), new PlayerCivilizationCapabilityProvider((EntityPlayer) event.getEntity()));
 	}
 
 	public static class PlayerCivilizationCapabilityProvider implements ICapabilityProvider {
@@ -161,31 +188,6 @@ public class CivilizationHandlers {
 		}
 		EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
 		PlayerCivilizationCapabilityImpl.get(player).updatePlayerLocation(event.getNewChunkX(), event.getNewChunkZ());
-	}
-
-	@SubscribeEvent
-	public void handleLeaveProvince(CivilizationEvent.ReputationChange event) {
-		chat(event.getEntityPlayer(), "Reputation with " + civName(event) + " is now " + event.getReputation());
-	}
-
-	protected String civName(CivilizationEvent.ReputationChange event) {
-		try {
-			return event.getCivilization().getLocalizedName();
-		} catch (Exception e) {
-			return "NULL";
-		}
-	}
-
-	@SubscribeEvent
-	public void handleEnterProvince(CivilizationEvent.Enter event) {
-		// chat(event.getEntityPlayer(),
-		// enteringMessage(event.getEntityPlayer(), event.getCivilization()));
-	}
-
-	@SubscribeEvent
-	public void handleLeaveProvince(CivilizationEvent.Leave event) {
-		// chat(event.getEntityPlayer(), leavingMessage(event.getEntityPlayer(),
-		// event.getCivilization()));
 	}
 
 	private String leavingMessage(EntityPlayer player, CivilizationType civ) {

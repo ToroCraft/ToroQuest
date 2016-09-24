@@ -4,7 +4,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.torocraft.toroquest.civilization.CivilizationOverlayHandler;
+import net.torocraft.toroquest.civilization.CivilizationClientHandlers;
 import net.torocraft.toroquest.entities.render.ToroQuestEntityRenders;
 import net.torocraft.toroquest.item.ToroQuestItems;
 
@@ -14,7 +14,7 @@ public class ClientProxy extends CommonProxy {
 	public void preInit(FMLPreInitializationEvent e) {
 		super.preInit(e);
 		ToroQuestEntityRenders.init();
-		MinecraftForge.EVENT_BUS.register(new CivilizationOverlayHandler());
+		MinecraftForge.EVENT_BUS.register(new CivilizationClientHandlers());
 	}
 
 	@Override

@@ -50,6 +50,10 @@ public class MessagePlayerCivilizationSetInCiv implements IMessage {
 			Minecraft minecraft = Minecraft.getMinecraft();
 			final EntityPlayerSP player = minecraft.thePlayer;
 
+			if (player == null) {
+				return null;
+			}
+
 			minecraft.addScheduledTask(new Runnable() {
 				@Override
 				public void run() {

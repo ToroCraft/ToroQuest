@@ -134,7 +134,8 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 	}
 
 	protected CivilizationType randomCivilizationType() {
-		Random rand = new Random();
+		// Random rand = new Random();
+		Random rand = world.rand;
 		return CivilizationType.values()[rand.nextInt(CivilizationType.values().length)];
 	}
 

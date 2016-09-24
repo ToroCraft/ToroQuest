@@ -5,12 +5,12 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.network.message.MessagePlayerCivilizationSetInCiv;
+import net.torocraft.toroquest.network.message.MessageRequestPlayerCivilizationSync;
 import net.torocraft.toroquest.network.message.MessageSetPlayerReputation;
 
 public class ToroQuestPacketHandler {
 
-
-	public static int messageId = 1;
+	public static int messageId = 15;
 
 	public static SimpleNetworkWrapper INSTANCE = null;
 
@@ -25,5 +25,7 @@ public class ToroQuestPacketHandler {
 		INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(ToroQuest.MODID);
 		INSTANCE.registerMessage(MessagePlayerCivilizationSetInCiv.Handler.class, MessagePlayerCivilizationSetInCiv.class, nextId(), Side.CLIENT);
 		INSTANCE.registerMessage(MessageSetPlayerReputation.Handler.class, MessageSetPlayerReputation.class, nextId(), Side.CLIENT);
+		INSTANCE.registerMessage(MessageRequestPlayerCivilizationSync.Handler.class, MessageRequestPlayerCivilizationSync.class, nextId(),
+				Side.SERVER);
 	}
 }

@@ -30,7 +30,6 @@ public class MessageSetPlayerReputation implements IMessage {
 	public void fromBytes(ByteBuf buf) {
 		amount = buf.readInt();
 		civ = e(ByteBufUtils.readUTF8String(buf));
-
 	}
 
 	@Override
@@ -50,6 +49,10 @@ public class MessageSetPlayerReputation implements IMessage {
 
 			Minecraft minecraft = Minecraft.getMinecraft();
 			final EntityPlayerSP player = minecraft.thePlayer;
+
+			if (player == null) {
+				return null;
+			}
 
 			minecraft.addScheduledTask(new Runnable() {
 				@Override

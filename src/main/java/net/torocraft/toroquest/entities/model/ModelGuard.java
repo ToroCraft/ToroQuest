@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.torocraft.toroquest.civilization.CivilizationType;
+import net.torocraft.toroquest.entities.EntityGuard;
 
 @SideOnly(Side.CLIENT)
 public class ModelGuard extends ModelBiped {
@@ -16,9 +17,6 @@ public class ModelGuard extends ModelBiped {
 
 	private final float modelSize;
 	private final float yOffset = 0f;
-
-	private float capeAni = 0;
-	private boolean capeAniUp = true;
 
 	private CivilizationType civ;
 
@@ -88,10 +86,10 @@ public class ModelGuard extends ModelBiped {
 
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
 		super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
-		capeAnimation(entityIn);
+		capeAnimation((EntityGuard) entityIn);
 	}
 
-	protected void capeAnimation(Entity entityIn) {
+	protected void capeAnimation(EntityGuard entityIn) {
 		if (civ == null) {
 			return;
 		}
@@ -106,20 +104,20 @@ public class ModelGuard extends ModelBiped {
 			rot = 0.6f;
 		}
 
-		if (capeAniUp && capeAni > MAX_CAPE_ANI) {
-			capeAniUp = false;
+		if (entityIn.capeAniUp && entityIn.capeAni > MAX_CAPE_ANI) {
+			entityIn.capeAniUp = false;
 
-		} else if (!capeAniUp && capeAni < 0) {
-			capeAniUp = true;
+		} else if (!entityIn.capeAniUp && entityIn.capeAni < 0) {
+			entityIn.capeAniUp = true;
 		}
 
-		if (capeAniUp) {
-			capeAni += 0.00025;
+		if (entityIn.capeAniUp) {
+			entityIn.capeAni += 0.00025;
 		} else {
-			capeAni -= 0.00025;
+			entityIn.capeAni -= 0.00025;
 		}
 
-		rot += capeAni;
+		rot += entityIn.capeAni;
 
 		capes[civ.ordinal()].rotateAngleX = rot;
 	}

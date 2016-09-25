@@ -59,6 +59,12 @@ public class EntityGuard extends EntityToroNpc {
 	/** The height of the the entity. */
 	private float zombieHeight;
 
+	/**
+	 * animation counters
+	 */
+	public float capeAni = 0;
+	public boolean capeAniUp = true;
+
 	public static String NAME = "guard";
 
 	public static void init(int entityId) {

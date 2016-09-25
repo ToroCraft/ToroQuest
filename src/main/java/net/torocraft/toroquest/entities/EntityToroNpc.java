@@ -12,6 +12,7 @@ import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -44,6 +45,33 @@ public class EntityToroNpc extends EntityCreature {
 		return SoundCategory.HOSTILE;
 	}
 
+	@Override
+	public void writeEntityToNBT(NBTTagCompound compound) {
+		super.writeEntityToNBT(compound);
+		compound.setString("civilization", s(getCivilization()));
+	}
+
+	private String s(CivilizationType civilization) {
+		if (civilization == null) {
+			return null;
+		}
+		return civilization.toString();
+	}
+
+	@Override
+	public void readEntityFromNBT(NBTTagCompound compound) {
+		super.readEntityFromNBT(compound);
+		setCivilization(e(compound.getString("civilization")));
+	}
+
+	private CivilizationType e(String s) {
+		try {
+			return CivilizationType.valueOf(s);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 	public void setCivilization(CivilizationType civ) {
 		if (civ == null) {
 			dataManager.set(CIV, "");
@@ -56,7 +84,6 @@ public class EntityToroNpc extends EntityCreature {
 	protected void entityInit() {
 		super.entityInit();
 		this.dataManager.register(CIV, "");
-
 	}
 
 	@Override
@@ -93,7 +120,6 @@ public class EntityToroNpc extends EntityCreature {
 		super.onLivingUpdate();
 
 		pledgeAllegianceIfUnaffiliated();
-
 	}
 
 	private void pledgeAllegianceIfUnaffiliated() {

@@ -14,7 +14,7 @@ import net.torocraft.toroquest.entities.EntityGuard;
 
 public class TileEntityToroSpawner extends TileEntity implements ITickable {
 
-	private int activatingRangeFromPlayer = 2;
+	private int activatingRangeFromPlayer = 40;
 
 	public TileEntityToroSpawner() {
 
@@ -33,14 +33,11 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 		if (worldObj.isRemote || !isRunTick()) {
 			return;
 		}
-		System.out.println("Spawner Tick");
 
 		if (withinRange()) {
 			spawnCreature();
 			worldObj.setBlockToAir(pos);
-
 		}
-
 	}
 
 	private void spawnCreature() {
@@ -58,7 +55,7 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 	}
 
 	private boolean isRunTick() {
-		return worldObj.getTotalWorldTime() % 60L == 0L;
+		return worldObj.getTotalWorldTime() % 20L == 0L;
 	}
 
 	@Nullable

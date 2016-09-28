@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "down": "toroquest:blocks/spawner_block",
+        "up": "toroquest:blocks/spawner_block",
+        "north": "toroquest:blocks/spawner_block",
+        "south": "toroquest:blocks/spawner_block",
+        "east": "toroquest:blocks/spawner_block",
+        "west": "toroquest:blocks/spawner_block",
+        "particle": "toroquest:blocks/spawner_block"
+    }
+}

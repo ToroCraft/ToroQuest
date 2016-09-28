@@ -7,6 +7,9 @@ import javax.annotation.Nullable;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -14,13 +17,34 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.torocraft.toroquest.ToroQuest;
 
 public class BlockToroSpawner extends BlockContainer {
 
+	public static BlockToroSpawner INSTANCE;
+
+	public static Item ITEM_INSTANCE;
+
+	public static final String NAME = "toroSpawnerBlock";
+
+	public static void init() {
+		GameRegistry.registerTileEntity(TileEntityToroSpawner.class, NAME);
+		INSTANCE = (BlockToroSpawner) new BlockToroSpawner().setUnlocalizedName(NAME);
+		GameRegistry.registerBlock(INSTANCE, NAME);
+		ITEM_INSTANCE = GameRegistry.findItem(ToroQuest.MODID, NAME);
+	}
+
+	public static void registerRenders() {
+		ModelResourceLocation model = new ModelResourceLocation(ToroQuest.MODID + ":" + NAME, "inventory");
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(ITEM_INSTANCE, 0, model);
+	}
+
 	protected BlockToroSpawner() {
 		super(Material.ROCK);
+		setCreativeTab(CreativeTabs.MISC);
 	}
 
 	/**

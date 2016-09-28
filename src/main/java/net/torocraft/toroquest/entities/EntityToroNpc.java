@@ -48,7 +48,16 @@ public class EntityToroNpc extends EntityCreature {
 	@Override
 	public void writeEntityToNBT(NBTTagCompound compound) {
 		super.writeEntityToNBT(compound);
-		compound.setString("civilization", s(getCivilization()));
+		String civ = s(getCivilization());
+		if (isSet(civ)) {
+			compound.setString("civilization", s(getCivilization()));
+		} else {
+			compound.removeTag("civilization");
+		}
+	}
+
+	private boolean isSet(String civ) {
+		return civ != null && civ.length() > 0;
 	}
 
 	private String s(CivilizationType civilization) {

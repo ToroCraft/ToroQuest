@@ -71,21 +71,7 @@ public class VillageHandlerGuardTower implements IVillageCreationHandler {
 			if (!c.equals("xx")) {
 				return false;
 			}
-
 			setBlockState(world, BlockToroSpawner.INSTANCE.getDefaultState(), x, y, z, boundingBox);
-
-			/*
-			 * int j = this.getXWithOffset(x, z); int k =
-			 * this.getYWithOffset(y); int l = this.getZWithOffset(x, z);
-			 * 
-			 * 
-			 * if (!structurebb.isVecInside(new BlockPos(j, k, l))) { return; }
-			 * /
-			 * 
-			 * EntityGuard guard = new EntityGuard(world);
-			 * guard.setLocationAndAngles(j + 0.5D, k, l + 0.5D, 90F, 0.0F);
-			 * world.spawnEntityInWorld(guard);
-			 */
 			return true;
 
 		}

@@ -35,11 +35,11 @@ S>CsCsCsCsCsCsCsS<
   d>----------d<
   Pwl<------l>Pw
   Pwc^c^--c^c^Pw
-  PwPwPw--PwPwPw
-  Pw  b<--b>  Pw
-  Pw  b<--b>  Pw
-  Pw  b<--b>  Pw
-  Pw  b<--b>  Pw
+  PwPwPwx1PwPwPw
+  Pw  b<x1b>  Pw
+  Pw  b<x1b>  Pw
+  Pw  b<x1b>  Pw
+  Pw  b<x1b>  Pw
   CsPwPwd^PwPwCs
 ######################################
   

@@ -1,5 +1,6 @@
 package net.torocraft.toroquest.generation.village;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -83,9 +84,14 @@ public class VillageHandlerBarracks implements IVillageCreationHandler {
 			stand.setLocationAndAngles((double) j + 0.5D, (double) k, (double) l + 0.5D, 90F, 0.0F);
 			world.spawnEntityInWorld(stand);
 
+			List<String> entities = new ArrayList<String>();
+			entities.add("toroquest.guard");
+			specialHandlingForSpawner(world, "xx", c, x, y, z, entities);
+
 			return true;
 
 		}
+
 
 		@Override
 		protected void alterPalette(Map<String, IBlockState> palette) {

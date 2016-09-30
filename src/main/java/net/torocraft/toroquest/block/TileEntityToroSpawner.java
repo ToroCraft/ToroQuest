@@ -28,6 +28,14 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 
 	}
 
+	public void setTriggerDistance(int triggerDistance) {
+		this.triggerDistance = triggerDistance;
+	}
+
+	public void setEntityIds(List<String> entityIds) {
+		this.entityIds = entityIds;
+	}
+
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		triggerDistance = compound.getInteger("trigger_distance");
@@ -88,7 +96,7 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 		}
 
 		double x = pos.getX() + 0.5D + xOffset;
-		double y = pos.getY() + 0.5D + yOffset;
+		double y = pos.getY() + yOffset;
 		double z = pos.getZ() + 0.5D + zOffset;
 
 		spawnEntityLiving((EntityLiving) entity, x, y, z);

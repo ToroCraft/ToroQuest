@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -43,8 +44,31 @@ public class BlockToroSpawner extends BlockContainer {
 	}
 
 	protected BlockToroSpawner() {
-		super(Material.ROCK);
+		super(Material.AIR);
 		setCreativeTab(CreativeTabs.MISC);
+	}
+
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		return EnumBlockRenderType.INVISIBLE;
+	}
+
+	@Nullable
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
+		return NULL_AABB;
+	}
+
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
+
+	public boolean canCollideCheck(IBlockState state, boolean hitIfLiquid) {
+		return false;
+	}
+
+	/**
+	 * Spawns this Block's drops into the World as EntityItems.
+	 */
+	public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
 	}
 
 	/**
@@ -53,6 +77,10 @@ public class BlockToroSpawner extends BlockContainer {
 	 */
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityToroSpawner();
+	}
+
+	public boolean isFullCube(IBlockState state) {
+		return false;
 	}
 
 	/**
@@ -70,32 +98,9 @@ public class BlockToroSpawner extends BlockContainer {
 		return 0;
 	}
 
-	/**
-	 * Spawns this Block's drops into the World as EntityItems.
-	 */
-	public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
-		super.dropBlockAsItemWithChance(worldIn, pos, state, chance, fortune);
-	}
-
 	@Override
 	public int getExpDrop(IBlockState state, net.minecraft.world.IBlockAccess world, BlockPos pos, int fortune) {
 		return 15 + RANDOM.nextInt(15) + RANDOM.nextInt(15);
-	}
-
-	/**
-	 * Used to determine ambient occlusion and culling when rebuilding chunks
-	 * for render
-	 */
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-
-	/**
-	 * The type of render function called. 3 for standard block models, 2 for
-	 * TESR's, 1 for liquids, -1 is no render
-	 */
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.MODEL;
 	}
 
 	@Nullable

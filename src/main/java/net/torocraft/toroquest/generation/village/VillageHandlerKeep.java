@@ -1,5 +1,6 @@
 package net.torocraft.toroquest.generation.village;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -7,6 +8,7 @@ import java.util.Random;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
@@ -58,6 +60,13 @@ public class VillageHandlerKeep implements IVillageCreationHandler {
 
 		public VillagePieceKeep(Start start, int type, Random rand, StructureBoundingBox bounds, EnumFacing facing) {
 			super(NAME, start, type, rand, bounds, facing);
+		}
+
+		@Override
+		protected boolean specialBlockHandling(World world, String c, int x, int y, int z) {
+			List<String> entities = new ArrayList<String>();
+			entities.add("toroquest.guard");
+			return specialHandlingForSpawner(world, "xx", c, x, y, z, entities);
 		}
 
 		public VillagePieceKeep() {

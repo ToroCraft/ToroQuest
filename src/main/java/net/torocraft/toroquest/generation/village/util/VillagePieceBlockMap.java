@@ -1,6 +1,7 @@
 package net.torocraft.toroquest.generation.village.util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -12,10 +13,14 @@ import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
+import net.torocraft.toroquest.block.BlockToroSpawner;
+import net.torocraft.toroquest.block.TileEntityToroSpawner;
 
 public abstract class VillagePieceBlockMap extends StructureVillagePieces.Village {
 
@@ -85,6 +90,27 @@ public abstract class VillagePieceBlockMap extends StructureVillagePieces.Villag
 
 	protected int getYOffset() {
 		return 0;
+	}
+
+	protected boolean specialHandlingForSpawner(World world, String entityBlockCode, String c, int x, int y, int z, List<String> entities) {
+		if (!c.equals(entityBlockCode)) {
+			return false;
+		}
+
+		BlockPos blockpos = new BlockPos(this.getXWithOffset(x, z), this.getYWithOffset(y), this.getZWithOffset(x, z));
+		if (boundingBox.isVecInside(blockpos)) {
+			addToroSpawner(world, blockpos, entities);
+		}
+		return true;
+	}
+
+	protected void addToroSpawner(World world, BlockPos blockpos, List<String> entities) {
+		world.setBlockState(blockpos, BlockToroSpawner.INSTANCE.getDefaultState());
+		TileEntity tileentity = world.getTileEntity(blockpos);
+		if (tileentity instanceof TileEntityToroSpawner) {
+			((TileEntityToroSpawner) tileentity).setTriggerDistance(80);
+			((TileEntityToroSpawner) tileentity).setEntityIds(entities);
+		}
 	}
 
 	public boolean addComponentParts(final World world, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {

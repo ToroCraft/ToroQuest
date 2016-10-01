@@ -13,7 +13,7 @@ SbCsCsCsSb        SbCsCsCsSb
 ######################################
 SbCsCsCsSb        SbCsCsCsSb
 Cs------Cs        Cs------Cs
-Cs----l>CsCs----CsCsl<----Cs
+Cs-xx-l>CsCs----CsCsl<--xxCs
 Cs------------------------Cs
 SbCsCs----------------CsCsSb
     Cs----------------Cs
@@ -21,7 +21,7 @@ SbCsCs----------------CsCsSb
 SbCsCs----------------CsCsSb
 Cs------------------------Cs
 Cs----l>CsCs----CsCsl<----Cs
-Cs------Cs        Cs------Cs
+Csxx----Cs        Cs----xxCs
 SbCsCsCsSb        SbCsCsCsSb
 ######################################
 SbCsCsCsSb        SbCsCsCsSb
@@ -77,7 +77,7 @@ SbPwPwPwSb        SbPwPwPwSb
 SbSbSbSbSb        SbSbSbSbSb
 ######################################
 SbCsCsCsSb        SbCsCsCsSb
-Cs------Cs        Cs------Cs
+Csxx----Cs        Cs----xxCs
 Cs----l>CsGpCsCsGpCsl<----Cs
 Cs----------xx------------Cs
 SbCsCs----------------CsCsSb
@@ -86,7 +86,7 @@ SbCsCs----------------CsCsSb
 SbCsCs----------------CsCsSb
 Cs------------------------Cs
 Cs----l>CsGpCsCsGpCsl<----Cs
-Cs------Cs        Cs------Cs
+Csxx----Cs        Cs----xxCs
 SbCsCsCsSb        SbCsCsCsSb
 ######################################
 SbCsGpCsSb        SbCsGpCsSb
@@ -129,7 +129,7 @@ SbPwPwPwSb        SbPwPwPwSb
 SbSbSbSbSb        SbSbSbSbSb
 ######################################
 SbCsCsCsSb        SbCsCsCsSb
-Cs------Cs        Cs------Cs
+Csxx----Cs        Cs----xxCs
 Cs----l>CsFwFwFwFwCsl<----Cs
 Cs------------------------Cs
 SbCsCsCsSb--------SbCsCsCsSb
@@ -138,7 +138,7 @@ SbCsCsCsSb--------SbCsCsCsSb
 SbCsCsCsSb--------SbCsCsCsSb
 Cs------------------------Cs
 Cs----l>CsFwFwFwFwCsl<----Cs
-Cs------Cs        Cs------Cs
+Csxx----Cs        Cs----xxCs
 SbCsCsCsSb        SbCsCsCsSb
 ######################################
 SbCsGpCsSb        SbCsGpCsSb
@@ -182,13 +182,13 @@ SbSbSbSbSb        SbSbSbSbSb
 ######################################
 Ss--Ss--Ss--------Ss--Ss--Ss
 ----------------------------
-Ss------Ss--------Ss------Ss
+Ss--xx--Ss--------Ss--xx--Ss
 ----------------------------
 Ss--Ss--Ss--------Ss--Ss--Ss
 ----------------------------
 ----------------------------
 Ss--Ss--Ss--------Ss--Ss--Ss
 ----------------------------
-Ss------Ss--------Ss------Ss
+Ss--xx--Ss--------Ss--xx--Ss
 ----------------------------
 Ss--Ss--Ss--------Ss--Ss--Ss

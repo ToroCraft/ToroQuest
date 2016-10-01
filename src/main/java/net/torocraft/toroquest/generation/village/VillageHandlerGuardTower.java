@@ -1,5 +1,6 @@
 package net.torocraft.toroquest.generation.village;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -18,7 +19,6 @@ import net.minecraft.world.gen.structure.StructureVillagePieces.Start;
 import net.minecraft.world.gen.structure.StructureVillagePieces.Village;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry.IVillageCreationHandler;
-import net.torocraft.toroquest.entities.EntityGuard;
 import net.torocraft.toroquest.generation.village.util.BlockMapMeasurer;
 import net.torocraft.toroquest.generation.village.util.VillagePieceBlockMap;
 
@@ -42,21 +42,17 @@ public class VillageHandlerGuardTower implements IVillageCreationHandler {
 	}
 
 	@Override
-	public Village buildComponent(PieceWeight villagePiece, Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3,
-			EnumFacing facing, int p5) {
+	public Village buildComponent(PieceWeight villagePiece, Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
 		return VillagePieceGuardTower.createPiece(startPiece, pieces, random, p1, p2, p3, facing, p5);
 
 	}
 
 	public static class VillagePieceGuardTower extends VillagePieceBlockMap {
 
-		public static VillagePieceGuardTower createPiece(StructureVillagePieces.Start start, List<StructureComponent> structures, Random rand, int x,
-				int y, int z, EnumFacing facing, int p_175850_7_) {
+		public static VillagePieceGuardTower createPiece(StructureVillagePieces.Start start, List<StructureComponent> structures, Random rand, int x, int y, int z, EnumFacing facing, int p_175850_7_) {
 			BlockPos size = new BlockMapMeasurer(NAME).measure();
-			StructureBoundingBox bounds = StructureBoundingBox.getComponentToAddBoundingBox(x, y, z, 0, 0, 0, size.getX(), size.getY(), size.getZ(),
-					facing);
-			return canVillageGoDeeper(bounds) && StructureComponent.findIntersecting(structures, bounds) == null
-					? new VillagePieceGuardTower(start, p_175850_7_, rand, bounds, facing) : null;
+			StructureBoundingBox bounds = StructureBoundingBox.getComponentToAddBoundingBox(x, y, z, 0, 0, 0, size.getX(), size.getY(), size.getZ(), facing);
+			return canVillageGoDeeper(bounds) && StructureComponent.findIntersecting(structures, bounds) == null ? new VillagePieceGuardTower(start, p_175850_7_, rand, bounds, facing) : null;
 		}
 
 		public VillagePieceGuardTower(Start start, int type, Random rand, StructureBoundingBox bounds, EnumFacing facing) {
@@ -68,26 +64,9 @@ public class VillageHandlerGuardTower implements IVillageCreationHandler {
 
 		@Override
 		protected boolean specialBlockHandling(World world, String c, int x, int y, int z) {
-			if (!c.equals("xx")) {
-				return false;
-			}
-
-			setBlockState(world, Blocks.AIR.getDefaultState(), x, y, z, boundingBox);
-
-			int j = this.getXWithOffset(x, z);
-			int k = this.getYWithOffset(y);
-			int l = this.getZWithOffset(x, z);
-
-			/*
-			 * if (!structurebb.isVecInside(new BlockPos(j, k, l))) { return; }
-			 */
-
-			EntityGuard guard = new EntityGuard(world);
-			guard.setLocationAndAngles(j + 0.5D, k, l + 0.5D, 90F, 0.0F);
-			world.spawnEntityInWorld(guard);
-
-			return true;
-
+			List<String> entities = new ArrayList<String>();
+			entities.add("toroquest.guard");
+			return specialHandlingForSpawner(world, "xx", c, x, y, z, entities);
 		}
 
 		@Override

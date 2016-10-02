@@ -70,7 +70,7 @@ public class Province {
 
 	@Override
 	public String toString() {
-		return "Province of " + civilization.getLocalizedName() + " at chunk " + chunkX + "," + chunkZ + " with an area of " + area;
+		return "Province of " + civilization + " at chunk " + chunkX + "," + chunkZ + " with an area of " + area;
 	}
 
 	private String s(CivilizationType civ) {

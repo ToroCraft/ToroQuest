@@ -2,7 +2,7 @@ package net.torocraft.toroquest.network.message;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -39,33 +39,16 @@ public class MessageSetPlayerReputation implements IMessage {
 
 	}
 
-	public static class Handler implements IMessageHandler<MessageSetPlayerReputation, IMessage> {
-
-		@Override
-		public IMessage onMessage(final MessageSetPlayerReputation message, MessageContext ctx) {
-			if (ctx.side != Side.CLIENT) {
-				return null;
-			}
-
+	public static class Worker {
+		public void work(MessageSetPlayerReputation message) {
 			Minecraft minecraft = Minecraft.getMinecraft();
-			final EntityPlayerSP player = minecraft.thePlayer;
+			final EntityPlayer player = minecraft.thePlayer;
 
 			if (player == null) {
-				return null;
+				return;
 			}
 
-			minecraft.addScheduledTask(new Runnable() {
-				@Override
-				public void run() {
-					processMessage(message, player);
-				}
-			});
-
-			return null;
-		}
-
-		void processMessage(MessageSetPlayerReputation message, EntityPlayerSP player) {
-			PlayerCivilizationCapabilityImpl.get(player).setPlayerReputation(message.civ, message.amount);
+			PlayerCivilizationCapabilityImpl.get(null).setPlayerReputation(message.civ, message.amount);
 		}
 
 		private String s(Province civ) {
@@ -74,6 +57,26 @@ public class MessageSetPlayerReputation implements IMessage {
 			}
 			return civ.toString();
 		}
+	}
+
+	public static class Handler implements IMessageHandler<MessageSetPlayerReputation, IMessage> {
+
+		@Override
+		public IMessage onMessage(final MessageSetPlayerReputation message, MessageContext ctx) {
+			if (ctx.side != Side.CLIENT) {
+				return null;
+			}
+
+			Minecraft.getMinecraft().addScheduledTask(new Runnable() {
+				@Override
+				public void run() {
+					new Worker().work(message);
+				}
+			});
+
+			return null;
+		}
+
 	}
 
 	private static String s(CivilizationType civ) {

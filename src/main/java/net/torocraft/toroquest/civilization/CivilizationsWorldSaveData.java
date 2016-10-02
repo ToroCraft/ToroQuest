@@ -177,20 +177,10 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 			province.readNBT(list.getCompoundTagAt(i));
 			addProvinceToSaveData(province);
 		}
-		System.out.println("*** Loaded [" + provinces.size() + "] Provinces");
-		for (Province p : provinces) {
-			System.out.println(p.toString());
-		}
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound t) {
-
-		System.out.println("*** Saving [" + provinces.size() + "] Provinces");
-		for (Province p : provinces) {
-			System.out.println(p.toString());
-		}
-
 		NBTTagList list = new NBTTagList();
 		for (Province p : provinces) {
 			list.appendTag(p.writeNBT());

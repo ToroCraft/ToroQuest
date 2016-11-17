@@ -122,7 +122,10 @@ public class CivilizationHandlers {
 
 		@Override
 		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-			return PlayerCivilizationCapabilityImpl.INSTANCE.cast(instance);
+			if(CAP != null && capability == CAP) {
+				return PlayerCivilizationCapabilityImpl.INSTANCE.cast(instance);
+			}
+			return null;
 		}
 	}
 

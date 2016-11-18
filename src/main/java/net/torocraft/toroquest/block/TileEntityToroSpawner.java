@@ -2,9 +2,11 @@ package net.torocraft.toroquest.block;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -21,11 +23,22 @@ import net.torocraft.toroquest.entities.EntityGuard;
 
 public class TileEntityToroSpawner extends TileEntity implements ITickable {
 
-	private int triggerDistance = 80;
+	private int triggerDistance = 60;
 	private List<String> entityIds = new ArrayList<String>();
+	private int spawnRadius = 0;
+
+	private int spawnTryCount = 0;
 
 	public TileEntityToroSpawner() {
 
+	}
+
+	public int getSpawnRadius() {
+		return spawnRadius;
+	}
+
+	public void setSpawnRadius(int spawnRadius) {
+		this.spawnRadius = spawnRadius;
 	}
 
 	public void setTriggerDistance(int triggerDistance) {
@@ -39,6 +52,7 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		triggerDistance = compound.getInteger("trigger_distance");
+		spawnRadius = compound.getInteger("spawn_radius");
 
 		entityIds.clear();
 
@@ -58,6 +72,7 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 		super.writeToNBT(compound);
 
 		compound.setInteger("trigger_distance", triggerDistance);
+		compound.setInteger("spawn_radius", spawnRadius);
 
 		NBTTagList list = new NBTTagList();
 		for (String id : entityIds) {
@@ -84,6 +99,31 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 	}
 
 	public void spawnCreature(String entityID) {
+		Random rand = worldObj.rand;
+
+		int r = 0;
+		double angle = 0;
+		spawnTryCount = 0;
+		double x = 0;
+		double z = 0;
+
+		while (spawnTryCount < 10) {
+			spawnTryCount++;
+
+			if (spawnRadius > 0) {
+				r = rand.nextInt(spawnRadius);
+				angle = (double) rand.nextInt(62) / 10;
+				x = r * Math.cos(angle);
+				z = r * Math.sin(angle);
+				if (badSpawnLocation(x, 0, z)) {
+					continue;
+				}
+			}
+
+			spawnCreature(entityID, x, 0, z);
+			return;
+		}
+
 		spawnCreature(entityID, 0, 0, 0);
 	}
 
@@ -102,13 +142,29 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 		spawnEntityLiving((EntityLiving) entity, x, y, z);
 	}
 
-	protected void spawnEntityLiving(EntityLiving entity, double x, double y, double z) {
+	protected boolean spawnEntityLiving(EntityLiving entity, double x, double y, double z) {
 		entity.setLocationAndAngles(x, y, z, MathHelper.wrapDegrees(worldObj.rand.nextFloat() * 360.0F), 0.0F);
 		entity.rotationYawHead = entity.rotationYaw;
 		entity.renderYawOffset = entity.rotationYaw;
 		entity.onInitialSpawn(worldObj.getDifficultyForLocation(new BlockPos(entity)), (IEntityLivingData) null);
 		worldObj.spawnEntityInWorld(entity);
 		entity.playLivingSound();
+		return true;
+	}
+
+	private boolean badSpawnLocation(double xOffset, double yOffset, double zOffset) {
+		double x = pos.getX() + 0.5D + xOffset;
+		double y = pos.getY() + yOffset;
+		double z = pos.getZ() + 0.5D + zOffset;
+
+		BlockPos pos = new BlockPos(x + 0.5D + xOffset, y, z);
+		if (worldObj.getBlockState(pos).getMaterial() != Material.AIR) {
+			return true;
+		}
+		if (worldObj.getBlockState(pos.up()).getMaterial() != Material.AIR) {
+			return true;
+		}
+		return false;
 	}
 
 	private void spawnCreature() {

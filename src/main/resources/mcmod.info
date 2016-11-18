@@ -11,6 +11,7 @@
   "credits": "The Forge and FML guys, for making Forge and FML",
   "logoFile": "",
   "screenshots": [],
-  "dependencies": []
+  "dependencies": ["dldungeonsjdg"],
+  "useDependencyInformation": "true"
 }
 ]

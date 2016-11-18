@@ -2,7 +2,7 @@ package net.torocraft.toroquest.network.message;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -39,32 +39,13 @@ public class MessagePlayerCivilizationSetInCiv implements IMessage {
 		}
 	}
 
-	public static class Handler implements IMessageHandler<MessagePlayerCivilizationSetInCiv, IMessage> {
+	public static class Worker {
 
-		@Override
-		public IMessage onMessage(final MessagePlayerCivilizationSetInCiv message, MessageContext ctx) {
-			if (ctx.side != Side.CLIENT) {
-				return null;
-			}
-
-			Minecraft minecraft = Minecraft.getMinecraft();
-			final EntityPlayerSP player = minecraft.thePlayer;
-
+		void work(MessagePlayerCivilizationSetInCiv message) {
+			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			if (player == null) {
-				return null;
+				return;
 			}
-
-			minecraft.addScheduledTask(new Runnable() {
-				@Override
-				public void run() {
-					processMessage(message, player);
-				}
-			});
-
-			return null;
-		}
-
-		void processMessage(MessagePlayerCivilizationSetInCiv message, EntityPlayerSP player) {
 			PlayerCivilizationCapabilityImpl.get(player).setPlayerInCivilization(message.province);
 		}
 
@@ -74,6 +55,26 @@ public class MessagePlayerCivilizationSetInCiv implements IMessage {
 			}
 			return civ.toString();
 		}
+	}
+
+	public static class Handler implements IMessageHandler<MessagePlayerCivilizationSetInCiv, IMessage> {
+
+		@Override
+		public IMessage onMessage(final MessagePlayerCivilizationSetInCiv message, MessageContext ctx) {
+			if (ctx.side != Side.CLIENT) {
+				return null;
+			}
+
+			Minecraft.getMinecraft().addScheduledTask(new Runnable() {
+				@Override
+				public void run() {
+					new Worker().work(message);
+				}
+			});
+
+			return null;
+		}
+
 	}
 
 }

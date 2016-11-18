@@ -23,9 +23,14 @@ public class ToroQuestPacketHandler {
 
 	public static void init() {
 		INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(ToroQuest.MODID);
-		INSTANCE.registerMessage(MessagePlayerCivilizationSetInCiv.Handler.class, MessagePlayerCivilizationSetInCiv.class, nextId(), Side.CLIENT);
-		INSTANCE.registerMessage(MessageSetPlayerReputation.Handler.class, MessageSetPlayerReputation.class, nextId(), Side.CLIENT);
-		INSTANCE.registerMessage(MessageRequestPlayerCivilizationSync.Handler.class, MessageRequestPlayerCivilizationSync.class, nextId(),
-				Side.SERVER);
+
+		INSTANCE.registerMessage(MessageRequestPlayerCivilizationSync.Handler.class, MessageRequestPlayerCivilizationSync.class, 3, Side.SERVER);
+
+		INSTANCE.registerMessage(MessageSetPlayerReputation.Handler.class, MessageSetPlayerReputation.class, 2, Side.CLIENT);
+
+		INSTANCE.registerMessage(MessagePlayerCivilizationSetInCiv.Handler.class, MessagePlayerCivilizationSetInCiv.class, 1, Side.CLIENT);
+
+
+
 	}
 }

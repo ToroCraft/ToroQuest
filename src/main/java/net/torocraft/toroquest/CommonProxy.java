@@ -23,8 +23,6 @@ import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 public class CommonProxy {
 
 	public void preInit(FMLPreInitializationEvent e) {
-		ToroQuestPacketHandler.init();
-
 		MinecraftForge.TERRAIN_GEN_BUS.register(new CivilizationGeneratorHandlers());
 		MinecraftForge.EVENT_BUS.register(new EventHandlers());
 		MinecraftForge.EVENT_BUS.register(new CivilizationHandlers());
@@ -34,6 +32,7 @@ public class CommonProxy {
 		VillageHandlerGuardTower.init();
 		// VillageHandlerGuardTower2.init();
 		VillageHandlerBarracks.init();
+		ToroQuestPacketHandler.init();
 	}
 
 	public void init(FMLInitializationEvent e) {

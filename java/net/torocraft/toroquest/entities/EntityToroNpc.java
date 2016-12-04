@@ -3,7 +3,6 @@ package net.torocraft.toroquest.entities;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityEnderman;
@@ -19,7 +18,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -35,10 +33,6 @@ public class EntityToroNpc extends EntityCreature {
 		super(worldIn);
 		this.experienceValue = 5;
 		setCivilization(civ);
-	}
-
-	public static void registerFixesMonster(DataFixer fixer) {
-		EntityLiving.registerFixesMob(fixer, "Monster");
 	}
 
 	public SoundCategory getSoundCategory() {

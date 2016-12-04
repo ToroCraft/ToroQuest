@@ -20,7 +20,7 @@ minecraft {
 }
 
 dependencies {
-    compile files("../libs/dld-pre1.jar")
+    compile files("src/main/libs/dld-pre1.jar")
     runtime "org.apache.httpcomponents:httpmime:4.3.3"
 }
 

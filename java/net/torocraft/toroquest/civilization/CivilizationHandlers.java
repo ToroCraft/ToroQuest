@@ -52,13 +52,13 @@ public class CivilizationHandlers {
 		}
 
 		PlayerCivilizationCapability newCap = PlayerCivilizationCapabilityImpl.get(event.getEntityPlayer());
-		PlayerCivilizationCapability oringialCap = PlayerCivilizationCapabilityImpl.get(event.getOriginal());
+		PlayerCivilizationCapability originalCap = PlayerCivilizationCapabilityImpl.get(event.getOriginal());
 
-		if (newCap == null || oringialCap == null) {
+		if (newCap == null || originalCap == null) {
 			return;
 		}
 
-		newCap.readNBT(oringialCap.writeNBT());
+		newCap.readNBT(originalCap.writeNBT());
 	}
 
 	@SubscribeEvent

@@ -50,6 +50,12 @@ public class EventHandlers {
 			return;
 		}
 
+		if (entity.getEntityData().getBoolean("AddedToWorld")) {
+			return;
+		}
+
+		entity.getEntityData().setBoolean("AddedToWorld", true);
+		
 		World world = event.getWorld();
 
 		if (world.rand.nextInt(8) != 0) {
@@ -61,7 +67,8 @@ public class EventHandlers {
 		if (spawnPoint == null) {
 			return;
 		}
-
+		
+		
 		Entity toro = new EntityToro(world);
 
 		toro.setPosition(spawnPoint.getX(), spawnPoint.getY() + 1, spawnPoint.getZ());

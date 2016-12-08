@@ -29,19 +29,19 @@ public class CivilizationGeneratorHandlers {
 
 	@Method(modid = "dldungeonsjdg")
 	@SubscribeEvent
-	public void spawnDunguen(DLDEvent.PlaceDungeonBegin event) {
+	public void spawnDungeon(DLDEvent.PlaceDungeonBegin event) {
 
 	}
 
 	@Method(modid = "dldungeonsjdg")
 	@SubscribeEvent
-	public void spawnDunguen(DLDEvent.PlaceDungeonFinish event) {
+	public void spawnDungeon(DLDEvent.PlaceDungeonFinish event) {
 
 	}
 
 	@Method(modid = "dldungeonsjdg")
 	@SubscribeEvent
-	public void spawnDunguen(DLDEvent.AfterChestTileEntity event) {
+	public void spawnDungeon(DLDEvent.AfterChestTileEntity event) {
 		addArmorToSlot2(event);
 	}
 
@@ -85,7 +85,7 @@ public class CivilizationGeneratorHandlers {
 
 	@Method(modid = "dldungeonsjdg")
 	@SubscribeEvent
-	public void spawnDunguen(DLDEvent.BeforeBuild event) {
+	public void spawnDungeon(DLDEvent.BeforeBuild event) {
 
 	}
 

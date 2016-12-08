@@ -48,7 +48,7 @@ public class MessageSetPlayerReputation implements IMessage {
 				return;
 			}
 
-			PlayerCivilizationCapabilityImpl.get(null).setPlayerReputation(message.civ, message.amount);
+			PlayerCivilizationCapabilityImpl.get(player).setPlayerReputation(message.civ, message.amount);
 		}
 
 		private String s(Province civ) {

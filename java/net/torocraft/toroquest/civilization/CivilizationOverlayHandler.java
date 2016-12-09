@@ -53,15 +53,15 @@ public class CivilizationOverlayHandler extends Hud {
 		case EARTH:
 			return 0;
 		case FIRE:
-			return 1;
-		case MOON:
-			return 2;
-		case SUN:
-			return 3;
-		case WATER:
-			return 4;
-		case WIND:
 			return 5;
+		case MOON:
+			return 4;
+		case SUN:
+			return 1;
+		case WATER:
+			return 2;
+		case WIND:
+			return 3;
 		default:
 			return 0;
 		}

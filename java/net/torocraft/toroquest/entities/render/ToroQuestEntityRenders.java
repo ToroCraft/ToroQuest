@@ -4,7 +4,6 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.torocraft.toroquest.entities.EntityFriendlyMage;
 import net.torocraft.toroquest.entities.EntityGuard;
 import net.torocraft.toroquest.entities.EntityMage;
 import net.torocraft.toroquest.entities.EntityMonolithEye;
@@ -15,7 +14,6 @@ public class ToroQuestEntityRenders {
 
 	public static void init() {
 		registerMageRenderer();
-		registerFriendlyMageRenderer();
 		registerMonolithEyeRenderer();
 		registerSentryRenderer();
 		EntityToro.registerRenders();
@@ -27,15 +25,6 @@ public class ToroQuestEntityRenders {
 			@Override 
 			public Render<EntityMage> createRenderFor(RenderManager manager) { 
 				return new RenderMage(manager); 
-			}
-		});
-	}
-	
-	public static void registerFriendlyMageRenderer() {
-		RenderingRegistry.registerEntityRenderingHandler(EntityFriendlyMage.class, new IRenderFactory<EntityFriendlyMage>() {
-			@Override 
-			public Render<EntityFriendlyMage> createRenderFor(RenderManager manager) { 
-				return new RenderFriendlyMage(manager); 
 			}
 		});
 	}

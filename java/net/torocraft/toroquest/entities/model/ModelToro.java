@@ -55,7 +55,6 @@ public class ModelToro extends ModelQuadruped {
 		body.setTextureOffset(52, 0);
 	}
 
-	@SuppressWarnings("unused")
 	private void drawAxes(ModelRenderer m) {
 		if (m == null) {
 			m = new ModelRenderer(this, 0, 16);

@@ -1,18 +1,18 @@
-------------------
---DrDrDrDrDrDr
---DrDrDrDrDrDr
---DrDrDrDrDrDr
---DrDrDrDrDrDr
---DrDrDrDrDrDr
-------------------
+
+  DrDrDrDrDrDr
+  DrDrDrDrDrDr
+  DrDrDrDrDrDr
+  DrDrDrDrDrDr
+  DrDrDrDrDrDr
+
 ######################################
---DrDrDrDrDrDr
---PwPwPwPwDrDr
---PwPwPwPwDrDr
---PwPwPwPwDrDr
---PwPwPwPwDrDr
---PwPwPwPwDrDr
---DrDrDrDrDrDr
+  DrDrDrDrDrDr
+  PwPwPwPwDrDr
+  PwPwPwPwDrDr
+  PwPwPwPwDrDr
+  PwPwPwPwDrDr
+  PwPwPwPwDrDr
+  DrDrDrDrDrDr
 ######################################
 ------------------
 --LgLgLgLgFwLg----

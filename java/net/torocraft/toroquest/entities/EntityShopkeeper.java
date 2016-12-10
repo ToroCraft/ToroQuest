@@ -25,6 +25,11 @@ import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.ReputationLevel;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.render.RenderShopkeeper;
+import net.torocraft.toroquest.entities.trades.ShopkeeperTradesForEarth;
+import net.torocraft.toroquest.entities.trades.ShopkeeperTradesForFire;
+import net.torocraft.toroquest.entities.trades.ShopkeeperTradesForMoon;
+import net.torocraft.toroquest.entities.trades.ShopkeeperTradesForSun;
+import net.torocraft.toroquest.entities.trades.ShopkeeperTradesForWater;
 import net.torocraft.toroquest.entities.trades.ShopkeeperTradesForWind;
 
 public class EntityShopkeeper extends EntityVillager implements IMerchant {
@@ -91,15 +96,15 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 		case WIND:
 			return ShopkeeperTradesForWind.trades(player, rep.rep);
 		case EARTH:
-			return ShopkeeperTradesForWind.trades(player, rep.rep);
+			return ShopkeeperTradesForEarth.trades(player, rep.rep);
 		case FIRE:
-			return ShopkeeperTradesForWind.trades(player, rep.rep);
+			return ShopkeeperTradesForFire.trades(player, rep.rep);
 		case MOON:
-			return ShopkeeperTradesForWind.trades(player, rep.rep);
+			return ShopkeeperTradesForMoon.trades(player, rep.rep);
 		case SUN:
-			return ShopkeeperTradesForWind.trades(player, rep.rep);
+			return ShopkeeperTradesForSun.trades(player, rep.rep);
 		case WATER:
-			return ShopkeeperTradesForWind.trades(player, rep.rep);
+			return ShopkeeperTradesForWater.trades(player, rep.rep);
 		default:
 			return new MerchantRecipeList();
 		}

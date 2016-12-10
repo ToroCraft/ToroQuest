@@ -1,56 +1,42 @@
-------------------
---DrDrDrDrDrDr
---DrDrDrDrDrDr
---DrDrDrDrDrDr
---DrDrDrDrDrDr
---DrDrDrDrDrDr
-------------------
+  DrDrDrDrDrDr
+  DrDrDrDrDrDr
+  DrDrDrDrDrDr
+  DrDrDrDrDrDr
+  DrDrDrDrDrDr
 ######################################
---DrDrDrDrDrDr
---PwPwPwPwDrDr
---PwPwPwPwDrDr
---PwPwPwPwDrDr
---PwPwPwPwDrDr
---PwPwPwPwDrDr
---DrDrDrDrDrDr
+  PwPwPwPwDrDr
+  PwPwPwPwDrDr
+  PwPwPwPwDrDr
+  PwPwPwPwDrDr
+  PwPwPwPwDrDr
 ######################################
-------------------
 --LgLgLgLgFwLg----
 --Lg----c>--Fw----
 --Lg  --d>xxFw----
 --Lgb^--c>--Fw----
 --LgLgLgLgFwLg----
-------------------
 ######################################
-------------------
 --LgLgLgLg--Fw----
 --Lg----c>--------
 --Lg----  --------
 --Lg----c>--------
 --LgLgLgLg--Fw----
-------------------
 ######################################
-------------------
 --LgLgLgLg--Fw----
 --Lg----c>--------
 --Lg----Bs--------
 --Lg----c>--------
 --LgLgLgLg--Fw----
-------------------
 ######################################
-------------------
 --LgLgLgLgFwFw----
 --Lg----c>--Fw----
 --Lg----Bs--Fw----
 --Lg----c>--Fw----
 --LgLgLgLgFwFw----
-------------------
 ######################################
-------------------
 --PwPwPwPwPwS<----
 --PwPwPwPwPwS<----
 --PwPwPwPwPwS<----
 --PwPwPwPwPwS<----
 --PwPwPwPwPwS<----
-------------------
 ######################################

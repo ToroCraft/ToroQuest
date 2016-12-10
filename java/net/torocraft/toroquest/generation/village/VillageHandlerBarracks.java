@@ -50,6 +50,11 @@ public class VillageHandlerBarracks implements IVillageCreationHandler {
 
 	public static class VillagePieceBarracks extends VillagePieceBlockMap {
 
+		@Override
+		protected int getYOffset() {
+			return -1;
+		}
+		
 		public static VillagePieceBarracks createPiece(StructureVillagePieces.Start start, List<StructureComponent> structures, Random rand, int x, int y, int z, EnumFacing facing, int p_175850_7_) {
 			BlockPos size = new BlockMapMeasurer(NAME).measure();
 			StructureBoundingBox bounds = StructureBoundingBox.getComponentToAddBoundingBox(x, y, z, 0, 0, 0, size.getX(), size.getY(), size.getZ(), facing);

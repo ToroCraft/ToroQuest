@@ -2,22 +2,24 @@ package net.torocraft.toroquest.item.armor;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.item.ItemToroLeather;
 import net.torocraft.toroquest.material.ArmorMaterials;
 import net.torocraft.toroquest.util.ToroBaseUtils;
 
-public class ItemKingArmor extends ItemArmor {
+public class ItemToroArmor extends ItemArmor {
 
-	public static final String NAME = "king";
+	public static final String NAME = "toro_armor";
 
-	public static ItemKingArmor helmetItem;
-	public static ItemKingArmor chestplateItem;
-	public static ItemKingArmor leggingsItem;
-	public static ItemKingArmor bootsItem;
+	public static ItemToroArmor helmetItem;
+	public static ItemToroArmor chestplateItem;
+	public static ItemToroArmor leggingsItem;
+	public static ItemToroArmor bootsItem;
 
 	public static void init() {
 		initHelmet();
@@ -33,8 +35,17 @@ public class ItemKingArmor extends ItemArmor {
 		registerRendersBoots();
 	}
 
+	public static void initRecipes() {
+		ItemStack emerald = new ItemStack(Items.EMERALD);
+		ItemStack leather = new ItemStack(ItemToroLeather.INSTANCE);
+		GameRegistry.addRecipe(new ItemStack(helmetItem), "ggg", "ddd", "d d", 'g', emerald, 'd', leather);
+		GameRegistry.addRecipe(new ItemStack(chestplateItem), "dgd", "ddd", "ddd", 'g', emerald, 'd', leather);
+		GameRegistry.addRecipe(new ItemStack(leggingsItem), "ddd", "dgd", "dgd", 'g', emerald, 'd', leather);
+		GameRegistry.addRecipe(new ItemStack(bootsItem), "dgd", "dgd", 'g', emerald, 'd', leather);
+	}
+
 	private static void initBoots() {
-		bootsItem = new ItemKingArmor(NAME + "_boots", 1, EntityEquipmentSlot.FEET);
+		bootsItem = new ItemToroArmor(NAME + "_boots", 1, EntityEquipmentSlot.FEET);
 		ToroBaseUtils.registerItem(bootsItem, NAME + "_boots");
 	}
 
@@ -43,7 +54,7 @@ public class ItemKingArmor extends ItemArmor {
 	}
 
 	private static void initLeggings() {
-		leggingsItem = new ItemKingArmor(NAME + "_leggings", 2, EntityEquipmentSlot.LEGS);
+		leggingsItem = new ItemToroArmor(NAME + "_leggings", 2, EntityEquipmentSlot.LEGS);
 		ToroBaseUtils.registerItem(leggingsItem, NAME + "_leggings");
 	}
 
@@ -52,7 +63,7 @@ public class ItemKingArmor extends ItemArmor {
 	}
 
 	private static void initHelmet() {
-		helmetItem = new ItemKingArmor(NAME + "_helmet", 1, EntityEquipmentSlot.HEAD);
+		helmetItem = new ItemToroArmor(NAME + "_helmet", 1, EntityEquipmentSlot.HEAD);
 		ToroBaseUtils.registerItem(helmetItem, NAME + "_helmet");
 	}
 
@@ -61,7 +72,7 @@ public class ItemKingArmor extends ItemArmor {
 	}
 
 	private static void initChestPlate() {
-		chestplateItem = new ItemKingArmor(NAME + "_chestplate", 1, EntityEquipmentSlot.CHEST);
+		chestplateItem = new ItemToroArmor(NAME + "_chestplate", 1, EntityEquipmentSlot.CHEST);
 		ToroBaseUtils.registerItem(chestplateItem, NAME + "_chestplate");
 	}
 
@@ -73,8 +84,8 @@ public class ItemKingArmor extends ItemArmor {
 		return new ModelResourceLocation(ToroQuest.MODID + ":" + NAME + "_" + model, "inventory");
 	}
 
-	public ItemKingArmor(String unlocalizedName, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn) {
-		super(ArmorMaterials.KING, renderIndexIn, equipmentSlotIn);
+	public ItemToroArmor(String unlocalizedName, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn) {
+		super(ArmorMaterials.TORO, renderIndexIn, equipmentSlotIn);
 		this.setUnlocalizedName(unlocalizedName);
 		setMaxDamage(8588);
 	}

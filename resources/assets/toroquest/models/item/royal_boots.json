@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "toroquest:items/bull_helmet"
+        "layer0": "toroquest:items/royal_boots"
     }
 }

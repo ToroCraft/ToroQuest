@@ -13,8 +13,8 @@ import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.torocraft.toroquest.block.BlockToroSpawner;
 import net.torocraft.toroquest.block.TileEntityToroSpawner;
-import net.torocraft.toroquest.item.armor.ItemHeavyDiamondArmor;
-import net.torocraft.toroquest.item.armor.ItemKingArmor;
+import net.torocraft.toroquest.item.armor.ItemReinforcedDiamondArmor;
+import net.torocraft.toroquest.item.armor.ItemRoyalArmor;
 import net.torocraft.toroquest.item.armor.ItemSamuraiArmor;
 
 public class CivilizationGeneratorHandlers {
@@ -54,13 +54,13 @@ public class CivilizationGeneratorHandlers {
 
 		switch(i) {
 		case 0:
-			return ItemKingArmor.chestplateItem;
+			return ItemRoyalArmor.chestplateItem;
 		case 1:
-			return ItemKingArmor.leggingsItem;
+			return ItemRoyalArmor.leggingsItem;
 		case 2:
-			return ItemKingArmor.helmetItem;
+			return ItemRoyalArmor.helmetItem;
 		case 3:
-			return ItemKingArmor.bootsItem;
+			return ItemRoyalArmor.bootsItem;
 
 		case 4:
 			return ItemSamuraiArmor.chestplateItem;
@@ -72,13 +72,13 @@ public class CivilizationGeneratorHandlers {
 			return ItemSamuraiArmor.bootsItem;
 			
 		case 8:
-			return ItemHeavyDiamondArmor.chestplateItem;
+			return ItemReinforcedDiamondArmor.chestplateItem;
 		case 9:
-			return ItemHeavyDiamondArmor.leggingsItem;
+			return ItemReinforcedDiamondArmor.leggingsItem;
 		case 10:
-			return ItemHeavyDiamondArmor.helmetItem;
+			return ItemReinforcedDiamondArmor.helmetItem;
 		default:
-			return ItemHeavyDiamondArmor.bootsItem;
+			return ItemReinforcedDiamondArmor.bootsItem;
 		}
 		
 	}

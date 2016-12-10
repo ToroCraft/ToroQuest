@@ -19,14 +19,14 @@ import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.material.ArmorMaterials;
 import net.torocraft.toroquest.util.ToroBaseUtils;
 
-public class ItemHeavyDiamondArmor extends ItemArmor {
+public class ItemReinforcedDiamondArmor extends ItemArmor {
 
-	public static final String NAME = "heavyDiamond";
+	public static final String NAME = "reinforced_diamond";
 
-	public static ItemHeavyDiamondArmor helmetItem;
-	public static ItemHeavyDiamondArmor chestplateItem;
-	public static ItemHeavyDiamondArmor leggingsItem;
-	public static ItemHeavyDiamondArmor bootsItem;
+	public static ItemReinforcedDiamondArmor helmetItem;
+	public static ItemReinforcedDiamondArmor chestplateItem;
+	public static ItemReinforcedDiamondArmor leggingsItem;
+	public static ItemReinforcedDiamondArmor bootsItem;
 
 	public static void init() {
 
@@ -46,7 +46,7 @@ public class ItemHeavyDiamondArmor extends ItemArmor {
 	}
 
 	private static void initBoots() {
-		bootsItem = new ItemHeavyDiamondArmor(NAME + "_boots", 1, EntityEquipmentSlot.FEET);
+		bootsItem = new ItemReinforcedDiamondArmor(NAME + "_boots", 1, EntityEquipmentSlot.FEET);
 		ToroBaseUtils.registerItem(bootsItem, NAME + "_boots");
 	}
 
@@ -55,7 +55,7 @@ public class ItemHeavyDiamondArmor extends ItemArmor {
 	}
 
 	private static void initLeggings() {
-		leggingsItem = new ItemHeavyDiamondArmor(NAME + "_leggings", 2, EntityEquipmentSlot.LEGS);
+		leggingsItem = new ItemReinforcedDiamondArmor(NAME + "_leggings", 2, EntityEquipmentSlot.LEGS);
 		ToroBaseUtils.registerItem(leggingsItem, NAME + "_leggings");
 	}
 
@@ -64,7 +64,7 @@ public class ItemHeavyDiamondArmor extends ItemArmor {
 	}
 
 	private static void initHelmet() {
-		helmetItem = new ItemHeavyDiamondArmor(NAME + "_helmet", 1, EntityEquipmentSlot.HEAD);
+		helmetItem = new ItemReinforcedDiamondArmor(NAME + "_helmet", 1, EntityEquipmentSlot.HEAD);
 		ToroBaseUtils.registerItem(helmetItem, NAME + "_helmet");
 	}
 
@@ -73,7 +73,7 @@ public class ItemHeavyDiamondArmor extends ItemArmor {
 	}
 
 	private static void initChestPlate() {
-		chestplateItem = new ItemHeavyDiamondArmor(NAME + "_chestplate", 1, EntityEquipmentSlot.CHEST);
+		chestplateItem = new ItemReinforcedDiamondArmor(NAME + "_chestplate", 1, EntityEquipmentSlot.CHEST);
 		ToroBaseUtils.registerItem(chestplateItem, NAME + "_chestplate");
 	}
 
@@ -85,8 +85,8 @@ public class ItemHeavyDiamondArmor extends ItemArmor {
 		return new ModelResourceLocation(ToroQuest.MODID + ":" + NAME + "_" + model, "inventory");
 	}
 
-	public ItemHeavyDiamondArmor(String unlocalizedName, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn) {
-		super(ArmorMaterials.HEAVY_DIAMOND, renderIndexIn, equipmentSlotIn);
+	public ItemReinforcedDiamondArmor(String unlocalizedName, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn) {
+		super(ArmorMaterials.REINFORCED_DIAMOND, renderIndexIn, equipmentSlotIn);
 		this.setUnlocalizedName(unlocalizedName);
 		setMaxDamage(8588);
 	}

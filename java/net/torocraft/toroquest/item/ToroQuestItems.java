@@ -2,34 +2,36 @@ package net.torocraft.toroquest.item;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.torocraft.toroquest.item.armor.ItemBullArmor;
-import net.torocraft.toroquest.item.armor.ItemHeavyDiamondArmor;
-import net.torocraft.toroquest.item.armor.ItemKingArmor;
+import net.torocraft.toroquest.item.armor.ItemReinforcedDiamondArmor;
+import net.torocraft.toroquest.item.armor.ItemRoyalArmor;
 import net.torocraft.toroquest.item.armor.ItemSamuraiArmor;
+import net.torocraft.toroquest.item.armor.ItemToroArmor;
 
 public class ToroQuestItems {
 
 	public static final void init() {
 		initTools();
 		initArmor();
+		ItemToroLeather.init();
 	}
 
 	private static void initTools() {
 	}
 
 	private static void initArmor() {
-		ItemKingArmor.init();
-		ItemBullArmor.init();
-		ItemHeavyDiamondArmor.init();
+		ItemRoyalArmor.init();
+		ItemToroArmor.init();
+		ItemReinforcedDiamondArmor.init();
 		ItemSamuraiArmor.init();
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public static final void registerRenders() {
-		ItemKingArmor.registerRenders();
-		ItemBullArmor.registerRenders();
-		ItemHeavyDiamondArmor.registerRenders();
+		ItemRoyalArmor.registerRenders();
+		ItemToroArmor.registerRenders();
+		ItemReinforcedDiamondArmor.registerRenders();
 		ItemSamuraiArmor.registerRenders();
+		ItemToroLeather.registerRenders();
 	}
 
 }

@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.torocraft.toroquest.civilization.ReputationLevel;
-import net.torocraft.toroquest.item.armor.ItemKingArmor;
+import net.torocraft.toroquest.item.armor.ItemRoyalArmor;
 
 public class ShopkeeperTradesForWind {
 	public static MerchantRecipeList trades(EntityPlayer player, ReputationLevel rep) {
@@ -27,7 +27,7 @@ public class ShopkeeperTradesForWind {
 		}
 
 		if (rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.STICK), ItemKingArmor.helmetItem));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.STICK), ItemRoyalArmor.helmetItem));
 
 		}
 

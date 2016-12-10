@@ -8,14 +8,14 @@ import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.material.ArmorMaterials;
 import net.torocraft.toroquest.util.ToroBaseUtils;
 
-public class ItemBullArmor extends ItemArmor {
+public class ItemRoyalArmor extends ItemArmor {
 
-	public static final String NAME = "bull";
+	public static final String NAME = "royal";
 
-	public static ItemBullArmor helmetItem;
-	public static ItemBullArmor chestplateItem;
-	public static ItemBullArmor leggingsItem;
-	public static ItemBullArmor bootsItem;
+	public static ItemRoyalArmor helmetItem;
+	public static ItemRoyalArmor chestplateItem;
+	public static ItemRoyalArmor leggingsItem;
+	public static ItemRoyalArmor bootsItem;
 
 	public static void init() {
 		initHelmet();
@@ -32,7 +32,7 @@ public class ItemBullArmor extends ItemArmor {
 	}
 
 	private static void initBoots() {
-		bootsItem = new ItemBullArmor(NAME + "_boots", 1, EntityEquipmentSlot.FEET);
+		bootsItem = new ItemRoyalArmor(NAME + "_boots", 1, EntityEquipmentSlot.FEET);
 		ToroBaseUtils.registerItem(bootsItem, NAME + "_boots");
 	}
 
@@ -41,7 +41,7 @@ public class ItemBullArmor extends ItemArmor {
 	}
 
 	private static void initLeggings() {
-		leggingsItem = new ItemBullArmor(NAME + "_leggings", 2, EntityEquipmentSlot.LEGS);
+		leggingsItem = new ItemRoyalArmor(NAME + "_leggings", 2, EntityEquipmentSlot.LEGS);
 		ToroBaseUtils.registerItem(leggingsItem, NAME + "_leggings");
 	}
 
@@ -50,7 +50,7 @@ public class ItemBullArmor extends ItemArmor {
 	}
 
 	private static void initHelmet() {
-		helmetItem = new ItemBullArmor(NAME + "_helmet", 1, EntityEquipmentSlot.HEAD);
+		helmetItem = new ItemRoyalArmor(NAME + "_helmet", 1, EntityEquipmentSlot.HEAD);
 		ToroBaseUtils.registerItem(helmetItem, NAME + "_helmet");
 	}
 
@@ -59,7 +59,7 @@ public class ItemBullArmor extends ItemArmor {
 	}
 
 	private static void initChestPlate() {
-		chestplateItem = new ItemBullArmor(NAME + "_chestplate", 1, EntityEquipmentSlot.CHEST);
+		chestplateItem = new ItemRoyalArmor(NAME + "_chestplate", 1, EntityEquipmentSlot.CHEST);
 		ToroBaseUtils.registerItem(chestplateItem, NAME + "_chestplate");
 	}
 
@@ -71,8 +71,8 @@ public class ItemBullArmor extends ItemArmor {
 		return new ModelResourceLocation(ToroQuest.MODID + ":" + NAME + "_" + model, "inventory");
 	}
 
-	public ItemBullArmor(String unlocalizedName, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn) {
-		super(ArmorMaterials.BULL, renderIndexIn, equipmentSlotIn);
+	public ItemRoyalArmor(String unlocalizedName, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn) {
+		super(ArmorMaterials.ROYAL, renderIndexIn, equipmentSlotIn);
 		this.setUnlocalizedName(unlocalizedName);
 		setMaxDamage(8588);
 	}

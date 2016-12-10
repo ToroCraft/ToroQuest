@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "toroquest:items/bull_boots"
+        "layer0": "toroquest:items/toro_leather"
     }
 }

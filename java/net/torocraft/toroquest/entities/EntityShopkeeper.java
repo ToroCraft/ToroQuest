@@ -86,19 +86,25 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 	}
 
 	protected MerchantRecipeList createTradesBaseOnRep(EntityPlayer player) {
-
 		RepData rep = getReputation(player);
-
-		System.out.println("Basing trades of shopkeeper for CIV[" + rep.civ + "] and REP[" + rep.rep + "]");
-
 		switch (rep.civ) {
 		case WIND:
+			return ShopkeeperTradesForWind.trades(player, rep.rep);
+		case EARTH:
+			return ShopkeeperTradesForWind.trades(player, rep.rep);
+		case FIRE:
+			return ShopkeeperTradesForWind.trades(player, rep.rep);
+		case MOON:
+			return ShopkeeperTradesForWind.trades(player, rep.rep);
+		case SUN:
+			return ShopkeeperTradesForWind.trades(player, rep.rep);
+		case WATER:
 			return ShopkeeperTradesForWind.trades(player, rep.rep);
 		default:
 			return new MerchantRecipeList();
 		}
-
 	};
+
 
 	/**
 	 * Get the formatted ChatComponent that will be used for the sender's

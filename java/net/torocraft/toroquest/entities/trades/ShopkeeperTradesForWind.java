@@ -14,16 +14,16 @@ public class ShopkeeperTradesForWind {
 		MerchantRecipeList recipeList = new MerchantRecipeList();
 
 		if (rep.equals(ReputationLevel.FRIEND) || rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, 15), level1Sword()));
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, 30), level2Sword()));
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, 15), level1Bow()));
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, 30), level2Bow()));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(15)), level1Sword()));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(30)), level2Sword()));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(15)), level1Bow()));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(30)), level2Bow()));
 
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, 30), level1Boots()));
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, 30), level2Boots()));
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, 30), level3Boots()));
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, 30), level4Boots()));
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, 30), level5Boots()));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(30)), level1Boots()));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(30)), level2Boots()));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(30)), level3Boots()));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(30)), level4Boots()));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(30)), level5Boots()));
 		}
 
 		if (rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
@@ -65,7 +65,7 @@ public class ShopkeeperTradesForWind {
 
 	private static ItemStack level4Boots() {
 		ItemStack stack = new ItemStack(Items.DIAMOND_BOOTS);
-		stack.setStackDisplayName("Wind Boots IIII");
+		stack.setStackDisplayName("Wind Boots IV");
 		stack.addEnchantment(Enchantment.REGISTRY.getObjectById(0), 2);
 		stack.addEnchantment(Enchantment.REGISTRY.getObjectById(2), 4);
 		return stack;

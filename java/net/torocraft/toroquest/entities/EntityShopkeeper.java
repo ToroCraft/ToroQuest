@@ -62,7 +62,7 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 
 				RepData rep = getReputation(player);
 
-				if (rep.rep.equals(ReputationLevel.DRIFTER) || rep.rep.equals(ReputationLevel.ENEMY) || rep.rep.equals(ReputationLevel.VILLIAN)) {
+				if (rep.rep.equals(ReputationLevel.DRIFTER) || rep.rep.equals(ReputationLevel.ENEMY) || rep.rep.equals(ReputationLevel.VILLAIN)) {
 					chat(player, "I WILL NOT TRADE WITH A " + rep.rep);
 				} else {
 					this.setCustomer(player);

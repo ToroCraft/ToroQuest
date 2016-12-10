@@ -5,13 +5,27 @@ import java.util.Random;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.MobSpawnerBaseLogic;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
-import net.torocraft.toroquest.entities.EntityMage;
+import net.minecraft.world.storage.loot.LootTableList;
 import net.torocraft.toroquest.entities.EntityMonolithEye;
 
 public class MonolithGenerator extends WorldGenerator {
+
+	/*
+	 * - kill eye when obsidian is removed
+	 * 
+	 * - eye shots guardian beams
+	 * 
+	 * - eye redirects all attacks
+	 * 
+	 * 
+	 */
 
 	private static int shallowsDepth = 50;
 	private static int monolithRadius = 0;
@@ -23,7 +37,7 @@ public class MonolithGenerator extends WorldGenerator {
 
 	private int monolithHeight;
 	private int height;
-	
+
 	protected IBlockState getObsidianBlock() {
 		return Blocks.OBSIDIAN.getDefaultState();
 	}
@@ -36,31 +50,97 @@ public class MonolithGenerator extends WorldGenerator {
 	public boolean generate(World world, Random rand, BlockPos pos) {
 		setHeight(rand);
 		BlockPos surface = findSurface(world, pos);
-		
 		if (surface == null) {
 			return false;
 		}
-
 		placeMonolith(world, rand, surface);
 		spawnMonolithEye(world, surface);
-
-		//		placeEye(world, rand, surface);
-		
+		placeDungeonRoom(world, surface.getX(), surface.getZ());
 		return true;
 	}
-	
+
+	private void placeDungeonRoom(World world, int xCenter, int zCenter) {
+		int halfX = 6;
+		int halfZ = 6;
+		int height = 6;
+
+		int xMin = xCenter - halfX;
+		int zMin = zCenter - halfZ;
+		int yMin = 10;
+
+		int xMax = xCenter + halfX;
+		int zMax = zCenter + halfZ;
+		int yMax = yMin + height;
+
+		IBlockState block;
+		BlockPos pos;
+		Random rand = new Random();
+
+		for (int y = yMin; y <= yMax; y++) {
+			for (int x = xMin; x <= xMax; x++) {
+				for (int z = zMin; z <= zMax; z++) {
+					if (y == yMax) {
+						block = Blocks.LAVA.getDefaultState();
+					} else if (x == xMin || x == xMax || z == zMax || z == zMin || y == yMax - 1 || y == yMin) {
+						block = Blocks.MOSSY_COBBLESTONE.getDefaultState();
+					} else if (y == yMin + 1) {
+						block = Blocks.LAVA.getDefaultState();
+					} else {
+						block = Blocks.AIR.getDefaultState();
+					}
+					pos = new BlockPos(x, y, z);
+					setBlockAndNotifyAdequately(world, pos, block);
+				}
+			}
+		}
+
+		for (int x = xMin + 1; x < xMax; x++) {
+			for (int z = zMin + 1; z < zMax; z++) {
+				if (rand.nextInt(100) < 3) {
+					pos = new BlockPos(x, yMin + 1, z);
+					placeChest(world, pos);
+				}
+			}
+		}
+
+		for (int x = xMin + 1; x < xMax; x++) {
+			for (int z = zMin + 1; z < zMax; z++) {
+				if (rand.nextInt(100) < 3) {
+					pos = new BlockPos(x, yMax - 1, z);
+					placeSpawner(world, pos);
+				}
+			}
+		}
+
+	}
+
+	protected void placeChest(World world, BlockPos placementPos) {
+		setBlockAndNotifyAdequately(world, placementPos, Blocks.CHEST.getDefaultState());
+		TileEntity tileentity = world.getTileEntity(placementPos);
+		if (tileentity instanceof TileEntityChest) {
+			((TileEntityChest) tileentity).setLootTable(LootTableList.CHESTS_END_CITY_TREASURE, world.rand.nextLong());
+		}
+	}
+
+	public void placeSpawner(World world, BlockPos pos) {
+		setBlockAndNotifyAdequately(world, pos, Blocks.MOB_SPAWNER.getDefaultState());
+		TileEntityMobSpawner theSpawner = (TileEntityMobSpawner) world.getTileEntity(pos);
+		MobSpawnerBaseLogic logic = theSpawner.getSpawnerBaseLogic();
+		logic.setEntityName("LavaSlime");
+	}
+
 	private void setHeight(Random rand) {
-		monolithHeight = (int) Math.round(monolithHeightBase * (1+rand.nextDouble()));
-		height = monolithHeight + eyeFloatHeight + eyeHeight + 1;		
+		monolithHeight = (int) Math.round(monolithHeightBase * (1 + rand.nextDouble()));
+		height = monolithHeight + eyeFloatHeight + eyeHeight + 1;
 	}
 
 	private void spawnMonolithEye(World world, BlockPos pos) {
 		EntityMonolithEye e = new EntityMonolithEye(world);
 		e.setPosition(pos.getX() + .5, pos.getY() + (monolithHeight + underseaHeight + eyeFloatHeight), pos.getZ() + .5);
-		
+
 		world.spawnEntityInWorld(e);
 	}
-	
+
 	private BlockPos findSurface(World world, BlockPos start) {
 
 		int minY = world.getActualHeight();
@@ -83,8 +163,8 @@ public class MonolithGenerator extends WorldGenerator {
 					if (isLiquid(blockState)) {
 						pos = findSeafloor(world, pos);
 
-						if(pos == null) {
-							return null;							
+						if (pos == null) {
+							return null;
 						}
 					}
 
@@ -119,16 +199,16 @@ public class MonolithGenerator extends WorldGenerator {
 	private boolean isLiquid(IBlockState blockState) {
 		return blockState.getBlock() == Blocks.WATER || blockState.getBlock() == Blocks.LAVA;
 	}
-	
+
 	private BlockPos findSeafloor(World world, BlockPos pos) {
 		int oY = pos.getY();
 		int oX = pos.getX();
 		int oZ = pos.getZ();
 
 		for (int y = oY; y >= oY - shallowsDepth; y--) {
-			BlockPos nPos = new BlockPos(oX,y,oZ);
+			BlockPos nPos = new BlockPos(oX, y, oZ);
 			IBlockState blockState = world.getBlockState(nPos);
-			if(isGroundBlock(blockState)) {
+			if (isGroundBlock(blockState)) {
 				underseaHeight = (oY - y);
 				return nPos;
 			}
@@ -136,7 +216,7 @@ public class MonolithGenerator extends WorldGenerator {
 
 		return null;
 	}
-	
+
 	private boolean isGroundBlock(IBlockState blockState) {
 
 		if (blockState.getBlock() == Blocks.LEAVES || blockState.getBlock() == Blocks.LEAVES2 || blockState.getBlock() == Blocks.LOG || blockState.getBlock() instanceof BlockBush) {
@@ -154,8 +234,8 @@ public class MonolithGenerator extends WorldGenerator {
 		for (int y = 0; y < monolithRealHeight; y++) {
 			for (int x = -monolithRadius; x <= monolithRadius; x++) {
 				for (int z = -monolithRadius; z <= monolithRadius; z++) {
-					if((x*x + z*z) <= radiusSquared) {
-						placeMonolithBlock(world, rand, pos, radiusSquared, innerRadiusSquared, y, x, z, getObsidianBlock());						
+					if ((x * x + z * z) <= radiusSquared) {
+						placeMonolithBlock(world, rand, pos, radiusSquared, innerRadiusSquared, y, x, z, getObsidianBlock());
 					}
 				}
 			}
@@ -166,7 +246,7 @@ public class MonolithGenerator extends WorldGenerator {
 		int radiusSquared = eyeRadius * eyeRadius;
 		int innerRadiusSquared = 0;
 		int monolithRealHeight = monolithHeight + underseaHeight;
-		
+
 		for (int y = monolithRealHeight + eyeFloatHeight; y <= monolithRealHeight + eyeHeight + eyeFloatHeight; y++) {
 			for (int x = -eyeRadius; x <= eyeRadius; x++) {
 				for (int z = -eyeRadius; z <= eyeRadius; z++) {
@@ -182,10 +262,10 @@ public class MonolithGenerator extends WorldGenerator {
 	}
 
 	private void placeMonolithBlock(World world, Random rand, BlockPos pos, int radiusSquared, int innerRadiusSquared, int y, int x, int z, IBlockState block) {
-		
+
 		if (block != null) {
 			BlockPos placementPos = pos.add(x, y, z);
-			setBlockAndNotifyAdequately(world, placementPos, block);				
+			setBlockAndNotifyAdequately(world, placementPos, block);
 		}
 	}
 }

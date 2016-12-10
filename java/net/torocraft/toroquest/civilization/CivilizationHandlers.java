@@ -160,11 +160,13 @@ public class CivilizationHandlers {
 		}
 
 		if (victum instanceof EntityVillager) {
-			return -10;
+			// FIXEM
+			return -100;
 		}
 
 		if (victum instanceof EntityMob) {
-			return 1;
+			// FIXME
+			return 100;
 		}
 
 		if (victum instanceof EntityToroNpc) {

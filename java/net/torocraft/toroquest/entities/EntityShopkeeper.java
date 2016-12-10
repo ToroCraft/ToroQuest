@@ -14,18 +14,18 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
-import net.torocraft.toroquest.civilization.Province;
+import net.torocraft.toroquest.civilization.ReputationLevel;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.render.RenderShopkeeper;
-import net.torocraft.toroquest.item.armor.ItemKingArmor;
+import net.torocraft.toroquest.entities.trades.ShopkeeperTradesForWind;
 
 public class EntityShopkeeper extends EntityVillager implements IMerchant {
 
@@ -54,8 +54,16 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 		if (!flag && isEntityAlive() && !isTrading() && !isChild() && !player.isSneaking()) {
 
 			if (!this.worldObj.isRemote) {
-				this.setCustomer(player);
-				player.displayVillagerTradeGui(this);
+
+				RepData rep = getReputation(player);
+
+				if (rep.rep.equals(ReputationLevel.DRIFTER) || rep.rep.equals(ReputationLevel.ENEMY) || rep.rep.equals(ReputationLevel.VILLIAN)) {
+					chat(player, "I WILL NOT TRADE WITH A " + rep.rep);
+				} else {
+					this.setCustomer(player);
+					player.displayVillagerTradeGui(this);
+				}
+
 			}
 
 			player.addStat(StatList.TALKED_TO_VILLAGER);
@@ -79,30 +87,17 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 
 	protected MerchantRecipeList createTradesBaseOnRep(EntityPlayer player) {
 
-		MerchantRecipeList recipeList = new MerchantRecipeList();
+		RepData rep = getReputation(player);
 
-		if (player == null) {
-			System.out.println("Not player to trade with");
-			return recipeList;
-		}
-		Province civ = CivilizationUtil.getProvinceAt(worldObj, chunkCoordX, chunkCoordZ);
-		
-		if (civ == null) {
-			System.out.println("Not in a civilization");
-			return recipeList;
+		System.out.println("Basing trades of shopkeeper for CIV[" + rep.civ + "] and REP[" + rep.rep + "]");
+
+		switch (rep.civ) {
+		case WIND:
+			return ShopkeeperTradesForWind.trades(player, rep.rep);
+		default:
+			return new MerchantRecipeList();
 		}
 
-		int rep = PlayerCivilizationCapabilityImpl.get(player).getPlayerReputation(civ.civilization);
-
-		System.out.println("Basing trades of shopkeeper for CIV[" + civ.civilization + "] and REP[" + rep + "]");
-
-		if (rep > 5) {
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.STICK), ItemKingArmor.helmetItem));
-		} else {
-			chat(player, "I don't trade with drifters.");
-		}
-
-		return recipeList;
 	};
 
 	/**
@@ -118,6 +113,27 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 
 	private void chat(EntityPlayer player, String message) {
 		player.addChatMessage(new TextComponentString(message));
+	}
+
+	private static class RepData {
+		CivilizationType civ = CivilizationType.EARTH;
+		ReputationLevel rep = ReputationLevel.DRIFTER;
+	}
+
+	private RepData getReputation(EntityPlayer player) {
+		RepData rep = new RepData();
+
+		if (player == null) {
+			return rep;
+		}
+
+		rep.civ = CivilizationUtil.getProvinceAt(worldObj, chunkCoordX, chunkCoordZ).civilization;
+
+		if (rep.civ == null) {
+			return rep;
+		}
+		rep.rep = ReputationLevel.fromReputation(PlayerCivilizationCapabilityImpl.get(player).getPlayerReputation(rep.civ));
+		return rep;
 	}
 
 }

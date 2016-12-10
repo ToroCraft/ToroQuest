@@ -49,6 +49,11 @@ public class VillageHandlerKeep implements IVillageCreationHandler {
 
 	public static class VillagePieceKeep extends VillagePieceBlockMap {
 
+		@Override
+		protected int getYOffset() {
+			return -1;
+		}
+		
 		public static VillagePieceKeep createPiece(StructureVillagePieces.Start start, List<StructureComponent> structures, Random rand, int x, int y,
 				int z, EnumFacing facing, int p_175850_7_) {
 			BlockPos size = new BlockMapMeasurer(NAME).measure();

@@ -30,7 +30,6 @@ public class CommonProxy {
 		VillageHandlerTrophy.init();
 		VillageHandlerShop.init();
 		VillageHandlerGuardTower.init();
-		// VillageHandlerGuardTower2.init();
 		VillageHandlerBarracks.init();
 		ToroQuestPacketHandler.init();
 	}

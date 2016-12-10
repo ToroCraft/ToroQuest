@@ -1,11 +1,11 @@
 package net.torocraft.toroquest.generation.village;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -42,8 +42,7 @@ public class VillageHandlerShop implements IVillageCreationHandler {
 	}
 
 	@Override
-	public Village buildComponent(PieceWeight villagePiece, Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3,
-			EnumFacing facing, int p5) {
+	public Village buildComponent(PieceWeight villagePiece, Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
 		return VillagePieceShop.createPiece(startPiece, pieces, random, p1, p2, p3, facing, p5);
 
 	}
@@ -55,13 +54,10 @@ public class VillageHandlerShop implements IVillageCreationHandler {
 			return -2;
 		}
 
-		public static VillagePieceShop createPiece(StructureVillagePieces.Start start, List<StructureComponent> structures, Random rand, int x, int y,
-				int z, EnumFacing facing, int p_175850_7_) {
+		public static VillagePieceShop createPiece(StructureVillagePieces.Start start, List<StructureComponent> structures, Random rand, int x, int y, int z, EnumFacing facing, int p_175850_7_) {
 			BlockPos size = new BlockMapMeasurer(NAME).measure();
-			StructureBoundingBox bounds = StructureBoundingBox.getComponentToAddBoundingBox(x, y, z, 0, 0, 0, size.getX(), size.getY(), size.getZ(),
-					facing);
-			return canVillageGoDeeper(bounds) && StructureComponent.findIntersecting(structures, bounds) == null
-					? new VillagePieceShop(start, p_175850_7_, rand, bounds, facing) : null;
+			StructureBoundingBox bounds = StructureBoundingBox.getComponentToAddBoundingBox(x, y, z, 0, 0, 0, size.getX(), size.getY(), size.getZ(), facing);
+			return canVillageGoDeeper(bounds) && StructureComponent.findIntersecting(structures, bounds) == null ? new VillagePieceShop(start, p_175850_7_, rand, bounds, facing) : null;
 		}
 
 		public VillagePieceShop(Start start, int type, Random rand, StructureBoundingBox bounds, EnumFacing facing) {
@@ -73,26 +69,9 @@ public class VillageHandlerShop implements IVillageCreationHandler {
 
 		@Override
 		protected boolean specialBlockHandling(World world, String c, int x, int y, int z) {
-			if (!c.equals("xx")) {
-				return false;
-			}
-
-			setBlockState(world, Blocks.AIR.getDefaultState(), x, y, z, boundingBox);
-
-			int j = this.getXWithOffset(x, z);
-			int k = this.getYWithOffset(y);
-			int l = this.getZWithOffset(x, z);
-
-			/*
-			 * if (!structurebb.isVecInside(new BlockPos(j, k, l))) { return; }
-			 */
-
-			EntityArmorStand stand = new EntityArmorStand(world);
-			stand.setLocationAndAngles(j + 0.5D, k, l + 0.5D, 90F, 0.0F);
-			world.spawnEntityInWorld(stand);
-
-			return true;
-
+			List<String> entities = new ArrayList<String>();
+			entities.add("toroquest.shopkeeper");
+			return specialHandlingForSpawner(world, "xx", c, x, y, z, entities);
 		}
 
 		@Override

@@ -15,7 +15,7 @@ public class WorldGenMonolithPlacer implements IWorldGenerator {
 		GameRegistry.registerWorldGenerator(new WorldGenMonolithPlacer(), 2);
 	}
 
-	public static final double LOW_CHANCE = 0.9995;
+	public static final double LOW_CHANCE = 0.9998;
 	public static final double HIGH_CHANCE = 0.9;
 
 	@Override

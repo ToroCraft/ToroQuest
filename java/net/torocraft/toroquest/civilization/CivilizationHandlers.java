@@ -3,6 +3,7 @@ package net.torocraft.toroquest.civilization;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -11,12 +12,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -30,6 +33,7 @@ import net.torocraft.toroquest.entities.EntityToroNpc;
 import net.torocraft.toroquest.util.TaskRunner;
 
 public class CivilizationHandlers {
+	private static final float THEIFT_FACTOR = -1.2f;
 
 	@SubscribeEvent
 	public void handleReputationChange(CivilizationEvent.ReputationChange event) {
@@ -145,16 +149,9 @@ public class CivilizationHandlers {
 			return;
 		}
 
-		Province province = PlayerCivilizationCapabilityImpl.get(event.getPlayer()).getPlayerInCivilization();
-
-		if (province == null || province.civilization == null) {
-			return;
-		}
-
-		PlayerCivilizationCapabilityImpl.get(event.getPlayer()).adjustPlayerReputation(province.civilization, value);
+		BlockPos pos = event.getBlockSnapshot().getPos();
+		adjustPlayerRep(event.getPlayer(), pos.getX() / 16, pos.getZ() / 16, value);
 	}
-
-	private static final int THEIFT_FACTOR = 2;
 
 	@SubscribeEvent
 	public void checkForTheftInCivilization(BreakEvent event) {
@@ -168,13 +165,16 @@ public class CivilizationHandlers {
 			return;
 		}
 
-		Province province = PlayerCivilizationCapabilityImpl.get(event.getPlayer()).getPlayerInCivilization();
+		BlockPos pos = event.getPos();
+		adjustPlayerRep(event.getPlayer(), pos.getX() / 16, pos.getZ() / 16, (int) Math.ceil(value * THEIFT_FACTOR));
+	}
 
+	protected void adjustPlayerRep(EntityPlayer player, int chunkX, int chunkZ, int value) {
+		Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), chunkX, chunkZ);
 		if (province == null || province.civilization == null) {
 			return;
 		}
-
-		PlayerCivilizationCapabilityImpl.get(event.getPlayer()).adjustPlayerReputation(province.civilization, -value * THEIFT_FACTOR);
+		PlayerCivilizationCapabilityImpl.get(player).adjustPlayerReputation(province.civilization, value);
 	}
 
 	private int blockValue(Block b) {
@@ -282,4 +282,27 @@ public class CivilizationHandlers {
 	private void chat(EntityPlayer player, String message) {
 		player.addChatMessage(new TextComponentString(message));
 	}
+
+	@SubscribeEvent
+	public void breed(BabyEntitySpawnEvent event) {
+		if (!(event.getParentA() instanceof EntityAnimal)) {
+			return;
+		}
+
+		if (!(event.getParentB() instanceof EntityAnimal)) {
+			return;
+		}
+
+		EntityPlayer playerA = ((EntityAnimal) event.getParentA()).getPlayerInLove();
+		EntityPlayer playerB = ((EntityAnimal) event.getParentB()).getPlayerInLove();
+
+		if (playerA != null) {
+			adjustPlayerRep(playerA, event.getParentA().chunkCoordX, event.getParentA().chunkCoordZ, 1);
+		}
+
+		if (playerB != null) {
+			adjustPlayerRep(playerB, event.getParentB().chunkCoordX, event.getParentB().chunkCoordZ, 1);
+		}
+	}
+
 }

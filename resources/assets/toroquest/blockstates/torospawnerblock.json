@@ -1,7 +1,7 @@
 {
     "variants": {
         "normal": {
-            "model": "toroquest:toroSpawnerBlock"
+            "model": "toroquest:torospawnerblock"
         }
     }
 }

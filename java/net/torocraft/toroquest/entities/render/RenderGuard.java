@@ -35,7 +35,7 @@ public class RenderGuard extends RenderBiped<EntityGuard> {
 		super(renderManagerIn, new ModelGuard(), 0.5F);
 
 		LayerRenderer<?> layerrenderer = (LayerRenderer) this.layerRenderers.get(0);
-		defaultModel = (ModelGuard) modelBipedMain;
+		defaultModel = (ModelGuard) mainModel;
 
 		addLayer(new LayerHeldItem(this));
 
@@ -69,17 +69,15 @@ public class RenderGuard extends RenderBiped<EntityGuard> {
 	 * Renders the desired {@code T} type Entity.
 	 */
 	public void doRender(EntityGuard entity, double x, double y, double z, float entityYaw, float partialTicks) {
-		this.swapArmor(entity);
+		// FIXME research if this is needed for 1.11 this.swapArmor(entity);
 		this.setModelVisibilities(entity);
 
-
 		// if (entity.ticksExisted % 30 == 0) {
-			defaultModel.setCivilization(entity.getCivilization());
+		defaultModel.setCivilization(entity.getCivilization());
 		// }
 
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
 	}
-
 
 	private void setModelVisibilities(EntityGuard clientPlayer) {
 		ModelGuard modelplayer = (ModelGuard) this.getMainModel();
@@ -136,15 +134,7 @@ public class RenderGuard extends RenderBiped<EntityGuard> {
 		return TEXTURES;
 
 	}
-
-	private void swapArmor(EntityGuard zombie) {
-
-		this.mainModel = this.defaultModel;
-		this.layerRenderers = this.defaultLayers;
-
-		this.modelBipedMain = (ModelBiped) this.mainModel;
-	}
-
+	
 	protected void rotateCorpse(EntityGuard entityLiving, float p_77043_2_, float p_77043_3_, float partialTicks) {
 
 		super.rotateCorpse(entityLiving, p_77043_2_, p_77043_3_, partialTicks);

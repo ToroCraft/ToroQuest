@@ -32,7 +32,7 @@ public class RenderGuard extends RenderBiped<EntityGuard> {
 	private final List<LayerRenderer<EntityGuard>> defaultLayers;
 
 	public RenderGuard(RenderManager renderManagerIn) {
-		super(renderManagerIn, new ModelGuard(), 0.5F, 1.0F);
+		super(renderManagerIn, new ModelGuard(), 0.5F);
 
 		LayerRenderer<?> layerrenderer = (LayerRenderer) this.layerRenderers.get(0);
 		defaultModel = (ModelGuard) modelBipedMain;

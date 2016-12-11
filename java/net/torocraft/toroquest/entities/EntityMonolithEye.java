@@ -8,6 +8,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -77,7 +78,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 	}
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(EntityMonolithEye.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityMonolithEye.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true);
 	}
 
 	@Override
@@ -363,13 +364,13 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 	public void moveEntityWithHeading(float strafe, float forward) {
 		if (this.isInWater()) {
 			this.moveRelative(strafe, forward, 0.02F);
-			this.moveEntity(this.motionX, this.motionY, this.motionZ);
+			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 			this.motionX *= 0.800000011920929D;
 			this.motionY *= 0.800000011920929D;
 			this.motionZ *= 0.800000011920929D;
 		} else if (this.isInLava()) {
 			this.moveRelative(strafe, forward, 0.02F);
-			this.moveEntity(this.motionX, this.motionY, this.motionZ);
+			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 			this.motionX *= 0.5D;
 			this.motionY *= 0.5D;
 			this.motionZ *= 0.5D;
@@ -388,7 +389,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 				f = this.worldObj.getBlockState(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.getEntityBoundingBox().minY) - 1, MathHelper.floor_double(this.posZ))).getBlock().slipperiness * 0.91F;
 			}
 
-			this.moveEntity(this.motionX, this.motionY, this.motionZ);
+			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 			this.motionX *= (double) f;
 			this.motionY *= (double) f;
 			this.motionZ *= (double) f;

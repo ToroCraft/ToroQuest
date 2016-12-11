@@ -11,6 +11,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -38,7 +39,7 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 	public static String NAME = "shopkeeper";
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(EntityShopkeeper.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0x000000, 0xe0d6b9);
+		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityShopkeeper.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0x000000, 0xe0d6b9);
 	}
 
 	public static void registerRenders() {
@@ -75,7 +76,7 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 			player.addStat(StatList.TALKED_TO_VILLAGER);
 			return true;
 		} else {
-			return super.processInteract(player, hand, stack);
+			return super.processInteract(player, hand);
 		}
 	}
 

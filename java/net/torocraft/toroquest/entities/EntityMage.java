@@ -76,7 +76,7 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 	private static final DataParameter<Boolean> STAFF_ATTACK = EntityDataManager.<Boolean>createKey(EntityMage.class, DataSerializers.BOOLEAN);
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(EntityMage.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0xff3024, 0xe0d6b9);
+		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityMage.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0xff3024, 0xe0d6b9);
 	}
 
 	@Nullable

@@ -171,7 +171,7 @@ public abstract class VillagePieceBlockMap extends StructureVillagePieces.Villag
 
 	protected IBlockState biomeSpecificDoor(IBlockState in) {
 		BlockDoor newBlock;
-		switch (this.field_189928_h) {
+		switch (this.structureType) {
 		case 2:
 			newBlock = Blocks.ACACIA_DOOR;
 			break;

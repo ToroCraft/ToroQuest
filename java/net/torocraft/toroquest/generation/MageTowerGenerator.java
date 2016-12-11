@@ -15,10 +15,12 @@ import net.minecraft.tileentity.MobSpawnerBaseLogic;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraft.world.storage.loot.LootTableList;
+import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.entities.EntityMage;
 
 public class MageTowerGenerator extends WorldGenerator {
@@ -250,7 +252,7 @@ public class MageTowerGenerator extends WorldGenerator {
 		placeBlock(world, pos, Blocks.MOB_SPAWNER);
 		TileEntityMobSpawner theSpawner = (TileEntityMobSpawner) world.getTileEntity(pos);
 		MobSpawnerBaseLogic logic = theSpawner.getSpawnerBaseLogic();
-		logic.setEntityName(mob);
+		logic.func_190894_a(new ResourceLocation(ToroQuest.MODID, mob));
 	}
 
 	public static void placeBlock(World world, BlockPos pos, net.minecraft.block.Block block) {

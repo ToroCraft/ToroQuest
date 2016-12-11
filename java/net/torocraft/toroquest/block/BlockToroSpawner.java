@@ -18,10 +18,12 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.util.ToroBaseUtils;
 
 public class BlockToroSpawner extends BlockContainer {
 
@@ -34,8 +36,8 @@ public class BlockToroSpawner extends BlockContainer {
 	public static void init() {
 		GameRegistry.registerTileEntity(TileEntityToroSpawner.class, NAME);
 		INSTANCE = (BlockToroSpawner) new BlockToroSpawner().setUnlocalizedName(NAME);
-		GameRegistry.registerBlock(INSTANCE, NAME);
-		ITEM_INSTANCE = GameRegistry.findItem(ToroQuest.MODID, NAME);
+		ToroBaseUtils.registerItem(INSTANCE, NAME);
+		ITEM_INSTANCE = GameData.findItem(ToroQuest.MODID, NAME);
 	}
 
 	public static void registerRenders() {

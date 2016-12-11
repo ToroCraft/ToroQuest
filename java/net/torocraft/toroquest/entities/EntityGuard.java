@@ -37,6 +37,7 @@ import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
@@ -68,7 +69,7 @@ public class EntityGuard extends EntityToroNpc {
 	public static String NAME = "guard";
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(EntityGuard.class, NAME, entityId, ToroQuest.INSTANCE, 80, 2, true, 0x3f3024, 0xe0d6b9);
+		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityGuard.class, NAME, entityId, ToroQuest.INSTANCE, 80, 2, true, 0x3f3024, 0xe0d6b9);
 	}
 
 	public static void registerRenders() {
@@ -311,7 +312,7 @@ public class EntityGuard extends EntityToroNpc {
 						if (mainhandItem != null && entity instanceof EntityLivingBase) {
 							mainhandItem.getItem().hitEntity(mainhandItem, (EntityLivingBase) entity, this);
 
-							if (mainhandItem.stackSize <= 0) {
+							if (mainhandItem.func_190916_E() <= 0) {
 								this.setHeldItem(EnumHand.MAIN_HAND, (ItemStack) null);
 							}
 						}

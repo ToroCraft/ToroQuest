@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.torocraft.toroquest.entities.EntityGuard;
@@ -128,7 +129,7 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 	}
 
 	public void spawnCreature(String entityID, double xOffset, double yOffset, double zOffset) {
-		Entity entity = EntityList.createEntityByIDFromName(entityID, worldObj);
+		Entity entity = EntityList.createEntityByIDFromName(new ResourceLocation("toroquest", entityID), worldObj);
 
 		if (!(entity instanceof EntityLivingBase)) {
 			System.out.println("entity not EntityLivingBase");

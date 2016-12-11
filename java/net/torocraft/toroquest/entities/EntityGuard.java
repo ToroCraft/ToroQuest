@@ -49,6 +49,7 @@ import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
+import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.ai.EntityAIMoveIntoArea;
 import net.torocraft.toroquest.entities.ai.EntityAINearestAttackableCivTarget;
 import net.torocraft.toroquest.entities.render.RenderGuard;
@@ -172,7 +173,26 @@ public class EntityGuard extends EntityToroNpc {
 
 	public boolean attackEntityAsMob(Entity victum) {
 		attackTargetEntityWithCurrentItem(victum);
+		removeTargetIfNotFoe(victum);
 		return true;
+	}
+
+	private void removeTargetIfNotFoe(Entity victum) {
+		if (victum instanceof EntityPlayer) {
+			if (!isFoe((EntityPlayer) victum)) {
+				setAttackTarget(null);
+			}
+		}
+	}
+
+	protected boolean isFoe(EntityPlayer target) {
+		EntityToroNpc npc = (EntityToroNpc) this;
+		CivilizationType civ = npc.getCivilization();
+		if (civ == null) {
+			return false;
+		}
+		int rep = PlayerCivilizationCapabilityImpl.get(target).getPlayerReputation(civ);
+		return rep < -10;
 	}
 
 	public void attackTargetEntityWithCurrentItem(Entity targetEntity) {

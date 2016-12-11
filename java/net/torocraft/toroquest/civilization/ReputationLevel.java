@@ -1,7 +1,7 @@
 package net.torocraft.toroquest.civilization;
 
 public enum ReputationLevel {
-	HERO(0.7), ALLY(0.9), FRIEND(1.0), DRIFTER(1.0), OUTCAST(1.0), ENEMY(1.0), VILLAIN(1.0);
+	HERO(0.7), ALLY(0.9), FRIEND(1.0), DRIFTER(1.7), OUTCAST(10.0), ENEMY(50.0), VILLAIN(100.0);
 	
 	private ReputationLevel(double priceMultiplier) {
 		this.priceMultiplier = priceMultiplier;

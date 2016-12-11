@@ -12,7 +12,7 @@ public class ShopkeeperTradesForFire {
 	public static MerchantRecipeList trades(EntityPlayer player, ReputationLevel rep) {
 		MerchantRecipeList recipeList = new MerchantRecipeList();
 
-		if (rep.equals(ReputationLevel.FRIEND) || rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
+		if (rep.equals(ReputationLevel.DRIFTER) || rep.equals(ReputationLevel.FRIEND) || rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
 			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(5)), level1Sword()));
 			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(10)), level2Sword()));
 			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(20)), level3Sword()));
@@ -27,6 +27,9 @@ public class ShopkeeperTradesForFire {
 			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(9)), level3FireProtection()));
 			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(15)), level4FireProtection()));
 			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(20)), level5FireProtection()));
+		}
+		
+		if (rep.equals(ReputationLevel.FRIEND) || rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
 			
 		}
 

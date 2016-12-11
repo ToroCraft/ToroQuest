@@ -6,12 +6,22 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class CivilizationGeneratorHandlers {
 
 	@SubscribeEvent
-	public void registerNewCiviliationBorder(PopulateChunkEvent.Populate event) {
+	public void registerNewCiviliationBorder(PopulateChunkEvent.Post event) {
+		registerCiv(event);
+	}
+
+	@SubscribeEvent
+	public void registerNewCiviliationBorder(PopulateChunkEvent.Pre event) {
+		registerCiv(event);
+	}
+
+	protected void registerCiv(PopulateChunkEvent event) {
 		if (!event.isHasVillageGenerated()) {
 			return;
 		}
 		CivilizationUtil.registerNewCivilization(event.getWorld(), event.getChunkX(), event.getChunkZ());
 	}
+
 
 	/*
 	 * @Method(modid = "dldungeonsjdg")

@@ -22,6 +22,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
+import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.ReputationLevel;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.render.RenderShopkeeper;
@@ -80,11 +81,11 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 
 	public void setCustomer(EntityPlayer player) {
 		super.setCustomer(player);
-	};
+	}
 
 	public EntityPlayer getCustomer() {
 		return super.getCustomer();
-	};
+	}
 
 	public MerchantRecipeList getRecipes(EntityPlayer player) {
 		return createTradesBaseOnRep(player);
@@ -116,7 +117,7 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 	 * username in chat
 	 */
 	public ITextComponent getDisplayName() {
-		TextComponentTranslation textcomponenttranslation = new TextComponentTranslation(NAME, new Object[0]);
+		TextComponentTranslation textcomponenttranslation = new TextComponentTranslation("entity.toroquest.shopkeeper.name", new Object[0]);
 		textcomponenttranslation.getStyle().setHoverEvent(this.getHoverEvent());
 		textcomponenttranslation.getStyle().setInsertion(this.getCachedUniqueIdString());
 		return textcomponenttranslation;
@@ -137,8 +138,14 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 		if (player == null) {
 			return rep;
 		}
+		
+		Province province = CivilizationUtil.getProvinceAt(worldObj, chunkCoordX, chunkCoordZ);
 
-		rep.civ = CivilizationUtil.getProvinceAt(worldObj, chunkCoordX, chunkCoordZ).civilization;
+		if (province == null) {
+			return rep;
+		}
+		
+		rep.civ = province.civilization;
 
 		if (rep.civ == null) {
 			return rep;

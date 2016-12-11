@@ -17,16 +17,6 @@ import net.torocraft.toroquest.entities.EntityMonolithEye;
 
 public class MonolithGenerator extends WorldGenerator {
 
-	/*
-	 * - kill eye when obsidian is removed
-	 * 
-	 * - eye shots guardian beams
-	 * 
-	 * - eye redirects all attacks
-	 * 
-	 * 
-	 */
-
 	private static int shallowsDepth = 50;
 	private static int monolithRadius = 0;
 	private static int monolithHeightBase = 4;
@@ -135,9 +125,9 @@ public class MonolithGenerator extends WorldGenerator {
 	}
 
 	private void spawnMonolithEye(World world, BlockPos pos) {
+		BlockPos entityPos = new BlockPos(pos.getX(), pos.getY() + (monolithHeight + underseaHeight + eyeFloatHeight) - 2, pos.getZ());
 		EntityMonolithEye e = new EntityMonolithEye(world);
-		e.setPosition(pos.getX() + .5, pos.getY() + (monolithHeight + underseaHeight + eyeFloatHeight), pos.getZ() + .5);
-
+		e.setPosition(entityPos.getX() + .5, entityPos.getY() + .5, entityPos.getZ() + .5);
 		world.spawnEntityInWorld(e);
 	}
 

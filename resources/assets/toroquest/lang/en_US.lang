@@ -15,6 +15,7 @@ item.toro_armor_helmet.name=Toro Helmet
 item.toro_armor_leggings.name=Toro Leggings
 item.toro_armor_chestplate.name=Toro Chestplate
 item.torch_arrow.name=Torch Arrow
+entity.toroquest.monolitheye.name=Overseer
 entity.toroquest.mage.name=Mage
 entity.toroquest.friendly_mage.name=Mage
 entity.toroquest.toro.name=Toro

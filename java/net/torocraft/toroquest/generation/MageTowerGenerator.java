@@ -20,7 +20,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraft.world.storage.loot.LootTableList;
-import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.entities.EntityMage;
 
 public class MageTowerGenerator extends WorldGenerator {
@@ -231,28 +230,26 @@ public class MageTowerGenerator extends WorldGenerator {
 	private String randomMob(Random rand) {
 		switch (rand.nextInt(7)) {
 		case 0:
-			return "CaveSpider";
+			return "cave_spider";
 		case 1:
-			return "Blaze";
+			return "blaze";
 		case 2:
-			return "Skeleton";
+			return "skeleton";
 		case 3:
-			return "Spider";
-		case 4:
-			return "Giant";
+			return "spider";
 		case 5:
-			return "Zombie";
+			return "zombie";
 		case 6:
-			return "PigZombie";
+			return "zombie_pigman";
 		}
-		return "Zombie";
+		return "zombie";
 	}
 
 	public static void placeSpawner(World world, BlockPos pos, String mob) {
 		placeBlock(world, pos, Blocks.MOB_SPAWNER);
 		TileEntityMobSpawner theSpawner = (TileEntityMobSpawner) world.getTileEntity(pos);
 		MobSpawnerBaseLogic logic = theSpawner.getSpawnerBaseLogic();
-		logic.func_190894_a(new ResourceLocation(ToroQuest.MODID, mob));
+		logic.func_190894_a(new ResourceLocation(mob));
 	}
 
 	public static void placeBlock(World world, BlockPos pos, net.minecraft.block.Block block) {

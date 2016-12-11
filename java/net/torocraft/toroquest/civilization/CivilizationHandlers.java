@@ -1,10 +1,12 @@
 package net.torocraft.toroquest.civilization;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
@@ -17,6 +19,8 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.world.BlockEvent.BreakEvent;
+import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.torocraft.toroquest.EventHandlers.SyncTask;
 import net.torocraft.toroquest.ToroQuest;
@@ -122,10 +126,70 @@ public class CivilizationHandlers {
 
 		@Override
 		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-			if(CAP != null && capability == CAP) {
+			if (CAP != null && capability == CAP) {
 				return PlayerCivilizationCapabilityImpl.INSTANCE.cast(instance);
 			}
 			return null;
+		}
+	}
+
+	@SubscribeEvent
+	public void checkForDonationsInCivilization(PlaceEvent event) {
+		if (event.getPlayer() == null) {
+			return;
+		}
+
+		int value = blockValue(event.getState().getBlock());
+
+		if (value < 1) {
+			return;
+		}
+
+		Province province = PlayerCivilizationCapabilityImpl.get(event.getPlayer()).getPlayerInCivilization();
+
+		if (province == null || province.civilization == null) {
+			return;
+		}
+
+		PlayerCivilizationCapabilityImpl.get(event.getPlayer()).adjustPlayerReputation(province.civilization, value);
+	}
+
+	private static final int THEIFT_FACTOR = 2;
+
+	@SubscribeEvent
+	public void checkForTheftInCivilization(BreakEvent event) {
+		if (event.getPlayer() == null) {
+			return;
+		}
+
+		int value = blockValue(event.getState().getBlock());
+
+		if (value < 1) {
+			return;
+		}
+
+		Province province = PlayerCivilizationCapabilityImpl.get(event.getPlayer()).getPlayerInCivilization();
+
+		if (province == null || province.civilization == null) {
+			return;
+		}
+
+		PlayerCivilizationCapabilityImpl.get(event.getPlayer()).adjustPlayerReputation(province.civilization, -value * THEIFT_FACTOR);
+	}
+
+	private int blockValue(Block b) {
+		if (b == Blocks.IRON_BLOCK) {
+			return 10;
+		} else if (b == Blocks.GOLD_BLOCK) {
+			return 20;
+		} else if (b == Blocks.DIAMOND_BLOCK) {
+			return 50;
+		} else if (b == Blocks.EMERALD_BLOCK) {
+			return 60;
+		} else if (b == Blocks.BEACON) {
+			return 200;
+		} else {
+			return 0;
 		}
 	}
 

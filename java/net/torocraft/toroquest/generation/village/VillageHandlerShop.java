@@ -70,7 +70,7 @@ public class VillageHandlerShop implements IVillageCreationHandler {
 		@Override
 		protected boolean specialBlockHandling(World world, String c, int x, int y, int z) {
 			List<String> entities = new ArrayList<String>();
-			entities.add("toroquest.shopkeeper");
+			entities.add("shopkeeper");
 			return specialHandlingForSpawner(world, "xx", c, x, y, z, entities);
 		}
 

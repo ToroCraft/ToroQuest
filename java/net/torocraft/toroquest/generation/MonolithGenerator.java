@@ -14,7 +14,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraft.world.storage.loot.LootTableList;
-import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.entities.EntityMonolithEye;
 
 public class MonolithGenerator extends WorldGenerator {
@@ -118,7 +117,7 @@ public class MonolithGenerator extends WorldGenerator {
 		setBlockAndNotifyAdequately(world, pos, Blocks.MOB_SPAWNER.getDefaultState());
 		TileEntityMobSpawner theSpawner = (TileEntityMobSpawner) world.getTileEntity(pos);
 		MobSpawnerBaseLogic logic = theSpawner.getSpawnerBaseLogic();
-		logic.func_190894_a(new ResourceLocation(ToroQuest.MODID, "LavaSlime"));
+		logic.func_190894_a(new ResourceLocation("magma_cube"));
 	}
 
 	private void setHeight(Random rand) {

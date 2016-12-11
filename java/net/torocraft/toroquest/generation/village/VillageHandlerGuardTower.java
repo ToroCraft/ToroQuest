@@ -70,7 +70,7 @@ public class VillageHandlerGuardTower implements IVillageCreationHandler {
 		@Override
 		protected boolean specialBlockHandling(World world, String c, int x, int y, int z) {
 			List<String> entities = new ArrayList<String>();
-			entities.add("toroquest.guard");
+			entities.add("guard");
 			return specialHandlingForSpawner(world, "xx", c, x, y, z, entities);
 		}
 

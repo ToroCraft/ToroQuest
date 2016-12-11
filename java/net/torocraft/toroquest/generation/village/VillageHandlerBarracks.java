@@ -90,7 +90,7 @@ public class VillageHandlerBarracks implements IVillageCreationHandler {
 			world.spawnEntityInWorld(stand);
 
 			List<String> entities = new ArrayList<String>();
-			entities.add("toroquest.guard");
+			entities.add("guard");
 			specialHandlingForSpawner(world, "xx", c, x, y, z, entities);
 
 			return true;

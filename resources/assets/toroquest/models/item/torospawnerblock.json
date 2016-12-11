@@ -1,5 +1,5 @@
 {
-    "parent": "toroquest:block/toroSpawnerBlock",
+    "parent": "toroquest:block/torospawnerblock",
     "display": {
         "thirdperson": {
             "rotation": [10, -45, 170],

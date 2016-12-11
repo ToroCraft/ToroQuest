@@ -15,12 +15,22 @@ item.toro_armor_helmet.name=Toro Helmet
 item.toro_armor_leggings.name=Toro Leggings
 item.toro_armor_chestplate.name=Toro Chestplate
 item.torch_arrow.name=Torch Arrow
+
 entity.toroquest.monolitheye.name=Overseer
+entity.monolitheye.name=Overseer
+
 entity.toroquest.mage.name=Mage
-entity.toroquest.friendly_mage.name=Mage
+entity.mage.name=Mage
+
 entity.toroquest.toro.name=Toro
+entity.toro.name=Toro
+
 entity.toroquest.villageLord.name=Village Lord
+entity.villageLord.name=Village Lord
+
 entity.toroquest.shopkeeper.name=Shopkeeper
+entity.shopkeeper.name=Shopkeeper
+
 civilization.earth.name=Terra
 civilization.wind.name=Gustaberg
 civilization.fire.name=Lumens

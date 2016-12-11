@@ -70,12 +70,6 @@ public class EntityToro extends EntityTameable implements IMob {
 		this.dataManager.register(CHARGING, Boolean.valueOf(false));
 	}
 
-	/*
-	 * public boolean processInteract(EntityPlayer player, EnumHand
-	 * hand, @Nullable ItemStack stack) { if (isCharging()) {
-	 * setAttackTarget(null); } else { setAttackTarget(player); } return true; }
-	 */
-
 	private void setCharging(boolean b) {
 		dataManager.set(CHARGING, b);
 	}
@@ -132,8 +126,6 @@ public class EntityToro extends EntityTameable implements IMob {
 
 	public void notifyDataManagerChange(DataParameter<?> key) {
 		if (CHARGING.equals(key) && this.isCharging() && worldObj.isRemote) {
-			// example => playEndermanSound();
-			// TODO: play charge sound
 		}
 		super.notifyDataManagerChange(key);
 	}

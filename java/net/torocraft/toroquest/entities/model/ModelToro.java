@@ -29,14 +29,9 @@ public class ModelToro extends ModelQuadruped {
 
 	protected void createHead() {
 		head = new ModelRenderer(this, 0, 0);
-
 		head.setTextureSize(TEX_WIDTH, TEX_HEIGHT);
-
 		head.addBox(-5.0F, -5.0F, -8.0F, 10, 10, 8, 0.0F);
-
 		head.setRotationPoint(0.0F, HEAD_HEIGHT, HEAD_DISTANCE);
-
-		// head.setRotationPoint(0.0F, 30.0F, -15.0F); moved it down
 
 		horns = new ModelRenderer(this, 0, 0);
 		horns.setTextureSize(TEX_WIDTH, TEX_HEIGHT);
@@ -103,19 +98,14 @@ public class ModelToro extends ModelQuadruped {
 
 		head.rotationPointY = HEAD_HEIGHT;
 		head.rotationPointZ = HEAD_DISTANCE;
-
 		body.rotationPointY = BODY_HEIGHT;
 
 		if (this.isCharging) {
 			head.rotateAngleX = 0.8f;
 			body.rotateAngleX += 0.10f;
-
-
 			head.rotationPointY += 6;
 			head.rotationPointZ += 2;
-
 			body.rotationPointY += 4;
-
 		}
 	}
 

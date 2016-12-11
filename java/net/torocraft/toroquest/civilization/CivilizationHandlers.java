@@ -1,6 +1,7 @@
 package net.torocraft.toroquest.civilization;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockCrops;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -302,6 +303,40 @@ public class CivilizationHandlers {
 
 		if (playerB != null) {
 			adjustPlayerRep(playerB, event.getParentB().chunkCoordX, event.getParentB().chunkCoordZ, 1);
+		}
+	}
+
+	@SubscribeEvent
+	public void farm(PlaceEvent event) {
+		if (event.getPlayer() == null) {
+			return;
+		}
+
+		if (event.getPlacedBlock().getBlock() instanceof BlockCrops) {
+
+			/*
+			 * if using bone mill, only give positive reputation 20% of the time
+			 */
+			if (event.getBlockSnapshot().getReplacedBlock().getBlock() instanceof BlockCrops) {
+				if (event.getWorld().rand.nextInt(100) > 20) {
+					return;
+				}
+			}
+
+			BlockPos pos = event.getBlockSnapshot().getPos();
+			adjustPlayerRep(event.getPlayer(), pos.getX() / 16, pos.getZ() / 16, 1);
+		}
+	}
+
+	@SubscribeEvent
+	public void harvest(BreakEvent event) {
+		if (event.getPlayer() == null) {
+			return;
+		}
+
+		if (event.getState().getBlock() instanceof BlockCrops) {
+			BlockPos pos = event.getPos();
+			adjustPlayerRep(event.getPlayer(), pos.getX() / 16, pos.getZ() / 16, -1);
 		}
 	}
 

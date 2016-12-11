@@ -258,7 +258,7 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 			this.worldObj.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_WITCH_DRINK, this.getSoundCategory(), 1.0F, 0.8F + this.rand.nextFloat() * 0.4F);
 			this.setAggressive(false);
 			ItemStack itemstack = this.getHeldItemOffhand();
-			this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, (ItemStack) null);
+			this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, ItemStack.field_190927_a);
 
 			if (itemstack != null && itemstack.getItem() == Items.POTIONITEM) {
 				List<PotionEffect> list = PotionUtils.getEffectsFromStack(itemstack);

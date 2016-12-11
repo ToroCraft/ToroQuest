@@ -10,23 +10,23 @@
   PwPwPwPwDrDr
   PwPwPwPwDrDr
 ######################################
---LgLgLgLgFwLg----
+--LgLgLgLgFwFw----
 --Lg----c>--Fw----
 --Lg  --d>xxFw----
 --Lgb^--c>--Fw----
---LgLgLgLgFwLg----
+--LgLgLgLgFwFw----
 ######################################
---LgLgLgLg--Fw----
---Lg----c>--------
---Lg----  --------
---Lg----c>--------
---LgLgLgLg--Fw----
+--LgSwSwLgFwFw----
+--Sw----c>--Wp----
+--Sw----  --Wp----
+--Sw----c>--Wp----
+--LgSwSwLgFwFw----
 ######################################
---LgLgLgLg--Fw----
---Lg----c>--------
---Lg----Bs--------
---Lg----c>--------
---LgLgLgLg--Fw----
+--LgFwFwLgFwFw----
+--Fw----c>--------
+--Fw----Bs--------
+--Fw----c>--------
+--LgFwFwLgFwFw----
 ######################################
 --LgLgLgLgFwFw----
 --Lg----c>--Fw----

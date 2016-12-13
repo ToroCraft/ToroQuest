@@ -22,6 +22,11 @@ public class CivilizationOverlayHandler extends Hud {
 
 
 		EntityPlayerSP player = mc.thePlayer;
+		
+		if (player.dimension != 0) {
+			return;
+		}
+		
 		Province civ = PlayerCivilizationCapabilityImpl.get(player).getPlayerInCivilization();
 
 		if (civ == null || civ.civilization == null) {

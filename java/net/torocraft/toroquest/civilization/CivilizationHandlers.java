@@ -5,7 +5,10 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityGhast;
+import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntityShulker;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -222,22 +225,22 @@ public class CivilizationHandlers {
 
 	}
 
-	private int getRepuationAdjustmentFor(EntityLivingBase victum, Province province) {
+	private int getRepuationAdjustmentFor(EntityLivingBase victim, Province province) {
 
 		if (province == null || province.civilization == null) {
 			return 0;
 		}
 
-		if (victum instanceof EntityVillager) {
+		if (victim instanceof EntityVillager) {
 			return -10;
 		}
 
-		if (victum instanceof EntityMob) {
+		if (isHostileMob(victim)) {
 			return 1;
 		}
 
-		if (victum instanceof EntityToroNpc) {
-			CivilizationType npcCiv = ((EntityToroNpc) victum).getCivilization();
+		if (victim instanceof EntityToroNpc) {
+			CivilizationType npcCiv = ((EntityToroNpc) victim).getCivilization();
 
 			if (npcCiv == null) {
 				return -1;
@@ -251,6 +254,10 @@ public class CivilizationHandlers {
 		}
 
 		return -1;
+	}
+
+	private boolean isHostileMob(EntityLivingBase victim) {
+		return victim instanceof EntityMob || victim instanceof EntityMagmaCube || victim instanceof EntityGhast || victim instanceof EntityShulker;
 	}
 
 	@SubscribeEvent

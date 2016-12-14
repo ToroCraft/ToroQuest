@@ -7,6 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.torocraft.toroquest.entities.EntityMage;
 import net.torocraft.toroquest.generation.MageTowerGenerator;
+import net.torocraft.toroquest.generation.ThroneRoomGenerator;
 
 public class ToroGenCommand extends CommandBase {
 
@@ -36,7 +37,9 @@ public class ToroGenCommand extends CommandBase {
 
 		// spawnMage(server, sender);
 
-		spawnTower(4, 10, 6, sender, sender.getPosition().add(2, -1, 0));
+		// spawnTower(4, 10, 6, sender, sender.getPosition().add(2, -1, 0));
+		
+		spawnThroneRoom(sender, sender.getPosition().add(2, -1, 0));
 	}
 
 	protected void spawnArrayOfTowers(ICommandSender sender) {
@@ -54,6 +57,10 @@ public class ToroGenCommand extends CommandBase {
 		}
 	}
 
+	protected void spawnThroneRoom(ICommandSender sender, BlockPos pos) {
+		new ThroneRoomGenerator().generate(sender.getEntityWorld(), sender.getEntityWorld().rand, pos);
+	}
+	
 	protected void spawnTower(int floors, int radius, int floorHieght, ICommandSender sender, BlockPos pos) {
 		new MageTowerGenerator().generate(floors, radius, floorHieght, sender.getEntityWorld(), sender.getEntityWorld().rand, pos);
 	}

@@ -46,13 +46,12 @@ public class ThroneRoomGenerator extends WorldGenerator {
 	protected final IBlockState netherStairsS = Blocks.NETHER_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.SOUTH);
 	protected final IBlockState netherStairsE = Blocks.NETHER_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.EAST);
 	protected final IBlockState netherStairsW = Blocks.NETHER_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.WEST);
+	protected final IBlockState oakFence = Blocks.OAK_FENCE.getDefaultState();
+	protected final IBlockState chiseledStone = Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, net.minecraft.block.BlockStoneBrick.EnumType.CHISELED);
 	
 	private int width = 30;
 	private int length = 85;
 	private int height = 16;
-	
-	protected final IBlockState oakFence = Blocks.OAK_FENCE.getDefaultState();
-	protected final IBlockState chiseledStone = Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, net.minecraft.block.BlockStoneBrick.EnumType.CHISELED);
 	
 	@Override
 	public boolean generate(World worldIn, Random rand, BlockPos position) {
@@ -90,11 +89,32 @@ public class ThroneRoomGenerator extends WorldGenerator {
 					if (y == 1 && (x == 13 || x == 17) && (z != 0 && z != length)) {
 						currentBlock = stoneBrickSlabs;
 					}
+					
+					if (isEntrancePlatform(y, x, z)) {
+						currentBlock = stone;
+					}
+					
+					if ((y == 1 && x == 9 && z > 0 && z <= 6) || (y == 2 && x == 11 && z > 0 && z <= 4) || (y == 3 && x == 13 && z > 0 && z <= 2)) {
+						currentBlock = stoneBrickStairsE;
+					}
+					
+					if ((y == 1 && x == width - 9 && z > 0 && z <= 6) || (y == 2 && x == width - 11 && z > 0 && z <= 4) || (y == 3 && x == width - 13 && z > 0 && z <= 2)) {
+						currentBlock = stoneBrickStairsW;
+					}
+					
+					if ((y == 1 && z == 6 && x >= 10 && x <= width - 10) || (y == 2 && z == 4 && x >= 12 && x <= width - 12) || (y == 3 && z == 2 && x >= 14 && x <= width - 14)) {
+						currentBlock = stoneBrickStairsN;
+					}
+						
 						
 					setBlockAndNotifyAdequately(world, startPos.add(x, y, z), currentBlock);
 				}
 			}
 		}
+	}
+
+	private boolean isEntrancePlatform(int y, int x, int z) {
+		return (y == 1 && (x >= 10 && x <= width - 10) && z <= 5) || (y == 2 && (x >= 12 && x <= width - 12) && z <= 3) || (y == 3 && (x >= 14 && x <= width - 14) && z == 1);
 	}
 
 	private void spawnKing() {

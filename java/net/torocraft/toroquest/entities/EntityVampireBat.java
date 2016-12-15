@@ -8,18 +8,9 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.EntityPigZombie;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -66,23 +57,31 @@ public class EntityVampireBat extends EntityMob {
 	}
 
 	protected void initEntityAI() {
-		this.tasks.addTask(0, new EntityAISwimming(this));
-		// this.tasks.addTask(2, new EntityAIZombieAttack(this, 1.0D, false));
-		tasks.addTask(2, new EntityAIAttackMelee(this, 0.6D, false));
-		this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 1.0D));
-		this.tasks.addTask(7, new EntityAIWanderAvoidWater(this, 1.0D));
-		this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-		this.tasks.addTask(8, new EntityAILookIdle(this));
-		this.applyEntityAI();
-	}
-
-	protected void applyEntityAI() {
-		this.tasks.addTask(6, new EntityAIMoveThroughVillage(this, 1.0D, false));
-		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[] { EntityPigZombie.class }));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
 		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityIronGolem.class, true));
+		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityAnimal.class, false));
 	}
+
+	/*
+	 * this.tasks.addTask(0, new EntityAISwimming(this)); tasks.addTask(2, new
+	 * EntityAIAttackMelee(this, 0.4D, false)); this.tasks.addTask(5, new
+	 * EntityAIMoveTowardsRestriction(this, 1.0D)); this.tasks.addTask(7, new
+	 * EntityAIWanderAvoidWater(this, 1.0D)); this.tasks.addTask(8, new
+	 * EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+	 * this.tasks.addTask(8, new EntityAILookIdle(this)); this.applyEntityAI();
+	 */
+
+
+	/*
+	 * protected void applyEntityAI() { this.tasks.addTask(6, new
+	 * EntityAIMoveThroughVillage(this, 1.0D, false));
+	 * this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new
+	 * Class[] { EntityPigZombie.class })); this.targetTasks.addTask(2, new
+	 * EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
+	 * this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this,
+	 * EntityVillager.class, false)); this.targetTasks.addTask(3, new
+	 * EntityAINearestAttackableTarget(this, EntityIronGolem.class, true)); }
+	 */
 
 	/**
 	 * Returns the volume for the sounds this mob makes.
@@ -111,6 +110,7 @@ public class EntityVampireBat extends EntityMob {
 		return SoundEvents.ENTITY_BAT_DEATH;
 	}
 
+
 	/**
 	 * Returns true if this entity should push and be pushed by other entities
 	 * when colliding.
@@ -128,6 +128,7 @@ public class EntityVampireBat extends EntityMob {
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(6.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2D);
 	}
 
 	/**
@@ -146,6 +147,26 @@ public class EntityVampireBat extends EntityMob {
 
 	protected void batAiEdit() {
 
+		Entity target = getAttackTarget();
+
+		if (target == null) {
+			this.spawnPosition = new BlockPos((int) this.posX + this.rand.nextInt(7) - this.rand.nextInt(7), (int) this.posY + this.rand.nextInt(6) - 2, (int) this.posZ + this.rand.nextInt(7) - this.rand.nextInt(7));
+			
+		} else if (rand.nextInt(100) > 50) {
+				this.spawnPosition = new BlockPos((int) this.posX + this.rand.nextInt(7) - this.rand.nextInt(7), (int) this.posY + this.rand.nextInt(6) - 2, (int) this.posZ + this.rand.nextInt(7) - this.rand.nextInt(7));
+				
+		} else {
+
+			this.spawnPosition = new BlockPos(target.getPosition().getX() + this.rand.nextInt(2), target.getPosition().getY() + this.rand.nextInt(4), target.getPosition().getZ() + this.rand.nextInt(2));
+
+		}
+
+		double d0 = (double) this.spawnPosition.getX() + 0.5D - this.posX;
+		double d1 = (double) this.spawnPosition.getY() + 0.1D - this.posY;
+		double d2 = (double) this.spawnPosition.getZ() + 0.5D - this.posZ;
+		this.motionX += (Math.signum(d0) * 0.5D - this.motionX) * 0.10000000149011612D;
+		this.motionY += (Math.signum(d1) * 0.699999988079071D - this.motionY) * 0.10000000149011612D;
+		this.motionZ += (Math.signum(d2) * 0.5D - this.motionZ) * 0.10000000149011612D;
 		float f = (float) (MathHelper.atan2(this.motionZ, this.motionX) * (180D / Math.PI)) - 90.0F;
 		float f1 = MathHelper.wrapDegrees(f - this.rotationYaw);
 		this.moveForward = 0.5F;

@@ -98,7 +98,7 @@ public class ThroneRoomGenerator extends WorldGenerator {
 						currentBlock = stoneBrickSlabs;
 					}
 					
-					if (isAisleEdging(x, y, z) && isAisleTorch(z)) {
+					if (isAisleEdging(y, x, z) && isAisleTorch(z)) {
 						currentBlock = stoneBrick;
 					}
 					

@@ -4,12 +4,14 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.torocraft.toroquest.entities.EntityBas;
 import net.torocraft.toroquest.entities.EntityGuard;
 import net.torocraft.toroquest.entities.EntityMage;
 import net.torocraft.toroquest.entities.EntityMonolithEye;
 import net.torocraft.toroquest.entities.EntitySentry;
 import net.torocraft.toroquest.entities.EntityShopkeeper;
 import net.torocraft.toroquest.entities.EntityToro;
+import net.torocraft.toroquest.entities.EntityVampireBat;
 
 public class ToroQuestEntityRenders {
 
@@ -20,6 +22,8 @@ public class ToroQuestEntityRenders {
 		EntityToro.registerRenders();
 		EntityGuard.registerRenders();
 		EntityShopkeeper.registerRenders();
+		EntityBas.registerRenders();
+		EntityVampireBat.registerRenders();
 	}
 	
 	public static void registerMageRenderer() {

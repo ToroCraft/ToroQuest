@@ -9,5 +9,7 @@ public class ToroQuestEntities {
 		EntityVillageLord.init(id++);
 		EntityGuard.init(id++);
 		EntityShopkeeper.init(id++);
+		EntityBas.init(id++);
+		EntityVampireBat.init(id++);
 	}
 }

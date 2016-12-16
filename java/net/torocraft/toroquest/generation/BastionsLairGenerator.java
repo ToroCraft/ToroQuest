@@ -33,15 +33,12 @@ public class BastionsLairGenerator extends WorldGenerator {
 			return false;
 		}
 
-
 		genMainChamber();
 
-		genEntrance(width, 0, EnumFacing.WEST);
-		genEntrance(0, -width, EnumFacing.NORTH);
-		genEntrance(0, width, EnumFacing.SOUTH);
-		genEntrance(-width, 0, EnumFacing.EAST);
-
-
+		genEntrance(width + 2, 0, EnumFacing.WEST);
+		genEntrance(0, -width - 2, EnumFacing.NORTH);
+		genEntrance(0, width + 2, EnumFacing.SOUTH);
+		genEntrance(-width - 2, 0, EnumFacing.EAST);
 
 		return true;
 	}

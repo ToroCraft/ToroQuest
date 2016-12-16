@@ -34,6 +34,13 @@ entity.villageLord.name=Village Lord
 entity.toroquest.shopkeeper.name=Shopkeeper
 entity.shopkeeper.name=Shopkeeper
 
+entity.toroquest.vampire_bat.name=Vampire Bat
+entity.vampire_bat.name=Vampire Bat
+
+entity.toroquest.bas.name=Lord Bastion
+entity.bas.name=Lord Bastion
+
+
 civilization.earth.name=Terra
 civilization.wind.name=Gustaberg
 civilization.fire.name=Lumens

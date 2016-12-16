@@ -6,6 +6,7 @@ import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
@@ -29,14 +30,26 @@ public class BastionsLairGenerator extends WorldGenerator {
 		findOrigin(pos);
 
 		if (origin == null) {
-			System.out.println("unable to find origin");
 			return false;
 		}
 
-		System.out.println("start [" + pos + " ] origin [" + origin + "]");
 
-		place();
+		genMainChamber();
+
+		genEntrance(width, 0, EnumFacing.WEST);
+		genEntrance(0, -width, EnumFacing.NORTH);
+		genEntrance(0, width, EnumFacing.SOUTH);
+		genEntrance(-width, 0, EnumFacing.EAST);
+
+
+
 		return true;
+	}
+
+	protected void genEntrance(int x, int z, EnumFacing facing) {
+		BastionsLairEntranceGenerator g = new BastionsLairEntranceGenerator();
+		g.setEntrance(facing);
+		g.generate(world, rand, new BlockPos(x, walkwayHeight, z).add(origin));
 	}
 
 	private void findOrigin(BlockPos start) {
@@ -44,7 +57,6 @@ public class BastionsLairGenerator extends WorldGenerator {
 		BlockPos pos = new BlockPos(start);
 		IBlockState blockState;
 		while (pos.getY() > bottomMargin) {
-			System.out.println("testing " + pos);
 			pos = pos.down();
 			blockState = world.getBlockState(pos);
 			if (isLiquid(blockState)) {
@@ -68,7 +80,7 @@ public class BastionsLairGenerator extends WorldGenerator {
 		return blockState.isOpaqueCube();
 	}
 
-	private void place() {
+	private void genMainChamber() {
 		for (y = 0; y <= height; y++) {
 			for (x = -width; x <= width; x++) {
 				for (z = -width; z <= width; z++) {

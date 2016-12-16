@@ -7,8 +7,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.torocraft.toroquest.entities.EntityMage;
 import net.torocraft.toroquest.generation.MageTowerGenerator;
-import net.torocraft.toroquest.generation.TombOfTheUndeadGenerator;
 import net.torocraft.toroquest.generation.ThroneRoomGenerator;
+import net.torocraft.toroquest.generation.BastionsLairGenerator;
 
 public class ToroGenCommand extends CommandBase {
 
@@ -39,11 +39,11 @@ public class ToroGenCommand extends CommandBase {
 		// spawnMage(server, sender);
 
 		// spawnTower(4, 10, 6, sender, sender.getPosition().add(2, -1, 0));
-		spawnTomb(sender, sender.getPosition());
+		spawnBastionsLair(sender, sender.getPosition());
 	}
 
-	private void spawnTomb(ICommandSender sender, BlockPos pos) {
-		new TombOfTheUndeadGenerator().generate(sender.getEntityWorld(), sender.getEntityWorld().rand, pos);
+	private void spawnBastionsLair(ICommandSender sender, BlockPos pos) {
+		new BastionsLairGenerator().generate(sender.getEntityWorld(), sender.getEntityWorld().rand, pos);
 	}
 
 	protected void spawnArrayOfTowers(ICommandSender sender) {

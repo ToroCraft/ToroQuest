@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
-public class TombOfTheUndeadGenerator extends WorldGenerator {
+public class BastionsLairGenerator extends WorldGenerator {
 
 	private final int width = 40;
 	private final int height = 25;

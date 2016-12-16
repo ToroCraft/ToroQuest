@@ -4,18 +4,24 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -47,8 +53,7 @@ public class EntityBas extends EntitySkeleton {
 	}
 
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
-		super.setEquipmentBasedOnDifficulty(difficulty);
-		this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemStack.field_190927_a);
+		this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.STONE_SWORD));
 	}
 
 	@Override
@@ -59,8 +64,8 @@ public class EntityBas extends EntitySkeleton {
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4D);
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100D);
-		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(10D);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(150D);
+		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5D);
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
 	}
 
@@ -72,26 +77,6 @@ public class EntityBas extends EntitySkeleton {
 	@Nullable
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
 		livingdata = super.onInitialSpawn(difficulty, livingdata);
-
-		/*
-		 * this.setEquipmentBasedOnDifficulty(difficulty);
-		 * this.setEnchantmentBasedOnDifficulty(difficulty);
-		 * this.setCombatTask(); this.setCanPickUpLoot(this.rand.nextFloat() <
-		 * 0.55F * difficulty.getClampedAdditionalDifficulty());
-		 * 
-		 * if
-		 * (this.getItemStackFromSlot(EntityEquipmentSlot.HEAD).func_190926_b())
-		 * { Calendar calendar = this.worldObj.getCurrentDate();
-		 * 
-		 * if (calendar.get(2) + 1 == 10 && calendar.get(5) == 31 &&
-		 * this.rand.nextFloat() < 0.25F) {
-		 * this.setItemStackToSlot(EntityEquipmentSlot.HEAD, new
-		 * ItemStack(this.rand.nextFloat() < 0.1F ? Blocks.LIT_PUMPKIN :
-		 * Blocks.PUMPKIN));
-		 * this.inventoryArmorDropChances[EntityEquipmentSlot.HEAD.getIndex()] =
-		 * 0.0F; } }
-		 */
-
 		return livingdata;
 	}
 
@@ -106,10 +91,67 @@ public class EntityBas extends EntitySkeleton {
 
 	protected void ai() {
 		tasks.addTask(1, new EntityAISwimming(this));
+		tasks.addTask(2, new EntityAIAttackMelee(this, 0.5D, false));
 		tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		tasks.addTask(3, new EntityAILookIdle(this));
 		targetTasks.addTask(1, new EntityAIHurtByTarget(this, false, new Class[0]));
 		targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
+	}
+
+	private void spawnBats() {
+		long start = System.currentTimeMillis();
+		int playerCount = worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(getPosition()).expand(40, 20, 40)).size();
+		int batCount = worldObj.getEntitiesWithinAABB(EntityVampireBat.class, new AxisAlignedBB(getPosition()).expand(40, 20, 40)).size();
+
+		if (batCount > 7 * playerCount) {
+			return;
+		}
+
+		for (int i = 0; i < 3 + rand.nextInt(4); i++) {
+			spawnBat();
+		}
+	}
+
+	protected void spawnBat() {
+		Entity mob = new EntityVampireBat(worldObj);
+		mob.setPosition(posX + rand.nextInt(6) - 3, posY + 4, posZ + rand.nextInt(6) - 3);
+		worldObj.spawnEntityInWorld(mob);
+	}
+
+	public void onLivingUpdate() {
+		super.onLivingUpdate();
+
+		if (worldObj.getTotalWorldTime() % 100 == 0) {
+			spawnBats();
+		}
+
+		if (this.worldObj.isDaytime() && !this.worldObj.isRemote) {
+			float f = this.getBrightness(1.0F);
+			BlockPos blockpos = this.getRidingEntity() instanceof EntityBoat ? (new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ)).up() : new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ);
+
+			if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.worldObj.canSeeSky(blockpos)) {
+				boolean flag = true;
+				ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+
+				if (!itemstack.func_190926_b()) {
+					if (itemstack.isItemStackDamageable()) {
+						itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
+
+						if (itemstack.getItemDamage() >= itemstack.getMaxDamage()) {
+							this.renderBrokenItemStack(itemstack);
+							this.setItemStackToSlot(EntityEquipmentSlot.HEAD, ItemStack.field_190927_a);
+						}
+					}
+
+					flag = false;
+				}
+
+				if (flag) {
+					this.setFire(8);
+				}
+			}
+		}
+
 	}
 
 }

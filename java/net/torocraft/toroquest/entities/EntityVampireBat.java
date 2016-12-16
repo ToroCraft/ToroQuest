@@ -1,5 +1,7 @@
 package net.torocraft.toroquest.entities;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.block.state.IBlockState;
@@ -7,7 +9,9 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -18,6 +22,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.datafix.DataFixer;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -31,6 +36,8 @@ import net.torocraft.toroquest.entities.render.RenderVampireBat;
 public class EntityVampireBat extends EntityMob {
 
 	public static String NAME = "vampire_bat";
+
+	private EntityBas nearbyBas;
 
 	public static void init(int entityId) {
 		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityVampireBat.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0x2015, 0x909090);
@@ -57,31 +64,11 @@ public class EntityVampireBat extends EntityMob {
 	}
 
 	protected void initEntityAI() {
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityAnimal.class, false));
+		tasks.addTask(2, new EntityAIAttackMelee(this, 0.4D, false));
+		targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
+		targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
+		targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityAnimal.class, false));
 	}
-
-	/*
-	 * this.tasks.addTask(0, new EntityAISwimming(this)); tasks.addTask(2, new
-	 * EntityAIAttackMelee(this, 0.4D, false)); this.tasks.addTask(5, new
-	 * EntityAIMoveTowardsRestriction(this, 1.0D)); this.tasks.addTask(7, new
-	 * EntityAIWanderAvoidWater(this, 1.0D)); this.tasks.addTask(8, new
-	 * EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-	 * this.tasks.addTask(8, new EntityAILookIdle(this)); this.applyEntityAI();
-	 */
-
-
-	/*
-	 * protected void applyEntityAI() { this.tasks.addTask(6, new
-	 * EntityAIMoveThroughVillage(this, 1.0D, false));
-	 * this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new
-	 * Class[] { EntityPigZombie.class })); this.targetTasks.addTask(2, new
-	 * EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
-	 * this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this,
-	 * EntityVillager.class, false)); this.targetTasks.addTask(3, new
-	 * EntityAINearestAttackableTarget(this, EntityIronGolem.class, true)); }
-	 */
 
 	/**
 	 * Returns the volume for the sounds this mob makes.
@@ -110,7 +97,6 @@ public class EntityVampireBat extends EntityMob {
 		return SoundEvents.ENTITY_BAT_DEATH;
 	}
 
-
 	/**
 	 * Returns true if this entity should push and be pushed by other entities
 	 * when colliding.
@@ -127,7 +113,7 @@ public class EntityVampireBat extends EntityMob {
 
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(6.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(2.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2D);
 	}
 
@@ -141,7 +127,6 @@ public class EntityVampireBat extends EntityMob {
 
 	protected void updateAITasks() {
 		super.updateAITasks();
-		// batAi();
 		batAiEdit();
 	}
 
@@ -149,16 +134,10 @@ public class EntityVampireBat extends EntityMob {
 
 		Entity target = getAttackTarget();
 
-		if (target == null) {
-			this.spawnPosition = new BlockPos((int) this.posX + this.rand.nextInt(7) - this.rand.nextInt(7), (int) this.posY + this.rand.nextInt(6) - 2, (int) this.posZ + this.rand.nextInt(7) - this.rand.nextInt(7));
-			
-		} else if (rand.nextInt(100) > 50) {
-				this.spawnPosition = new BlockPos((int) this.posX + this.rand.nextInt(7) - this.rand.nextInt(7), (int) this.posY + this.rand.nextInt(6) - 2, (int) this.posZ + this.rand.nextInt(7) - this.rand.nextInt(7));
-				
+		if (target == null || rand.nextInt(100) > 50) {
+			this.spawnPosition = nonAttackLocation();
 		} else {
-
-			this.spawnPosition = new BlockPos(target.getPosition().getX() + this.rand.nextInt(2), target.getPosition().getY() + this.rand.nextInt(4), target.getPosition().getZ() + this.rand.nextInt(2));
-
+			spawnPosition = target.getPosition().up();
 		}
 
 		double d0 = (double) this.spawnPosition.getX() + 0.5D - this.posX;
@@ -173,26 +152,29 @@ public class EntityVampireBat extends EntityMob {
 		this.rotationYaw += f1;
 	}
 
-	protected void batAi() {
-
-		if (this.spawnPosition != null && (!this.worldObj.isAirBlock(this.spawnPosition) || this.spawnPosition.getY() < 1)) {
-			this.spawnPosition = null;
+	protected BlockPos nonAttackLocation() {
+		if (nearbyBas == null || nearbyBas.isDead) {
+			if (rand.nextInt(100) > 90) {
+				searchForBas();
+			}
+			return randomNearByPlace();
 		}
 
-		if (this.spawnPosition == null || this.rand.nextInt(30) == 0 || this.spawnPosition.distanceSq((double) ((int) this.posX), (double) ((int) this.posY), (double) ((int) this.posZ)) < 4.0D) {
-			this.spawnPosition = new BlockPos((int) this.posX + this.rand.nextInt(7) - this.rand.nextInt(7), (int) this.posY + this.rand.nextInt(6) - 2, (int) this.posZ + this.rand.nextInt(7) - this.rand.nextInt(7));
-		}
+		return new BlockPos((int) nearbyBas.posX + rand.nextInt(30) - 15, (int) nearbyBas.posY + rand.nextInt(8) + 2, (int) nearbyBas.posZ + rand.nextInt(30) - 15);
+	}
 
-		double d0 = (double) this.spawnPosition.getX() + 0.5D - this.posX;
-		double d1 = (double) this.spawnPosition.getY() + 0.1D - this.posY;
-		double d2 = (double) this.spawnPosition.getZ() + 0.5D - this.posZ;
-		this.motionX += (Math.signum(d0) * 0.5D - this.motionX) * 0.10000000149011612D;
-		this.motionY += (Math.signum(d1) * 0.699999988079071D - this.motionY) * 0.10000000149011612D;
-		this.motionZ += (Math.signum(d2) * 0.5D - this.motionZ) * 0.10000000149011612D;
-		float f = (float) (MathHelper.atan2(this.motionZ, this.motionX) * (180D / Math.PI)) - 90.0F;
-		float f1 = MathHelper.wrapDegrees(f - this.rotationYaw);
-		this.moveForward = 0.5F;
-		this.rotationYaw += f1;
+
+	protected BlockPos randomNearByPlace() {
+		return new BlockPos((int) posX + rand.nextInt(7) - rand.nextInt(7), (int) posY + rand.nextInt(6) - 2, (int) posZ + rand.nextInt(7) - rand.nextInt(7));
+	}
+
+
+	private void searchForBas() {
+		List<EntityBas> list = worldObj.getEntitiesWithinAABB(EntityBas.class, new AxisAlignedBB(getPosition()).expand(40, 20, 40));
+		if (list.size() < 1) {
+			return;
+		}
+		nearbyBas = list.get(rand.nextInt(list.size()));
 	}
 
 	/**
@@ -239,5 +221,62 @@ public class EntityVampireBat extends EntityMob {
 	@Nullable
 	protected ResourceLocation getLootTable() {
 		return LootTableList.ENTITIES_BAT;
+	}
+
+	/**
+	 * Moves the entity based on the specified heading.
+	 */
+	public void moveEntityWithHeading(float strafe, float forward) {
+		if (this.isInWater()) {
+			this.moveRelative(strafe, forward, 0.02F);
+			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+			this.motionX *= 0.800000011920929D;
+			this.motionY *= 0.800000011920929D;
+			this.motionZ *= 0.800000011920929D;
+		} else if (this.isInLava()) {
+			this.moveRelative(strafe, forward, 0.02F);
+			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+			this.motionX *= 0.5D;
+			this.motionY *= 0.5D;
+			this.motionZ *= 0.5D;
+		} else {
+			float f = 0.91F;
+
+			if (this.onGround) {
+				f = this.worldObj.getBlockState(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.getEntityBoundingBox().minY) - 1, MathHelper.floor_double(this.posZ))).getBlock().slipperiness * 0.91F;
+			}
+
+			float f1 = 0.16277136F / (f * f * f);
+			this.moveRelative(strafe, forward, this.onGround ? 0.1F * f1 : 0.02F);
+			f = 0.91F;
+
+			if (this.onGround) {
+				f = this.worldObj.getBlockState(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.getEntityBoundingBox().minY) - 1, MathHelper.floor_double(this.posZ))).getBlock().slipperiness * 0.91F;
+			}
+
+			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+			this.motionX *= (double) f;
+			this.motionY *= (double) f;
+			this.motionZ *= (double) f;
+		}
+
+		this.prevLimbSwingAmount = this.limbSwingAmount;
+		double d1 = this.posX - this.prevPosX;
+		double d0 = this.posZ - this.prevPosZ;
+		float f2 = MathHelper.sqrt_double(d1 * d1 + d0 * d0) * 4.0F;
+
+		if (f2 > 1.0F) {
+			f2 = 1.0F;
+		}
+
+		this.limbSwingAmount += (f2 - this.limbSwingAmount) * 0.4F;
+		this.limbSwing += this.limbSwingAmount;
+	}
+
+	/**
+	 * returns true if this entity is by a ladder, false otherwise
+	 */
+	public boolean isOnLadder() {
+		return false;
 	}
 }

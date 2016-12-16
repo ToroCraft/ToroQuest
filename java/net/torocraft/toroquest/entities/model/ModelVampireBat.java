@@ -66,15 +66,15 @@ public class ModelVampireBat extends ModelBase {
 	 * how "far" arms and legs can swing at most.
 	 */
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
-		// this.batHead.rotateAngleX = headPitch * 0.017453292F;
-		// this.batHead.rotateAngleY = netHeadYaw * 0.017453292F;
-		this.batHead.rotateAngleZ = 0.0F;
-		this.batHead.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.batRightWing.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.batLeftWing.setRotationPoint(0.0F, 0.0F, 0.0F);
-		// bodyLeanForward(ageInTicks);
-		this.batBody.rotateAngleY = 0.0F;
-		// wingFlap(ageInTicks);
+		batHead.rotateAngleX = headPitch * 0.017453292F;
+		batHead.rotateAngleY = netHeadYaw * 0.017453292F;
+		batHead.rotateAngleZ = 0.0F;
+		batHead.setRotationPoint(0.0F, 0.0F, 0.0F);
+		batRightWing.setRotationPoint(0.0F, 0.0F, 0.0F);
+		batLeftWing.setRotationPoint(0.0F, 0.0F, 0.0F);
+		bodyLeanForward(ageInTicks);
+		batBody.rotateAngleY = 0.0F;
+		wingFlap(ageInTicks);
 
 	}
 

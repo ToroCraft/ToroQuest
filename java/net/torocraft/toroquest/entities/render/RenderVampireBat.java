@@ -31,7 +31,6 @@ public class RenderVampireBat extends RenderLiving<EntityVampireBat> {
 	 * rendered.
 	 */
 	protected void preRenderCallback(EntityVampireBat entitylivingbaseIn, float partialTickTime) {
-		// GlStateManager.scale(0.35F, 0.35F, 0.35F);
 		GlStateManager.scale(0.5F, 0.5F, 0.5F);
 	}
 

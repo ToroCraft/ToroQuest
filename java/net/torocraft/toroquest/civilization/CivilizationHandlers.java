@@ -1,9 +1,14 @@
 package net.torocraft.toroquest.civilization;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityGhast;
+import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntityShulker;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
@@ -24,6 +30,7 @@ import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
+import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.torocraft.toroquest.EventHandlers.SyncTask;
@@ -218,22 +225,22 @@ public class CivilizationHandlers {
 
 	}
 
-	private int getRepuationAdjustmentFor(EntityLivingBase victum, Province province) {
+	private int getRepuationAdjustmentFor(EntityLivingBase victim, Province province) {
 
 		if (province == null || province.civilization == null) {
 			return 0;
 		}
 
-		if (victum instanceof EntityVillager) {
+		if (victim instanceof EntityVillager) {
 			return -10;
 		}
 
-		if (victum instanceof EntityMob) {
+		if (isHostileMob(victim)) {
 			return 1;
 		}
 
-		if (victum instanceof EntityToroNpc) {
-			CivilizationType npcCiv = ((EntityToroNpc) victum).getCivilization();
+		if (victim instanceof EntityToroNpc) {
+			CivilizationType npcCiv = ((EntityToroNpc) victim).getCivilization();
 
 			if (npcCiv == null) {
 				return -1;
@@ -247,6 +254,10 @@ public class CivilizationHandlers {
 		}
 
 		return -1;
+	}
+
+	private boolean isHostileMob(EntityLivingBase victim) {
+		return victim instanceof EntityMob || victim instanceof EntityMagmaCube || victim instanceof EntityGhast || victim instanceof EntityShulker;
 	}
 
 	@SubscribeEvent
@@ -315,7 +326,7 @@ public class CivilizationHandlers {
 		if (event.getPlacedBlock().getBlock() instanceof BlockCrops) {
 
 			/*
-			 * if using bone mill, only give positive reputation 20% of the time
+			 * if using bone meal, only give positive reputation 20% of the time
 			 */
 			if (event.getBlockSnapshot().getReplacedBlock().getBlock() instanceof BlockCrops) {
 				if (event.getWorld().rand.nextInt(100) > 20) {
@@ -328,6 +339,20 @@ public class CivilizationHandlers {
 		}
 	}
 
+	@SubscribeEvent
+	public void harvestDrops(HarvestDropsEvent event) {		
+		if (event.getState().getBlock() instanceof BlockCrops) {
+			BlockPos pos = event.getPos();
+			AxisAlignedBB bb = new AxisAlignedBB(pos);
+			List<EntityPlayer> players = event.getWorld().getEntitiesWithinAABB(EntityPlayer.class, bb);
+			if (players != null && players.size() > 0) {
+				for (EntityPlayer player : players) {
+					adjustPlayerRep(player, pos.getX() / 16, pos.getZ() / 16, -1);
+				}
+			}
+		}
+	}
+	
 	@SubscribeEvent
 	public void harvest(BreakEvent event) {
 		if (event.getPlayer() == null) {

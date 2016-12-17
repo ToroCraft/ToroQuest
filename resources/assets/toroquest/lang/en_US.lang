@@ -40,6 +40,8 @@ entity.vampire_bat.name=Vampire Bat
 entity.toroquest.bas.name=Lord Bastion
 entity.bas.name=Lord Bastion
 
+entity.toroquest.sentry.name=Sentry
+entity.sentry.name=Sentry
 
 civilization.earth.name=Terra
 civilization.wind.name=Gustaberg

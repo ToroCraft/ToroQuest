@@ -24,6 +24,7 @@ public class ToroQuestEntityRenders {
 		EntityShopkeeper.registerRenders();
 		EntityBas.registerRenders();
 		EntityVampireBat.registerRenders();
+		EntitySentry.registerRenders();
 	}
 	
 	public static void registerMageRenderer() {

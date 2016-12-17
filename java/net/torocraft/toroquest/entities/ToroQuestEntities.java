@@ -11,5 +11,6 @@ public class ToroQuestEntities {
 		EntityShopkeeper.init(id++);
 		EntityBas.init(id++);
 		EntityVampireBat.init(id++);
+		EntitySentry.init(id++);
 	}
 }

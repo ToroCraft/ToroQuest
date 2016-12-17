@@ -1,10 +1,14 @@
 package net.torocraft.toroquest.civilization;
 
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockCrops;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.monster.EntityGhast;
 import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntityMob;
@@ -21,6 +25,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -33,11 +38,15 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.torocraft.toroquest.EventHandlers.SyncTask;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapability;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
+import net.torocraft.toroquest.entities.EntitySentry;
 import net.torocraft.toroquest.entities.EntityToroNpc;
+import net.torocraft.toroquest.entities.EntityVampireBat;
 import net.torocraft.toroquest.util.TaskRunner;
 
 public class CivilizationHandlers {
@@ -340,7 +349,7 @@ public class CivilizationHandlers {
 	}
 
 	@SubscribeEvent
-	public void harvestDrops(HarvestDropsEvent event) {		
+	public void harvestDrops(HarvestDropsEvent event) {
 		if (event.getState().getBlock() instanceof BlockCrops) {
 			BlockPos pos = event.getPos();
 			AxisAlignedBB bb = new AxisAlignedBB(pos);
@@ -352,7 +361,7 @@ public class CivilizationHandlers {
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void harvest(BreakEvent event) {
 		if (event.getPlayer() == null) {
@@ -363,6 +372,108 @@ public class CivilizationHandlers {
 			BlockPos pos = event.getPos();
 			adjustPlayerRep(event.getPlayer(), pos.getX() / 16, pos.getZ() / 16, -1);
 		}
+	}
+
+	private int randomSpawnDistance(Random rand) {
+		int d = rand.nextInt(20) + 20;
+		if (rand.nextBoolean()) {
+			d = -d;
+		}
+		return d;
+	}
+
+	@SubscribeEvent
+	public void spawnSentries(PlayerTickEvent event) {
+		if (TickEvent.Phase.START.equals(event.phase)) {
+			return;
+		}
+		EntityPlayer player = event.player;
+		World world = player.getEntityWorld();
+
+		if (world.isRemote || world.getTotalWorldTime() % 200 != 0) {
+			return;
+		}
+
+		spawnSentry(player.getPosition(), world);
+	}
+
+	protected void spawnSentry(BlockPos position, World world) {
+		BlockPos randomNearbySpot = position.add(randomSpawnDistance(world.rand), 0, randomSpawnDistance(world.rand));
+
+		Province province = CivilizationUtil.getProvinceAt(world, randomNearbySpot.getX() / 16, randomNearbySpot.getZ() / 16);
+
+		if (province == null) {
+			return;
+		}
+
+		BlockPos spawnPos = findSpawnLocationFrom(world, randomNearbySpot);
+
+		if (spawnPos == null) {
+			return;
+		}
+
+		int localMobCount = world.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(spawnPos).expand(50, 16, 50)).size();
+		int localSentryCount = world.getEntitiesWithinAABB(EntityVampireBat.class, new AxisAlignedBB(spawnPos).expand(50, 40, 50)).size();
+
+		if (localSentryCount > 5 + (localMobCount / 10)) {
+			return;
+		}
+
+		int count = world.rand.nextInt(3) + 1;
+
+		for (int i = 0; i < count; i++) {
+			EntitySentry e = new EntitySentry(world);
+			e.setCivilization(province.civilization);
+			e.setPosition(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5);
+			e.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(e)), (IEntityLivingData) null);
+			world.spawnEntityInWorld(e);
+		}
+
+	}
+
+	private BlockPos findSpawnLocationFrom(World world, BlockPos from) {
+		BlockPos spawnPos = from.add(0, 20, 0);
+		boolean[] airSpace = { false, false };
+		IBlockState blockState;
+
+		// TODO improve so sentries don't always spawn at the highest possible
+		// location
+		for (int i = 0; i < 40; i++) {
+			blockState = world.getBlockState(spawnPos);
+
+			if (isAir(blockState)) {
+				if (airSpace[0]) {
+					airSpace[1] = true;
+				} else {
+					airSpace[0] = true;
+				}
+			} else if (isGroundBlock(blockState)) {
+				if (airSpace[0] && airSpace[1]) {
+					return spawnPos.up();
+				} else {
+					airSpace[0] = false;
+					airSpace[1] = false;
+				}
+			} else {
+				airSpace[0] = false;
+				airSpace[1] = false;
+			}
+
+			spawnPos = spawnPos.down();
+		}
+
+		return null;
+	}
+
+	private boolean isAir(IBlockState blockState) {
+		return blockState.getBlock() == Blocks.AIR;
+	}
+
+	private boolean isGroundBlock(IBlockState blockState) {
+		if (blockState.getBlock() == Blocks.LEAVES || blockState.getBlock() == Blocks.LEAVES2 || blockState.getBlock() instanceof BlockBush) {
+			return false;
+		}
+		return blockState.isOpaqueCube();
 	}
 
 }

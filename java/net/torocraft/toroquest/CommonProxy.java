@@ -10,6 +10,7 @@ import net.torocraft.toroquest.civilization.CivilizationHandlers;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.crafting.ToroQuestRecipes;
 import net.torocraft.toroquest.entities.ToroQuestEntities;
+import net.torocraft.toroquest.generation.WorldGenBastionsLairPlacer;
 import net.torocraft.toroquest.generation.WorldGenMageTowerPlacer;
 import net.torocraft.toroquest.generation.WorldGenMonolithPlacer;
 import net.torocraft.toroquest.generation.village.VillageHandlerBarracks;
@@ -41,6 +42,7 @@ public class CommonProxy {
 		ToroQuestRecipes.init();
 		WorldGenMageTowerPlacer.init();
 		WorldGenMonolithPlacer.init();
+		WorldGenBastionsLairPlacer.init();
 		ToroQuestEntities.init();
 	}
 

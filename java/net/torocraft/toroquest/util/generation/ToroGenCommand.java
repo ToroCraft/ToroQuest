@@ -6,9 +6,9 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.torocraft.toroquest.entities.EntityMage;
+import net.torocraft.toroquest.generation.BastionsLairGenerator;
 import net.torocraft.toroquest.generation.MageTowerGenerator;
 import net.torocraft.toroquest.generation.ThroneRoomGenerator;
-import net.torocraft.toroquest.generation.BastionsLairGenerator;
 
 public class ToroGenCommand extends CommandBase {
 
@@ -29,16 +29,6 @@ public class ToroGenCommand extends CommandBase {
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-		// if(args[0].equals("verdererscabin")){
-		// new VerderersCabin(sender.getEntityWorld(),
-		// sender.getPosition()).generate();
-		// }
-
-		// spawnArrayOfTowers(sender);
-
-		// spawnMage(server, sender);
-
-		// spawnTower(4, 10, 6, sender, sender.getPosition().add(2, -1, 0));
 		spawnBastionsLair(sender, sender.getPosition());
 	}
 

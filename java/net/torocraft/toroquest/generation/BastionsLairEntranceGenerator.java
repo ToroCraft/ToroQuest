@@ -48,14 +48,19 @@ public class BastionsLairEntranceGenerator extends WorldGenerator {
 	}
 
 	private void findSurface(BlockPos start) {
+		int surfaceGlobal = world.getActualHeight();
 		IBlockState blockState;
-		surface = 0;
-		while ((surface + origin.getY()) < world.getActualHeight()) {
-			surface++;
-			blockState = world.getBlockState(origin.add(0, surface, 0));
-			if (!isGroundBlock(blockState) && !isLiquid(blockState)) {
+		while (surfaceGlobal > 0) {
+			surfaceGlobal--;
+			blockState = world.getBlockState(new BlockPos(start.getX(), surfaceGlobal, start.getZ()));
+			if (isLiquid(blockState) || isGroundBlock(blockState)) {
 				break;
 			}
+		}
+		surface = surfaceGlobal - origin.getY();
+
+		if (surface < 5) {
+			surface = 5;
 		}
 	}
 
@@ -92,7 +97,7 @@ public class BastionsLairEntranceGenerator extends WorldGenerator {
 			block = Blocks.STONEBRICK.getDefaultState();
 
 		} else if (isFloor()) {
-			block = Blocks.STONEBRICK.getDefaultState();
+			block = Blocks.STONE.getDefaultState();
 
 		} else {
 			block = Blocks.AIR.getDefaultState();
@@ -101,7 +106,7 @@ public class BastionsLairEntranceGenerator extends WorldGenerator {
 	}
 
 	private boolean isFloor() {
-		return y % 8 == 0 || y == surface;
+		return (y < surface && y % 8 == 0) || y == surface;
 	}
 
 	private boolean isStairs() {
@@ -117,11 +122,11 @@ public class BastionsLairEntranceGenerator extends WorldGenerator {
 		}
 
 		if (y < 1) {
-			return Blocks.STONEBRICK.getDefaultState();
+			return Blocks.STONE.getDefaultState();
 		}
 
 		if (x == 0 && z == 0) {
-			return Blocks.MOSSY_COBBLESTONE.getDefaultState();
+			return Blocks.STONE.getDefaultState();
 		}
 
 		int yAdj = (y + 1) % 4;
@@ -184,7 +189,7 @@ public class BastionsLairEntranceGenerator extends WorldGenerator {
 	}
 
 	private boolean isWall() {
-		return magSq >= innerRadiusSquared;
+		return magSq >= innerRadiusSquared && y <= surface + 1;
 	}
 
 	private boolean isOutside() {

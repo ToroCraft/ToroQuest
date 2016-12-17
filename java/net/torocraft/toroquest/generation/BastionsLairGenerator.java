@@ -10,12 +10,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
+import net.torocraft.toroquest.entities.EntityBas;
 
 public class BastionsLairGenerator extends WorldGenerator {
 
 	private final int width = 40;
 	private final int height = 25;
-	private final int bottomMargin = 2;
 
 	private BlockPos origin;
 	private int x, y, z;
@@ -27,6 +27,7 @@ public class BastionsLairGenerator extends WorldGenerator {
 	public boolean generate(World world, Random rand, BlockPos pos) {
 		this.world = world;
 		this.rand = rand;
+
 		findOrigin(pos);
 
 		if (origin == null) {
@@ -34,13 +35,44 @@ public class BastionsLairGenerator extends WorldGenerator {
 		}
 
 		genMainChamber();
-
 		genEntrance(width + 2, 0, EnumFacing.WEST);
 		genEntrance(0, -width - 2, EnumFacing.NORTH);
 		genEntrance(0, width + 2, EnumFacing.SOUTH);
 		genEntrance(-width - 2, 0, EnumFacing.EAST);
-
+		spawnBas();
 		return true;
+	}
+
+	protected void findOrigin(BlockPos pos) {
+		origin = null;
+		BlockPos a = getSurfacePosition(pos.add(width, 0, 0));
+		BlockPos b = getSurfacePosition(pos.add(0, 0, -width));
+		BlockPos c = getSurfacePosition(pos.add(0, 0, width));
+		BlockPos d = getSurfacePosition(pos.add(-width, 0, 0));
+
+		if (a == null || b == null || c == null || d == null) {
+			return;
+		}
+
+		origin = a;
+
+		if (b.getY() < origin.getY()) {
+			origin = b;
+		}
+
+		if (c.getY() < origin.getY()) {
+			origin = c;
+		}
+
+		if (d.getY() < origin.getY()) {
+			origin = d;
+		}
+
+		origin = origin.down(50);
+
+		if (origin.getY() < 5) {
+			origin = new BlockPos(origin.getX(), 5, origin.getZ());
+		}
 	}
 
 	protected void genEntrance(int x, int z, EnumFacing facing) {
@@ -49,21 +81,20 @@ public class BastionsLairGenerator extends WorldGenerator {
 		g.generate(world, rand, new BlockPos(x, walkwayHeight, z).add(origin));
 	}
 
-	private void findOrigin(BlockPos start) {
-		origin = null;
-		BlockPos pos = new BlockPos(start);
+	private BlockPos getSurfacePosition(BlockPos start) {
 		IBlockState blockState;
-		while (pos.getY() > bottomMargin) {
-			pos = pos.down();
-			blockState = world.getBlockState(pos);
+		BlockPos search = new BlockPos(start.getX(), world.getActualHeight(), start.getZ());
+		while (search.getY() > 0) {
+			search = search.down();
+			blockState = world.getBlockState(search);
 			if (isLiquid(blockState)) {
-				return;
+				return null;
 			}
 			if (isGroundBlock(blockState)) {
-				origin = pos.down(30);
 				break;
 			}
 		}
+		return search;
 	}
 
 	private boolean isLiquid(IBlockState blockState) {
@@ -98,8 +129,11 @@ public class BastionsLairGenerator extends WorldGenerator {
 		if (isOutside()) {
 			return;
 
-		} else if (isWall() || isFloor() || isRoof()) {
-			block = Blocks.STONEBRICK.getDefaultState();
+		} else if (isWall() || isRoof()) {
+			block = Blocks.STONE.getDefaultState();
+
+		} else if (isFloor()) {
+			block = Blocks.DIRT.getDefaultState();
 
 		} else if (isPlatform()) {
 
@@ -125,17 +159,11 @@ public class BastionsLairGenerator extends WorldGenerator {
 		} else if (isWalkwaySubstructure()) {
 			block = Blocks.DIRT.getDefaultState();
 
-		} else if (isWater()) {
-			block = Blocks.WATER.getDefaultState();
 		} else {
 			block = Blocks.AIR.getDefaultState();
 		}
 
 		placeBlock();
-	}
-
-	private boolean isWater() {
-		return y == 1;
 	}
 
 	private boolean isPlatformUnderstructure() {
@@ -186,11 +214,11 @@ public class BastionsLairGenerator extends WorldGenerator {
 		return y == walkwayHeight + 1 && isWalkwayEdge() && (x % 6 == 0 || z % 6 == 0) && (Math.abs(x) > 4 || Math.abs(z) > 4);
 	}
 
-	private boolean isRoof() {
+	private boolean isFloor() {
 		return y == 0;
 	}
 
-	private boolean isFloor() {
+	private boolean isRoof() {
 		return y == height;
 	}
 
@@ -207,6 +235,12 @@ public class BastionsLairGenerator extends WorldGenerator {
 
 	protected boolean isOutside() {
 		return Math.abs(x) + Math.abs(z) > width + 4;
+	}
+
+	private void spawnBas() {
+		EntityBas e = new EntityBas(world);
+		e.setPosition(origin.getX() + 0.5, origin.getY() + walkwayHeight + 1, origin.getZ() + 0.5);
+		world.spawnEntityInWorld(e);
 	}
 
 }

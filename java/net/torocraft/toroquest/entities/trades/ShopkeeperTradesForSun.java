@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.torocraft.toroquest.civilization.ReputationLevel;
+import net.torocraft.toroquest.item.ItemToroLeather;
+import net.torocraft.toroquest.item.armor.ItemSamuraiArmor;
 
 public class ShopkeeperTradesForSun {
 	public static MerchantRecipeList trades(EntityPlayer player, ReputationLevel rep) {
@@ -31,7 +33,10 @@ public class ShopkeeperTradesForSun {
 		}
 		
 		if (rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
-
+			recipeList.add(new MerchantRecipe(new ItemStack(ItemToroLeather.INSTANCE, 5), new ItemStack(Items.EMERALD, 5), new ItemStack(ItemSamuraiArmor.helmetItem)));
+			recipeList.add(new MerchantRecipe(new ItemStack(ItemToroLeather.INSTANCE, 7), new ItemStack(Items.EMERALD, 5), new ItemStack(ItemSamuraiArmor.leggingsItem)));
+			recipeList.add(new MerchantRecipe(new ItemStack(ItemToroLeather.INSTANCE, 4), new ItemStack(Items.EMERALD, 5), new ItemStack(ItemSamuraiArmor.bootsItem)));
+			recipeList.add(new MerchantRecipe(new ItemStack(ItemToroLeather.INSTANCE, 8), new ItemStack(Items.EMERALD, 5), new ItemStack(ItemSamuraiArmor.chestplateItem)));
 		}
 
 		if (rep.equals(ReputationLevel.HERO)) {

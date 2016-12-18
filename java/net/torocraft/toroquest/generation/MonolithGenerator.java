@@ -152,11 +152,7 @@ public class MonolithGenerator extends WorldGenerator {
 					blockState = world.getBlockState(pos);
 
 					if (isLiquid(blockState)) {
-						pos = findSeafloor(world, pos);
-
-						if (pos == null) {
-							return null;
-						}
+						return null;
 					}
 
 					if (isGroundBlock(blockState)) {

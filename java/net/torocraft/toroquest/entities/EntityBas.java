@@ -14,11 +14,15 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityBoat;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -53,7 +57,15 @@ public class EntityBas extends EntitySkeleton {
 	}
 
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
-		this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.STONE_SWORD));
+		setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.STONE_SWORD));
+		setItemStackToSlot(EntityEquipmentSlot.HEAD, colorArmor(new ItemStack(Items.LEATHER_HELMET, 1), 0xb0b0b0));
+	}
+
+	protected ItemStack colorArmor(ItemStack stack, int color) {
+		ItemArmor armor = (ItemArmor) stack.getItem();
+		armor.setColor(stack, color);
+		stack.getTagCompound().setBoolean("Unbreakable", true);
+		return stack;
 	}
 
 	@Override
@@ -150,6 +162,39 @@ public class EntityBas extends EntitySkeleton {
 					this.setFire(8);
 				}
 			}
+		}
+
+	}
+
+	@Override
+	public void onDeath(DamageSource cause) {
+		super.onDeath(cause);
+		if (!worldObj.isRemote) {
+			dropLoot();
+		}
+	}
+
+	private void dropLoot() {
+		dropLootItem(Items.BONE, rand.nextInt(100));
+		dropLootItem(Items.ARROW, rand.nextInt(20));
+		dropLootItem(Items.DIAMOND, rand.nextInt(5));
+		dropLootItem(Items.EMERALD, rand.nextInt(10));
+		dropLootItem(Items.STICK, rand.nextInt(10));
+	}
+
+	private void dropLootItem(Item item, int amount) {
+		if (amount == 0) {
+			return;
+		}
+
+		for (int i = 0; i < amount; i++) {
+			ItemStack stack = new ItemStack(item);
+			EntityItem dropItem = new EntityItem(worldObj, posX, posY, posZ, stack.copy());
+			dropItem.setNoPickupDelay();
+			dropItem.motionY = rand.nextDouble();
+			dropItem.motionZ = rand.nextDouble() - 0.5d;
+			dropItem.motionX = rand.nextDouble() - 0.5d;
+			worldObj.spawnEntityInWorld(dropItem);
 		}
 
 	}

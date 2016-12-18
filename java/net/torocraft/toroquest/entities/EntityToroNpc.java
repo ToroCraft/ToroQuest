@@ -145,8 +145,6 @@ public class EntityToroNpc extends EntityCreature {
 			return;
 		}
 
-		System.out.println("pledgeAllegianceIfUnaffiliated() -> " + civ.civilization);
-
 		setCivilization(civ.civilization);
 	}
 

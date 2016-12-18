@@ -23,6 +23,7 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 
 	private TreeMap<Integer, TreeMap<Integer, Province>> provincesTreeMap = new TreeMap<Integer, TreeMap<Integer, Province>>();
 	private List<Province> provinces = new ArrayList<Province>();
+	private List<Structure> structures = new ArrayList<Structure>();
 
 	public CivilizationsWorldSaveData() {
 		super(DATA_NAME);
@@ -30,6 +31,31 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 
 	public CivilizationsWorldSaveData(String name) {
 		super(name);
+	}
+
+	@Override
+	public synchronized boolean canGenStructure(String type, int chunkX, int chunkZ) {
+
+		if (chunkX < 70 && chunkZ < 70) {
+			return false;
+		}
+
+		for (Structure s : structures) {
+			if (s.distanceSqFrom(chunkX, chunkZ) < 500) {
+				return false;
+			}
+			if (type.equals(s.type) && s.distanceSqFrom(chunkX, chunkZ) < 4000) {
+				return false;
+			}
+		}
+		
+		Structure newStructure = new Structure();
+		newStructure.type = type;
+		newStructure.chunkX = chunkX;
+		newStructure.chunkZ = chunkZ;
+		structures.add(newStructure);
+		
+		return true;
 	}
 
 	@Override
@@ -68,7 +94,6 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 	}
 
 	private Collection<Province> scan(int chunkX, int chunkZ) {
-		// return rangeQueryOnProvinces(chunkX, chunkZ);
 		return sequentialScan(chunkX, chunkZ);
 	}
 
@@ -103,7 +128,6 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 
 	@Override
 	public synchronized Province register(int chunkX, int chunkZ) {
-		// System.out.println("register [" + chunkX + "][" + chunkZ + "]");
 		Province province = atLocation(chunkX, chunkZ);
 
 		if (province != null) {
@@ -134,25 +158,15 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 	}
 
 	protected CivilizationType randomCivilizationType() {
-		// Random rand = new Random();
 		Random rand = world.rand;
 		return CivilizationType.values()[rand.nextInt(CivilizationType.values().length)];
 	}
 
 	private synchronized void updateExistingProvince(Province province, int chunkX, int chunkZ) {
 		province.addToBoundsAndRecenter(chunkX, chunkZ);
-		// System.out.println("UPDATED newX[" + chunkX + "] newZ[" + chunkZ + "]
-		// Province X[" + province.chunkX + "] Z[" + province.chunkZ + "] CIV["
-		// + province.civilization + "] AREA[" + province.area + "] x[" +
-		// province.xLength + "] z["
-		// + province.zLength + "]");
 	}
 
 	private synchronized void addProvinceToSaveData(Province province) {
-		// System.out.println("NEW Province X[" + province.chunkX + "] Z[" +
-		// province.chunkZ + "] CIV[" + province.civilization + "] AREA[" +
-		// province.area + "] x[" + province.xLength + "] z[" + province.zLength
-		// + "]");
 		provinces.add(province);
 		addProvinceToTreeMap(province);
 	}
@@ -177,6 +191,23 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 			province.readNBT(list.getCompoundTagAt(i));
 			addProvinceToSaveData(province);
 		}
+
+		NBTTagList slist = null;
+		try {
+			slist = (NBTTagList) t.getTag("structures");
+		} catch (Exception e) {
+
+		}
+		if (slist == null) {
+			slist = new NBTTagList();
+		}
+		for (int i = 0; i < slist.tagCount(); i++) {
+			System.out.println("Loading structure");
+			structures.clear();
+			Structure s = new Structure();
+			s.readNBT(slist.getCompoundTagAt(i));
+			structures.add(s);
+		}
 	}
 
 	@Override
@@ -185,7 +216,13 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 		for (Province p : provinces) {
 			list.appendTag(p.writeNBT());
 		}
+		NBTTagList slist = new NBTTagList();
+		for (Structure s : structures) {
+			System.out.println("Saving structure");
+			list.appendTag(s.writeNBT());
+		}
 		t.setTag("provinces", list);
+		t.setTag("structures", slist);
 		return t;
 	}
 

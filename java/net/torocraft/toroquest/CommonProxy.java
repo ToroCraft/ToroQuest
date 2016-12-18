@@ -9,9 +9,7 @@ import net.torocraft.toroquest.civilization.CivilizationGeneratorHandlers;
 import net.torocraft.toroquest.civilization.CivilizationHandlers;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.ToroQuestEntities;
-import net.torocraft.toroquest.generation.WorldGenBastionsLairPlacer;
-import net.torocraft.toroquest.generation.WorldGenMageTowerPlacer;
-import net.torocraft.toroquest.generation.WorldGenMonolithPlacer;
+import net.torocraft.toroquest.generation.WorldGenPlacer;
 import net.torocraft.toroquest.generation.village.VillageHandlerBarracks;
 import net.torocraft.toroquest.generation.village.VillageHandlerGuardTower;
 import net.torocraft.toroquest.generation.village.VillageHandlerKeep;
@@ -38,9 +36,8 @@ public class CommonProxy {
 		PlayerCivilizationCapabilityImpl.register();
 		ToroQuestItems.init();
 		ToroQuestBlocks.init();
-		WorldGenMageTowerPlacer.init();
-		WorldGenMonolithPlacer.init();
-		WorldGenBastionsLairPlacer.init();
+		int seedOffset = 1;
+		WorldGenPlacer.init();
 		ToroQuestEntities.init();
 	}
 

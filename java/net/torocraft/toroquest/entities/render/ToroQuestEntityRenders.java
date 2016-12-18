@@ -13,13 +13,13 @@ import net.torocraft.toroquest.entities.EntitySentry;
 import net.torocraft.toroquest.entities.EntityShopkeeper;
 import net.torocraft.toroquest.entities.EntityToro;
 import net.torocraft.toroquest.entities.EntityVampireBat;
+import net.torocraft.toroquest.entities.EntityVillageLord;
 
 public class ToroQuestEntityRenders {
 
 	public static void init() {
 		registerMageRenderer();
 		registerMonolithEyeRenderer();
-		registerSentryRenderer();
 		EntityToro.registerRenders();
 		EntityGuard.registerRenders();
 		EntityShopkeeper.registerRenders();
@@ -27,6 +27,7 @@ public class ToroQuestEntityRenders {
 		EntityVampireBat.registerRenders();
 		EntitySentry.registerRenders();
 		EntityRainbowGuard.registerRenders();
+		EntityVillageLord.registerRenders();
 	}
 	
 	public static void registerMageRenderer() {
@@ -47,12 +48,4 @@ public class ToroQuestEntityRenders {
 		});
 	}
 	
-	public static void registerSentryRenderer() {
-		RenderingRegistry.registerEntityRenderingHandler(EntitySentry.class, new IRenderFactory<EntitySentry>() {
-			@Override 
-			public Render<EntitySentry> createRenderFor(RenderManager manager) { 
-				return new RenderSentry(manager); 
-			}
-		});
-	}
 }

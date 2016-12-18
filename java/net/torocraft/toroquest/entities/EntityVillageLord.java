@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIPanic;
@@ -12,6 +13,7 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DifficultyInstance;
@@ -20,6 +22,8 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.civilization.CivilizationType;
+import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.render.RenderVillageLord;
 import net.torocraft.toroquest.item.armor.ItemRoyalArmor;
 
@@ -51,7 +55,6 @@ public class EntityVillageLord extends EntityToroNpc {
 		});
 	}
 
-
 	public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
 		System.out.println("process Interact");
 		return false;
@@ -64,7 +67,6 @@ public class EntityVillageLord extends EntityToroNpc {
 		tasks.addTask(8, new EntityAILookIdle(this));
 	}
 
-	
 	@Nullable
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
 		livingdata = super.onInitialSpawn(difficulty, livingdata);
@@ -80,5 +82,34 @@ public class EntityVillageLord extends EntityToroNpc {
 		setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ItemRoyalArmor.chestplateItem, 1));
 	}
 
+	public boolean attackEntityFrom(DamageSource source, float amount) {
+		if (this.isEntityInvulnerable(source)) {
+			return false;
+		}
+
+		dropRepTo(source.getEntity());
+
+		return super.attackEntityFrom(source, amount);
+	}
+
+	private void dropRepTo(Entity entity) {
+		if (entity == null) {
+			return;
+		}
+
+		if (!(entity instanceof EntityPlayer)) {
+			return;
+		}
+
+		EntityPlayer player = (EntityPlayer) entity;
+
+		CivilizationType civ = getCivilization();
+		if (civ == null) {
+			return;
+		}
+
+		PlayerCivilizationCapabilityImpl.get(player).adjustPlayerReputation(civ, -5);
+	}
 	
+
 }

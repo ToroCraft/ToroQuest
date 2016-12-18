@@ -14,6 +14,7 @@ import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityShulker;
 import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -260,6 +261,10 @@ public class CivilizationHandlers {
 			} else {
 				return 10;
 			}
+		}
+		
+		if (victim instanceof EntityBat) {
+			return 0;
 		}
 
 		return -1;

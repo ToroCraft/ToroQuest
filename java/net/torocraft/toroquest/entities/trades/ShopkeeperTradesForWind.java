@@ -19,20 +19,22 @@ public class ShopkeeperTradesForWind {
 			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(15)), level1Bow()));
 			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(30)), level2Bow()));
 
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(30)), level1Boots()));
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(30)), level2Boots()));
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(30)), level3Boots()));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(5)), level1Boots()));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(10)), level2Boots()));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(20)), level3Boots()));
 			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(30)), level4Boots()));
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(30)), level5Boots()));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(40)), level5Boots()));
 		}
-		
+
 		if (rep.equals(ReputationLevel.FRIEND) || rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
-			
+
 		}
 
 		if (rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.STICK), ItemRoyalArmor.helmetItem));
-
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 5), new ItemStack(Items.EMERALD, 5), new ItemStack(ItemRoyalArmor.helmetItem)));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 7), new ItemStack(Items.EMERALD, 5), new ItemStack(ItemRoyalArmor.leggingsItem)));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 4), new ItemStack(Items.EMERALD, 5), new ItemStack(ItemRoyalArmor.bootsItem)));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 8), new ItemStack(Items.EMERALD, 5), new ItemStack(ItemRoyalArmor.chestplateItem)));
 		}
 
 		if (rep.equals(ReputationLevel.HERO)) {

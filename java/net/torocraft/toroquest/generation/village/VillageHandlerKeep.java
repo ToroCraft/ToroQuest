@@ -71,7 +71,12 @@ public class VillageHandlerKeep implements IVillageCreationHandler {
 		protected boolean specialBlockHandling(World world, String c, int x, int y, int z) {
 			List<String> entities = new ArrayList<String>();
 			entities.add("guard");
-			return specialHandlingForSpawner(world, "xx", c, x, y, z, entities);
+			specialHandlingForSpawner(world, "xx", c, x, y, z, entities);
+
+			List<String> villageLord = new ArrayList<String>();
+			villageLord.add("village_lord");
+			specialHandlingForSpawner(world, "xl", c, x, y, z, villageLord);
+			return true;
 		}
 
 		public VillagePieceKeep() {

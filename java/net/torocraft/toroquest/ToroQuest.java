@@ -8,7 +8,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.torocraft.toroquest.util.generation.ToroGenCommand;
 
 @Mod (modid = ToroQuest.MODID, name = ToroQuest.MODNAME, version = ToroQuest.VERSION)
 public class ToroQuest {
@@ -41,7 +40,7 @@ public class ToroQuest {
 	
 	@EventHandler
 	public void serverLoad(FMLServerStartingEvent e) {
-		e.registerServerCommand(new ToroGenCommand());
+		e.registerServerCommand(new ToroQuestCommand());
 	}
 	
 	

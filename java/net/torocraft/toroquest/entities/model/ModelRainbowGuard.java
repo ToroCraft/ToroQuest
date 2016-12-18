@@ -6,15 +6,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ModelSentry extends ModelBiped {
+public class ModelRainbowGuard extends ModelBiped {
+	public boolean atAttention;
 
-
-
-	public ModelSentry() {
+	public ModelRainbowGuard() {
 		this(0.0F, false);
 	}
 
-	public ModelSentry(float modelSize, boolean p_i1168_2_) {
+	public ModelRainbowGuard(float modelSize, boolean p_i1168_2_) {
 		super(modelSize, 0.0F, 64, p_i1168_2_ ? 32 : 64);
 	}
 
@@ -25,6 +24,12 @@ public class ModelSentry extends ModelBiped {
 	 * how "far" arms and legs can swing at most.
 	 */
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
+		if (atAttention) {
+			ageInTicks = 0;
+		}
 		super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
+		if (atAttention) {
+			bipedRightArm.rotateAngleX = -1f;
+		}
 	}
 }

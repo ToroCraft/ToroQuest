@@ -8,6 +8,7 @@ import net.torocraft.toroquest.entities.EntityBas;
 import net.torocraft.toroquest.entities.EntityGuard;
 import net.torocraft.toroquest.entities.EntityMage;
 import net.torocraft.toroquest.entities.EntityMonolithEye;
+import net.torocraft.toroquest.entities.EntityRainbowGuard;
 import net.torocraft.toroquest.entities.EntitySentry;
 import net.torocraft.toroquest.entities.EntityShopkeeper;
 import net.torocraft.toroquest.entities.EntityToro;
@@ -25,6 +26,7 @@ public class ToroQuestEntityRenders {
 		EntityBas.registerRenders();
 		EntityVampireBat.registerRenders();
 		EntitySentry.registerRenders();
+		EntityRainbowGuard.registerRenders();
 	}
 	
 	public static void registerMageRenderer() {

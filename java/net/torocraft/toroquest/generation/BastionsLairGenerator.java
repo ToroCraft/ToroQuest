@@ -3,13 +3,18 @@ package net.torocraft.toroquest.generation;
 import java.util.Random;
 
 import net.minecraft.block.BlockBush;
+import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
+import net.minecraft.world.storage.loot.LootTableList;
 import net.torocraft.toroquest.entities.EntityBas;
 
 public class BastionsLairGenerator extends WorldGenerator {
@@ -138,7 +143,11 @@ public class BastionsLairGenerator extends WorldGenerator {
 		} else if (isPlatform()) {
 
 			if (isPlatformUnderstructure()) {
-				block = Blocks.DIRT.getDefaultState();
+				if (isHiddenUnderPlatformChest()) {
+					block = Blocks.CHEST.getDefaultState();
+				} else {
+					block = Blocks.DIRT.getDefaultState();
+				}
 			} else if (isPlatformEdge()) {
 				block = Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.DIORITE_SMOOTH);
 			} else {
@@ -159,11 +168,49 @@ public class BastionsLairGenerator extends WorldGenerator {
 		} else if (isWalkwaySubstructure()) {
 			block = Blocks.DIRT.getDefaultState();
 
+		} else if (isLootChest()) {
+			block = randomChest();
 		} else {
 			block = Blocks.AIR.getDefaultState();
 		}
 
 		placeBlock();
+		addLootToChest();
+	}
+
+	protected boolean isHiddenUnderPlatformChest() {
+		return y == 1 && x == 0 && z == 0;
+	}
+
+	private IBlockState randomChest() {
+		int roll = rand.nextInt(4);
+		switch (roll) {
+		case 1:
+			return Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.NORTH);
+		case 2:
+			return Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH);
+		case 3:
+			return Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST);
+		default:
+			return Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST);
+		}
+	}
+
+	protected void addLootToChest() {
+		if (block == null) {
+			return;
+		}
+		if (block.getBlock() == Blocks.CHEST) {
+			System.out.println("found chest");
+			TileEntity tileentity = world.getTileEntity(origin.add(x, y, z));
+			if (tileentity instanceof TileEntityChest) {
+				((TileEntityChest) tileentity).setLootTable(LootTableList.CHESTS_END_CITY_TREASURE, world.rand.nextLong());
+			}
+		}
+	}
+
+	private boolean isLootChest() {
+		return y == 1 && rand.nextInt(400) == 0;
 	}
 
 	private boolean isPlatformUnderstructure() {
@@ -240,6 +287,7 @@ public class BastionsLairGenerator extends WorldGenerator {
 	private void spawnBas() {
 		EntityBas e = new EntityBas(world);
 		e.setPosition(origin.getX() + 0.5, origin.getY() + walkwayHeight + 1, origin.getZ() + 0.5);
+		e.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(e)), (IEntityLivingData) null);
 		world.spawnEntityInWorld(e);
 	}
 

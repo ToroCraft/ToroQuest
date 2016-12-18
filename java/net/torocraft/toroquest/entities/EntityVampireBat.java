@@ -66,8 +66,9 @@ public class EntityVampireBat extends EntityMob {
 	protected void initEntityAI() {
 		tasks.addTask(2, new EntityAIAttackMelee(this, 0.4D, false));
 		targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
-		targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
-		targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityAnimal.class, false));
+		targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityToroNpc.class, true));
+		targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
+		targetTasks.addTask(5, new EntityAINearestAttackableTarget(this, EntityAnimal.class, false));
 	}
 
 	/**

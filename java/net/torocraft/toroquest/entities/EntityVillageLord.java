@@ -1,10 +1,15 @@
 package net.torocraft.toroquest.entities;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
+
+import com.google.common.base.Predicate;
 
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIPanic;
@@ -16,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -89,6 +95,10 @@ public class EntityVillageLord extends EntityToroNpc {
 
 		dropRepTo(source.getEntity());
 
+		if (source.getEntity() instanceof EntityLivingBase) {
+			callForHelp((EntityLivingBase) source.getEntity());
+		}
+
 		return super.attackEntityFrom(source, amount);
 	}
 
@@ -110,6 +120,27 @@ public class EntityVillageLord extends EntityToroNpc {
 
 		PlayerCivilizationCapabilityImpl.get(player).adjustPlayerReputation(civ, -5);
 	}
-	
+
+	private void callForHelp(EntityLivingBase attacker) {
+		List<EntityToroNpc> help = worldObj.getEntitiesWithinAABB(EntityToroNpc.class, new AxisAlignedBB(getPosition()).expand(16, 6, 16), new Predicate<EntityToroNpc>() {
+			public boolean apply(@Nullable EntityToroNpc entity) {
+				if (!(entity instanceof EntityGuard || entity instanceof EntitySentry)) {
+					return false;
+				}
+
+				CivilizationType civ = entity.getCivilization();
+
+				if (civ == null) {
+					return false;
+				}
+
+				return civ.equals(EntityVillageLord.this.getCivilization());
+			}
+		});
+
+		for (EntityToroNpc entity : help) {
+			entity.setAttackTarget(attacker);
+		}
+	}
 
 }

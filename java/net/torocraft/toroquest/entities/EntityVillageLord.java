@@ -1,80 +1,146 @@
 package net.torocraft.toroquest.entities;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
-import io.netty.buffer.ByteBuf;
+import com.google.common.base.Predicate;
+
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAIPanic;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.scoreboard.Team;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.civilization.CivilizationType;
+import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
+import net.torocraft.toroquest.entities.render.RenderVillageLord;
+import net.torocraft.toroquest.item.armor.ItemRoyalArmor;
 
-public class EntityVillageLord extends EntityVillager implements IEntityAdditionalSpawnData {
+/*
+ * on damage, remove rep
+ * 
+ * 
+ * 
+ */
 
-	public static String NAME = "villageLord";
+public class EntityVillageLord extends EntityToroNpc {
+
+	public static String NAME = "village_lord";
 
 	public EntityVillageLord(World world) {
-		super(world);
-		this.setSize(0.6F, 1.95F);
+		super(world, null);
 	}
 
 	public static void init(int entityId) {
 		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityVillageLord.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0xeca58c, 0xba12c8);
 	}
 
+	public static void registerRenders() {
+		RenderingRegistry.registerEntityRenderingHandler(EntityVillageLord.class, new IRenderFactory<EntityVillageLord>() {
+			@Override
+			public Render<EntityVillageLord> createRenderFor(RenderManager manager) {
+				return new RenderVillageLord(manager);
+			}
+		});
+	}
+
 	public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+		System.out.println("process Interact");
 		return false;
 	}
 
-	@Override
-	public ITextComponent getDisplayName() {
-		Team team = this.getTeam();
-		String name = this.getCustomNameTag();
+	protected void initEntityAI() {
+		tasks.addTask(0, new EntityAISwimming(this));
+		tasks.addTask(1, new EntityAIPanic(this, 1.0D));
+		tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+		tasks.addTask(8, new EntityAILookIdle(this));
+	}
 
-		if (name == null || name.length() == 0) {
-			name = NAME;
+	@Nullable
+	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
+		livingdata = super.onInitialSpawn(difficulty, livingdata);
+		setCanPickUpLoot(false);
+		addArmor();
+		return livingdata;
+	}
+
+	protected void addArmor() {
+		setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ItemRoyalArmor.helmetItem, 1));
+		setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ItemRoyalArmor.bootsItem, 1));
+		setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ItemRoyalArmor.leggingsItem, 1));
+		setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ItemRoyalArmor.chestplateItem, 1));
+	}
+
+	public boolean attackEntityFrom(DamageSource source, float amount) {
+		if (this.isEntityInvulnerable(source)) {
+			return false;
 		}
 
-		TextComponentString textcomponentstring = new TextComponentString(ScorePlayerTeam.formatPlayerName(team, name));
-		textcomponentstring.getStyle().setHoverEvent(this.getHoverEvent());
-		textcomponentstring.getStyle().setInsertion(this.getCachedUniqueIdString());
-		return textcomponentstring;
-	}
-	
-	@Override
-	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata) {
-		IEntityLivingData data = super.onInitialSpawn(difficulty, livingdata);
-		return data;
-	}
-	
-	@Override
-	public void readEntityFromNBT(NBTTagCompound compound) {
-		
-	}
-	
-	@Override
-	public void writeEntityToNBT(NBTTagCompound compound) {
-		
+		dropRepTo(source.getEntity());
+
+		if (source.getEntity() instanceof EntityLivingBase) {
+			callForHelp((EntityLivingBase) source.getEntity());
+		}
+
+		return super.attackEntityFrom(source, amount);
 	}
 
-	@Override
-	public void writeSpawnData(ByteBuf buffer) {
-		
+	private void dropRepTo(Entity entity) {
+		if (entity == null) {
+			return;
+		}
+
+		if (!(entity instanceof EntityPlayer)) {
+			return;
+		}
+
+		EntityPlayer player = (EntityPlayer) entity;
+
+		CivilizationType civ = getCivilization();
+		if (civ == null) {
+			return;
+		}
+
+		PlayerCivilizationCapabilityImpl.get(player).adjustPlayerReputation(civ, -5);
 	}
 
-	@Override
-	public void readSpawnData(ByteBuf additionalData) {
-		
+	private void callForHelp(EntityLivingBase attacker) {
+		List<EntityToroNpc> help = worldObj.getEntitiesWithinAABB(EntityToroNpc.class, new AxisAlignedBB(getPosition()).expand(16, 6, 16), new Predicate<EntityToroNpc>() {
+			public boolean apply(@Nullable EntityToroNpc entity) {
+				if (!(entity instanceof EntityGuard || entity instanceof EntitySentry)) {
+					return false;
+				}
+
+				CivilizationType civ = entity.getCivilization();
+
+				if (civ == null) {
+					return false;
+				}
+
+				return civ.equals(EntityVillageLord.this.getCivilization());
+			}
+		});
+
+		for (EntityToroNpc entity : help) {
+			entity.setAttackTarget(attacker);
+		}
 	}
+
 }

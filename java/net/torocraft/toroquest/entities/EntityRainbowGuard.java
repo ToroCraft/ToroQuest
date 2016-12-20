@@ -27,6 +27,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -36,15 +37,35 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.entities.ai.EntityAIStayCentered;
 import net.torocraft.toroquest.entities.render.RenderRainbowGuard;
 
 public class EntityRainbowGuard extends EntityMob {
 
 	public static String NAME = "rainbow_guard";
-	public final static int[] COLORS = { 0xff0000, 0xff9900, 0xffff00, 0x00ff00, 0x0000ff, 0x800080 };
+	public static enum COLOR {
+		RED(10040115),
+		ORANGE(0xff9900),
+		YELLOW(0xffff00),
+		GREEN(6717235),
+		BLUE(3361970),
+		PURPLE(8339378);
+		
+		private int color;
+		
+		private COLOR (int color) {
+			this.color = color;
+		}
+		
+		public int getColor() {
+			return color;
+		}
+	}
+	private final COLOR color;
 
 	private static final DataParameter<Boolean> AT_ATTENTION = EntityDataManager.<Boolean>createKey(EntityRainbowGuard.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<BlockPos> LOOK_AT = EntityDataManager.<BlockPos>createKey(EntityRainbowGuard.class, DataSerializers.BLOCK_POS);
+	
 	// TODO: add new data parameter for color when we stop using armor
 
 	public static void init(int entityId) {
@@ -59,15 +80,21 @@ public class EntityRainbowGuard extends EntityMob {
 			}
 		});
 	}
-
+	
 	public EntityRainbowGuard(World world) {
 		super(world);
+		this.color = COLOR.RED;
+	}
+
+	public EntityRainbowGuard(World world, COLOR color) {
+		super(world);
+		this.color = color;
 	}
 
 	protected void entityInit() {
 		super.entityInit();
 		this.dataManager.register(AT_ATTENTION, Boolean.valueOf(true));
-		this.dataManager.register(LOOK_AT, getPosition().add(100, 0, 0));
+		this.dataManager.register(LOOK_AT, getPosition().add(4, 0, 0));
 		this.setLeftHanded(false);
 	}
 
@@ -94,7 +121,7 @@ public class EntityRainbowGuard extends EntityMob {
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
 		livingdata = super.onInitialSpawn(difficulty, livingdata);
 
-		setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.GOLDEN_SWORD));
+		setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.GOLDEN_SWORD, 1));
 		setCanPickUpLoot(false);
 		addArmor();
 		return livingdata;
@@ -102,7 +129,7 @@ public class EntityRainbowGuard extends EntityMob {
 
 	protected void addArmor() {
 
-		int color = COLORS[worldObj.rand.nextInt(COLORS.length)];
+		int color = this.color.getColor();
 
 		setItemStackToSlot(EntityEquipmentSlot.HEAD, colorArmor(new ItemStack(Items.LEATHER_HELMET, 1), color));
 		setItemStackToSlot(EntityEquipmentSlot.FEET, colorArmor(new ItemStack(Items.LEATHER_BOOTS, 1), color));
@@ -135,22 +162,34 @@ public class EntityRainbowGuard extends EntityMob {
 
 	protected void ai() {
 		tasks.addTask(1, new EntityAISwimming(this));
-		tasks.addTask(2, new EntityAIAtAttention(this));
-		tasks.addTask(3, new EntityAIAttackMelee(this, 0.5D, false));
-		tasks.addTask(4, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-		tasks.addTask(4, new EntityAILookIdle(this));
+		tasks.addTask(3, new EntityAIAtAttention(this));
+		tasks.addTask(3, new EntityAIStayCentered(this));
+		tasks.addTask(4, new EntityAIAttackMelee(this, 0.5D, false));
+		tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+		tasks.addTask(5, new EntityAILookIdle(this));
 		targetTasks.addTask(1, new EntityAIHurtByTarget(this, false, new Class[0]));
 		targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
 	}
 
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		wakeIfPlayerIsClose();
+		List<EntityRainbowGuard> nearbyRainbowGuards = worldObj.getEntitiesWithinAABB(EntityRainbowGuard.class, getEntityBoundingBox().expand(5.0D, 4.0D, 2.0D));
+		if (nearbyRainbowGuards != null && !nearbyRainbowGuards.isEmpty()) {
+			setLookAt(nearbyRainbowGuards.get(0).getPosition());
+		} else {
+			setLookAt(getPosition().add(4, 0, 0));
+		}
+		wakeIfPlayerIsClose(true);
 	}
 
 	private static final int WAKE_DIAMETER = 8;
 
-	private void wakeIfPlayerIsClose() {
+	// to be called by partner's waking function
+	public void wokenByPartner() {
+		wakeIfPlayerIsClose(false);
+	}
+	
+	private void wakeIfPlayerIsClose(boolean wakePartner) {
 		if (worldObj.getTotalWorldTime() % 30 != 0 || !isAtAttention()) {
 			return;
 		}
@@ -162,9 +201,15 @@ public class EntityRainbowGuard extends EntityMob {
 			return;
 		}
 
-		// TODO wake partner
+		if (wakePartner) {
+			List<EntityRainbowGuard> nearbyRainbowGuards = worldObj.getEntitiesWithinAABB(EntityRainbowGuard.class, getEntityBoundingBox().expand(5.0D, 4.0D, 2.0D));
+			if (nearbyRainbowGuards != null && !nearbyRainbowGuards.isEmpty()) {
+				nearbyRainbowGuards.get(0).wokenByPartner();
+			}
+		}
 
 		setAtAttention(false);
+		tasks.removeTask(new EntityAIStayCentered(this));
 
 		setAttackTarget(players.get(worldObj.rand.nextInt(players.size())));
 	}
@@ -214,7 +259,7 @@ public class EntityRainbowGuard extends EntityMob {
 		 * Updates the task
 		 */
 		public void updateTask() {
-			entity.getLookHelper().setLookPosition(getLookAt().getX(), getLookAt().getY(), getLookAt().getZ(), (float) entity.getHorizontalFaceSpeed(), (float) this.entity.getVerticalFaceSpeed());
+			entity.getLookHelper().setLookPosition(getLookAt().getX(), getLookAt().getY(), getLookAt().getZ(), (float) entity.getHorizontalFaceSpeed(), 0.0f);
 		}
 	}
 

@@ -49,6 +49,7 @@ import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityI
 import net.torocraft.toroquest.entities.EntitySentry;
 import net.torocraft.toroquest.entities.EntityToroNpc;
 import net.torocraft.toroquest.entities.EntityVampireBat;
+import net.torocraft.toroquest.entities.EntityVillageLord;
 import net.torocraft.toroquest.util.TaskRunner;
 
 public class CivilizationHandlers {
@@ -253,15 +254,21 @@ public class CivilizationHandlers {
 		if (victim instanceof EntityToroNpc) {
 			CivilizationType npcCiv = ((EntityToroNpc) victim).getCivilization();
 
+			int amount = 0;
+
 			if (npcCiv == null) {
-				return -1;
+				amount = -1;
+			} else if (npcCiv.equals(province.civilization)) {
+				amount = -10;
+			} else {
+				amount = 10;
 			}
 
-			if (npcCiv.equals(province.civilization)) {
-				return -10;
-			} else {
-				return 10;
+			if (victim instanceof EntityVillageLord) {
+				amount *= 10;
 			}
+
+			return amount;
 		}
 		
 		if (victim instanceof EntityBat) {

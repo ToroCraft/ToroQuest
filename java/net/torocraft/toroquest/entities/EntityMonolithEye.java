@@ -38,7 +38,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.torocraft.toroquest.ToroQuest;
-import net.torocraft.toroquest.entities.ai.EntityAIMonolithStackCentered;
+import net.torocraft.toroquest.entities.ai.EntityAIStayCentered;
 
 public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 
@@ -87,7 +87,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 	}
 
 	protected void initEntityAI() {
-		tasks.addTask(1, new EntityAIMonolithStackCentered(this));
+		tasks.addTask(1, new EntityAIStayCentered(this));
 		tasks.addTask(4, new AIAttack(this));
 		tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 20.0F));
 		targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityLivingBase.class, 10, true, false, new MonolithEyeTargetSelector(this)));

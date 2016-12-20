@@ -14,6 +14,7 @@ item.toro_armor_boots.name=Toro Boots
 item.toro_armor_helmet.name=Toro Helmet
 item.toro_armor_leggings.name=Toro Leggings
 item.toro_armor_chestplate.name=Toro Chestplate
+item.toro_leather.name=Toro Leather
 item.torch_arrow.name=Torch Arrow
 
 entity.toroquest.monolitheye.name=Overseer
@@ -42,6 +43,9 @@ entity.bas.name=Lord Bastion
 
 entity.toroquest.sentry.name=Sentry
 entity.sentry.name=Sentry
+
+entity.toroquest.rainbow_guard.name=Rainbow Guardsman
+entity.rainbow_guard.name=Rainbow Guardsman
 
 civilization.earth.name=Terra
 civilization.wind.name=Gustaberg

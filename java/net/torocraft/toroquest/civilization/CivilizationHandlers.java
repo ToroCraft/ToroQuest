@@ -6,6 +6,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockCrops;
+import net.minecraft.block.BlockStem;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
@@ -48,6 +49,7 @@ import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityI
 import net.torocraft.toroquest.entities.EntitySentry;
 import net.torocraft.toroquest.entities.EntityToroNpc;
 import net.torocraft.toroquest.entities.EntityVampireBat;
+import net.torocraft.toroquest.entities.EntityVillageLord;
 import net.torocraft.toroquest.util.TaskRunner;
 
 public class CivilizationHandlers {
@@ -252,15 +254,21 @@ public class CivilizationHandlers {
 		if (victim instanceof EntityToroNpc) {
 			CivilizationType npcCiv = ((EntityToroNpc) victim).getCivilization();
 
+			int amount = 0;
+
 			if (npcCiv == null) {
-				return -1;
+				amount = -1;
+			} else if (npcCiv.equals(province.civilization)) {
+				amount = -10;
+			} else {
+				amount = 10;
 			}
 
-			if (npcCiv.equals(province.civilization)) {
-				return -10;
-			} else {
-				return 10;
+			if (victim instanceof EntityVillageLord) {
+				amount *= 10;
 			}
+
+			return amount;
 		}
 		
 		if (victim instanceof EntityBat) {
@@ -337,12 +345,11 @@ public class CivilizationHandlers {
 			return;
 		}
 
-		if (event.getPlacedBlock().getBlock() instanceof BlockCrops) {
-
+		if (isCrop(event.getState().getBlock())) {
 			/*
 			 * if using bone meal, only give positive reputation 20% of the time
 			 */
-			if (event.getBlockSnapshot().getReplacedBlock().getBlock() instanceof BlockCrops) {
+			if (isCrop(event.getBlockSnapshot().getReplacedBlock().getBlock())) {
 				if (event.getWorld().rand.nextInt(100) > 20) {
 					return;
 				}
@@ -355,7 +362,7 @@ public class CivilizationHandlers {
 
 	@SubscribeEvent
 	public void harvestDrops(HarvestDropsEvent event) {
-		if (event.getState().getBlock() instanceof BlockCrops) {
+		if (isCrop(event.getState().getBlock())) {
 			BlockPos pos = event.getPos();
 			AxisAlignedBB bb = new AxisAlignedBB(pos);
 			List<EntityPlayer> players = event.getWorld().getEntitiesWithinAABB(EntityPlayer.class, bb);
@@ -373,10 +380,14 @@ public class CivilizationHandlers {
 			return;
 		}
 
-		if (event.getState().getBlock() instanceof BlockCrops) {
+		if (isCrop(event.getState().getBlock())) {
 			BlockPos pos = event.getPos();
 			adjustPlayerRep(event.getPlayer(), pos.getX() / 16, pos.getZ() / 16, -1);
 		}
+	}
+
+	protected boolean isCrop(Block block) {
+		return block instanceof BlockCrops || block instanceof BlockStem;
 	}
 
 	private int randomSpawnDistance(Random rand) {

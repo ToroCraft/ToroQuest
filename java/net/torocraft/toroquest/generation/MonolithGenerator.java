@@ -152,11 +152,7 @@ public class MonolithGenerator extends WorldGenerator {
 					blockState = world.getBlockState(pos);
 
 					if (isLiquid(blockState)) {
-						pos = findSeafloor(world, pos);
-
-						if (pos == null) {
-							return null;
-						}
+						return null;
 					}
 
 					if (isGroundBlock(blockState)) {
@@ -218,45 +214,15 @@ public class MonolithGenerator extends WorldGenerator {
 	}
 
 	private void placeMonolith(World world, Random rand, BlockPos pos) {
-		int radiusSquared = monolithRadius * monolithRadius;
-		int innerRadiusSquared = 0;
-		int monolithRealHeight = monolithHeight + underseaHeight;
-
-		for (int y = 0; y < monolithRealHeight; y++) {
-			for (int x = -monolithRadius; x <= monolithRadius; x++) {
-				for (int z = -monolithRadius; z <= monolithRadius; z++) {
-					if ((x * x + z * z) <= radiusSquared) {
-						placeMonolithBlock(world, rand, pos, radiusSquared, innerRadiusSquared, y, x, z, getObsidianBlock());
-					}
-				}
-			}
+		pos = new BlockPos(pos.getX(), pos.getY() + monolithHeight - 1, pos.getZ());
+		while (pos.getY() > 16) {
+			setBlockAndNotifyAdequately(world, pos, Blocks.OBSIDIAN.getDefaultState());
+			pos = pos.down();
 		}
-	}
-
-	private void placeEye(World world, Random rand, BlockPos pos) {
-		int radiusSquared = eyeRadius * eyeRadius;
-		int innerRadiusSquared = 0;
-		int monolithRealHeight = monolithHeight + underseaHeight;
-
-		for (int y = monolithRealHeight + eyeFloatHeight; y <= monolithRealHeight + eyeHeight + eyeFloatHeight; y++) {
-			for (int x = -eyeRadius; x <= eyeRadius; x++) {
-				for (int z = -eyeRadius; z <= eyeRadius; z++) {
-					placeMonolithBlock(world, rand, pos, radiusSquared, innerRadiusSquared, y, x, z, getEyeBlock());
-				}
-			}
-		}
-
 	}
 
 	public static void placeBlock(World world, BlockPos pos, net.minecraft.block.Block block) {
 		world.setBlockState(pos, block.getDefaultState());
 	}
 
-	private void placeMonolithBlock(World world, Random rand, BlockPos pos, int radiusSquared, int innerRadiusSquared, int y, int x, int z, IBlockState block) {
-
-		if (block != null) {
-			BlockPos placementPos = pos.add(x, y, z);
-			setBlockAndNotifyAdequately(world, placementPos, block);
-		}
-	}
 }

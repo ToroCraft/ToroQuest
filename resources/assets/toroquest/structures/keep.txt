@@ -95,7 +95,7 @@ Cs----l>CsGpCsCsGpCsl<----Cs
 Cs----------xx------------Cs
 SbCsCs----------------CsCsSb
     Cs----------------Cs
-    Cs----------------Cs
+    Cs------xl--------Cs
 SbCsCs----------------CsCsSb
 Cs------------------------Cs
 Cs----l>CsGpCsCsGpCsl<----Cs

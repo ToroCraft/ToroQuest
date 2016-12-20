@@ -20,6 +20,7 @@ import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAITempt;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityTameable;
@@ -38,13 +39,13 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.entities.model.ModelToro;
 import net.torocraft.toroquest.entities.render.RenderToro;
+import net.torocraft.toroquest.item.ItemToroLeather;
 
 public class EntityToro extends EntityTameable implements IMob {
 
@@ -219,11 +220,6 @@ public class EntityToro extends EntityTameable implements IMob {
 		return 0.4F;
 	}
 
-	@Nullable
-	protected ResourceLocation getLootTable() {
-		return LootTableList.ENTITIES_COW;
-	}
-
 	public EntityCow createChild(EntityAgeable ageable) {
 		return new EntityCow(this.worldObj);
 	}
@@ -242,5 +238,35 @@ public class EntityToro extends EntityTameable implements IMob {
 			return 1.5 + attackTarget.width;
 		}
 
+	}
+
+	@Override
+	public void onDeath(DamageSource cause) {
+		super.onDeath(cause);
+		if (!worldObj.isRemote) {
+			dropLoot();
+		}
+	}
+
+	private void dropLoot() {
+		dropBeef();
+		dropLeather();
+	}
+
+	protected void dropBeef() {
+		ItemStack stack = new ItemStack(Items.BEEF, rand.nextInt(3) + 2);
+		EntityItem dropItem = new EntityItem(worldObj, posX, posY, posZ, stack.copy());
+		worldObj.spawnEntityInWorld(dropItem);
+	}
+
+	protected void dropLeather() {
+		ItemStack stack = new ItemStack(ItemToroLeather.INSTANCE, 1);
+		EntityItem dropItem = new EntityItem(worldObj, posX, posY, posZ, stack.copy());
+		worldObj.spawnEntityInWorld(dropItem);
+	}
+
+	@Nullable
+	protected ResourceLocation getLootTable() {
+		return null;
 	}
 }

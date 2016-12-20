@@ -201,7 +201,6 @@ public class BastionsLairGenerator extends WorldGenerator {
 			return;
 		}
 		if (block.getBlock() == Blocks.CHEST) {
-			System.out.println("found chest");
 			TileEntity tileentity = world.getTileEntity(origin.add(x, y, z));
 			if (tileentity instanceof TileEntityChest) {
 				((TileEntityChest) tileentity).setLootTable(LootTableList.CHESTS_END_CITY_TREASURE, world.rand.nextLong());

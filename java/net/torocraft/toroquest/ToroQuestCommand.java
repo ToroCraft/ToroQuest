@@ -15,6 +15,7 @@ import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.generation.BastionsLairGenerator;
 import net.torocraft.toroquest.generation.MageTowerGenerator;
+import net.torocraft.toroquest.generation.MonolithGenerator;
 import net.torocraft.toroquest.generation.ThroneRoomGenerator;
 
 public class ToroQuestCommand extends CommandBase {
@@ -102,6 +103,11 @@ public class ToroQuestCommand extends CommandBase {
 			return;
 		}
 
+		if ("monolith".equals(structure)) {
+			new MonolithGenerator().generate(player.getEntityWorld(), player.getEntityWorld().rand, player.getPosition());
+			return;
+		}
+
 		throw new WrongUsageException("commands.tq.usage", new Object[0]);
 	}
 
@@ -129,6 +135,7 @@ public class ToroQuestCommand extends CommandBase {
 				tabOptions.add("throne_room");
 				tabOptions.add("mage_tower");
 				tabOptions.add("bastions_lair");
+				tabOptions.add("monolith");
 			}
 		}
 		return tabOptions;

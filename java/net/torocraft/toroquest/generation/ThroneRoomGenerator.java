@@ -9,12 +9,15 @@ import net.minecraft.block.BlockStoneSlab;
 import net.minecraft.block.BlockStoneSlab.EnumType;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
+import net.torocraft.toroquest.entities.EntityRainbowGuard;
+import net.torocraft.toroquest.entities.EntityRainbowGuard.COLOR;
 
 public class ThroneRoomGenerator extends WorldGenerator {	
 
@@ -38,10 +41,10 @@ public class ThroneRoomGenerator extends WorldGenerator {
 	private int height = 16;
 	
 	@Override
-	public boolean generate(World worldIn, Random rand, BlockPos position) {
-		buildThroneRoom(worldIn, rand, position);
+	public boolean generate(World worldIn, Random rand, BlockPos origin) {
+		buildThroneRoom(worldIn, rand, origin);
 		spawnKing();
-		spawnRainbowGuard();
+		spawnRainbowGuard(worldIn, origin);
 		return true;
 	}
 
@@ -315,9 +318,82 @@ public class ThroneRoomGenerator extends WorldGenerator {
 		
 	}
 
-	private void spawnRainbowGuard() {
-		// TODO Auto-generated method stub
+	private void spawnRainbowGuard(World world, BlockPos origin) {
+		/*
+		 * EntityMage e = new EntityMage(world);
+		e.setPosition(pos.getX() + 3, pos.getY() + (floors * floorHieght) + 1, pos.getZ() + 3);
+		world.spawnEntityInWorld(e);
+		 */
 		
+		
+		
+		EntityRainbowGuard red1 = new EntityRainbowGuard(world, COLOR.RED);
+		BlockPos spawnPos = origin.add(13, 2, 10.7);
+		red1.setPosition(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+		red1.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(red1)), (IEntityLivingData) null);
+		EntityRainbowGuard red2 = new EntityRainbowGuard(world, COLOR.RED);
+		spawnPos = origin.add(17, 2, 10);
+		red2.setPosition(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+		red2.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(red1)), (IEntityLivingData) null);
+		
+		EntityRainbowGuard orange1 = new EntityRainbowGuard(world, COLOR.ORANGE);
+		spawnPos = origin.add(13, 2, 22);
+		orange1.setPosition(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+		orange1.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(red1)), (IEntityLivingData) null);
+		EntityRainbowGuard orange2 = new EntityRainbowGuard(world, COLOR.ORANGE);
+		spawnPos = origin.add(17, 2, 22);
+		orange2.setPosition(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+		orange2.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(red1)), (IEntityLivingData) null);
+		
+		EntityRainbowGuard yellow1 = new EntityRainbowGuard(world, COLOR.YELLOW);
+		spawnPos = origin.add(13, 2, 34);
+		yellow1.setPosition(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+		yellow1.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(red1)), (IEntityLivingData) null);
+		EntityRainbowGuard yellow2 = new EntityRainbowGuard(world, COLOR.YELLOW);
+		spawnPos = origin.add(17, 2, 34);
+		yellow2.setPosition(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+		yellow2.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(red1)), (IEntityLivingData) null);
+		
+		EntityRainbowGuard green1 = new EntityRainbowGuard(world, COLOR.GREEN);
+		spawnPos = origin.add(13, 2, 46);
+		green1.setPosition(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+		green1.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(red1)), (IEntityLivingData) null);
+		EntityRainbowGuard green2 = new EntityRainbowGuard(world, COLOR.GREEN);
+		spawnPos = origin.add(17, 2, 46);
+		green2.setPosition(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+		green2.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(red1)), (IEntityLivingData) null);
+		
+		EntityRainbowGuard blue1 = new EntityRainbowGuard(world, COLOR.BLUE);
+		spawnPos = origin.add(13, 2, 58);
+		blue1.setPosition(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+		blue1.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(red1)), (IEntityLivingData) null);
+		EntityRainbowGuard blue2 = new EntityRainbowGuard(world, COLOR.BLUE);
+		spawnPos = origin.add(17, 2, 58);
+		blue2.setPosition(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+		blue2.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(red1)), (IEntityLivingData) null);
+		
+		EntityRainbowGuard purple1 = new EntityRainbowGuard(world, COLOR.PURPLE);
+		spawnPos = origin.add(13, 2, 70);
+		purple1.setPosition(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+		purple1.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(red1)), (IEntityLivingData) null);
+		EntityRainbowGuard purple2 = new EntityRainbowGuard(world, COLOR.PURPLE);
+		spawnPos = origin.add(17, 2, 70);
+		purple2.setPosition(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+		purple2.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(red1)), (IEntityLivingData) null);
+		
+		
+		world.spawnEntityInWorld(red1);
+		world.spawnEntityInWorld(red2);
+		world.spawnEntityInWorld(orange1);
+		world.spawnEntityInWorld(orange2);
+		world.spawnEntityInWorld(yellow1);
+		world.spawnEntityInWorld(yellow2);
+		world.spawnEntityInWorld(green1);
+		world.spawnEntityInWorld(green2);
+		world.spawnEntityInWorld(blue1);
+		world.spawnEntityInWorld(blue2);
+		world.spawnEntityInWorld(purple1);
+		world.spawnEntityInWorld(purple2);
 	}
 
 }

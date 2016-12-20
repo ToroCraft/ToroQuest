@@ -4,6 +4,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.torocraft.toroquest.block.ToroQuestBlocks;
 import net.torocraft.toroquest.civilization.CivilizationGeneratorHandlers;
 import net.torocraft.toroquest.civilization.CivilizationHandlers;
@@ -15,6 +16,7 @@ import net.torocraft.toroquest.generation.village.VillageHandlerGuardTower;
 import net.torocraft.toroquest.generation.village.VillageHandlerKeep;
 import net.torocraft.toroquest.generation.village.VillageHandlerShop;
 import net.torocraft.toroquest.generation.village.VillageHandlerTrophy;
+import net.torocraft.toroquest.gui.VillageLordGuiHandler;
 import net.torocraft.toroquest.item.ToroQuestItems;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 
@@ -30,6 +32,7 @@ public class CommonProxy {
 		VillageHandlerGuardTower.init();
 		VillageHandlerBarracks.init();
 		ToroQuestPacketHandler.init();
+		NetworkRegistry.INSTANCE.registerGuiHandler(ToroQuest.INSTANCE, new VillageLordGuiHandler());
 	}
 
 	public void init(FMLInitializationEvent e) {

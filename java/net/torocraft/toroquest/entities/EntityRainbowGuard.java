@@ -43,33 +43,30 @@ import net.torocraft.toroquest.entities.render.RenderRainbowGuard;
 public class EntityRainbowGuard extends EntityMob {
 
 	public static String NAME = "rainbow_guard";
-	public static enum COLOR {
-		RED(10040115),
-		ORANGE(0xff9900),
-		YELLOW(0xffff00),
-		GREEN(6717235),
-		BLUE(3361970),
-		PURPLE(8339378);
-		
+
+	public static enum Color {
+		RED(10040115), ORANGE(0xff9900), YELLOW(0xffff00), GREEN(6717235), BLUE(3361970), PURPLE(8339378);
+
 		private int color;
-		
-		private COLOR (int color) {
+
+		private Color(int color) {
 			this.color = color;
 		}
-		
+
 		public int getColor() {
 			return color;
 		}
 	}
-	private final COLOR color;
+
+	private Color color = Color.RED;
 
 	private static final DataParameter<Boolean> AT_ATTENTION = EntityDataManager.<Boolean>createKey(EntityRainbowGuard.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<BlockPos> LOOK_AT = EntityDataManager.<BlockPos>createKey(EntityRainbowGuard.class, DataSerializers.BLOCK_POS);
-	
+
 	// TODO: add new data parameter for color when we stop using armor
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityRainbowGuard.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0xffffff, 0x909090);
+		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityRainbowGuard.class, NAME, entityId, ToroQuest.INSTANCE, 90, 2, true, 0xffffff, 0x909090);
 	}
 
 	public static void registerRenders() {
@@ -80,22 +77,16 @@ public class EntityRainbowGuard extends EntityMob {
 			}
 		});
 	}
-	
+
 	public EntityRainbowGuard(World world) {
 		super(world);
-		this.color = COLOR.RED;
-	}
-
-	public EntityRainbowGuard(World world, COLOR color) {
-		super(world);
-		this.color = color;
 	}
 
 	protected void entityInit() {
 		super.entityInit();
-		this.dataManager.register(AT_ATTENTION, Boolean.valueOf(true));
-		this.dataManager.register(LOOK_AT, getPosition().add(4, 0, 0));
-		this.setLeftHanded(false);
+		setLeftHanded(false);
+		dataManager.register(AT_ATTENTION, Boolean.valueOf(true));
+		dataManager.register(LOOK_AT, getPosition());
 	}
 
 	public boolean isAtAttention() {
@@ -106,12 +97,16 @@ public class EntityRainbowGuard extends EntityMob {
 		dataManager.set(AT_ATTENTION, Boolean.valueOf(b));
 	}
 
-	private void setLookAt(BlockPos pos) {
+	public void setLookAt(BlockPos pos) {
 		dataManager.set(LOOK_AT, pos.add(0, getEyeHeight(), 0));
 	}
 
 	private BlockPos getLookAt() {
 		return dataManager.get(LOOK_AT);
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
 	}
 
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
@@ -120,7 +115,7 @@ public class EntityRainbowGuard extends EntityMob {
 
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
 		livingdata = super.onInitialSpawn(difficulty, livingdata);
-
+		setLeftHanded(false);
 		setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.GOLDEN_SWORD, 1));
 		setCanPickUpLoot(false);
 		addArmor();
@@ -128,26 +123,21 @@ public class EntityRainbowGuard extends EntityMob {
 	}
 
 	protected void addArmor() {
-
-		int color = this.color.getColor();
-
-		setItemStackToSlot(EntityEquipmentSlot.HEAD, colorArmor(new ItemStack(Items.LEATHER_HELMET, 1), color));
-		setItemStackToSlot(EntityEquipmentSlot.FEET, colorArmor(new ItemStack(Items.LEATHER_BOOTS, 1), color));
-		setItemStackToSlot(EntityEquipmentSlot.LEGS, colorArmor(new ItemStack(Items.LEATHER_LEGGINGS, 1), color));
-		setItemStackToSlot(EntityEquipmentSlot.CHEST, colorArmor(new ItemStack(Items.LEATHER_CHESTPLATE, 1), color));
+		setItemStackToSlot(EntityEquipmentSlot.HEAD, colorArmor(new ItemStack(Items.LEATHER_HELMET, 1)));
+		setItemStackToSlot(EntityEquipmentSlot.FEET, colorArmor(new ItemStack(Items.LEATHER_BOOTS, 1)));
+		setItemStackToSlot(EntityEquipmentSlot.LEGS, colorArmor(new ItemStack(Items.LEATHER_LEGGINGS, 1)));
+		setItemStackToSlot(EntityEquipmentSlot.CHEST, colorArmor(new ItemStack(Items.LEATHER_CHESTPLATE, 1)));
 	}
 
-	protected ItemStack colorArmor(ItemStack stack, int color) {
+	protected ItemStack colorArmor(ItemStack stack) {
 		ItemArmor armor = (ItemArmor) stack.getItem();
-		armor.setColor(stack, color);
+		armor.setColor(stack, color.getColor());
 		return stack;
 	}
 
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		// this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4D);
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40D);
-		// this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5D);
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
 	}
 
@@ -162,8 +152,7 @@ public class EntityRainbowGuard extends EntityMob {
 
 	protected void ai() {
 		tasks.addTask(1, new EntityAISwimming(this));
-		tasks.addTask(3, new EntityAIAtAttention(this));
-		tasks.addTask(3, new EntityAIStayCentered(this));
+		tasks.addTask(2, new EntityAIAtAttention(this));
 		tasks.addTask(4, new EntityAIAttackMelee(this, 0.5D, false));
 		tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		tasks.addTask(5, new EntityAILookIdle(this));
@@ -173,12 +162,6 @@ public class EntityRainbowGuard extends EntityMob {
 
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		List<EntityRainbowGuard> nearbyRainbowGuards = worldObj.getEntitiesWithinAABB(EntityRainbowGuard.class, getEntityBoundingBox().expand(5.0D, 4.0D, 2.0D));
-		if (nearbyRainbowGuards != null && !nearbyRainbowGuards.isEmpty()) {
-			setLookAt(nearbyRainbowGuards.get(0).getPosition());
-		} else {
-			setLookAt(getPosition().add(4, 0, 0));
-		}
 		wakeIfPlayerIsClose(true);
 	}
 
@@ -188,7 +171,7 @@ public class EntityRainbowGuard extends EntityMob {
 	public void wokenByPartner() {
 		wakeIfPlayerIsClose(false);
 	}
-	
+
 	private void wakeIfPlayerIsClose(boolean wakePartner) {
 		if (worldObj.getTotalWorldTime() % 30 != 0 || !isAtAttention()) {
 			return;
@@ -217,6 +200,7 @@ public class EntityRainbowGuard extends EntityMob {
 	protected void updateAITasks() {
 		super.updateAITasks();
 	}
+
 
 	public class EntityAIAtAttention extends EntityAIBase {
 
@@ -259,6 +243,7 @@ public class EntityRainbowGuard extends EntityMob {
 		 * Updates the task
 		 */
 		public void updateTask() {
+			entity.setPosition(entity.getPosition().getX() + 0.5d, entity.posY, entity.getPosition().getZ() + 0.5d);
 			entity.getLookHelper().setLookPosition(getLookAt().getX(), getLookAt().getY(), getLookAt().getZ(), (float) entity.getHorizontalFaceSpeed(), 0.0f);
 		}
 	}

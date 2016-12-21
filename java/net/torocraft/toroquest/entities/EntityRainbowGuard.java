@@ -80,6 +80,7 @@ public class EntityRainbowGuard extends EntityMob {
 
 	public EntityRainbowGuard(World world) {
 		super(world);
+		this.experienceValue = 10;
 	}
 
 	protected void entityInit() {

@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.torocraft.toroquest.entities.EntityRainbowGuard;
 import net.torocraft.toroquest.entities.EntityRainbowGuard.Color;
+import net.torocraft.toroquest.entities.EntityRainbowKing;
 
 public class ThroneRoomGenerator extends WorldGenerator {	
 
@@ -321,8 +322,10 @@ public class ThroneRoomGenerator extends WorldGenerator {
 	}
 
 	private void spawnKing() {
-		// TODO Auto-generated method stub
-		
+		EntityRainbowKing king = new EntityRainbowKing(world);
+		king.setPosition(origin.getX() + 15 + 0.5D, origin.getY() + 7, origin.getZ() + (length - 3) + 0.5D);
+		king.onInitialSpawn(world.getDifficultyForLocation(origin), (IEntityLivingData) null);
+		world.spawnEntityInWorld(king);
 	}
 
 	private void spawnRainbowGuards() {

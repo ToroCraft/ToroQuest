@@ -14,10 +14,10 @@ public class VillageLordContainer extends Container {
 	private final int INVENTORY_ROW_COUNT = 3;
 	private final int INVENTORY_COLUMN_COUNT = 9;
 	private final int SUBMIT_ITEM_ROW_COUNT = 1;
-	private final int SUBMIT_ITEM_COLUMN_COUNT = 3;
+	private final int SUBMIT_ITEM_COLUMN_COUNT = 1;
 	
 	private final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + (INVENTORY_COLUMN_COUNT * INVENTORY_ROW_COUNT);
-	private final int LORD_INVENTORY_SLOT_COUNT = 3;
+	private final int LORD_INVENTORY_SLOT_COUNT = 1;
 	
 	private final int VANILLA_FIRST_SLOT_INDEX = 0;
 	private final int LORD_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
@@ -31,11 +31,8 @@ public class VillageLordContainer extends Container {
 	private final int INVENTORY_XPOS = 8;
 	private final int INVENTORY_YPOS = 48;;
 	
-	private final int SUBMIT_ITEM_XPOS = 30;
+	private final int SUBMIT_ITEM_XPOS = 51;
 	private final int SUBMIT_ITEM_YPOS = 17;
-	
-	private final int OUTPUT_ITEM_XPOS = 107;
-	private final int OUTPUT_ITEM_YPOS = 17;
 	
 	private final VillageLordInventory inventory;
 	
@@ -64,15 +61,13 @@ public class VillageLordContainer extends Container {
 				addSlotToContainer(new Slot(inventory, slotNumber, xPos, yPos));
 			}
 		}
-		
-		addSlotToContainer(new SlotOutput(inventory, 3, OUTPUT_ITEM_XPOS, OUTPUT_ITEM_YPOS));
 	}
 	
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
 		Slot slot = (Slot)this.inventorySlots.get(index);
         if(slot == null || !slot.getHasStack()) {
-        	return null;
+        	return ItemStack.field_190927_a;
         }
         
         ItemStack sourceStack = slot.getStack();
@@ -80,20 +75,20 @@ public class VillageLordContainer extends Container {
         
         if(indexIsForAVanillaSlot(index)) {
         	if(!mergeItemStack(sourceStack, LORD_INVENTORY_FIRST_SLOT_INDEX, LORD_INVENTORY_FIRST_SLOT_INDEX + LORD_INVENTORY_SLOT_COUNT, false)) {
-        		return null;
+        		return ItemStack.field_190927_a;
         	}
         } else if(indexIsForALordInventorySlot(index) || indexIsForLordOutputSlot(index)) {
         	if(!mergeStackFromLordToPlayer(sourceStack)) {
-        		return null;
+        		return ItemStack.field_190927_a;
         	}
         } else {
-        	return null;
+        	return ItemStack.field_190927_a;
         }
         
         int stackSize = sourceStack.func_190916_E();
         
         if(stackSize == 0) {
-        	slot.putStack(null);
+        	slot.putStack(ItemStack.field_190927_a);
         } else {
         	slot.onSlotChanged();
         }
@@ -126,6 +121,7 @@ public class VillageLordContainer extends Container {
 	@Override
 	public void onContainerClosed(EntityPlayer player) {
 		super.onContainerClosed(player);
+		this.inventory.closeInventory(player);
 	}
 	
 	@Override

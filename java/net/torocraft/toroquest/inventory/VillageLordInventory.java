@@ -11,21 +11,17 @@ import net.minecraft.util.text.TextComponentString;
 
 public class VillageLordInventory implements IInventory {
 
-	private static final int SUBMIT_ITEM_COUNT = 3;
-	private static final int OUTPUT_ITEM_COUNT = 1;
-	private static final int REWARD_OUTPUT_INDEX = 3;
-	private static final int TOTAL_SLOT_COUNT = SUBMIT_ITEM_COUNT + OUTPUT_ITEM_COUNT;
+	private static final int SUBMIT_ITEM_COUNT = 1;
 	
-	private ItemStack[] itemStacks = new ItemStack[TOTAL_SLOT_COUNT];
+	private ItemStack[] itemStacks = new ItemStack[SUBMIT_ITEM_COUNT];
 	
-	private ItemStack lastModifiedStack = null;
-	private int lastModifiedIndex = 0;
-	
-	private EntityPlayer player = null;
+	public VillageLordInventory() {
+		this.clear();
+	}
 	
 	@Override
 	public String getName() {
-		return "Bailey's Inventory";
+		return "Village Lord Inventory";
 	}
 
 	@Override
@@ -53,19 +49,15 @@ public class VillageLordInventory implements IInventory {
 		ItemStack slotStack = getStackInSlot(index);
 		int stackSize = slotStack.func_190916_E();
 		
-		if(slotStack == null) {
-			return null;
-		}
-		
 		ItemStack stackRemoved;
 		if(stackSize <= count) {
 			stackRemoved = slotStack;
-			setInventorySlotContents(index, null);
+			setInventorySlotContents(index, ItemStack.field_190927_a);
 			
 		} else {
 			stackRemoved = slotStack.splitStack(count);
 			if(stackSize == 0) {
-				setInventorySlotContents(index, null);
+				setInventorySlotContents(index, ItemStack.field_190927_a);
 			}
 		}
 		
@@ -77,26 +69,28 @@ public class VillageLordInventory implements IInventory {
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
 		ItemStack itemStack = getStackInSlot(index);
-		if(itemStack != null) {
-			setInventorySlotContents(index, null);
-		}
-		
+		setInventorySlotContents(index, ItemStack.field_190927_a);
 		return itemStack;
 	}
 
 	@Override
 	public void setInventorySlotContents(int index, ItemStack stack) {
-		itemStacks[index] = stack;
+		if (index < 0 || index >= this.getSizeInventory()) {
+            return;
+		}
+
 		int stackSize = stack.func_190916_E();
-		if(stack != null && stackSize > getInventoryStackLimit()) {
-			stackSize = getInventoryStackLimit();
-		}
 		
-		if(stack != null && index != REWARD_OUTPUT_INDEX) {
-			this.lastModifiedIndex = index;
-		}
-		
-		markDirty();
+        if (stackSize > this.getInventoryStackLimit()) {
+            stack.func_190920_e(this.getInventoryStackLimit());
+        }
+
+        if (stackSize == 0) {
+            stack = ItemStack.field_190927_a;
+        }
+
+        this.itemStacks[index] = stack;
+        this.markDirty();
 	}
 
 	@Override
@@ -111,7 +105,7 @@ public class VillageLordInventory implements IInventory {
 	
 	@Override
 	public void openInventory(EntityPlayer player) {
-		this.player = player;
+		
 	}
 
 	@Override
@@ -145,7 +139,7 @@ public class VillageLordInventory implements IInventory {
 
 	@Override
 	public void clear() {
-		Arrays.fill(itemStacks, null);
+		Arrays.fill(itemStacks, ItemStack.field_190927_a);
 	}
 	
 	@Override
@@ -161,21 +155,6 @@ public class VillageLordInventory implements IInventory {
 		System.out.println("type:" + Item.getIdFromItem(stack.getItem()));
 		System.out.println("subType:" + stack.getMetadata());
 		System.out.println("NBT: " + String.valueOf(stack.getTagCompound()));
-	}
-	
-	private void syncProgress(final String questId, final int progress) {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				
-			}
-
-		}).start();
-	}
-	
-	private void updateClient(final EntityPlayer player) {
-
 	}
 
 	@Override

@@ -17,6 +17,7 @@ import net.torocraft.toroquest.generation.BastionsLairGenerator;
 import net.torocraft.toroquest.generation.MageTowerGenerator;
 import net.torocraft.toroquest.generation.MonolithGenerator;
 import net.torocraft.toroquest.generation.ThroneRoomGenerator;
+import net.torocraft.toroquest.gui.VillageLordGuiHandler;
 
 public class ToroQuestCommand extends CommandBase {
 
@@ -56,6 +57,8 @@ public class ToroQuestCommand extends CommandBase {
 			adjustRep(player, args);
 		} else if ("gen".equals(command)) {
 			genCommand(player, args);
+		} else if ("gui".equals(command)) {
+			guiCommand(player, args);
 		} else {
 			throw new WrongUsageException("commands.tq.usage", new Object[0]);
 		}
@@ -110,6 +113,20 @@ public class ToroQuestCommand extends CommandBase {
 
 		throw new WrongUsageException("commands.tq.usage", new Object[0]);
 	}
+	
+	private void guiCommand(EntityPlayer player, String[] args) throws CommandException {
+		if(args.length < 2) {
+			throw new WrongUsageException("commans.tq.usage", new Object[0]);
+		}
+		
+		String type = args[1];
+		
+		if("lord".equals(type)) {
+			player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+		}
+		
+		throw new WrongUsageException("commands.tq.usage", new Object[0]);
+	}
 
 	@Override
 	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
@@ -123,11 +140,13 @@ public class ToroQuestCommand extends CommandBase {
 			if (command == null || command.trim().length() == 0) {
 				tabOptions.add("rep");
 				tabOptions.add("gen");
+				tabOptions.add("gui");
 			} else {
 				if (command.startsWith("r")) {
 					tabOptions.add("rep");
 				} else if (command.startsWith("g")) {
 					tabOptions.add("gen");
+					tabOptions.add("gui");
 				}
 			}
 		} else if (args.length == 2) {
@@ -136,6 +155,8 @@ public class ToroQuestCommand extends CommandBase {
 				tabOptions.add("mage_tower");
 				tabOptions.add("bastions_lair");
 				tabOptions.add("monolith");
+			} else if ("gui".equals(args[0])) {
+				tabOptions.add("lord");
 			}
 		}
 		return tabOptions;

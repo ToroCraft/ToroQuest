@@ -8,6 +8,7 @@ import net.torocraft.toroquest.inventory.VillageLordInventory;
 public class VillageLordGuiHandler implements IGuiHandler {
 
 	private static final int VILLAGE_LORD_GUI_ID = 70;
+	public static int getGuiID() {return VILLAGE_LORD_GUI_ID;}
 	
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {

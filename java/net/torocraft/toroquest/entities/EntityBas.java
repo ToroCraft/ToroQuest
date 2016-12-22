@@ -112,6 +112,9 @@ public class EntityBas extends EntitySkeleton {
 	}
 
 	private void spawnBats() {
+		if(worldObj.isRemote){
+			return;
+		}
 		long start = System.currentTimeMillis();
 		int playerCount = worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(getPosition()).expand(40, 20, 40)).size();
 		int batCount = worldObj.getEntitiesWithinAABB(EntityVampireBat.class, new AxisAlignedBB(getPosition()).expand(40, 20, 40)).size();
@@ -126,6 +129,9 @@ public class EntityBas extends EntitySkeleton {
 	}
 
 	protected void spawnBat() {
+		if(worldObj.isRemote){
+			return;
+		}
 		Entity mob = new EntityVampireBat(worldObj);
 		mob.setPosition(posX + rand.nextInt(6) - 3, posY + 4, posZ + rand.nextInt(6) - 3);
 		worldObj.spawnEntityInWorld(mob);

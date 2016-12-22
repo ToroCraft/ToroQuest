@@ -29,8 +29,8 @@ entity.toro.name=Toro
 entity.toroquest.guard.name=Guard
 entity.guard.name=Guard
 
-entity.toroquest.villageLord.name=Village Lord
-entity.villageLord.name=Village Lord
+entity.toroquest.village_lord.name=Village Lord
+entity.village_lord.name=Village Lord
 
 entity.toroquest.shopkeeper.name=Shopkeeper
 entity.shopkeeper.name=Shopkeeper

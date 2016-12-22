@@ -26,15 +26,21 @@ public class WorldGenPlacer implements IWorldGenerator {
 			return;
 		}
 
-		int roll = random.nextInt(3);
+		int roll = random.nextInt(4);
 
 		switch (roll) {
 		case 0:
 			genMonolith(world, random, chunkX, chunkZ);
+			break;
 		case 1:
 			genBastionsLair(world, random, chunkX, chunkZ);
+			break;
 		case 2:
 			genMageTower(world, random, chunkX, chunkZ);
+			break;
+		case 3:
+			genThroneRoom(world, random, chunkX, chunkZ);
+			break;
 		}
 	}
 
@@ -66,6 +72,17 @@ public class WorldGenPlacer implements IWorldGenerator {
 		BlockPos pos = new BlockPos(chunkX * 16 + random.nextInt(16), world.getActualHeight(), chunkZ * 16 + random.nextInt(16));
 		if (new MonolithGenerator().generate(world, random, pos)) {
 			System.out.println("ToroQuest Gen Placer: Monolith " + pos);
+		}
+	}
+	
+	private void genThroneRoom(World world, Random random, int chunkX, int chunkZ) {
+		if (!CivilizationsWorldSaveData.get(world).canGenStructure("throne_room", chunkX, chunkZ)) {
+			return;
+		}
+		int y = random.nextInt(20) + 10;
+		BlockPos pos = new BlockPos(chunkX * 16 + random.nextInt(16), y, chunkZ * 16 + random.nextInt(16));
+		if (new ThroneRoomGenerator().generate(world, random, pos)) {
+			System.out.println("ToroQuest Gen Placer: Throne Room " + pos);
 		}
 	}
 

@@ -54,6 +54,7 @@ public class EntityBas extends EntitySkeleton {
 	public EntityBas(World world) {
 		super(world);
 		this.setSize(0.6F * 3, 1.99F * 3);
+		this.experienceValue = 75;
 	}
 
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {

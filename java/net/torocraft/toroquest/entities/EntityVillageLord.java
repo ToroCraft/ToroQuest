@@ -16,6 +16,7 @@ import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -27,10 +28,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.render.RenderVillageLord;
+import net.torocraft.toroquest.gui.VillageLordGuiHandler;
 import net.torocraft.toroquest.item.armor.ItemRoyalArmor;
 
 /*
@@ -61,9 +64,17 @@ public class EntityVillageLord extends EntityToroNpc {
 		});
 	}
 
-	public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-		System.out.println("process Interact");
-		return false;
+	@Override
+	protected boolean processInteract(EntityPlayer player, EnumHand hand) {
+		if (this.isEntityAlive() && !this.isChild()) {
+			if (!this.worldObj.isRemote) {
+				player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), this.worldObj,
+						player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	protected void initEntityAI() {

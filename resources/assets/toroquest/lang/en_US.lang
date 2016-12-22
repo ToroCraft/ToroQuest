@@ -29,8 +29,8 @@ entity.toro.name=Toro
 entity.toroquest.guard.name=Guard
 entity.guard.name=Guard
 
-entity.toroquest.villageLord.name=Village Lord
-entity.villageLord.name=Village Lord
+entity.toroquest.village_lord.name=Village Lord
+entity.village_lord.name=Village Lord
 
 entity.toroquest.shopkeeper.name=Shopkeeper
 entity.shopkeeper.name=Shopkeeper
@@ -46,6 +46,9 @@ entity.sentry.name=Sentry
 
 entity.toroquest.rainbow_guard.name=Rainbow Guardsman
 entity.rainbow_guard.name=Rainbow Guardsman
+
+entity.toroquest.rainbow_king.name=Rainbow King
+entity.rainbow_king.name=Rainbow King
 
 civilization.earth.name=Terra
 civilization.wind.name=Gustaberg

@@ -173,7 +173,7 @@ public class EntityRainbowGuard extends EntityMob {
 		wakeIfPlayerIsClose(false);
 	}
 
-	private void wakeIfPlayerIsClose(boolean wakePartner) {
+	protected void wakeIfPlayerIsClose(boolean wakePartner) {
 		if (worldObj.getTotalWorldTime() % 30 != 0 || !isAtAttention()) {
 			return;
 		}

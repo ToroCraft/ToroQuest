@@ -47,6 +47,9 @@ entity.sentry.name=Sentry
 entity.toroquest.rainbow_guard.name=Rainbow Guardsman
 entity.rainbow_guard.name=Rainbow Guardsman
 
+entity.toroquest.rainbow_king.name=Rainbow King
+entity.rainbow_king.name=Rainbow King
+
 civilization.earth.name=Terra
 civilization.wind.name=Gustaberg
 civilization.fire.name=Lumens

@@ -5,14 +5,6 @@ import javax.annotation.Nullable;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
@@ -26,7 +18,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.entities.render.RenderRainbowKing;
 
-public class EntityRainbowKing extends EntityMob {
+public class EntityRainbowKing extends EntityRainbowGuard {
 
 	public static String NAME = "rainbow_king";
 	
@@ -81,16 +73,8 @@ public class EntityRainbowKing extends EntityMob {
 		return false;
 	}
 
-	protected void initEntityAI() {
-		ai();
-	}
-
-	protected void ai() {
-		tasks.addTask(1, new EntityAISwimming(this));
-		tasks.addTask(2, new EntityAIAttackMelee(this, 0.5D, false));
-		tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-		tasks.addTask(3, new EntityAILookIdle(this));
-		targetTasks.addTask(1, new EntityAIHurtByTarget(this, false, new Class[0]));
-		targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
+	public void onLivingUpdate() {
+		super.onLivingUpdate();
+		wakeIfPlayerIsClose(true);
 	}
 }

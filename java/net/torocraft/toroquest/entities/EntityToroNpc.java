@@ -54,6 +54,27 @@ public class EntityToroNpc extends EntityCreature {
 		return civ != null && civ.length() > 0;
 	}
 
+	@Override
+	public void setAttackTarget(EntityLivingBase e) {
+		if (!isCivilizationAlly(e)) {
+			super.setAttackTarget(e);
+		}
+	}
+
+	public boolean isCivilizationAlly(EntityLivingBase e) {
+		if (!(e instanceof EntityToroNpc)) {
+			return false;
+		}
+
+		CivilizationType otherCiv = ((EntityToroNpc) e).getCivilization();
+
+		if (otherCiv == null) {
+			return false;
+		}
+
+		return otherCiv.equals(getCivilization());
+	}
+
 	private String s(CivilizationType civilization) {
 		if (civilization == null) {
 			return null;

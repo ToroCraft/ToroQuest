@@ -75,9 +75,6 @@ public class CivilizationHandlers {
 		if (event.getEntityPlayer().getEntityWorld().isRemote) {
 			return;
 		}
-		if (!event.isWasDeath()) {
-			return;
-		}
 
 		PlayerCivilizationCapability newCap = PlayerCivilizationCapabilityImpl.get(event.getEntityPlayer());
 		PlayerCivilizationCapability originalCap = PlayerCivilizationCapabilityImpl.get(event.getOriginal());

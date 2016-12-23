@@ -42,7 +42,9 @@ public class VillageLordGuiContainer extends GuiContainer {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		
-		drawSubmitButton(mouseX, mouseY);
+		if(hasReputation()) {
+			drawSubmitButton(mouseX, mouseY);
+		}
 	}
 	
 	@Override
@@ -51,12 +53,11 @@ public class VillageLordGuiContainer extends GuiContainer {
 		final int LABEL_XPOS = 5;
 		final int LABEL_YPOS = 5;
 		fontRendererObj.drawString("Village Lord", LABEL_XPOS, LABEL_YPOS, Color.darkGray.getRGB());
-		
 		drawReputationDisplay(LABEL_XPOS, LABEL_YPOS);
 	}
 	
 	private void drawSubmitButton(int mouseX, int mouseY) {
-		GuiButton submitButton = new GuiButton(0, guiLeft + 73, guiTop + 15, buttonWidth, buttonHeight, "Submit");
+		GuiButton submitButton = new GuiButton(0, guiLeft + 73, guiTop + 15, buttonWidth, buttonHeight, "Donate");
 		submitButton.drawButton(mc, mouseX, mouseY);
 		if (Mouse.getEventButtonState() && Mouse.getEventButton() != -1) {
 			if (submitButton.mousePressed(mc, mouseX, mouseY) && mouseCooldownOver()) {
@@ -72,6 +73,13 @@ public class VillageLordGuiContainer extends GuiContainer {
 	
 	public static void setAvailableReputation(int rep) {
 		availableReputation = rep;
+	}
+	
+	private boolean hasReputation() {
+		if(availableReputation > 0) {
+			return true;
+		}
+		return false;
 	}
 	
 	private boolean mouseCooldownOver() {

@@ -127,6 +127,7 @@ public class VillageLordContainer extends Container {
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
+		this.inventory.checkForReputation();
 	}
 	
 	public class SlotOutput extends Slot {

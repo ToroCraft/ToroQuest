@@ -10,6 +10,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
@@ -21,8 +22,7 @@ import net.torocraft.toroquest.civilization.quests.util.Quests;
 
 public class QuestFarm implements Quest {
 
-	private static final Block[] CROP_TYPES = { Blocks.CARROTS, Blocks.POTATOES, Blocks.WHEAT, Blocks.MELON_STEM, Blocks.PUMPKIN_STEM,
-			Blocks.BEETROOTS };
+	private static final Block[] CROP_TYPES = { Blocks.CARROTS, Blocks.POTATOES, Blocks.WHEAT, Blocks.MELON_STEM, Blocks.PUMPKIN_STEM, Blocks.BEETROOTS };
 
 	public static QuestFarm INSTANCE;
 
@@ -146,22 +146,35 @@ public class QuestFarm implements Quest {
 			return;
 		}
 
-		System.out.println("***** onFarm event");
-
 		Province provinceFarmedIn = loadProvice(event.getPlayer().worldObj, event.getBlockSnapshot().getPos());
 
 		if (provinceFarmedIn == null || provinceFarmedIn.civilization == null) {
 			return;
 		}
 
-		handleFarmQuest(event.getPlayer(), provinceFarmedIn, event.getPlacedBlock().getBlock());
+		handleFarmQuest(event.getPlayer(), provinceFarmedIn, event.getPlacedBlock().getBlock(), true);
+	}
+
+	@SubscribeEvent
+	public void onHarvest(BreakEvent event) {
+		if (event.getPlayer() == null) {
+			return;
+		}
+
+		Province provinceFarmedIn = loadProvice(event.getPlayer().worldObj, event.getPos());
+
+		if (provinceFarmedIn == null || provinceFarmedIn.civilization == null) {
+			return;
+		}
+
+		handleFarmQuest(event.getPlayer(), provinceFarmedIn, event.getState().getBlock(), false);
 	}
 
 	protected Province loadProvice(World world, BlockPos pos) {
 		return CivilizationUtil.getProvinceAt(world, pos.getX() / 16, pos.getZ() / 16);
 	}
 
-	private void handleFarmQuest(EntityPlayer player, Province provinceFarmedIn, Block crop) {
+	private void handleFarmQuest(EntityPlayer player, Province provinceFarmedIn, Block crop, boolean plant) {
 
 		System.out.println("***** handleFarmQuest event");
 
@@ -172,26 +185,30 @@ public class QuestFarm implements Quest {
 			quest.setData(data);
 			quest.farmedCrop = crop;
 			quest.provinceFarmedIn = provinceFarmedIn;
-			if (perform(quest, crop)) {
+			if (perform(quest, crop, plant)) {
 				return;
 			}
 		}
 	}
 
-	public boolean perform(Data quest, Block farmedCrop) {
-
-		System.out.println("***** perform");
+	public boolean perform(Data quest, Block farmedCrop, boolean plant) {
 
 		if (!quest.isApplicable()) {
 			return false;
 		}
-		quest.setCurrentAmount(quest.getCurrentAmount() + 1);
+
+		if (plant) {
+			quest.setCurrentAmount(quest.getCurrentAmount() + 1);
+		} else {
+			quest.setCurrentAmount(quest.getCurrentAmount() - 1);
+		}
+
 		if (quest.getCurrentAmount() >= quest.getTargetAmount()) {
 			quest.data.setCompleted(true);
 			complete(quest.data);
 		}
 
-		System.out.println("***** status " + quest.getCurrentAmount());
+		System.out.println("Farm Quest Status: " + quest.getCurrentAmount());
 
 		return true;
 	}
@@ -234,8 +251,7 @@ public class QuestFarm implements Quest {
 			return "";
 		}
 		Data q = new Data().setData(data);
-		return "You have currently planted " + q.getCurrentAmount() + " of " + q.getTargetAmount() + " " + cropName(q.getCropType()) + " plants.  On completion you will be reward with " + q.getRewardRep()
-				+ " reputation points";
+		return "You have currently planted " + q.getCurrentAmount() + " of " + q.getTargetAmount() + " " + cropName(q.getCropType()) + " plants.  On completion you will be reward with " + q.getRewardRep() + " reputation points";
 	}
 
 	@Override

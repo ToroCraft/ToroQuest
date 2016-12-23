@@ -1,6 +1,8 @@
 package net.torocraft.toroquest.civilization.quests.util;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,18 +11,37 @@ import net.torocraft.toroquest.civilization.CivilizationType;
 
 public class QuestData {
 
-	public UUID questId;
-	public Integer questType;
-	public UUID provinceId;
-	public CivilizationType civ;
-	public EntityPlayer player;
-	public Map<String, Object> data;
+	private UUID questId;
+	private Integer questType;
+	private UUID provinceId;
+	private CivilizationType civ;
+	private EntityPlayer player;
+	private Boolean completed = false;
+	private Map<String, Integer> iData;
 
 	public void readNBT(NBTTagCompound c, EntityPlayer player) {
 		this.player = player;
 		questId = UUID.fromString(c.getString("id"));
 		provinceId = UUID.fromString(c.getString("provinceId"));
 		civ = e(c.getString("civ"));
+		iData = readMap(c.getCompoundTag("idata"));
+		completed = c.getBoolean("completed");
+	}
+
+	private Map<String, Integer> readMap(NBTTagCompound c) {
+		Map<String, Integer> m = new HashMap<String, Integer>();
+		for (String key : c.getKeySet()) {
+			m.put(key, c.getInteger(key));
+		}
+		return m;
+	}
+
+	private NBTTagCompound writeMap(Map<String, Integer> m) {
+		NBTTagCompound c = new NBTTagCompound();
+		for (Entry<String, Integer> e : m.entrySet()) {
+			c.setInteger(e.getKey(), e.getValue());
+		}
+		return c;
 	}
 
 	public NBTTagCompound writeNBT() {
@@ -28,6 +49,8 @@ public class QuestData {
 		c.setString("id", questId.toString());
 		c.setString("provinceId", provinceId.toString());
 		c.setString("civ", s(civ));
+		c.setTag("idata", writeMap(iData));
+		c.setBoolean("completed", completed);
 		return c;
 	}
 
@@ -69,6 +92,62 @@ public class QuestData {
 		} else if (!questId.equals(other.questId))
 			return false;
 		return true;
+	}
+
+	public UUID getQuestId() {
+		return questId;
+	}
+
+	public void setQuestId(UUID questId) {
+		this.questId = questId;
+	}
+
+	public Integer getQuestType() {
+		return questType;
+	}
+
+	public void setQuestType(Integer questType) {
+		this.questType = questType;
+	}
+
+	public UUID getProvinceId() {
+		return provinceId;
+	}
+
+	public void setProvinceId(UUID provinceId) {
+		this.provinceId = provinceId;
+	}
+
+	public CivilizationType getCiv() {
+		return civ;
+	}
+
+	public void setCiv(CivilizationType civ) {
+		this.civ = civ;
+	}
+
+	public EntityPlayer getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(EntityPlayer player) {
+		this.player = player;
+	}
+
+	public Map<String, Integer> getiData() {
+		return iData;
+	}
+
+	public void setiData(Map<String, Integer> iData) {
+		this.iData = iData;
+	}
+
+	public Boolean getCompleted() {
+		return completed;
+	}
+
+	public void setCompleted(Boolean completed) {
+		this.completed = completed;
 	}
 
 }

@@ -3,7 +3,6 @@ package net.torocraft.toroquest.civilization;
 import java.util.UUID;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.torocraft.toroquest.civilization.quests.util.Quest;
 
 public class Province {
 
@@ -20,8 +19,6 @@ public class Province {
 	public int zLength;
 	public int area;
 
-	public Quest nextQuest;
-
 	public CivilizationType civilization;
 
 	public void readNBT(NBTTagCompound c) {
@@ -33,8 +30,6 @@ public class Province {
 		lowerVillageBoundZ = c.getInteger("lZ");
 		upperVillageBoundZ = c.getInteger("uZ");
 		civilization = e(c.getString("civilization"));
-
-		nextQuest = c.getTag("nextQuest");
 		computeSize();
 	}
 

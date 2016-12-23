@@ -1,6 +1,8 @@
 package net.torocraft.toroquest.civilization.quests;
 
+import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,21 +17,26 @@ import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.civilization.quests.util.Quest;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
+import net.torocraft.toroquest.civilization.quests.util.Quests;
 
 public class QuestFarm implements Quest {
 
-	private static final Block[] CROP_TYPES = { Blocks.CARROTS, Blocks.POTATOES, Blocks.WHEAT, Blocks.MELON_STEM, Blocks.PUMPKIN_STEM, Blocks.BEETROOTS };
+	private static final Block[] CROP_TYPES = { Blocks.CARROTS, Blocks.POTATOES, Blocks.WHEAT, Blocks.MELON_STEM, Blocks.PUMPKIN_STEM,
+			Blocks.BEETROOTS };
 
 	public static QuestFarm INSTANCE;
 
-	public static void init() {
+	public static int ID;
+
+	public static void init(int id) {
 		INSTANCE = new QuestFarm();
+		Quests.registerQuest(id, INSTANCE);
 		MinecraftForge.EVENT_BUS.register(INSTANCE);
-		// TODO register with QuestList?
+		ID = id;
 	}
 
 	public static class Data extends QuestData {
-		private QuestData data;
+		private QuestData data = new QuestData();
 		private Province provinceFarmedIn;
 		private Block farmedCrop;
 
@@ -59,35 +66,35 @@ public class QuestFarm implements Quest {
 		}
 
 		public Integer getCropType() {
-			return i(data.data.get("type"));
+			return i(data.getiData().get("type"));
 		}
 
 		public void setCropType(Integer cropType) {
-			data.data.put("type", cropType);
+			data.getiData().put("type", cropType);
 		}
 
 		public Integer getTargetAmount() {
-			return i(data.data.get("target"));
+			return i(data.getiData().get("target"));
 		}
 
 		public void setTargetAmount(Integer targetAmount) {
-			data.data.put("target", targetAmount);
+			data.getiData().put("target", targetAmount);
 		}
 
 		public Integer getCurrentAmount() {
-			return i(data.data.get("amount"));
+			return i(data.getiData().get("amount"));
 		}
 
 		public void setCurrentAmount(Integer currentAmount) {
-			data.data.put("amount", currentAmount);
+			data.getiData().put("amount", currentAmount);
 		}
 
 		public Integer getRewardRep() {
-			return i(data.data.get("rep"));
+			return i(data.getiData().get("rep"));
 		}
 
 		public void setRewardRep(Integer rewardRep) {
-			data.data.put("rep", rewardRep);
+			data.getiData().put("rep", rewardRep);
 		}
 
 		private Integer i(Object o) {
@@ -103,12 +110,11 @@ public class QuestFarm implements Quest {
 		}
 
 		private boolean isFarmQuest() {
-			// TODO: figure out how to type
-			return true;
+			return getQuestType() == ID;
 		}
 
 		private boolean isInCorrectProvince() {
-			return provinceId.equals(provinceFarmedIn.id);
+			return getProvinceId().equals(provinceFarmedIn.id);
 		}
 
 		private boolean isCorrectCrop() {
@@ -155,6 +161,7 @@ public class QuestFarm implements Quest {
 		}
 		quest.setCurrentAmount(quest.getCurrentAmount() + 1);
 		if (quest.getCurrentAmount() >= quest.getTargetAmount()) {
+			quest.setCompleted(true);
 			complete(quest);
 		}
 		return true;
@@ -162,13 +169,12 @@ public class QuestFarm implements Quest {
 
 	@Override
 	public void reward(QuestData data) {
-		PlayerCivilizationCapabilityImpl.get(data.player).adjustPlayerReputation(data.civ, new Data().setData(data).getRewardRep());
+		PlayerCivilizationCapabilityImpl.get(data.getPlayer()).adjustPlayerReputation(data.getCiv(), new Data().setData(data).getRewardRep());
 	}
-
 
 	@Override
 	public void complete(QuestData quest) {
-		if (PlayerCivilizationCapabilityImpl.get(quest.player).removeQuest(quest)) {
+		if (PlayerCivilizationCapabilityImpl.get(quest.getPlayer()).removeQuest(quest)) {
 			reward(quest);
 		}
 	}
@@ -181,6 +187,31 @@ public class QuestFarm implements Quest {
 	@Override
 	public String getDescription(QuestData data) {
 		return "";
+	}
+
+	@Override
+	public QuestData generateQuestFor(EntityPlayer player, Province province) {
+
+		Random rand = player.getEntityWorld().rand;
+
+		Data q = new Data();
+		q.setCiv(province.civilization);
+		q.setPlayer(player);
+		q.setProvinceId(province.id);
+		q.setQuestId(UUID.randomUUID());
+		q.setQuestType(ID);
+		q.setCompleted(false);
+		// TODO factor in current rep for amount and reward, maybe also the
+		// amount of crops in the province
+
+		int roll = rand.nextInt(100);
+
+		q.setCropType(rand.nextInt(CROP_TYPES.length));
+		q.setCurrentAmount(0);
+		q.setRewardRep(roll / 20);
+		q.setTargetAmount(roll);
+
+		return q;
 	}
 
 }

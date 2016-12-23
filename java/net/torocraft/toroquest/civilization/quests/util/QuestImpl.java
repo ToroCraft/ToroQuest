@@ -1,5 +1,8 @@
 package net.torocraft.toroquest.civilization.quests.util;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.torocraft.toroquest.civilization.Province;
+
 public class QuestImpl implements Quest {
 
 	public Quest getTypedQuest(QuestData data) {
@@ -24,6 +27,11 @@ public class QuestImpl implements Quest {
 	@Override
 	public String getDescription(QuestData data) {
 		return getTypedQuest(data).getDescription(data);
+	}
+
+	@Override
+	public QuestData generateQuestFor(EntityPlayer player, Province province) {
+		throw new UnsupportedOperationException();
 	}
 
 }

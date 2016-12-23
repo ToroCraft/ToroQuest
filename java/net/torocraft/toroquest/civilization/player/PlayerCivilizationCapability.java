@@ -38,5 +38,7 @@ public interface PlayerCivilizationCapability {
 
 	boolean removeQuest(QuestData quest);
 
+	QuestData getCurrentQuestFor(Province province);
 
+	QuestData getNextQuestFor(Province province);
 }

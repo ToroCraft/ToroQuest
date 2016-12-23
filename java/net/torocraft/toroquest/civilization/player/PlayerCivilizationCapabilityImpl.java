@@ -23,7 +23,8 @@ import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.ReputationLevel;
-import net.torocraft.toroquest.civilization.quests.util.Quest;
+import net.torocraft.toroquest.civilization.quests.QuestFarm;
+import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 import net.torocraft.toroquest.network.message.MessagePlayerCivilizationSetInCiv;
 import net.torocraft.toroquest.network.message.MessageSetPlayerReputation;
@@ -34,7 +35,8 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	public static Capability<PlayerCivilizationCapability> INSTANCE = null;
 
 	private Map<CivilizationType, Integer> reputations = new HashMap<CivilizationType, Integer>();
-	private Set<Quest> quests = new HashSet<Quest>();
+	private Set<QuestData> quests = new HashSet<QuestData>();
+	private Set<QuestData> nextQuests = new HashSet<QuestData>();
 	private Province inCiv;
 
 	private final EntityPlayer player;
@@ -139,13 +141,6 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		return a.civilization;
 	}
 
-	private String s(Province civ) {
-		if (civ == null) {
-			return null;
-		}
-		return civ.toString();
-	}
-
 	@Override
 	public Province getPlayerInCivilization() {
 		return inCiv;
@@ -236,12 +231,13 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	}
 
 	public static void register() {
-		CapabilityManager.INSTANCE.register(PlayerCivilizationCapability.class, new PlayerCivilizationStorage(), new Callable<PlayerCivilizationCapability>() {
-			@Override
-			public PlayerCivilizationCapability call() throws Exception {
-				return null;
-			}
-		});
+		CapabilityManager.INSTANCE.register(PlayerCivilizationCapability.class, new PlayerCivilizationStorage(),
+				new Callable<PlayerCivilizationCapability>() {
+					@Override
+					public PlayerCivilizationCapability call() throws Exception {
+						return null;
+					}
+				});
 	}
 
 	private int i(Integer integer) {
@@ -266,20 +262,51 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		}
 
 		@Override
-		public void readNBT(Capability<PlayerCivilizationCapability> capability, PlayerCivilizationCapability instance, EnumFacing side, NBTBase nbt) {
+		public void readNBT(Capability<PlayerCivilizationCapability> capability, PlayerCivilizationCapability instance, EnumFacing side,
+				NBTBase nbt) {
 			instance.readNBT(nbt);
 		}
 
 	}
 
 	@Override
-	public Set<Quest> getCurrentQuests() {
+	public Set<QuestData> getCurrentQuests() {
 		return quests;
 	}
 
 	@Override
-	public boolean removeQuest(Quest quest) {
+	public boolean removeQuest(QuestData quest) {
+		// TODO if task is incomplete impose negative rep for reject the quest,
+		// relative to how much rep the have, so it will never take it negative
 		return quests.remove(quest);
+	}
+
+	@Override
+	public QuestData getCurrentQuestFor(Province province) {
+		for (QuestData q : getCurrentQuests()) {
+			if (q.getProvinceId().equals(province.id)) {
+				return q;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public QuestData getNextQuestFor(Province province) {
+		for (QuestData q : nextQuests) {
+			if (q.getProvinceId().equals(province.id)) {
+				return q;
+			}
+		}
+		return generateNextQuestFor(province);
+	}
+
+	private QuestData generateNextQuestFor(Province province) {
+
+		// TODO choose next quest based on rep and random factors
+		QuestData q = QuestFarm.INSTANCE.generateQuestFor(player, province);
+		nextQuests.add(q);
+		return q;
 	}
 
 }

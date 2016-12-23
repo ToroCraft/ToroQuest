@@ -1,22 +1,32 @@
 package net.torocraft.toroquest.inventory;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.torocraft.toroquest.network.ToroQuestPacketHandler;
+import net.torocraft.toroquest.network.message.MessageSetItemReputationAmount;
 
 public class VillageLordInventory implements IInventory {
 
 	private static final int SUBMIT_ITEM_COUNT = 1;
 	
+	private Map<Item,Integer> itemReputations = new HashMap<Item,Integer>();
+	
 	private ItemStack[] itemStacks = new ItemStack[SUBMIT_ITEM_COUNT];
+	
+	private EntityPlayer player;
 	
 	public VillageLordInventory() {
 		this.clear();
+		loadItemList();
 	}
 	
 	@Override
@@ -105,7 +115,7 @@ public class VillageLordInventory implements IInventory {
 	
 	@Override
 	public void openInventory(EntityPlayer player) {
-		
+		this.player = player;
 	}
 
 	@Override
@@ -155,6 +165,23 @@ public class VillageLordInventory implements IInventory {
 		System.out.println("type:" + Item.getIdFromItem(stack.getItem()));
 		System.out.println("subType:" + stack.getMetadata());
 		System.out.println("NBT: " + String.valueOf(stack.getTagCompound()));
+	}
+	
+	public void checkForReputation() {
+		Integer reputation = itemReputations.get(itemStacks[0].getItem());
+		if(reputation != null) {
+			updateClientReputation(reputation * itemStacks[0].func_190916_E());
+		} else {
+			updateClientReputation(0);
+		}
+	}
+	
+	private void updateClientReputation(Integer rep) {
+		ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetItemReputationAmount(rep), (EntityPlayerMP)this.player);
+	}
+	
+	private void loadItemList() {
+		itemReputations.put(Item.getItemById(3), 10);
 	}
 
 	@Override

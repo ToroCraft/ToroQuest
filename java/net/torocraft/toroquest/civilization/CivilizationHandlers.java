@@ -62,7 +62,7 @@ public class CivilizationHandlers {
 
 	@SubscribeEvent
 	public void handleEnterProvince(CivilizationEvent.Enter event) {
-
+		System.out.println(event.getEntityPlayer().getName() + "entering " + event.province.id);
 	}
 
 	@SubscribeEvent
@@ -186,7 +186,7 @@ public class CivilizationHandlers {
 		adjustPlayerRep(event.getPlayer(), pos.getX() / 16, pos.getZ() / 16, (int) Math.ceil(value * THEIFT_FACTOR));
 	}
 
-	protected void adjustPlayerRep(EntityPlayer player, int chunkX, int chunkZ, int value) {
+	public static void adjustPlayerRep(EntityPlayer player, int chunkX, int chunkZ, int value) {
 		Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), chunkX, chunkZ);
 		if (province == null || province.civilization == null) {
 			return;
@@ -354,6 +354,7 @@ public class CivilizationHandlers {
 
 			BlockPos pos = event.getBlockSnapshot().getPos();
 			adjustPlayerRep(event.getPlayer(), pos.getX() / 16, pos.getZ() / 16, 1);
+
 		}
 	}
 
@@ -383,7 +384,7 @@ public class CivilizationHandlers {
 		}
 	}
 
-	protected boolean isCrop(Block block) {
+	public static boolean isCrop(Block block) {
 		return block instanceof BlockCrops || block instanceof BlockStem;
 	}
 

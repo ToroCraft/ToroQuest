@@ -5,26 +5,30 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 
 public class CivilizationEvent extends PlayerEvent {
 
-	private final CivilizationType civilization;
+	public final CivilizationType civilization;
 
 	public CivilizationEvent(EntityPlayer player, CivilizationType civilization) {
 		super(player);
 		this.civilization = civilization;
 	}
 
-	public CivilizationType getCivilization() {
-		return civilization;
-	}
-
 	public static class Enter extends CivilizationEvent {
-		public Enter(EntityPlayer player, CivilizationType civilization) {
-			super(player, civilization);
+
+		public final Province province;
+
+		public Enter(EntityPlayer player, Province province) {
+			super(player, province.civilization);
+			this.province = province;
 		}
 	}
 
 	public static class Leave extends CivilizationEvent {
-		public Leave(EntityPlayer player, CivilizationType civilization) {
-			super(player, civilization);
+
+		public final Province province;
+
+		public Leave(EntityPlayer player, Province province) {
+			super(player, province.civilization);
+			this.province = province;
 		}
 	}
 

@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.TreeMap;
+import java.util.UUID;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -142,6 +143,7 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 	protected Province buildNewProvince(int chunkX, int chunkZ) {
 		Province province;
 		province = new Province();
+		province.id = UUID.randomUUID();
 		province.chunkX = chunkX;
 		province.chunkZ = chunkZ;
 		province.civilization = randomCivilizationType();
@@ -189,6 +191,10 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 		for (int i = 0; i < list.tagCount(); i++) {
 			Province province = new Province();
 			province.readNBT(list.getCompoundTagAt(i));
+			if (province.id == null) {
+				province.id = UUID.randomUUID();
+				markDirty();
+			}
 			addProvinceToSaveData(province);
 		}
 
@@ -202,7 +208,6 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 			slist = new NBTTagList();
 		}
 		for (int i = 0; i < slist.tagCount(); i++) {
-			System.out.println("Loading structure");
 			structures.clear();
 			Structure s = new Structure();
 			s.readNBT(slist.getCompoundTagAt(i));
@@ -218,7 +223,6 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 		}
 		NBTTagList slist = new NBTTagList();
 		for (Structure s : structures) {
-			System.out.println("Saving structure");
 			list.appendTag(s.writeNBT());
 		}
 		t.setTag("provinces", list);

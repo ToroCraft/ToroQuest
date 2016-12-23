@@ -1,8 +1,13 @@
 package net.torocraft.toroquest.civilization;
 
+import java.util.UUID;
+
 import net.minecraft.nbt.NBTTagCompound;
+import net.torocraft.toroquest.civilization.quests.util.Quest;
 
 public class Province {
+
+	public UUID id;
 	public int chunkX;
 	public int chunkZ;
 
@@ -15,9 +20,12 @@ public class Province {
 	public int zLength;
 	public int area;
 
+	public Quest nextQuest;
+
 	public CivilizationType civilization;
 
 	public void readNBT(NBTTagCompound c) {
+		id = uuid(c.getString("id"));
 		chunkX = c.getInteger("chunkX");
 		chunkZ = c.getInteger("chunkZ");
 		lowerVillageBoundX = c.getInteger("lX");
@@ -25,7 +33,17 @@ public class Province {
 		lowerVillageBoundZ = c.getInteger("lZ");
 		upperVillageBoundZ = c.getInteger("uZ");
 		civilization = e(c.getString("civilization"));
+
+		nextQuest = c.getTag("nextQuest");
 		computeSize();
+	}
+
+	private UUID uuid(String s) {
+		try {
+			return UUID.fromString(s);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	private CivilizationType e(String s) {
@@ -57,7 +75,9 @@ public class Province {
 	}
 
 	public NBTTagCompound writeNBT() {
+		System.out.println("saving ID " + id.toString());
 		NBTTagCompound c = new NBTTagCompound();
+		c.setString("id", id.toString());
 		c.setString("civilization", s(civilization));
 		c.setInteger("chunkX", chunkX);
 		c.setInteger("chunkZ", chunkZ);
@@ -70,7 +90,7 @@ public class Province {
 
 	@Override
 	public String toString() {
-		return "Province of " + civilization + " at chunk " + chunkX + "," + chunkZ + " with an area of " + area;
+		return "Province [" + id + "] of " + civilization + " at chunk " + chunkX + "," + chunkZ + " with an area of " + area;
 	}
 
 	private String s(CivilizationType civ) {

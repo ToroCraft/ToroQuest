@@ -1,8 +1,10 @@
 package net.torocraft.toroquest.civilization.player;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,6 +23,7 @@ import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.ReputationLevel;
+import net.torocraft.toroquest.civilization.quests.util.Quest;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 import net.torocraft.toroquest.network.message.MessagePlayerCivilizationSetInCiv;
 import net.torocraft.toroquest.network.message.MessageSetPlayerReputation;
@@ -31,6 +34,7 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	public static Capability<PlayerCivilizationCapability> INSTANCE = null;
 
 	private Map<CivilizationType, Integer> reputations = new HashMap<CivilizationType, Integer>();
+	private Set<Quest> quests = new HashSet<Quest>();
 	private Province inCiv;
 
 	private final EntityPlayer player;
@@ -98,12 +102,12 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		}
 
 		if (prev != null) {
-			MinecraftForge.EVENT_BUS.post(new CivilizationEvent.Leave(player, prev.civilization));
+			MinecraftForge.EVENT_BUS.post(new CivilizationEvent.Leave(player, prev));
 		}
 
 		if (curr != null) {
 			PlayerCivilizationCapabilityImpl.get(player).setPlayerInCivilization(curr);
-			MinecraftForge.EVENT_BUS.post(new CivilizationEvent.Enter(player, curr.civilization));
+			MinecraftForge.EVENT_BUS.post(new CivilizationEvent.Enter(player, curr));
 		}
 	}
 
@@ -266,6 +270,16 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 			instance.readNBT(nbt);
 		}
 
+	}
+
+	@Override
+	public Set<Quest> getCurrentQuests() {
+		return quests;
+	}
+
+	@Override
+	public boolean removeQuest(Quest quest) {
+		return quests.remove(quest);
 	}
 
 }

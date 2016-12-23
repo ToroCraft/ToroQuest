@@ -1,10 +1,13 @@
 package net.torocraft.toroquest.civilization.player;
 
+import java.util.Set;
+
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.ReputationLevel;
+import net.torocraft.toroquest.civilization.quests.util.QuestData;
 
 public interface PlayerCivilizationCapability {
 
@@ -27,5 +30,13 @@ public interface PlayerCivilizationCapability {
 	void readNBT(NBTBase c);
 
 	void updatePlayerLocation(int chunkX, int chunkZ);
+
+	/*
+	 * Quests
+	 */
+	Set<QuestData> getCurrentQuests();
+
+	boolean removeQuest(QuestData quest);
+
 
 }

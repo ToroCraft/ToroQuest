@@ -12,27 +12,27 @@ public enum CivilizationType {
 		return I18n.format(getUnlocalizedName(), new Object[0]);
 	}
 
-	public String getFriendlyEnteringMessage() {
-		return I18n.format("civilization.entering.friendly", getLocalizedName());
+	public String getFriendlyEnteringMessage(Province province) {
+		return I18n.format("civilization.entering.friendly", province.name, getLocalizedName());
 	}
 
-	public String getNeutralEnteringMessage() {
-		return I18n.format("civilization.entering.neutral", getLocalizedName());
+	public String getNeutralEnteringMessage(Province province) {
+		return I18n.format("civilization.entering.neutral", province.name, getLocalizedName());
 	}
 
-	public String getHostileEnteringMessage() {
-		return I18n.format("civilization.entering.hostile", getLocalizedName());
+	public String getHostileEnteringMessage(Province province) {
+		return I18n.format("civilization.entering.hostile", province.name, getLocalizedName());
 	}
 
-	public String getFriendlyLeavingMessage() {
-		return I18n.format("civilization.leaving.friendly", getLocalizedName());
+	public String getFriendlyLeavingMessage(Province province) {
+		return I18n.format("civilization.leaving.friendly", province.name, getLocalizedName());
 	}
 
-	public String getNeutralLeavingMessage() {
-		return I18n.format("civilization.leaving.neutral", getLocalizedName());
+	public String getNeutralLeavingMessage(Province province) {
+		return I18n.format("civilization.leaving.neutral", province.name, getLocalizedName());
 	}
 
-	public String getHostileLeavingMessage() {
-		return I18n.format("civilization.leaving.hostile", getLocalizedName());
+	public String getHostileLeavingMessage(Province province) {
+		return I18n.format("civilization.leaving.hostile", province.name, getLocalizedName());
 	}
 }

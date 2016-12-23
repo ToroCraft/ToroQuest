@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 public class Province {
 
 	public UUID id;
+	public String name;
 	public int chunkX;
 	public int chunkZ;
 
@@ -25,6 +26,7 @@ public class Province {
 		id = uuid(c.getString("id"));
 		chunkX = c.getInteger("chunkX");
 		chunkZ = c.getInteger("chunkZ");
+		name = c.getString("name");
 		lowerVillageBoundX = c.getInteger("lX");
 		upperVillageBoundX = c.getInteger("uX");
 		lowerVillageBoundZ = c.getInteger("lZ");
@@ -80,6 +82,9 @@ public class Province {
 		c.setInteger("uX", upperVillageBoundX);
 		c.setInteger("lZ", lowerVillageBoundZ);
 		c.setInteger("uZ", upperVillageBoundZ);
+		if (name != null && name.trim().length() > 0) {
+			c.setString("name", name);
+		}
 		return c;
 	}
 

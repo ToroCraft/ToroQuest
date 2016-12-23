@@ -62,12 +62,12 @@ public class CivilizationHandlers {
 
 	@SubscribeEvent
 	public void handleEnterProvince(CivilizationEvent.Enter event) {
-		System.out.println(event.getEntityPlayer().getName() + "entering " + event.province.id);
+		event.getEntityPlayer().addChatMessage(enteringMessage(event.getEntityPlayer(), event.province));
 	}
 
 	@SubscribeEvent
 	public void handleLeaveProvince(CivilizationEvent.Leave event) {
-
+		event.getEntityPlayer().addChatMessage(leavingMessage(event.getEntityPlayer(), event.province));
 	}
 
 	@SubscribeEvent
@@ -288,26 +288,30 @@ public class CivilizationHandlers {
 		PlayerCivilizationCapabilityImpl.get(player).updatePlayerLocation(event.getNewChunkX(), event.getNewChunkZ());
 	}
 
-	private String leavingMessage(EntityPlayer player, CivilizationType civ) {
-		int rep = PlayerCivilizationCapabilityImpl.get(player).getPlayerReputation(civ);
+	public static TextComponentString leavingMessage(EntityPlayer player, Province province) {
+		int rep = PlayerCivilizationCapabilityImpl.get(player).getPlayerReputation(province.civilization);
+		String s;
 		if (rep >= 10) {
-			return civ.getFriendlyLeavingMessage();
+			s = province.civilization.getFriendlyLeavingMessage(province);
 		} else if (rep <= -10) {
-			return civ.getHostileLeavingMessage();
+			s = province.civilization.getHostileLeavingMessage(province);
 		} else {
-			return civ.getNeutralLeavingMessage();
+			s = province.civilization.getNeutralLeavingMessage(province);
 		}
+		return new TextComponentString(s);
 	}
 
-	private String enteringMessage(EntityPlayer player, CivilizationType civ) {
-		int rep = PlayerCivilizationCapabilityImpl.get(player).getPlayerReputation(civ);
+	public static TextComponentString enteringMessage(EntityPlayer player, Province province) {
+		int rep = PlayerCivilizationCapabilityImpl.get(player).getPlayerReputation(province.civilization);
+		String s;
 		if (rep >= 10) {
-			return civ.getFriendlyEnteringMessage();
+			s = province.civilization.getFriendlyEnteringMessage(province);
 		} else if (rep <= -10) {
-			return civ.getHostileEnteringMessage();
+			s = province.civilization.getHostileEnteringMessage(province);
 		} else {
-			return civ.getNeutralEnteringMessage();
+			s = province.civilization.getNeutralEnteringMessage(province);
 		}
+		return new TextComponentString(s);
 	}
 
 	private void chat(EntityPlayer player, String message) {

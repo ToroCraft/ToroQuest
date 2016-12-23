@@ -19,7 +19,7 @@ public class ProvinceNames {
 			"ginia", "gow", "ham", "hull", "land", "las", "ledo", "lens", "ling", "mery", "mond", "mont", "more", "mouth", "nard", "phia", "phis", "polis", "pool", "port", "pus", "ridge", "rith", "ron", "rora", "ross", "rough", "sa",
 			"sall", "sas", "sea", "set", "sey", "shire", "son", "stead", "stin", "ta", "tin", "tol", "ton", "vale", "ver", "ville", "vine", "ving", "well", "wood" };
 
-	public String random(Random rand) {
+	public static String random(Random rand) {
 		int i = rand.nextInt(10);
 		StringBuilder buf = new StringBuilder();
 		if (i < 3) {
@@ -50,7 +50,7 @@ public class ProvinceNames {
 		return name.substring(0, 1).toUpperCase() + name.substring(1);
 	}
 
-	protected String choose(Random rand, String[] parts) {
+	private static String choose(Random rand, String[] parts) {
 		return parts[rand.nextInt(parts.length)];
 	}
 

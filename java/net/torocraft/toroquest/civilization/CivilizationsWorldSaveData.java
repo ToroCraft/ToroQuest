@@ -147,7 +147,7 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 		province.chunkX = chunkX;
 		province.chunkZ = chunkZ;
 		province.civilization = randomCivilizationType();
-
+		province.name = ProvinceNames.random(new Random());
 		province.lowerVillageBoundX = chunkX;
 		province.upperVillageBoundX = chunkX;
 		province.lowerVillageBoundZ = chunkZ;
@@ -193,6 +193,12 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 			province.readNBT(list.getCompoundTagAt(i));
 			if (province.id == null) {
 				province.id = UUID.randomUUID();
+				System.out.println("----- adding missing province ID");
+				markDirty();
+			}
+			if (province.name == null || province.name.trim().length() == 0) {
+				province.name = ProvinceNames.random(new Random());
+				System.out.println("----- adding missing province name");
 				markDirty();
 			}
 			addProvinceToSaveData(province);

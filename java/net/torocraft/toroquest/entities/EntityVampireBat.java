@@ -57,6 +57,7 @@ public class EntityVampireBat extends EntityMob {
 	public EntityVampireBat(World worldIn) {
 		super(worldIn);
 		this.setSize(0.75F, 0.9F);
+		this.experienceValue = 2;
 	}
 
 	protected void entityInit() {

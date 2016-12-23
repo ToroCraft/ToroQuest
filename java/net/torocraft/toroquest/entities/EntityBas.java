@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -23,6 +23,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -54,6 +55,7 @@ public class EntityBas extends EntitySkeleton {
 	public EntityBas(World world) {
 		super(world);
 		this.setSize(0.6F * 3, 1.99F * 3);
+		this.experienceValue = 75;
 	}
 
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
@@ -76,7 +78,7 @@ public class EntityBas extends EntitySkeleton {
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4D);
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(150D);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(200D);
 		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5D);
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
 	}
@@ -110,7 +112,11 @@ public class EntityBas extends EntitySkeleton {
 		targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
 	}
 
-	private void spawnBats() {
+
+	private void spawnLimitedBats() {
+		if(worldObj.isRemote){
+			return;
+		}
 		long start = System.currentTimeMillis();
 		int playerCount = worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(getPosition()).expand(40, 20, 40)).size();
 		int batCount = worldObj.getEntitiesWithinAABB(EntityVampireBat.class, new AxisAlignedBB(getPosition()).expand(40, 20, 40)).size();
@@ -119,22 +125,42 @@ public class EntityBas extends EntitySkeleton {
 			return;
 		}
 
+		spawnBats(null);
+	}
+
+	private void spawnBats(EntityLivingBase target) {
+		if (worldObj.isRemote) {
+			return;
+		}
 		for (int i = 0; i < 3 + rand.nextInt(4); i++) {
-			spawnBat();
+			spawnBat(target);
 		}
 	}
 
-	protected void spawnBat() {
-		Entity mob = new EntityVampireBat(worldObj);
-		mob.setPosition(posX + rand.nextInt(6) - 3, posY + 4, posZ + rand.nextInt(6) - 3);
+	protected void spawnBat(EntityLivingBase target) {
+		if(worldObj.isRemote){
+			return;
+		}
+
+		EntityVampireBat mob = new EntityVampireBat(worldObj);
+
+		if (target == null) {
+			mob.setPosition(posX + rand.nextInt(6) - 3, posY + 4, posZ + rand.nextInt(6) - 3);
+		} else {
+			mob.setPosition(target.posX + rand.nextInt(3) - 1, target.posY + 1 + rand.nextInt(1), target.posZ + rand.nextInt(3) - 1);
+		}
+
 		worldObj.spawnEntityInWorld(mob);
+		if (target != null) {
+			mob.setAttackTarget(target);
+		}
 	}
 
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 
 		if (worldObj.getTotalWorldTime() % 100 == 0) {
-			spawnBats();
+			spawnLimitedBats();
 		}
 
 		if (this.worldObj.isDaytime() && !this.worldObj.isRemote) {
@@ -166,6 +192,26 @@ public class EntityBas extends EntitySkeleton {
 
 	}
 
+	public boolean attackEntityFrom(DamageSource source, float amount) {
+		if (this.isEntityInvulnerable(source)) {
+			return false;
+		}
+
+		if (source instanceof EntityDamageSourceIndirect) {
+			attackDistantAttackerWithBats(source);
+		}
+
+		return super.attackEntityFrom(source, amount);
+	}
+
+	protected void attackDistantAttackerWithBats(DamageSource source) {
+		if (!(source.getEntity() instanceof EntityLivingBase)) {
+			return;
+		}
+		EntityLivingBase distantAttacker = (EntityLivingBase) source.getEntity();
+		spawnBats(distantAttacker);
+	}
+
 	@Override
 	public void onDeath(DamageSource cause) {
 		super.onDeath(cause);
@@ -177,8 +223,8 @@ public class EntityBas extends EntitySkeleton {
 	private void dropLoot() {
 		dropLootItem(Items.BONE, rand.nextInt(100));
 		dropLootItem(Items.ARROW, rand.nextInt(20));
-		dropLootItem(Items.DIAMOND, rand.nextInt(5));
-		dropLootItem(Items.EMERALD, rand.nextInt(10));
+		dropLootItem(Items.DIAMOND, rand.nextInt(5) + 2);
+		dropLootItem(Items.EMERALD, rand.nextInt(10) + 10);
 		dropLootItem(Items.STICK, rand.nextInt(10));
 	}
 

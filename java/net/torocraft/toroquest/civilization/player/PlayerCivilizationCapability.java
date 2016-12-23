@@ -31,14 +31,35 @@ public interface PlayerCivilizationCapability {
 
 	void updatePlayerLocation(int chunkX, int chunkZ);
 
-	/*
-	 * Quests
+	/**
+	 * get a Set of all quests currently accepted by the player
 	 */
 	Set<QuestData> getCurrentQuests();
 
+	/**
+	 * @return quest data or NULL if wasn't able to accept
+	 */
+	QuestData acceptQuest();
+
+	/**
+	 * rejects the current quest and returns the rejected quest data or NULL if
+	 * no quest was rejected
+	 */
+	QuestData rejectQuest();
+
+	/**
+	 * @return returns true if the given quest was successfully removed
+	 */
 	boolean removeQuest(QuestData quest);
 
+	/**
+	 * get the current quest accepted for the given province or NULL is there is
+	 * no accepted quest for the province
+	 */
 	QuestData getCurrentQuestFor(Province province);
 
+	/**
+	 * return the next quest for the given province, should never return NULL
+	 */
 	QuestData getNextQuestFor(Province province);
 }

@@ -9,6 +9,7 @@ import net.torocraft.toroquest.block.ToroQuestBlocks;
 import net.torocraft.toroquest.civilization.CivilizationGeneratorHandlers;
 import net.torocraft.toroquest.civilization.CivilizationHandlers;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
+import net.torocraft.toroquest.civilization.quests.util.Quests;
 import net.torocraft.toroquest.entities.ToroQuestEntities;
 import net.torocraft.toroquest.generation.WorldGenPlacer;
 import net.torocraft.toroquest.generation.village.VillageHandlerBarracks;
@@ -33,6 +34,7 @@ public class CommonProxy {
 		VillageHandlerBarracks.init();
 		ToroQuestPacketHandler.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(ToroQuest.INSTANCE, new VillageLordGuiHandler());
+		Quests.init();
 	}
 
 	public void init(FMLInitializationEvent e) {

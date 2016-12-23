@@ -150,12 +150,32 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	public NBTTagCompound writeNBT() {
 		NBTTagCompound c = new NBTTagCompound();
 		c.setTag("reputations", buildNBTReputationList());
+		System.out.println("** Store Current Quests ------------------- ");
+		c.setTag("quests", buildQuestCompound(quests));
+		System.out.println("** Store Next Quests ------------------");
+		c.setTag("nextQuests", buildQuestCompound(nextQuests));
 		if (inCiv != null) {
 			c.setTag("inCiv", inCiv.writeNBT());
 		} else {
 			c.removeTag("inCiv");
 		}
 		return c;
+	}
+
+	private NBTTagList buildQuestCompound(Set<QuestData> quests) {
+		NBTTagList repList = new NBTTagList();
+		for (QuestData data : quests) {
+			if (data == null) {
+				continue;
+			}
+			if (!data.isValid()) {
+				System.out.println("** INVALID Quest, skipping store: " + data.toString());
+				continue;
+			}
+			System.out.println("** Store Quest: " + data.toString());
+			repList.appendTag(data.writeNBT());
+		}
+		return repList;
 	}
 
 	private static String s(CivilizationType civ) {
@@ -194,6 +214,10 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 
 		NBTTagCompound b = (NBTTagCompound) nbt;
 		reputations = readNBTReputationList(b.getTag("reputations"));
+		System.out.println("** Load Current Quests ------------------");
+		quests = readQuests(b.getTag("quests"));
+		System.out.println("** Load Next Quests ------------------");
+		nextQuests = readQuests(b.getTag("nextQuests"));
 
 		NBTBase civTag = b.getTag("inCiv");
 		if (civTag != null && civTag instanceof NBTTagCompound) {
@@ -202,6 +226,25 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		} else {
 			inCiv = null;
 		}
+	}
+
+	private Set<QuestData> readQuests(NBTBase tag) {
+		Set<QuestData> quests = new HashSet<QuestData>();
+		if (tag == null || !(tag instanceof NBTTagList)) {
+			return quests;
+		}
+		NBTTagList list = (NBTTagList) tag;
+		for (int i = 0; i < list.tagCount(); i++) {
+			QuestData d = new QuestData();
+			d.readNBT(list.getCompoundTagAt(i), player);
+			if (!d.isValid()) {
+				System.out.println("** INVALID Quest, skipping load: " + d.toString());
+				continue;
+			}
+			System.out.println("** Load Quest: " + d.toString());
+			quests.add(d);
+		}
+		return quests;
 	}
 
 	private Map<CivilizationType, Integer> readNBTReputationList(NBTBase tag) {
@@ -231,13 +274,12 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	}
 
 	public static void register() {
-		CapabilityManager.INSTANCE.register(PlayerCivilizationCapability.class, new PlayerCivilizationStorage(),
-				new Callable<PlayerCivilizationCapability>() {
-					@Override
-					public PlayerCivilizationCapability call() throws Exception {
-						return null;
-					}
-				});
+		CapabilityManager.INSTANCE.register(PlayerCivilizationCapability.class, new PlayerCivilizationStorage(), new Callable<PlayerCivilizationCapability>() {
+			@Override
+			public PlayerCivilizationCapability call() throws Exception {
+				return null;
+			}
+		});
 	}
 
 	private int i(Integer integer) {
@@ -262,8 +304,7 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		}
 
 		@Override
-		public void readNBT(Capability<PlayerCivilizationCapability> capability, PlayerCivilizationCapability instance, EnumFacing side,
-				NBTBase nbt) {
+		public void readNBT(Capability<PlayerCivilizationCapability> capability, PlayerCivilizationCapability instance, EnumFacing side, NBTBase nbt) {
 			instance.readNBT(nbt);
 		}
 
@@ -302,11 +343,47 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	}
 
 	private QuestData generateNextQuestFor(Province province) {
-
 		// TODO choose next quest based on rep and random factors
 		QuestData q = QuestFarm.INSTANCE.generateQuestFor(player, province);
 		nextQuests.add(q);
+		if (!q.isValid()) {
+			throw new IllegalArgumentException("Invalid next quest generated: " + q.toString());
+		}
 		return q;
+	}
+
+	@Override
+	public QuestData acceptQuest() {
+		Province province = getPlayerInCivilization();
+		if (province == null) {
+			return null;
+		}
+
+		if (getCurrentQuestFor(province) != null) {
+			return null;
+		}
+		QuestData data = getNextQuestFor(province);
+		quests.add(data);
+		nextQuests.remove(data);
+		return data;
+	}
+
+	@Override
+	public QuestData rejectQuest() {
+		Province province = getPlayerInCivilization();
+		if (province == null) {
+			return null;
+		}
+		QuestData data = getCurrentQuestFor(province);
+		if (data == null) {
+			return null;
+		}
+
+		if (removeQuest(data)) {
+			return data;
+		}
+
+		return null;
 	}
 
 }

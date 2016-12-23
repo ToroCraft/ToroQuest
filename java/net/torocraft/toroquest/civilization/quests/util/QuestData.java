@@ -17,11 +17,28 @@ public class QuestData {
 	private CivilizationType civ;
 	private EntityPlayer player;
 	private Boolean completed = false;
-	private Map<String, Integer> iData;
+	private Map<String, Integer> iData = new HashMap<String, Integer>();
+
+	@Override
+	public String toString() {
+		StringBuilder s = new StringBuilder();
+		s.append("id[").append(questId).append("]");
+		s.append(" questType[").append(questType).append("]");
+		s.append(" provinceId[").append(provinceId).append("]");
+		for(Entry<String, Integer> e : iData.entrySet()){
+			s.append(" idata_" + e.getKey() + "[").append(e.getValue()).append("]");
+		}
+		return s.toString();
+	}
+
+	public boolean isValid() {
+		return questId != null && questType != null && Quests.getQuestForId(questType) != null && provinceId != null;
+	}
 
 	public void readNBT(NBTTagCompound c, EntityPlayer player) {
 		this.player = player;
 		questId = UUID.fromString(c.getString("id"));
+		questType = c.getInteger("type");
 		provinceId = UUID.fromString(c.getString("provinceId"));
 		civ = e(c.getString("civ"));
 		iData = readMap(c.getCompoundTag("idata"));
@@ -47,6 +64,7 @@ public class QuestData {
 	public NBTTagCompound writeNBT() {
 		NBTTagCompound c = new NBTTagCompound();
 		c.setString("id", questId.toString());
+		c.setInteger("type", questType);
 		c.setString("provinceId", provinceId.toString());
 		c.setString("civ", s(civ));
 		c.setTag("idata", writeMap(iData));

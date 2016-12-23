@@ -2,6 +2,7 @@ package net.torocraft.toroquest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -10,9 +11,12 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
+import net.torocraft.toroquest.civilization.quests.util.QuestData;
+import net.torocraft.toroquest.civilization.quests.util.QuestDelegator;
 import net.torocraft.toroquest.generation.BastionsLairGenerator;
 import net.torocraft.toroquest.generation.MageTowerGenerator;
 import net.torocraft.toroquest.generation.MonolithGenerator;
@@ -59,11 +63,11 @@ public class ToroQuestCommand extends CommandBase {
 			genCommand(player, args);
 		} else if ("gui".equals(command)) {
 			guiCommand(player, args);
+		} else if ("quest".equals(command)) {
+			questCommand(player, args);
 		} else {
 			throw new WrongUsageException("commands.tq.usage", new Object[0]);
 		}
-
-		// spawnBastionsLair(sender, sender.getPosition());
 	}
 
 
@@ -123,9 +127,77 @@ public class ToroQuestCommand extends CommandBase {
 		
 		if("lord".equals(type)) {
 			player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+			return;
 		}
 		
 		throw new WrongUsageException("commands.tq.usage", new Object[0]);
+	}
+
+	private void questCommand(EntityPlayer player, String[] args) throws CommandException {
+		if (args.length < 2) {
+			throw new WrongUsageException("commans.tq.usage", new Object[0]);
+		}
+
+		String sub = args[1];
+
+		if ("list".equals(sub)) {
+			Set<QuestData> quests = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuests();
+			QuestDelegator quest = new QuestDelegator(new QuestData());
+			for (QuestData data : quests) {
+				quest.setData(data);
+				player.addChatMessage(new TextComponentString("----"));
+				player.addChatMessage(new TextComponentString(quest.getTitle()));
+				player.addChatMessage(new TextComponentString(quest.getDescription()));
+			}
+
+			if (quests.size() < 1) {
+				player.addChatMessage(new TextComponentString("No accepted quests"));
+			}
+
+			return;
+		}
+
+		Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), player.chunkCoordX, player.chunkCoordZ);
+		if (province == null || province.civilization == null) {
+			throw new WrongUsageException("commands.tq.not_in_civ", new Object[0]);
+		}
+
+		if ("next".equals(sub)) {
+			QuestDelegator quest = new QuestDelegator(PlayerCivilizationCapabilityImpl.get(player).getNextQuestFor(province));
+			if (quest.getData() == null) {
+				throw new NullPointerException("next quest should never be null");
+			}
+			player.addChatMessage(new TextComponentString(quest.getTitle()));
+
+		} else if ("current".equals(sub)) {
+			QuestData data = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
+			if (data == null) {
+				player.addChatMessage(new TextComponentString("No quest has been accepted"));
+			} else {
+				QuestDelegator quest = new QuestDelegator(data);
+				player.addChatMessage(new TextComponentString(quest.getTitle()));
+				player.addChatMessage(new TextComponentString(quest.getDescription()));
+			}
+		} else if ("accept".equals(sub)) {
+			QuestData data = PlayerCivilizationCapabilityImpl.get(player).acceptQuest();
+			if (data == null) {
+				throw new WrongUsageException("commands.tq.quest_could_not_be_accepted", new Object[0]);
+			} else {
+				QuestDelegator quest = new QuestDelegator(data);
+				player.addChatMessage(new TextComponentString("Accepted: " + quest.getTitle()));
+				player.addChatMessage(new TextComponentString(quest.getDescription()));
+			}
+		} else if ("reject".equals(sub)) {
+			QuestData data = PlayerCivilizationCapabilityImpl.get(player).rejectQuest();
+			if (data == null) {
+				throw new WrongUsageException("commands.tq.quest_could_not_be_rejected", new Object[0]);
+			} else {
+				QuestDelegator quest = new QuestDelegator(data);
+				player.addChatMessage(new TextComponentString("Rejected: " + quest.getTitle()));
+			}
+		} else {
+			throw new WrongUsageException("commands.tq.usage", new Object[0]);
+		}
 	}
 
 	@Override
@@ -141,6 +213,7 @@ public class ToroQuestCommand extends CommandBase {
 				tabOptions.add("rep");
 				tabOptions.add("gen");
 				tabOptions.add("gui");
+				tabOptions.add("quest");
 			} else {
 				if (command.startsWith("r")) {
 					tabOptions.add("rep");
@@ -157,6 +230,12 @@ public class ToroQuestCommand extends CommandBase {
 				tabOptions.add("monolith");
 			} else if ("gui".equals(args[0])) {
 				tabOptions.add("lord");
+			} else if ("quest".equals(args[0])) {
+				tabOptions.add("current");
+				tabOptions.add("list");
+				tabOptions.add("next");
+				tabOptions.add("accept");
+				tabOptions.add("reject");
 			}
 		}
 		return tabOptions;

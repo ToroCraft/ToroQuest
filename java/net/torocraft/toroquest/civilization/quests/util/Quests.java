@@ -17,7 +17,10 @@ public class Quests {
 		REGISTRY.put(id, instance);
 	}
 
-	public static Quest getQuestForId(int id) {
+	public static Quest getQuestForId(Integer id) {
+		if (id == null) {
+			throw new NullPointerException("quest ID is null");
+		}
 		return REGISTRY.get(id);
 	}
 

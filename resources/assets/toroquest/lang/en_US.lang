@@ -62,3 +62,12 @@ civilization.entering.hostile=Trespassing into %s of %s
 civilization.leaving.friendly=Farewell from %s of %s
 civilization.leaving.neutral=Leaving %s of %s
 civilization.leaving.hostile=Escaped %s of %s
+
+
+civilization.reputation_level.hero=Hero
+civilization.reputation_level.ally=Ally
+civilization.reputation_level.friend=Friend
+civilization.reputation_level.drifter=Drifter
+civilization.reputation_level.outcast=Outcast
+civilization.reputation_level.enemy=Enemy
+civilization.reputation_level.villain=Villian

@@ -109,6 +109,12 @@ public abstract class Hud {
 
 	}
 
+	public void drawRightString(String text, int x, int y, int color) {
+
+		fontRenderer.drawStringWithShadow(text, (float) (x - fontRenderer.getStringWidth(text)), (float) y, color);
+
+	}
+
 	/**
 	 * Renders the specified text to the screen. Args : renderer, string, x, y,
 	 * color

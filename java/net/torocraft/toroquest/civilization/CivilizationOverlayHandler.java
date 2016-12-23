@@ -16,9 +16,9 @@ public class CivilizationOverlayHandler extends Hud {
 	@Override
 	public void render(int screenWidth, int screenHeight) {
 
-		int left = screenWidth - 75;
+		int left = screenWidth - 5;
 
-		int top = screenHeight - 25;
+		int top = screenHeight - 5;
 
 
 		EntityPlayerSP player = mc.thePlayer;
@@ -38,11 +38,20 @@ public class CivilizationOverlayHandler extends Hud {
 
 	private void drawCurrentCivilizationIcon(int left, int top, Province civ, EntityPlayerSP player) {
 
-		drawString(Integer.toString(PlayerCivilizationCapabilityImpl.get(player).getPlayerReputation(civ.civilization), 10), left + 20, top + 5, 0xffffff);
-		drawString(s(PlayerCivilizationCapabilityImpl.get(player).getReputationLevel(civ.civilization)), left + 18, top + 15, 0xffffff);
+		int textX = left - 18;
+		int textY = top - 25;
 
-		ToroGuiUtils.drawOverlayIcon(mc, left - 2, top - 3, 0, 96, 20, 27);
-		ToroGuiUtils.drawOverlayIcon(mc, left, top, iconIndex(civ.civilization), 0);
+		drawRightString(Integer.toString(PlayerCivilizationCapabilityImpl.get(player).getPlayerReputation(civ.civilization), 10) + " Rep", textX, textY, 0xffffff);
+		textY += 10;
+
+		drawRightString(PlayerCivilizationCapabilityImpl.get(player).getReputationLevel(civ.civilization).getLocalname(), textX, textY, 0xffffff);
+		textY += 10;
+
+		drawRightString(civ.name, textX, textY, 0xffffff);
+		textY += 10;
+
+		ToroGuiUtils.drawOverlayIcon(mc, left - 16, top - 25, 0, 96, 20, 27);
+		ToroGuiUtils.drawOverlayIcon(mc, left - 14, top - 22, iconIndex(civ.civilization), 0);
 	}
 
 	private String s(ReputationLevel reputationLevel) {

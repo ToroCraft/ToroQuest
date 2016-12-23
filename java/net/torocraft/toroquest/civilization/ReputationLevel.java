@@ -1,5 +1,7 @@
 package net.torocraft.toroquest.civilization;
 
+import net.minecraft.client.resources.I18n;
+
 public enum ReputationLevel {
 	HERO(0.7), ALLY(0.9), FRIEND(1.0), DRIFTER(1.7), OUTCAST(10.0), ENEMY(50.0), VILLAIN(100.0);
 	
@@ -17,6 +19,10 @@ public enum ReputationLevel {
 		return (int)(price * priceMultiplier);
 	}
 	
+	public String getLocalname() {
+		return I18n.format("civilization.reputation_level." + this.toString().toLowerCase());
+	}
+
 	public static ReputationLevel fromReputation(int rep) {
 
 		if (rep <= -1000) {

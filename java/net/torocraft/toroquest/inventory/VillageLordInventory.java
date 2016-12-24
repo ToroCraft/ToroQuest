@@ -167,6 +167,12 @@ public class VillageLordInventory implements IInventory {
 		System.out.println("NBT: " + String.valueOf(stack.getTagCompound()));
 	}
 	
+	public void updateClientQuest(){
+		// FIXME: send a quest update packet to the client (I started to created
+		// MessageSetQuestInfo for this)
+
+	}
+
 	public void checkForReputation() {
 		Integer reputation = itemReputations.get(itemStacks[0].getItem());
 		if(reputation != null) {

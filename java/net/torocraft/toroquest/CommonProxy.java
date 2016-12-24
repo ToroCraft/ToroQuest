@@ -41,7 +41,6 @@ public class CommonProxy {
 		PlayerCivilizationCapabilityImpl.register();
 		ToroQuestItems.init();
 		ToroQuestBlocks.init();
-		int seedOffset = 1;
 		WorldGenPlacer.init();
 		ToroQuestEntities.init();
 	}

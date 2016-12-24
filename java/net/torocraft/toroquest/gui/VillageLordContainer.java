@@ -26,10 +26,10 @@ public class VillageLordContainer extends Container {
     private final int SLOT_Y_SPACING = 18;
 	
     private final int HOTBAR_XPOS = 8;
-	private final int HOTBAR_YPOS = 106;
+	private final int HOTBAR_YPOS = 106 + 92;
 	
 	private final int INVENTORY_XPOS = 8;
-	private final int INVENTORY_YPOS = 48;;
+	private final int INVENTORY_YPOS = 48 + 92;
 	
 	private final int SUBMIT_ITEM_XPOS = 51;
 	private final int SUBMIT_ITEM_YPOS = 17;
@@ -61,6 +61,8 @@ public class VillageLordContainer extends Container {
 				addSlotToContainer(new Slot(inventory, slotNumber, xPos, yPos));
 			}
 		}
+
+		this.inventory.updateClientQuest();
 	}
 	
 	@Override

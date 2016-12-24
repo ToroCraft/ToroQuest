@@ -32,8 +32,8 @@ public class VillageLordGuiContainer extends GuiContainer {
 	public VillageLordGuiContainer(EntityPlayer player, VillageLordInventory inventory, World world) {
 		super(new VillageLordContainer(player, inventory, world));
 		
-		xSize = 175;
-		ySize = 130;
+		xSize = 176;
+		ySize = 222;
 	}
 
 	@Override

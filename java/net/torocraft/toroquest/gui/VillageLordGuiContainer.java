@@ -23,7 +23,7 @@ public class VillageLordGuiContainer extends GuiContainer {
 	private static final int MOUSE_COOLDOWN = 200;
 	private static long mousePressed = 0;
 	
-	private static int availableReputation = 0;
+	private static int availableReputation = 100;
 	
 	public VillageLordGuiContainer() {
 		this(null, null, null);
@@ -42,9 +42,10 @@ public class VillageLordGuiContainer extends GuiContainer {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		
-		if(hasReputation()) {
-			drawSubmitButton(mouseX, mouseY);
-		}
+		//if(hasReputation()) {
+			drawDonateButton(mouseX, mouseY);
+			drawAcceptButton(mouseX, mouseY);
+		//}
 	}
 	
 	@Override
@@ -54,10 +55,11 @@ public class VillageLordGuiContainer extends GuiContainer {
 		final int LABEL_YPOS = 5;
 		fontRendererObj.drawString("Village Lord", LABEL_XPOS, LABEL_YPOS, Color.darkGray.getRGB());
 		drawReputationDisplay(LABEL_XPOS, LABEL_YPOS);
+		drawQuestTitle(LABEL_XPOS, LABEL_YPOS);
 	}
 	
-	private void drawSubmitButton(int mouseX, int mouseY) {
-		GuiButton submitButton = new GuiButton(0, guiLeft + 73, guiTop + 15, buttonWidth, buttonHeight, "Donate");
+	private void drawDonateButton(int mouseX, int mouseY) {
+		GuiButton submitButton = new GuiButton(0, guiLeft + 105, guiTop + 15, buttonWidth, buttonHeight, "Donate");
 		submitButton.drawButton(mc, mouseX, mouseY);
 		if (Mouse.getEventButtonState() && Mouse.getEventButton() != -1) {
 			if (submitButton.mousePressed(mc, mouseX, mouseY) && mouseCooldownOver()) {
@@ -67,8 +69,24 @@ public class VillageLordGuiContainer extends GuiContainer {
 		}
 	}
 	
+	private void drawAcceptButton(int mouseX, int mouseY) {
+		GuiButton acceptButton = new GuiButton(0, guiLeft + 105, guiTop + 114, buttonWidth, buttonHeight, "Accept");
+		acceptButton.drawButton(mc, mouseX, mouseY);
+		if (Mouse.getEventButtonState() && Mouse.getEventButton() != -1) {
+			if (acceptButton.mousePressed(mc, mouseX, mouseY) && mouseCooldownOver()) {
+				mousePressed = Minecraft.getSystemTime();
+				availableReputation = 10;
+			}
+		}
+	}
+	
 	private void drawReputationDisplay(int xPos, int yPos) {
-		fontRendererObj.drawString(String.valueOf(availableReputation) + " Reputation", xPos + 50, yPos + 32, Color.darkGray.getRGB());
+		fontRendererObj.drawString(String.valueOf(availableReputation) + " Rep. for", xPos + 13, yPos + 15, Color.darkGray.getRGB());
+	}
+	
+	private void drawQuestTitle(int xPos, int yPos) {
+		fontRendererObj.drawString("Quest Title", xPos + 2, yPos + 32, Color.darkGray.getRGB());
+
 	}
 	
 	public static void setAvailableReputation(int rep) {

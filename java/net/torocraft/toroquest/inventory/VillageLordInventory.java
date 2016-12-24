@@ -187,7 +187,7 @@ public class VillageLordInventory implements IInventory {
 	}
 	
 	private void loadItemList() {
-		itemReputations.put(Item.getItemById(3), 10);
+		itemReputations.put(Item.getItemById(3), 100);
 	}
 
 	@Override

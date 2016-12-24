@@ -1,5 +1,6 @@
 package net.torocraft.toroquest.civilization.quests;
 
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -7,6 +8,8 @@ import java.util.UUID;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -175,9 +178,6 @@ public class QuestFarm implements Quest {
 	}
 
 	private void handleFarmQuest(EntityPlayer player, Province provinceFarmedIn, Block crop, boolean plant) {
-
-		System.out.println("***** handleFarmQuest event");
-
 		Set<QuestData> quests = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuests();
 		Data quest = new Data();
 		for (QuestData data : quests) {
@@ -192,6 +192,9 @@ public class QuestFarm implements Quest {
 	}
 
 	public boolean perform(Data quest, Block farmedCrop, boolean plant) {
+		if (quest.getData().getPlayer().worldObj.isRemote) {
+			return false;
+		}
 
 		if (!quest.isApplicable()) {
 			return false;
@@ -205,24 +208,12 @@ public class QuestFarm implements Quest {
 
 		if (quest.getCurrentAmount() >= quest.getTargetAmount()) {
 			quest.data.setCompleted(true);
-			complete(quest.data);
+			complete(quest.data, null);
 		}
 
 		System.out.println("Farm Quest Status: " + quest.getCurrentAmount());
 
 		return true;
-	}
-
-	@Override
-	public void reward(QuestData data) {
-		PlayerCivilizationCapabilityImpl.get(data.getPlayer()).adjustPlayerReputation(data.getCiv(), new Data().setData(data).getRewardRep());
-	}
-
-	@Override
-	public void complete(QuestData quest) {
-		if (PlayerCivilizationCapabilityImpl.get(quest.getPlayer()).removeQuest(quest)) {
-			reward(quest);
-		}
 	}
 
 	@Override
@@ -277,6 +268,44 @@ public class QuestFarm implements Quest {
 		q.setTargetAmount(roll);
 
 		return q.data;
+	}
+
+	@Override
+	public void reject(QuestData data) {
+
+	}
+
+	@Override
+	public List<ItemStack> accept(QuestData data, List<ItemStack> in) {
+		return in;
+	}
+
+	@Override
+	public List<ItemStack> complete(QuestData quest, List<ItemStack> items) {
+		if (!quest.getCompleted() || !removeQuestFromPlayer(quest)) {
+			return null;
+		}
+
+		Province province = loadProvice(quest.getPlayer().worldObj, quest.getPlayer().getPosition());
+
+		if (province == null || !province.id.equals(quest.getProvinceId())) {
+			return null;
+		}
+
+		PlayerCivilizationCapabilityImpl.get(quest.getPlayer()).adjustPlayerReputation(quest.getCiv(), new Data().setData(quest).getRewardRep());
+
+		ItemStack hoe = new ItemStack(Items.GOLDEN_HOE);
+		hoe.setStackDisplayName("Golden Hoe of " + province.name);
+
+		ItemStack emeralds = new ItemStack(Items.EMERALD, 2);
+		items.add(hoe);
+		items.add(emeralds);
+
+		return items;
+	}
+
+	protected boolean removeQuestFromPlayer(QuestData quest) {
+		return PlayerCivilizationCapabilityImpl.get(quest.getPlayer()).removeQuest(quest);
 	}
 
 }

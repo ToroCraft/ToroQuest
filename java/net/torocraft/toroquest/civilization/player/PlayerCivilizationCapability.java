@@ -1,7 +1,9 @@
 package net.torocraft.toroquest.civilization.player;
 
+import java.util.List;
 import java.util.Set;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.torocraft.toroquest.civilization.CivilizationType;
@@ -39,11 +41,20 @@ public interface PlayerCivilizationCapability {
 	/**
 	 * @return quest data or NULL if wasn't able to accept
 	 */
-	QuestData acceptQuest();
+	List<ItemStack> acceptQuest(List<ItemStack> in);
 
 	/**
-	 * rejects the current quest and returns the rejected quest data or NULL if
-	 * no quest was rejected
+	 * 
+	 * @param in
+	 *            items to turn in
+	 * @return NULL if quest was not completed or a List of gifts / return items
+	 *         if the quest completed
+	 */
+	List<ItemStack> completeQuest(List<ItemStack> in);
+
+	/**
+	 * rejects the current quest and returns the next quest data or NULL on
+	 * errors
 	 */
 	QuestData rejectQuest();
 

@@ -8,7 +8,10 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -70,7 +73,6 @@ public class ToroQuestCommand extends CommandBase {
 		}
 	}
 
-
 	private void adjustRep(EntityPlayer player, String[] args) throws CommandException {
 		int amount;
 		if (args.length < 2) {
@@ -117,19 +119,19 @@ public class ToroQuestCommand extends CommandBase {
 
 		throw new WrongUsageException("commands.tq.usage", new Object[0]);
 	}
-	
+
 	private void guiCommand(EntityPlayer player, String[] args) throws CommandException {
-		if(args.length < 2) {
+		if (args.length < 2) {
 			throw new WrongUsageException("commans.tq.usage", new Object[0]);
 		}
-		
+
 		String type = args[1];
-		
-		if("lord".equals(type)) {
+
+		if ("lord".equals(type)) {
 			player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
 			return;
 		}
-		
+
 		throw new WrongUsageException("commands.tq.usage", new Object[0]);
 	}
 
@@ -139,6 +141,14 @@ public class ToroQuestCommand extends CommandBase {
 		}
 
 		String sub = args[1];
+
+		if ("test".equals(sub)) {
+			List<ItemStack> items = pullHotbarItems(player);
+
+			dropItems(player, items);
+
+			return;
+		}
 
 		if ("list".equals(sub)) {
 			Set<QuestData> quests = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuests();
@@ -179,14 +189,28 @@ public class ToroQuestCommand extends CommandBase {
 				player.addChatMessage(new TextComponentString(quest.getDescription()));
 			}
 		} else if ("accept".equals(sub)) {
-			QuestData data = PlayerCivilizationCapabilityImpl.get(player).acceptQuest();
-			if (data == null) {
-				throw new WrongUsageException("commands.tq.quest_could_not_be_accepted", new Object[0]);
+			List<ItemStack> stack = PlayerCivilizationCapabilityImpl.get(player).acceptQuest(pullHotbarItems(player));
+			dropItems(player, stack);
+
+			if (stack == null) {
+				player.addChatMessage(new TextComponentString("Quest not Accepted"));
 			} else {
-				QuestDelegator quest = new QuestDelegator(data);
+				QuestDelegator quest = new QuestDelegator(PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province));
 				player.addChatMessage(new TextComponentString("Accepted: " + quest.getTitle()));
 				player.addChatMessage(new TextComponentString(quest.getDescription()));
 			}
+			
+		} else if ("complete".equals(sub)) {
+			QuestDelegator curQuest = new QuestDelegator(PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province));
+			List<ItemStack> stack = PlayerCivilizationCapabilityImpl.get(player).completeQuest(pullHotbarItems(player));
+			dropItems(player, stack);
+
+			if (stack == null) {
+				player.addChatMessage(new TextComponentString("Quest not Completed"));
+			} else {
+				player.addChatMessage(new TextComponentString("Completed: " + curQuest.getTitle()));
+			}
+
 		} else if ("reject".equals(sub)) {
 			QuestData data = PlayerCivilizationCapabilityImpl.get(player).rejectQuest();
 			if (data == null) {
@@ -197,6 +221,29 @@ public class ToroQuestCommand extends CommandBase {
 			}
 		} else {
 			throw new WrongUsageException("commands.tq.usage", new Object[0]);
+		}
+	}
+
+	private List<ItemStack> pullHotbarItems(EntityPlayer player) {
+		List<ItemStack> items = new ArrayList<ItemStack>();
+		InventoryPlayer inv = player.inventory;
+
+		for (int i = 0; i < inv.getSizeInventory(); i++) {
+			if (inv.getStackInSlot(i) != null && inv.isHotbar(i)) {
+				ItemStack stack = inv.getStackInSlot(i);
+				inv.setInventorySlotContents(i, ItemStack.field_190927_a);
+				items.add(stack);
+			}
+		}
+
+		return items;
+	}
+
+	private void dropItems(EntityPlayer player, List<ItemStack> items) {
+		for (ItemStack stack : items) {
+			EntityItem dropItem = new EntityItem(player.worldObj, player.posX, player.posY, player.posZ, stack);
+			dropItem.setNoPickupDelay();
+			player.worldObj.spawnEntityInWorld(dropItem);
 		}
 	}
 
@@ -232,6 +279,7 @@ public class ToroQuestCommand extends CommandBase {
 				tabOptions.add("lord");
 			} else if ("quest".equals(args[0])) {
 				tabOptions.add("current");
+				tabOptions.add("complete");
 				tabOptions.add("list");
 				tabOptions.add("next");
 				tabOptions.add("accept");

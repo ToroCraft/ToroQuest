@@ -2,6 +2,7 @@ package net.torocraft.toroquest.civilization.player;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -9,6 +10,7 @@ import java.util.concurrent.Callable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -25,6 +27,7 @@ import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.ReputationLevel;
 import net.torocraft.toroquest.civilization.quests.QuestFarm;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
+import net.torocraft.toroquest.civilization.quests.util.QuestDelegator;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 import net.torocraft.toroquest.network.message.MessagePlayerCivilizationSetInCiv;
 import net.torocraft.toroquest.network.message.MessageSetPlayerReputation;
@@ -317,8 +320,6 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 
 	@Override
 	public boolean removeQuest(QuestData quest) {
-		// TODO if task is incomplete impose negative rep for reject the quest,
-		// relative to how much rep the have, so it will never take it negative
 		return quests.remove(quest);
 	}
 
@@ -353,7 +354,7 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	}
 
 	@Override
-	public QuestData acceptQuest() {
+	public List<ItemStack> acceptQuest(List<ItemStack> in) {
 		Province province = getPlayerInCivilization();
 		if (province == null) {
 			return null;
@@ -362,10 +363,13 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		if (getCurrentQuestFor(province) != null) {
 			return null;
 		}
+		
 		QuestData data = getNextQuestFor(province);
 		quests.add(data);
 		nextQuests.remove(data);
-		return data;
+		
+		
+		return new QuestDelegator(data).accept(in);
 	}
 
 	@Override
@@ -380,10 +384,25 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		}
 
 		if (removeQuest(data)) {
-			return data;
+			// TODO remove rep, not allowed to go negative
+			new QuestDelegator(data).reject();
 		}
 
-		return null;
+		return getNextQuestFor(province);
+	}
+
+	@Override
+	public List<ItemStack> completeQuest(List<ItemStack> in) {
+		Province province = getPlayerInCivilization();
+		if (province == null) {
+			return null;
+		}
+		QuestData data = getCurrentQuestFor(province);
+		if (data == null) {
+			return null;
+		}
+
+		return new QuestDelegator(data).complete(in);
 	}
 
 }

@@ -1,5 +1,9 @@
 package net.torocraft.toroquest.civilization.quests.util;
 
+import java.util.List;
+
+import net.minecraft.item.ItemStack;
+
 public class QuestDelegator {
 
 	private QuestData data;
@@ -15,12 +19,8 @@ public class QuestDelegator {
 		return Quests.getQuestForId(data.getQuestType());
 	};
 
-	public void complete() {
-		getTypedQuest(data).complete(data);
-	}
-
-	public void reward() {
-		getTypedQuest(data).reward(data);
+	public List<ItemStack> complete(List<ItemStack> in) {
+		return getTypedQuest(data).complete(data, in);
 	}
 
 	public String getTitle() {
@@ -40,6 +40,14 @@ public class QuestDelegator {
 			throw new NullPointerException("quest delegator was set with a null");
 		}
 		this.data = data;
+	}
+
+	public void reject() {
+		getTypedQuest(data).reject(data);
+	}
+
+	public List<ItemStack> accept(List<ItemStack> in) {
+		return getTypedQuest(data).accept(data, in);
 	}
 
 }

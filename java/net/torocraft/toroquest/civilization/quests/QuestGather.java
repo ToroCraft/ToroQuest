@@ -171,12 +171,24 @@ public class QuestGather implements Quest {
 	}
 
 	private static void handleStackDecrement(ItemStack requiredItem, ItemStack givenItem) {
+		if (!equals(requiredItem, givenItem)) {
+			return;
+		}
+
 		if (requiredItem.func_190916_E() < 1 || givenItem.func_190916_E() < 1) {
 			return;
 		}
 		int decrementBy = Math.min(requiredItem.func_190916_E(), givenItem.func_190916_E());
 		requiredItem.func_190918_g(decrementBy);
 		givenItem.func_190918_g(decrementBy);
+
+		System.out.println("stack dec: " + decrementBy + " => G:" + givenItem.func_190916_E() + " R:" + requiredItem.func_190916_E());
+	}
+
+	private static boolean equals(ItemStack requiredItem, ItemStack givenItem) {
+		ItemStack givenCopy = givenItem.copy();
+		givenCopy.func_190920_e(requiredItem.func_190916_E());
+		return ItemStack.areItemStacksEqual(givenCopy, requiredItem);
 	}
 
 	public static class InsufficientItems extends Exception {

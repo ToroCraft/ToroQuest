@@ -15,7 +15,7 @@ public class QuestData {
 	private Integer questType;
 	private UUID provinceId;
 	private CivilizationType civ;
-	private EntityPlayer player;
+	private transient EntityPlayer player;
 	private Boolean completed = false;
 	private Map<String, Integer> iData = new HashMap<String, Integer>();
 

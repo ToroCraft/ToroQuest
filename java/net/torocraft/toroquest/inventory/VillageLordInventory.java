@@ -3,6 +3,7 @@ package net.torocraft.toroquest.inventory;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -11,8 +12,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.torocraft.toroquest.civilization.CivilizationUtil;
+import net.torocraft.toroquest.civilization.Province;
+import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
+import net.torocraft.toroquest.civilization.quests.QuestFarm;
+import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 import net.torocraft.toroquest.network.message.MessageSetItemReputationAmount;
+import net.torocraft.toroquest.network.message.MessageSetQuestInfo;
 
 public class VillageLordInventory implements IInventory {
 
@@ -168,9 +175,10 @@ public class VillageLordInventory implements IInventory {
 	}
 	
 	public void updateClientQuest(){
-		// FIXME: send a quest update packet to the client (I started to created
-		// MessageSetQuestInfo for this)
-
+		Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), player.chunkCoordX, player.chunkCoordZ);
+		QuestData currentQuest = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
+		QuestData nextQuest = PlayerCivilizationCapabilityImpl.get(player).getNextQuestFor(province);
+		ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetQuestInfo(province, currentQuest, nextQuest), (EntityPlayerMP) player);
 	}
 
 	public void checkForReputation() {

@@ -8,6 +8,7 @@ import net.torocraft.toroquest.network.message.MessagePlayerCivilizationSetInCiv
 import net.torocraft.toroquest.network.message.MessageRequestPlayerCivilizationSync;
 import net.torocraft.toroquest.network.message.MessageSetItemReputationAmount;
 import net.torocraft.toroquest.network.message.MessageSetPlayerReputation;
+import net.torocraft.toroquest.network.message.MessageSetQuestInfo;
 
 public class ToroQuestPacketHandler {
 
@@ -24,6 +25,8 @@ public class ToroQuestPacketHandler {
 
 	public static void init() {
 		INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(ToroQuest.MODID);
+		
+		INSTANCE.registerMessage(MessageSetQuestInfo.Handler.class, MessageSetQuestInfo.class, 5, Side.CLIENT);
 		
 		INSTANCE.registerMessage(MessageSetItemReputationAmount.Handler.class, MessageSetItemReputationAmount.class, 4, Side.CLIENT);
 

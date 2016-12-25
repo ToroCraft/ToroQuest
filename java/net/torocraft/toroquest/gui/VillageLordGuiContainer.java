@@ -11,6 +11,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.torocraft.toroquest.civilization.Province;
+import net.torocraft.toroquest.civilization.quests.util.QuestData;
+import net.torocraft.toroquest.civilization.quests.util.QuestDelegator;
 import net.torocraft.toroquest.inventory.VillageLordInventory;
 
 public class VillageLordGuiContainer extends GuiContainer {
@@ -24,6 +27,11 @@ public class VillageLordGuiContainer extends GuiContainer {
 	private static long mousePressed = 0;
 	
 	private static int availableReputation = 100;
+	private static Province civ;
+	private static QuestData currentQuest;
+	private static QuestData nextQuest;
+	
+	private QuestDelegator quest = new QuestDelegator(new QuestData());
 	
 	public VillageLordGuiContainer() {
 		this(null, null, null);
@@ -31,7 +39,6 @@ public class VillageLordGuiContainer extends GuiContainer {
 	
 	public VillageLordGuiContainer(EntityPlayer player, VillageLordInventory inventory, World world) {
 		super(new VillageLordContainer(player, inventory, world));
-		
 		xSize = 176;
 		ySize = 222;
 	}
@@ -44,8 +51,13 @@ public class VillageLordGuiContainer extends GuiContainer {
 		
 		//if(hasReputation()) {
 			drawDonateButton(mouseX, mouseY);
-			drawAcceptButton(mouseX, mouseY);
 		//}
+			
+		if(currentQuest != null) {
+			drawAbandonButton(mouseX, mouseY);
+		} else if(nextQuest != null) {
+			drawAcceptButton(mouseX, mouseY);
+		}
 	}
 	
 	@Override
@@ -53,9 +65,14 @@ public class VillageLordGuiContainer extends GuiContainer {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		final int LABEL_XPOS = 5;
 		final int LABEL_YPOS = 5;
-		fontRendererObj.drawString("Village Lord", LABEL_XPOS, LABEL_YPOS, Color.darkGray.getRGB());
+		drawGuiTitle(LABEL_XPOS, LABEL_YPOS);
 		drawReputationDisplay(LABEL_XPOS, LABEL_YPOS);
 		drawQuestTitle(LABEL_XPOS, LABEL_YPOS);
+	}
+	
+	private void drawGuiTitle(int xPos, int yPos) {
+		if(civ != null)
+			fontRendererObj.drawString("Lord of " + civ.name, xPos, yPos, Color.darkGray.getRGB());
 	}
 	
 	private void drawDonateButton(int mouseX, int mouseY) {
@@ -75,7 +92,16 @@ public class VillageLordGuiContainer extends GuiContainer {
 		if (Mouse.getEventButtonState() && Mouse.getEventButton() != -1) {
 			if (acceptButton.mousePressed(mc, mouseX, mouseY) && mouseCooldownOver()) {
 				mousePressed = Minecraft.getSystemTime();
-				availableReputation = 10;
+			}
+		}
+	}
+	
+	private void drawAbandonButton(int mouseX, int mouseY) {
+		GuiButton abandonButton = new GuiButton(0, guiLeft + 105, guiTop + 114, buttonWidth, buttonHeight, "Accept");
+		abandonButton.drawButton(mc, mouseX, mouseY);
+		if (Mouse.getEventButtonState() && Mouse.getEventButton() != -1) {
+			if (abandonButton.mousePressed(mc, mouseX, mouseY) && mouseCooldownOver()) {
+				mousePressed = Minecraft.getSystemTime();
 			}
 		}
 	}
@@ -85,12 +111,30 @@ public class VillageLordGuiContainer extends GuiContainer {
 	}
 	
 	private void drawQuestTitle(int xPos, int yPos) {
-		fontRendererObj.drawString("Quest Title", xPos + 2, yPos + 32, Color.darkGray.getRGB());
-
+		if(currentQuest != null) {
+			quest.setData(currentQuest);
+		} else if(nextQuest != null) {
+			quest.setData(nextQuest);		
+		}
+		
+		fontRendererObj.drawString(quest.getTitle(), xPos + 2, yPos + 35, Color.darkGray.getRGB());
+		fontRendererObj.drawSplitString(quest.getDescription(), xPos + 25, yPos + 50, 115, Color.darkGray.getRGB());
+	}
+	
+	public static void setProvince(Province province) {
+		civ = province;
 	}
 	
 	public static void setAvailableReputation(int rep) {
 		availableReputation = rep;
+	}
+
+	public static void setCurrentQuest(QuestData quest) {
+		currentQuest = quest;
+	}
+	
+	public static void setNextQuest(QuestData quest) {
+		nextQuest = quest;
 	}
 	
 	private boolean hasReputation() {

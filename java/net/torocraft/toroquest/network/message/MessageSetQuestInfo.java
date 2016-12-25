@@ -1,5 +1,7 @@
 package net.torocraft.toroquest.network.message;
 
+import com.google.gson.Gson;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,31 +10,48 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
+import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
+import net.torocraft.toroquest.gui.VillageLordGuiContainer;
 
 public class MessageSetQuestInfo implements IMessage {
 
-	private boolean accepted;
-	private String title;
-	private String description;
+	private QuestMessage questMessage;
+	private String questMessageJson;
 	
 	public MessageSetQuestInfo() {
 
 	}
 
-	public MessageSetQuestInfo(QuestData current, QuestData next) {
-		// TODO map from questData here?
+	public MessageSetQuestInfo(Province civ, QuestData current, QuestData next) {
+		questMessage = new QuestMessage();
+		questMessage.civ = civ;
+		questMessage.current = current;
+		questMessage.next = next;
+		serializeData();
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		// TODO
-		ByteBufUtils.writeUTF8String(buf, "");
+		questMessageJson = ByteBufUtils.readUTF8String(buf);
+		deserializeData();
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		// TODO
+		ByteBufUtils.writeUTF8String(buf, questMessageJson);
+	}
+	
+	private void serializeData() {
+		if(questMessage != null) {
+			questMessageJson = new Gson().toJson(questMessage, QuestMessage.class);
+		} else {
+			questMessageJson = "";
+		}
+	}
+	
+	private void deserializeData() {
+		questMessage = new Gson().fromJson(questMessageJson, QuestMessage.class);
 	}
 	
 	public static class Worker {
@@ -44,8 +63,9 @@ public class MessageSetQuestInfo implements IMessage {
 				return;
 			}
 			
-			// FIXME
-			// VillageLordGuiContainer.setAvailableReputation(message.reputation);
+			VillageLordGuiContainer.setProvince(message.questMessage.civ);
+			VillageLordGuiContainer.setCurrentQuest(message.questMessage.current);
+			VillageLordGuiContainer.setNextQuest(message.questMessage.next);
 		}
 	}
 
@@ -66,5 +86,11 @@ public class MessageSetQuestInfo implements IMessage {
 
 			return null;
 		}	
+	}
+	
+	public static class QuestMessage {
+		public Province civ;
+		public QuestData current;
+		public QuestData next;
 	}
 }

@@ -62,7 +62,9 @@ public class VillageLordContainer extends Container {
 			}
 		}
 
-		this.inventory.updateClientQuest();
+		if(!player.worldObj.isRemote) {
+			this.inventory.updateClientQuest();
+		}
 	}
 	
 	@Override

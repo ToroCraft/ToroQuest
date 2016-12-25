@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.torocraft.toroquest.civilization.CivilizationType;
 
@@ -18,6 +19,8 @@ public class QuestData {
 	private transient EntityPlayer player;
 	private Boolean completed = false;
 	private Map<String, Integer> iData = new HashMap<String, Integer>();
+	private Map<String, String> sData = new HashMap<String, String>();
+	private NBTBase custom = new NBTTagCompound();
 
 	@Override
 	public String toString() {
@@ -25,8 +28,11 @@ public class QuestData {
 		s.append("id[").append(questId).append("]");
 		s.append(" questType[").append(questType).append("]");
 		s.append(" provinceId[").append(provinceId).append("]");
-		for(Entry<String, Integer> e : iData.entrySet()){
+		for (Entry<String, Integer> e : iData.entrySet()) {
 			s.append(" idata_" + e.getKey() + "[").append(e.getValue()).append("]");
+		}
+		for (Entry<String, Integer> e : iData.entrySet()) {
+			s.append(" sdata_" + e.getKey() + "[").append(e.getValue()).append("]");
 		}
 		return s.toString();
 	}
@@ -41,11 +47,13 @@ public class QuestData {
 		questType = c.getInteger("type");
 		provinceId = UUID.fromString(c.getString("provinceId"));
 		civ = e(c.getString("civ"));
-		iData = readMap(c.getCompoundTag("idata"));
+		iData = readIMap(c.getCompoundTag("idata"));
+		sData = readSMap(c.getCompoundTag("sdata"));
 		completed = c.getBoolean("completed");
+		custom = c.getTag("custom");
 	}
 
-	private Map<String, Integer> readMap(NBTTagCompound c) {
+	private Map<String, Integer> readIMap(NBTTagCompound c) {
 		Map<String, Integer> m = new HashMap<String, Integer>();
 		for (String key : c.getKeySet()) {
 			m.put(key, c.getInteger(key));
@@ -53,10 +61,26 @@ public class QuestData {
 		return m;
 	}
 
-	private NBTTagCompound writeMap(Map<String, Integer> m) {
+	private NBTTagCompound writeIMap(Map<String, Integer> m) {
 		NBTTagCompound c = new NBTTagCompound();
 		for (Entry<String, Integer> e : m.entrySet()) {
 			c.setInteger(e.getKey(), e.getValue());
+		}
+		return c;
+	}
+
+	private Map<String, String> readSMap(NBTTagCompound c) {
+		Map<String, String> m = new HashMap<String, String>();
+		for (String key : c.getKeySet()) {
+			m.put(key, c.getString(key));
+		}
+		return m;
+	}
+
+	private NBTTagCompound writeSMap(Map<String, String> m) {
+		NBTTagCompound c = new NBTTagCompound();
+		for (Entry<String, String> e : m.entrySet()) {
+			c.setString(e.getKey(), e.getValue());
 		}
 		return c;
 	}
@@ -67,8 +91,16 @@ public class QuestData {
 		c.setInteger("type", questType);
 		c.setString("provinceId", provinceId.toString());
 		c.setString("civ", s(civ));
-		c.setTag("idata", writeMap(iData));
+		c.setTag("idata", writeIMap(iData));
+		c.setTag("sdata", writeSMap(sData));
 		c.setBoolean("completed", completed);
+
+		if (custom == null) {
+			System.out.println("**** quest custom data was null, boo.");
+			custom = new NBTTagCompound();
+		}
+
+		c.setTag("custom", custom);
 		return c;
 	}
 
@@ -166,6 +198,22 @@ public class QuestData {
 
 	public void setCompleted(Boolean completed) {
 		this.completed = completed;
+	}
+
+	public Map<String, String> getsData() {
+		return sData;
+	}
+
+	public void setsData(Map<String, String> sData) {
+		this.sData = sData;
+	}
+
+	public NBTBase getCustom() {
+		return custom;
+	}
+
+	public void setCustom(NBTBase custom) {
+		this.custom = custom;
 	}
 
 }

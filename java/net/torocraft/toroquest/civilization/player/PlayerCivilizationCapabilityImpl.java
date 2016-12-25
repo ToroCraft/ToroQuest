@@ -25,7 +25,7 @@ import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.ReputationLevel;
-import net.torocraft.toroquest.civilization.quests.QuestFarm;
+import net.torocraft.toroquest.civilization.quests.QuestGather;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.civilization.quests.util.QuestDelegator;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
@@ -345,8 +345,13 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 
 	private QuestData generateNextQuestFor(Province province) {
 		// TODO choose next quest based on rep and random factors
-		QuestData q = QuestFarm.INSTANCE.generateQuestFor(player, province);
+
+		// QuestData q = QuestFarm.INSTANCE.generateQuestFor(player, province);
+
+		QuestData q = QuestGather.INSTANCE.generateQuestFor(player, province);
+
 		nextQuests.add(q);
+
 		if (!q.isValid()) {
 			throw new IllegalArgumentException("Invalid next quest generated: " + q.toString());
 		}

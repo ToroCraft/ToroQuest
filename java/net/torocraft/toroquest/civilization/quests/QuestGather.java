@@ -133,8 +133,8 @@ public class QuestGather implements Quest {
 			return "";
 		}
 		StringBuilder s = new StringBuilder();
-		s.append("- Gather: ").append(listItems(getRequiredItems(data))).append("\n");
-		s.append("- Reward: ").append(listItems(getRewardItems(data))).append("\n");
+		s.append("- Gather ").append(listItems(getRequiredItems(data))).append("\n");
+		s.append("- Reward ").append(listItems(getRewardItems(data))).append("\n");
 		s.append("- Recieve ").append(getRewardRep(data)).append(" reputation");
 		return s.toString();
 	}

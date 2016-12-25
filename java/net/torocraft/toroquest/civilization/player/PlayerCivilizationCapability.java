@@ -73,4 +73,5 @@ public interface PlayerCivilizationCapability {
 	 * return the next quest for the given province, should never return NULL
 	 */
 	QuestData getNextQuestFor(Province province);
+
 }

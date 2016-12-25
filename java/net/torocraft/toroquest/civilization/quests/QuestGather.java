@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 
@@ -75,9 +76,9 @@ public class QuestGather implements Quest {
 
 		Integer[] a = { Item.getIdFromItem(Items.DIAMOND) };
 
-		// q.setItemIds(a);
-		// q.setRewardRep(roll / 20 + 10);
-		// q.setTargetAmount(roll);
+		setRequiredItems(data, new HashMap<Item, Integer>());
+
+		setRewardRep(data, roll / 20 + 10);
 
 		return data;
 	}
@@ -97,21 +98,22 @@ public class QuestGather implements Quest {
 
 	@Override
 	public List<ItemStack> complete(QuestData data, List<ItemStack> items) {
-		if (!removeQuestFromPlayer(data)) {
-			return null;
-		}
-
 		Province province = loadProvice(data.getPlayer().worldObj, data.getPlayer().getPosition());
 
 		if (province == null || !province.id.equals(data.getProvinceId())) {
 			return null;
 		}
 
-		if (!hasCorrectItems(data, items)) {
+		try {
+			items = removeItems(getRequiredItems(data), items);
+		} catch (InsufficientItems ex) {
+			System.out.println("Insuifficient items: " + ex.getMessage());
 			return null;
 		}
 
-		items = removeQuestItems(data, items);
+		if (!removeQuestFromPlayer(data)) {
+			return null;
+		}
 
 		PlayerCivilizationCapabilityImpl.get(data.getPlayer()).adjustPlayerReputation(data.getCiv(), getRewardRep(data));
 
@@ -121,74 +123,61 @@ public class QuestGather implements Quest {
 		return items;
 	}
 
-	private List<ItemStack> removeQuestItems(QuestData data, List<ItemStack> items) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	private boolean hasCorrectItems(QuestData data, List<ItemStack> items) {
+	public static List<ItemStack> removeItems(Map<Item, Integer> required, List<ItemStack> itemsIn) throws InsufficientItems {
+		List<ItemStack> items = copyItems(itemsIn);
+		int decrementBy;
 
-		for (ItemStack requiredStack : getRequiredItems(data)) {
-			for (ItemStack turnInStack : items) {
+		for (ItemStack stack : items) {
+			if (stack.func_190916_E() < 1) {
 				continue;
 			}
-		}
-
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public static class ItemCount {
-		public int target = 0;
-		public int count = 0;
-	}
-
-	public static class ItemCounter {
-
-
-		public Map<Item, ItemCount> counts;
-
-		public boolean hasEnough(List<ItemStack> required, List<ItemStack> items) {
-			resetCounts(required);
-
-			for (ItemStack stack : items) {
-				if (counts.get(stack.getItem()) != null) {
-					ItemCount count = counts.get(stack.getItem());
-					count.target += stack.func_190916_E();
-				}
-
-			}
-
-			return false;
-		}
-
-		protected void resetCounts(List<ItemStack> required) {
-			counts = new HashMap<Item, ItemCount>();
-			for (ItemStack stack : required) {
-				if (counts.get(stack.getItem()) == null) {
-					counts.put(stack.getItem(), new ItemCount());
-				}
-				ItemCount count = counts.get(stack.getItem());
-				count.target += stack.func_190916_E();
+			Integer requiredCount = required.get(stack.getItem());
+			if (requiredCount != null && requiredCount > 0) {
+				decrementBy = Math.min(stack.func_190916_E(), requiredCount);
+				required.put(stack.getItem(), requiredCount - decrementBy);
+				stack.func_190918_g(decrementBy);
 			}
 		}
 
+		for (Entry<Item, Integer> remaining : required.entrySet()) {
+			if (remaining.getValue() > 0) {
+				throw new InsufficientItems(remaining.getValue() + " " + remaining.getKey().getUnlocalizedName());
+			}
+		}
+
+		return items;
 	}
+
+	public static class InsufficientItems extends Exception {
+		public InsufficientItems(String message) {
+			super(message);
+		}
+	}
+
+	protected static List<ItemStack> copyItems(List<ItemStack> itemsIn) {
+		List<ItemStack> items = new ArrayList<ItemStack>();
+		for (ItemStack stack : itemsIn) {
+			items.add(stack.copy());
+		}
+		return items;
+	}
+
+
 
 	protected boolean removeQuestFromPlayer(QuestData quest) {
 		return PlayerCivilizationCapabilityImpl.get(quest.getPlayer()).removeQuest(quest);
 	}
 
-	public List<ItemStack> getRequiredItems(QuestData data) {
-		List<ItemStack> items = new ArrayList<ItemStack>();
-		items.add(new ItemStack(Items.DIAMOND, 10));
-
+	public Map<Item, Integer> getRequiredItems(QuestData data) {
+		Map<Item, Integer> items = new HashMap<Item, Integer>();
+		items.put(Items.DIAMOND, 10);
 		// TODO return i(data.getiData().get("type"));
 		// Integer[] a = { Item.getIdFromItem(Items.DIAMOND) };
 		return items;
 	}
 
-	public void setRequiredItems(QuestData data, List<ItemStack> items) {
+	public void setRequiredItems(QuestData data, Map<Item, Integer> required) {
 		// data.getiData().put("type", cropType);
 		// TODO
 	}

@@ -201,14 +201,25 @@ public class ToroQuestCommand extends CommandBase {
 			}
 			
 		} else if ("complete".equals(sub)) {
-			QuestDelegator curQuest = new QuestDelegator(PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province));
-			List<ItemStack> stack = PlayerCivilizationCapabilityImpl.get(player).completeQuest(pullHotbarItems(player));
-			dropItems(player, stack);
 
-			if (stack == null) {
+			QuestData data = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
+
+			if (data == null) {
+				player.addChatMessage(new TextComponentString("No accepted quest to complete"));
+				return;
+			}
+
+			QuestDelegator curQuest = new QuestDelegator(data);
+
+			List<ItemStack> beforeItems = pullHotbarItems(player);
+			List<ItemStack> afterItems = PlayerCivilizationCapabilityImpl.get(player).completeQuest(beforeItems);
+
+			if (afterItems == null) {
 				player.addChatMessage(new TextComponentString("Quest not Completed"));
+				dropItems(player, beforeItems);
 			} else {
 				player.addChatMessage(new TextComponentString("Completed: " + curQuest.getTitle()));
+				dropItems(player, afterItems);
 			}
 
 		} else if ("reject".equals(sub)) {

@@ -4,7 +4,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
-import net.torocraft.toroquest.ToroQuest;
 
 public class ToolMaterials {
 	
@@ -22,16 +21,15 @@ public class ToolMaterials {
 	 * GOLD(0, 32, 12.0F, 0.0F, 22);
 	 */
 
-	private static final String MODID = ToroQuest.MODID;
-	
 	public static ToolMaterial OBSIDIAN_MATERIAL;
+	public static ToolMaterial FIRE_MATERIAL;
 
 	public static void init() {
 		obsidianMaterial();
+		fireMaterial();
 	}
 
 	protected static void obsidianMaterial() {
-
 		int harvestLevel = 3;
 		int durability = 10;
 		float miningSpeed = 10f;
@@ -39,5 +37,15 @@ public class ToolMaterials {
 		int enchantability = 12;
 		OBSIDIAN_MATERIAL = EnumHelper.addToolMaterial("OBSIDIAN", harvestLevel, durability, miningSpeed, damageVsEntities, enchantability);
 		OBSIDIAN_MATERIAL.setRepairItem(new ItemStack(Blocks.OBSIDIAN));
+	}
+
+	protected static void fireMaterial() {
+		int harvestLevel = 3;
+		int durability = 1000;
+		float miningSpeed = 8f;
+		float damageVsEntities = 9f;
+		int enchantability = 20;
+		FIRE_MATERIAL = EnumHelper.addToolMaterial("FIRE", harvestLevel, durability, miningSpeed, damageVsEntities, enchantability);
+		FIRE_MATERIAL.setRepairItem(new ItemStack(Blocks.MAGMA));
 	}
 }

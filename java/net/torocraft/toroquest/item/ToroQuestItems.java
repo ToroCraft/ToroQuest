@@ -10,12 +10,9 @@ import net.torocraft.toroquest.item.armor.ItemToroArmor;
 public class ToroQuestItems {
 
 	public static final void init() {
-		initArmor();
 		ItemToroLeather.init();
 		ItemObsidianSword.init();
-	}
-
-	private static void initArmor() {
+		ItemFireSword.init();
 		ItemRoyalArmor.init();
 		ItemToroArmor.init();
 		ItemReinforcedDiamondArmor.init();
@@ -30,6 +27,7 @@ public class ToroQuestItems {
 		ItemSamuraiArmor.registerRenders();
 		ItemToroLeather.registerRenders();
 		ItemObsidianSword.registerRenders();
+		ItemFireSword.registerRenders();
 	}
 
 }

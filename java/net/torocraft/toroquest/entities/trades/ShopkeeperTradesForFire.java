@@ -2,11 +2,13 @@ package net.torocraft.toroquest.entities.trades;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.torocraft.toroquest.civilization.ReputationLevel;
+import net.torocraft.toroquest.item.ItemObsidianSword;
 
 public class ShopkeeperTradesForFire {
 	public static MerchantRecipeList trades(EntityPlayer player, ReputationLevel rep) {
@@ -30,7 +32,7 @@ public class ShopkeeperTradesForFire {
 		}
 		
 		if (rep.equals(ReputationLevel.FRIEND) || rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
-			
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(5)), new ItemStack(Blocks.OBSIDIAN, 3), new ItemStack(ItemObsidianSword.INSTANCE)));
 		}
 
 		if (rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {

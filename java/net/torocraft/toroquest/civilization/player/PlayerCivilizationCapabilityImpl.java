@@ -1,5 +1,6 @@
 package net.torocraft.toroquest.civilization.player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -26,14 +27,15 @@ import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.ReputationLevel;
+import net.torocraft.toroquest.civilization.quests.QuestEnemyEncampment;
 import net.torocraft.toroquest.civilization.quests.QuestFarm;
 import net.torocraft.toroquest.civilization.quests.QuestGather;
+import net.torocraft.toroquest.civilization.quests.util.Quest;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.civilization.quests.util.QuestDelegator;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 import net.torocraft.toroquest.network.message.MessagePlayerCivilizationSetInCiv;
 import net.torocraft.toroquest.network.message.MessageSetPlayerReputation;
-
 
 public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapability {
 
@@ -355,17 +357,21 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	private QuestData generateNextQuestFor(Province province) {
 		QuestData q;
 		Random rand = new Random();
-		switch (rand.nextInt(1)) {
-		case 0:
-			q = QuestFarm.INSTANCE.generateQuestFor(player, province);
-			break;
-		case 1:
-			q = QuestGather.INSTANCE.generateQuestFor(player, province);
-			break;
-		default:
-			q = QuestGather.INSTANCE.generateQuestFor(player, province);
-			break;
+
+		List<Quest> possibleQuests = new ArrayList<Quest>();
+		possibleQuests.add(QuestFarm.INSTANCE);
+		possibleQuests.add(QuestGather.INSTANCE);
+		if (getPlayerReputation(province.civilization) > 100) {
+			possibleQuests.add(QuestEnemyEncampment.INSTANCE);
 		}
+		if (getPlayerReputation(province.civilization) > 200) {
+			possibleQuests.add(QuestEnemyEncampment.INSTANCE);
+		}
+		if (getPlayerReputation(province.civilization) > 300) {
+			possibleQuests.add(QuestEnemyEncampment.INSTANCE);
+		}
+
+		q = possibleQuests.get(rand.nextInt(possibleQuests.size())).generateQuestFor(player, province);
 
 		nextQuests.add(q);
 
@@ -424,9 +430,22 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		}
 
 		List<ItemStack> reward = new QuestDelegator(data).complete(in);
-		if (reward != null) {
-			completedQuests++;
+
+		/*
+		 * quest not completed check
+		 */
+		if (reward == null) {
+			return null;
 		}
+
+		/*
+		 * quest was not in quest list check
+		 */
+		if (!removeQuest(data)) {
+			return null;
+		}
+
+		completedQuests++;
 		return reward;
 	}
 

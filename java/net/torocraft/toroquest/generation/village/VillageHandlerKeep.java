@@ -18,6 +18,7 @@ import net.minecraft.world.gen.structure.StructureVillagePieces.Start;
 import net.minecraft.world.gen.structure.StructureVillagePieces.Village;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry.IVillageCreationHandler;
+import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.generation.village.util.BlockMapMeasurer;
 import net.torocraft.toroquest.generation.village.util.VillagePieceBlockMap;
 
@@ -71,8 +72,8 @@ public class VillageHandlerKeep implements IVillageCreationHandler {
 		protected boolean specialBlockHandling(World world, String c, int x, int y, int z) {
 			List<String> entities = new ArrayList<String>();
 			List<String> villageLord = new ArrayList<String>();
-			entities.add("guard");
-			villageLord.add("village_lord");
+			entities.add(ToroQuest.MODID + ":guard");
+			villageLord.add(ToroQuest.MODID + ":village_lord");
 			return specialHandlingForSpawner(world, "xx", c, x, y, z, entities) || specialHandlingForSpawner(world, "xl", c, x, y, z, villageLord);
 		}
 

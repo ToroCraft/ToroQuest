@@ -178,8 +178,7 @@ public class QuestGather implements Quest {
 
 		PlayerCivilizationCapabilityImpl.get(data.getPlayer()).adjustPlayerReputation(data.getCiv(), getRewardRep(data));
 
-		ItemStack emeralds = new ItemStack(Items.EMERALD, 20);
-		items.add(emeralds);
+		items.addAll(getRewardItems(data));
 
 		return items;
 	}

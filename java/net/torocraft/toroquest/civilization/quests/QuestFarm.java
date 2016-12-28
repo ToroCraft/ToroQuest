@@ -1,5 +1,6 @@
 package net.torocraft.toroquest.civilization.quests;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -11,6 +12,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -18,6 +20,7 @@ import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
+import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapability;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.civilization.quests.util.Quest;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
@@ -38,16 +41,208 @@ public class QuestFarm implements Quest {
 		ID = id;
 	}
 
-	public static class Data {
+	@SubscribeEvent
+	public void onFarm(PlaceEvent event) {
+		if (event.getPlayer() == null) {
+			return;
+		}
+
+		Province provinceFarmedIn = loadProvice(event.getPlayer().world, event.getBlockSnapshot().getPos());
+
+		if (provinceFarmedIn == null || provinceFarmedIn.civilization == null) {
+			return;
+		}
+
+		handleFarmQuest(event.getPlayer(), provinceFarmedIn, event.getPlacedBlock().getBlock(), true);
+	}
+
+	@SubscribeEvent
+	public void onHarvest(BreakEvent event) {
+		if (event.getPlayer() == null) {
+			return;
+		}
+
+		Province provinceFarmedIn = loadProvice(event.getPlayer().world, event.getPos());
+
+		if (provinceFarmedIn == null || provinceFarmedIn.civilization == null) {
+			return;
+		}
+
+		handleFarmQuest(event.getPlayer(), provinceFarmedIn, event.getState().getBlock(), false);
+	}
+
+	protected Province loadProvice(World world, BlockPos pos) {
+		return CivilizationUtil.getProvinceAt(world, pos.getX() / 16, pos.getZ() / 16);
+	}
+
+	private void handleFarmQuest(EntityPlayer player, Province provinceFarmedIn, Block crop, boolean plant) {
+		//FIXME doesn't look like this checks if you're planting in the correct province
+		Set<QuestData> quests = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuests();
+		DataWrapper quest = new DataWrapper();
+		for (QuestData data : quests) {
+			quest.setData(data);
+			quest.farmedCrop = crop;
+			quest.provinceFarmedIn = provinceFarmedIn;
+			if (perform(quest, crop, plant)) {
+				return;
+			}
+		}
+	}
+
+	public boolean perform(DataWrapper quest, Block farmedCrop, boolean plant) {
+		if (quest.getData().getPlayer().world.isRemote) {
+			return false;
+		}
+
+		if (!quest.isApplicable()) {
+			return false;
+		}
+
+		if (plant) {
+			quest.setCurrentAmount(quest.getCurrentAmount() + 1);
+		} else {
+			quest.setCurrentAmount(quest.getCurrentAmount() - 1);
+		}
+
+		if (quest.getCurrentAmount() >= quest.getTargetAmount()) {
+			quest.data.setCompleted(true);
+		}
+
+		return true;
+	}
+
+	@Override
+	public String getTitle(QuestData data) {
+		if (data == null) {
+			return "";
+		}
+		DataWrapper q = new DataWrapper().setData(data);
+		return "Plant " + q.getTargetAmount() + " " + cropName(q.getCropType()) + " Plants";
+	}
+
+	private String cropName(Integer i) {
+		if (i == null) {
+			return "Crop";
+		}
+		Block crop = CROP_TYPES[i];
+		if (crop == null) {
+			System.out.println("invalid crop ID [" + i + "]");
+			return "Crop";
+		}
+		return crop.getLocalizedName();
+	}
+
+	@Override
+	public String getDescription(QuestData data) {
+		if (data == null) {
+			return "";
+		}
+		DataWrapper q = new DataWrapper().setData(data);
+		StringBuilder s = new StringBuilder();
+		s.append("- Plant ").append(q.getTargetAmount()).append(" ").append(cropName(q.getCropType())).append(" plants.\n");
+		s.append("- You have planted ").append(q.getCurrentAmount()).append(" so far.\n");
+		s.append("- Reward: " + printRewards(q.data.getRewardItems()));
+		s.append("- Recieve ").append(q.getRewardRep()).append(" reputation");
+		return s.toString();
+	}
+
+	private String printRewards(List<ItemStack> rewardItems) {
+		if (rewardItems == null || rewardItems.isEmpty()) {
+			return "no items\n";
+		}
+		StringBuilder sb = new StringBuilder();
+		
+		for (ItemStack item : rewardItems) {
+			sb.append(item.getCount()).append(" ").append(item.getDisplayName());
+			if (item.getCount() > 1) {
+				sb.append("s");
+			}
+			sb.append("\n");
+		}
+		
+		return sb.toString();
+	}
+
+	@Override
+	public QuestData generateQuestFor(EntityPlayer player, Province province) {
+
+		Random rand = player.getEntityWorld().rand;
+
+		DataWrapper q = new DataWrapper();
+		q.data.setCiv(province.civilization);
+		q.data.setPlayer(player);
+		q.data.setProvinceId(province.id);
+		q.data.setQuestId(UUID.randomUUID());
+		q.data.setQuestType(ID);
+		q.data.setCompleted(false);
+
+		int roll = rand.nextInt(100);
+
+		q.setCropType(rand.nextInt(CROP_TYPES.length));
+		q.setCurrentAmount(0);
+		q.setRewardRep(0); // was using MathHelper.clamp(roll / 10, 3, 8) :: I removed it because planting already gives rep
+		q.setTargetAmount(MathHelper.clamp(roll, 32, 100));
+		
+		
+		//FIXME doesn't actually work because it doesn't get persisted.  Need to add this to the NBTTagCompound somehow
+		ItemStack emeralds = new ItemStack(Items.EMERALD, MathHelper.clamp(q.getTargetAmount() / 32, 1, 4));
+		q.data.setRewardItems(new ArrayList<ItemStack>());
+		q.data.getRewardItems().add(emeralds);
+
+		return q.data;
+	}
+
+	@Override
+	public void reject(QuestData data) {
+
+	}
+
+	@Override
+	public List<ItemStack> accept(QuestData data, List<ItemStack> in) {
+		return in;
+	}
+
+	@Override
+	public List<ItemStack> complete(QuestData quest, List<ItemStack> items) {
+		if (!quest.getCompleted() || !removeQuestFromPlayer(quest)) {
+			return null;
+		}
+
+		Province province = loadProvice(quest.getPlayer().world, quest.getPlayer().getPosition());
+
+		if (province == null || province.id == null || !province.id.equals(quest.getProvinceId())) {
+			return null;
+		}
+
+		PlayerCivilizationCapability playerCiv = PlayerCivilizationCapabilityImpl.get(quest.getPlayer());
+
+		playerCiv.adjustPlayerReputation(quest.getCiv(), new DataWrapper().setData(quest).getRewardRep());
+
+		if (playerCiv.getPlayerReputation(province.civilization) > 100 && quest.getPlayer().world.rand.nextInt(10) > 8) {
+			ItemStack hoe = new ItemStack(Items.GOLDEN_HOE);
+			hoe.setStackDisplayName("Golden Hoe of " + province.name);
+			items.add(hoe);
+		}
+
+		items.addAll(quest.getRewardItems());
+
+		return items;
+	}
+
+	protected boolean removeQuestFromPlayer(QuestData quest) {
+		return PlayerCivilizationCapabilityImpl.get(quest.getPlayer()).removeQuest(quest);
+	}
+
+	public static class DataWrapper {
 		private QuestData data = new QuestData();
 		private Province provinceFarmedIn;
 		private Block farmedCrop;
-
+		
 		public QuestData getData() {
 			return data;
 		}
 
-		public Data setData(QuestData data) {
+		public DataWrapper setData(QuestData data) {
 			this.data = data;
 			return this;
 		}
@@ -109,24 +304,7 @@ public class QuestFarm implements Quest {
 		}
 
 		private boolean isApplicable() {
-			StringBuilder s = new StringBuilder();
-			s.append("** isApplicable\n");
-			s.append("Required by Quest:\n");
-			s.append("province: ").append(data.getProvinceId()).append("\n");
-			s.append("quest type id: ").append(data.getQuestType()).append("\n");
-			s.append("crop type: ").append(CROP_TYPES[getCropType()]).append("\n");
-
-			s.append("Current:\n");
-			s.append("province: ").append(getProvinceFarmedIn().id).append("\n");
-			s.append("quest type id: ").append(ID).append("\n");
-			s.append("crop type: ").append(getFarmedCrop()).append("\n");
-
-			boolean isApplicable = isFarmQuest() && isInCorrectProvince() && isCorrectCrop();
-
-			s.append("RESULT: ").append(isApplicable);
-			System.out.println(s.toString());
-
-			return isApplicable;
+			return isFarmQuest() && isInCorrectProvince() && isCorrectCrop();
 		}
 
 		private boolean isFarmQuest() {
@@ -142,170 +320,4 @@ public class QuestFarm implements Quest {
 		}
 
 	}
-
-	@SubscribeEvent
-	public void onFarm(PlaceEvent event) {
-		if (event.getPlayer() == null) {
-			return;
-		}
-
-		Province provinceFarmedIn = loadProvice(event.getPlayer().worldObj, event.getBlockSnapshot().getPos());
-
-		if (provinceFarmedIn == null || provinceFarmedIn.civilization == null) {
-			return;
-		}
-
-		handleFarmQuest(event.getPlayer(), provinceFarmedIn, event.getPlacedBlock().getBlock(), true);
-	}
-
-	@SubscribeEvent
-	public void onHarvest(BreakEvent event) {
-		if (event.getPlayer() == null) {
-			return;
-		}
-
-		Province provinceFarmedIn = loadProvice(event.getPlayer().worldObj, event.getPos());
-
-		if (provinceFarmedIn == null || provinceFarmedIn.civilization == null) {
-			return;
-		}
-
-		handleFarmQuest(event.getPlayer(), provinceFarmedIn, event.getState().getBlock(), false);
-	}
-
-	protected Province loadProvice(World world, BlockPos pos) {
-		return CivilizationUtil.getProvinceAt(world, pos.getX() / 16, pos.getZ() / 16);
-	}
-
-	private void handleFarmQuest(EntityPlayer player, Province provinceFarmedIn, Block crop, boolean plant) {
-		Set<QuestData> quests = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuests();
-		Data quest = new Data();
-		for (QuestData data : quests) {
-			System.out.println("LOOP: " + data.toString());
-			quest.setData(data);
-			quest.farmedCrop = crop;
-			quest.provinceFarmedIn = provinceFarmedIn;
-			if (perform(quest, crop, plant)) {
-				return;
-			}
-		}
-	}
-
-	public boolean perform(Data quest, Block farmedCrop, boolean plant) {
-		if (quest.getData().getPlayer().worldObj.isRemote) {
-			return false;
-		}
-
-		if (!quest.isApplicable()) {
-			return false;
-		}
-
-		if (plant) {
-			quest.setCurrentAmount(quest.getCurrentAmount() + 1);
-		} else {
-			quest.setCurrentAmount(quest.getCurrentAmount() - 1);
-		}
-
-		if (quest.getCurrentAmount() >= quest.getTargetAmount()) {
-			quest.data.setCompleted(true);
-			complete(quest.data, null);
-		}
-
-		System.out.println("Farm Quest Status: " + quest.getCurrentAmount());
-
-		return true;
-	}
-
-	@Override
-	public String getTitle(QuestData data) {
-		if (data == null) {
-			return "";
-		}
-		Data q = new Data().setData(data);
-		return "Plant " + q.getTargetAmount() + " " + cropName(q.getCropType()) + " Plants";
-	}
-
-	private String cropName(Integer i) {
-		if (i == null) {
-			return "Crop";
-		}
-		Block crop = CROP_TYPES[i];
-		if (crop == null) {
-			return "Crop";
-		}
-		return crop.getLocalizedName();
-	}
-
-	@Override
-	public String getDescription(QuestData data) {
-		if (data == null) {
-			return "";
-		}
-		Data q = new Data().setData(data);
-		return "You have currently planted " + q.getCurrentAmount() + " of " + q.getTargetAmount() + " " + cropName(q.getCropType()) + " plants.  On completion you will be reward with " + q.getRewardRep() + " reputation points";
-	}
-
-	@Override
-	public QuestData generateQuestFor(EntityPlayer player, Province province) {
-
-		Random rand = player.getEntityWorld().rand;
-
-		Data q = new Data();
-		q.data.setCiv(province.civilization);
-		q.data.setPlayer(player);
-		q.data.setProvinceId(province.id);
-		q.data.setQuestId(UUID.randomUUID());
-		q.data.setQuestType(ID);
-		q.data.setCompleted(false);
-		// TODO factor in current rep for amount and reward, maybe also the
-		// amount of crops in the province
-
-		int roll = rand.nextInt(100);
-
-		q.setCropType(rand.nextInt(CROP_TYPES.length));
-		q.setCurrentAmount(0);
-		q.setRewardRep(roll / 20);
-		q.setTargetAmount(roll);
-
-		return q.data;
-	}
-
-	@Override
-	public void reject(QuestData data) {
-
-	}
-
-	@Override
-	public List<ItemStack> accept(QuestData data, List<ItemStack> in) {
-		return in;
-	}
-
-	@Override
-	public List<ItemStack> complete(QuestData quest, List<ItemStack> items) {
-		if (!quest.getCompleted() || !removeQuestFromPlayer(quest)) {
-			return null;
-		}
-
-		Province province = loadProvice(quest.getPlayer().worldObj, quest.getPlayer().getPosition());
-
-		if (province == null || !province.id.equals(quest.getProvinceId())) {
-			return null;
-		}
-
-		PlayerCivilizationCapabilityImpl.get(quest.getPlayer()).adjustPlayerReputation(quest.getCiv(), new Data().setData(quest).getRewardRep());
-
-		ItemStack hoe = new ItemStack(Items.GOLDEN_HOE);
-		hoe.setStackDisplayName("Golden Hoe of " + province.name);
-
-		ItemStack emeralds = new ItemStack(Items.EMERALD, 2);
-		items.add(hoe);
-		items.add(emeralds);
-
-		return items;
-	}
-
-	protected boolean removeQuestFromPlayer(QuestData quest) {
-		return PlayerCivilizationCapabilityImpl.get(quest.getPlayer()).removeQuest(quest);
-	}
-
 }

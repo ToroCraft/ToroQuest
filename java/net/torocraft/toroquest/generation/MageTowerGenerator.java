@@ -99,7 +99,7 @@ public class MageTowerGenerator extends WorldGenerator {
 	private void spawnMage(World world, BlockPos pos) {
 		EntityMage e = new EntityMage(world);
 		e.setPosition(pos.getX() + 3, pos.getY() + (floors * floorHieght) + 1, pos.getZ() + 3);
-		world.spawnEntityInWorld(e);
+		world.spawnEntity(e);
 	}
 
 	private BlockPos findSurface(World world, BlockPos start) {
@@ -249,7 +249,7 @@ public class MageTowerGenerator extends WorldGenerator {
 		placeBlock(world, pos, Blocks.MOB_SPAWNER);
 		TileEntityMobSpawner theSpawner = (TileEntityMobSpawner) world.getTileEntity(pos);
 		MobSpawnerBaseLogic logic = theSpawner.getSpawnerBaseLogic();
-		logic.func_190894_a(new ResourceLocation(mob));
+		logic.setEntityId(new ResourceLocation(mob));
 	}
 
 	public static void placeBlock(World world, BlockPos pos, net.minecraft.block.Block block) {

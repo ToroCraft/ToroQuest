@@ -104,13 +104,13 @@ public class EntityAINearestAttackableCivTarget extends EntityAITarget {
 		double maxXZDistance = getTargetDistance();
 		double maxYDistance = getTargetDistance();
 
-		targetEntity = taskOwner.worldObj.getNearestAttackablePlayer(taskOwner.posX, taskOwner.posY + (double) taskOwner.getEyeHeight(), taskOwner.posZ, maxXZDistance, maxYDistance, null, targetEntitySelector);
+		targetEntity = taskOwner.world.getNearestAttackablePlayer(taskOwner.posX, taskOwner.posY + (double) taskOwner.getEyeHeight(), taskOwner.posZ, maxXZDistance, maxYDistance, null, targetEntitySelector);
 
 		return targetEntity != null;
 	}
 
 	protected boolean shouldExecuteNonPlayer() {
-		List<EntityToroNpc> list = taskOwner.worldObj.<EntityToroNpc>getEntitiesWithinAABB(EntityToroNpc.class, getTargetableArea(getTargetDistance()));
+		List<EntityToroNpc> list = taskOwner.world.<EntityToroNpc>getEntitiesWithinAABB(EntityToroNpc.class, getTargetableArea(getTargetDistance()));
 
 		if (list.isEmpty()) {
 			return false;

@@ -43,6 +43,7 @@ public class MessageSetQuestInfo implements IMessage {
 	}
 	
 	private void serializeData() {
+		// FIXME look at the other fixme
 		if(questMessage != null) {
 			questMessageJson = new Gson().toJson(questMessage, QuestMessage.class);
 		} else {
@@ -51,13 +52,19 @@ public class MessageSetQuestInfo implements IMessage {
 	}
 	
 	private void deserializeData() {
+		// FIXME will crash on NBT tags which I just added and broke your stuff
+		// (your welcome, hehehehe), you might want to manually
+		// serialize each field in QuestMessage, it would be more efficient that
+		// way too. you
+		// can use ByteBufUtils.writeTag(buff, data.getCustom());
+
 		questMessage = new Gson().fromJson(questMessageJson, QuestMessage.class);
 	}
 	
 	public static class Worker {
 		public void work(MessageSetQuestInfo message) {
 			Minecraft minecraft = Minecraft.getMinecraft();
-			final EntityPlayer player = minecraft.thePlayer;
+			final EntityPlayer player = minecraft.player;
 
 			if (player == null) {
 				return;

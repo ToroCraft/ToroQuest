@@ -16,7 +16,6 @@ import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -28,7 +27,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
@@ -67,8 +65,8 @@ public class EntityVillageLord extends EntityToroNpc {
 	@Override
 	protected boolean processInteract(EntityPlayer player, EnumHand hand) {
 		if (this.isEntityAlive() && !this.isChild()) {
-			if (!this.worldObj.isRemote) {
-				player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), this.worldObj,
+			if (!this.world.isRemote) {
+				player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), world,
 						player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
 			}
 			return true;
@@ -133,7 +131,7 @@ public class EntityVillageLord extends EntityToroNpc {
 	}
 
 	private void callForHelp(EntityLivingBase attacker) {
-		List<EntityToroNpc> help = worldObj.getEntitiesWithinAABB(EntityToroNpc.class, new AxisAlignedBB(getPosition()).expand(16, 6, 16), new Predicate<EntityToroNpc>() {
+		List<EntityToroNpc> help = world.getEntitiesWithinAABB(EntityToroNpc.class, new AxisAlignedBB(getPosition()).expand(16, 6, 16), new Predicate<EntityToroNpc>() {
 			public boolean apply(@Nullable EntityToroNpc entity) {
 				if (!(entity instanceof EntityGuard || entity instanceof EntitySentry)) {
 					return false;

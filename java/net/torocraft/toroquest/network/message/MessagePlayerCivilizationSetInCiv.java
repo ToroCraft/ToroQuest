@@ -42,7 +42,7 @@ public class MessagePlayerCivilizationSetInCiv implements IMessage {
 	public static class Worker {
 
 		void work(MessagePlayerCivilizationSetInCiv message) {
-			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+			EntityPlayer player = Minecraft.getMinecraft().player;
 			if (player == null) {
 				return;
 			}

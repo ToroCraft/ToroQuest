@@ -148,7 +148,7 @@ public class EntityToroNpc extends EntityCreature {
 
 	private void pledgeAllegianceIfUnaffiliated() {
 
-		if (worldObj.getTotalWorldTime() % 80L != 0L) {
+		if (world.getTotalWorldTime() % 80L != 0L) {
 			return;
 		}
 
@@ -156,11 +156,11 @@ public class EntityToroNpc extends EntityCreature {
 			return;
 		}
 
-		if (worldObj.isRemote) {
+		if (world.isRemote) {
 			return;
 		}
 
-		Province civ = CivilizationUtil.getProvinceAt(worldObj, chunkCoordX, chunkCoordZ);
+		Province civ = CivilizationUtil.getProvinceAt(world, chunkCoordX, chunkCoordZ);
 
 		if (civ == null || civ.civilization == null) {
 			return;
@@ -244,7 +244,7 @@ public class EntityToroNpc extends EntityCreature {
 
 				if (this.rand.nextFloat() < f1) {
 					entityplayer.getCooldownTracker().setCooldown(Items.SHIELD, 100);
-					this.worldObj.setEntityState(entityplayer, (byte) 30);
+					this.world.setEntityState(entityplayer, (byte) 30);
 				}
 			}
 		}
@@ -253,7 +253,7 @@ public class EntityToroNpc extends EntityCreature {
 	}
 
 	public float getBlockPathWeight(BlockPos pos) {
-		return 0.5F - this.worldObj.getLightBrightness(pos);
+		return 0.5F - this.world.getLightBrightness(pos);
 	}
 
 	/**

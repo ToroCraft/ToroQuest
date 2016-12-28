@@ -1,10 +1,12 @@
 package net.torocraft.toroquest.civilization.player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -25,7 +27,10 @@ import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.ReputationLevel;
+import net.torocraft.toroquest.civilization.quests.QuestEnemyEncampment;
+import net.torocraft.toroquest.civilization.quests.QuestFarm;
 import net.torocraft.toroquest.civilization.quests.QuestGather;
+import net.torocraft.toroquest.civilization.quests.util.Quest;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.civilization.quests.util.QuestDelegator;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
@@ -40,6 +45,7 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	private Map<CivilizationType, Integer> reputations = new HashMap<CivilizationType, Integer>();
 	private Set<QuestData> quests = new HashSet<QuestData>();
 	private Set<QuestData> nextQuests = new HashSet<QuestData>();
+	private Integer completedQuests = 0;
 	private Province inCiv;
 
 	private final EntityPlayer player;
@@ -94,7 +100,7 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	@Override
 	public void updatePlayerLocation(int chunkX, int chunkZ) {
 		Province prev = inCiv;
-		Province curr = CivilizationUtil.getProvinceAt(player.worldObj, chunkX, chunkZ);
+		Province curr = CivilizationUtil.getProvinceAt(player.world, chunkX, chunkZ);
 
 		if (equals(prev, curr)) {
 			return;
@@ -157,6 +163,8 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		c.setTag("quests", buildQuestCompound(quests));
 		System.out.println("** Store Next Quests ------------------");
 		c.setTag("nextQuests", buildQuestCompound(nextQuests));
+		System.out.println("completedQuests = " + completedQuests);
+		c.setInteger("completedQuests", completedQuests);
 		if (inCiv != null) {
 			c.setTag("inCiv", inCiv.writeNBT());
 		} else {
@@ -221,6 +229,9 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		quests = readQuests(b.getTag("quests"));
 		System.out.println("** Load Next Quests ------------------");
 		nextQuests = readQuests(b.getTag("nextQuests"));
+
+		completedQuests = b.getInteger("completedQuests");
+		System.out.println("load completedQuests = " + completedQuests);
 
 		NBTBase civTag = b.getTag("inCiv");
 		if (civTag != null && civTag instanceof NBTTagCompound) {
@@ -344,11 +355,23 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	}
 
 	private QuestData generateNextQuestFor(Province province) {
-		// TODO choose next quest based on rep and random factors
+		QuestData q;
+		Random rand = new Random();
 
-		// QuestData q = QuestFarm.INSTANCE.generateQuestFor(player, province);
+		List<Quest> possibleQuests = new ArrayList<Quest>();
+		possibleQuests.add(QuestFarm.INSTANCE);
+		possibleQuests.add(QuestGather.INSTANCE);
+		if (getPlayerReputation(province.civilization) > 100) {
+			possibleQuests.add(QuestEnemyEncampment.INSTANCE);
+		}
+		if (getPlayerReputation(province.civilization) > 200) {
+			possibleQuests.add(QuestEnemyEncampment.INSTANCE);
+		}
+		if (getPlayerReputation(province.civilization) > 300) {
+			possibleQuests.add(QuestEnemyEncampment.INSTANCE);
+		}
 
-		QuestData q = QuestGather.INSTANCE.generateQuestFor(player, province);
+		q = possibleQuests.get(rand.nextInt(possibleQuests.size())).generateQuestFor(player, province);
 
 		nextQuests.add(q);
 
@@ -368,12 +391,11 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		if (getCurrentQuestFor(province) != null) {
 			return null;
 		}
-		
+
 		QuestData data = getNextQuestFor(province);
 		quests.add(data);
 		nextQuests.remove(data);
-		
-		
+
 		return new QuestDelegator(data).accept(in);
 	}
 
@@ -407,7 +429,24 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 			return null;
 		}
 
-		return new QuestDelegator(data).complete(in);
+		List<ItemStack> reward = new QuestDelegator(data).complete(in);
+
+		/*
+		 * quest not completed check
+		 */
+		if (reward == null) {
+			return null;
+		}
+
+		/*
+		 * quest was not in quest list check
+		 */
+		if (!removeQuest(data)) {
+			return null;
+		}
+
+		completedQuests++;
+		return reward;
 	}
 
 }

@@ -1,17 +1,17 @@
 package net.torocraft.toroquest.civilization.quests;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -28,12 +28,91 @@ public class QuestGather implements Quest {
 
 	public static int ID;
 
+
 	public static void init(int id) {
 		INSTANCE = new QuestGather();
 		Quests.registerQuest(id, INSTANCE);
 		MinecraftForge.EVENT_BUS.register(INSTANCE);
 		ID = id;
 	}
+
+	private static QuestData baseQuest(Province province, EntityPlayer player) {
+		QuestData data = new QuestData();
+		data.setCiv(province.civilization);
+		data.setPlayer(player);
+		data.setProvinceId(province.id);
+		data.setQuestId(UUID.randomUUID());
+		data.setQuestType(ID);
+		data.setCompleted(false);
+		return data;
+	}
+
+	private static QuestData quest1(Province province, EntityPlayer player) {
+		QuestData data = baseQuest(province, player);
+		List<ItemStack> required = new ArrayList<ItemStack>();
+		required.add(new ItemStack(Blocks.GRAVEL, 64));
+		required.add(new ItemStack(Blocks.COBBLESTONE, 64));
+		required.add(new ItemStack(Blocks.CLAY, 16));
+		QuestGather.setRequiredItems(data, required);
+		List<ItemStack> reward = new ArrayList<ItemStack>();
+		reward.add(new ItemStack(Items.EMERALD, 4));
+		QuestGather.setRewardItems(data, reward);
+		setRewardRep(data, 10);
+		return data;
+	}
+
+	private static QuestData questDarkOak(Province province, EntityPlayer player) {
+		Random rand = player.world.rand;
+		int roll = rand.nextInt(32);
+		QuestData data = baseQuest(province, player);
+		List<ItemStack> required = new ArrayList<ItemStack>();
+		required.add(createMetaBlockStack(Blocks.LOG2, 1, 32 + roll));
+		required.add(createMetaBlockStack(Blocks.LEAVES2, 1, 32 + roll));
+		QuestGather.setRequiredItems(data, required);
+		List<ItemStack> reward = new ArrayList<ItemStack>();
+		reward.add(new ItemStack(Items.EMERALD, 5 + Math.round(roll / 10)));
+		QuestGather.setRewardItems(data, reward);
+		setRewardRep(data, 10);
+		return data;
+	}
+
+	private static QuestData quest2(Province province, EntityPlayer player) {
+		Random rand = player.world.rand;
+		QuestData data = baseQuest(province, player);
+		List<ItemStack> required = new ArrayList<ItemStack>();
+		required.add(new ItemStack(Items.FLINT_AND_STEEL, 1));
+		required.add(new ItemStack(Blocks.OBSIDIAN, 10));
+
+		QuestGather.setRequiredItems(data, required);
+		List<ItemStack> reward = new ArrayList<ItemStack>();
+		reward.add(new ItemStack(Items.EMERALD, 3 + rand.nextInt(2)));
+		QuestGather.setRewardItems(data, reward);
+		setRewardRep(data, 10);
+		return data;
+	}
+
+	private static ItemStack createMetaBlockStack(Block block, int meta, int amount) {
+		ItemStack s = new ItemStack(block, amount);
+		s.setItemDamage(meta);
+		return s;
+	}
+
+	@Override
+	public QuestData generateQuestFor(EntityPlayer player, Province province) {
+		Random rand = player.getEntityWorld().rand;
+
+		switch (rand.nextInt(3)) {
+		case 0:
+			return quest1(province, player);
+		case 1:
+			return quest2(province, player);
+		case 2:
+			return questDarkOak(province, player);
+		default:
+			return quest1(province, player);
+		}
+	}
+
 
 	protected Province loadProvice(World world, BlockPos pos) {
 		return CivilizationUtil.getProvinceAt(world, pos.getX() / 16, pos.getZ() / 16);
@@ -45,7 +124,7 @@ public class QuestGather implements Quest {
 			return "";
 		}
 
-		return "Gather " + getTargetAmount(data) + "  Items";
+		return "Gather Items";
 	}
 
 	@Override
@@ -53,35 +132,21 @@ public class QuestGather implements Quest {
 		if (data == null) {
 			return "";
 		}
-		return "Gahter Quest:  On completion you will be reward with " + getRewardRep(data) + " reputation points";
+		StringBuilder s = new StringBuilder();
+		s.append("- Gather ").append(listItems(getRequiredItems(data))).append("\n");
+		s.append("- Reward ").append(listItems(getRewardItems(data))).append("\n");
+		s.append("- Recieve ").append(getRewardRep(data)).append(" reputation");
+		return s.toString();
 	}
 
-	@Override
-	public QuestData generateQuestFor(EntityPlayer player, Province province) {
-
-		Random rand = player.getEntityWorld().rand;
-
-		QuestData data = new QuestData();
-
-		data.setCiv(province.civilization);
-		data.setPlayer(player);
-		data.setProvinceId(province.id);
-		data.setQuestId(UUID.randomUUID());
-		data.setQuestType(ID);
-		data.setCompleted(false);
-		// TODO factor in current rep for amount and reward, maybe also the
-		// amount of crops in the province
-
-		int roll = rand.nextInt(30) + 10;
-
-		Integer[] a = { Item.getIdFromItem(Items.DIAMOND) };
-
-		setRequiredItems(data, new HashMap<Item, Integer>());
-
-		setRewardRep(data, roll / 20 + 10);
-
-		return data;
+	private String listItems(List<ItemStack> items) {
+		StringBuilder s = new StringBuilder();
+		for (ItemStack stack : items) {
+			s.append(" ").append(stack.getCount()).append(" ").append(stack.getDisplayName());
+		}
+		return s.toString();
 	}
+
 
 	@Override
 	public void reject(QuestData data) {
@@ -90,15 +155,12 @@ public class QuestGather implements Quest {
 
 	@Override
 	public List<ItemStack> accept(QuestData data, List<ItemStack> in) {
-		ItemStack emeralds = new ItemStack(Items.EMERALD, 10);
-		emeralds.setStackDisplayName("Starter Funds");
-		in.add(emeralds);
 		return in;
 	}
 
 	@Override
 	public List<ItemStack> complete(QuestData data, List<ItemStack> items) {
-		Province province = loadProvice(data.getPlayer().worldObj, data.getPlayer().getPosition());
+		Province province = loadProvice(data.getPlayer().world, data.getPlayer().getPosition());
 
 		if (province == null || !province.id.equals(data.getProvinceId())) {
 			return null;
@@ -107,7 +169,6 @@ public class QuestGather implements Quest {
 		try {
 			items = removeItems(getRequiredItems(data), items);
 		} catch (InsufficientItems ex) {
-			System.out.println("Insuifficient items: " + ex.getMessage());
 			return null;
 		}
 
@@ -117,36 +178,47 @@ public class QuestGather implements Quest {
 
 		PlayerCivilizationCapabilityImpl.get(data.getPlayer()).adjustPlayerReputation(data.getCiv(), getRewardRep(data));
 
-		ItemStack emeralds = new ItemStack(Items.EMERALD, 20);
-		items.add(emeralds);
+		items.addAll(getRewardItems(data));
 
 		return items;
 	}
 
+	public static List<ItemStack> removeItems(List<ItemStack> requiredIn, List<ItemStack> itemsIn) throws InsufficientItems {
+		List<ItemStack> givenItems = copyItems(itemsIn);
+		List<ItemStack> requiredItems = copyItems(requiredIn);
 
-	public static List<ItemStack> removeItems(Map<Item, Integer> required, List<ItemStack> itemsIn) throws InsufficientItems {
-		List<ItemStack> items = copyItems(itemsIn);
-		int decrementBy;
-
-		for (ItemStack stack : items) {
-			if (stack.func_190916_E() < 1) {
-				continue;
-			}
-			Integer requiredCount = required.get(stack.getItem());
-			if (requiredCount != null && requiredCount > 0) {
-				decrementBy = Math.min(stack.func_190916_E(), requiredCount);
-				required.put(stack.getItem(), requiredCount - decrementBy);
-				stack.func_190918_g(decrementBy);
+		for (ItemStack givenItem : givenItems) {
+			for (ItemStack requiredItem : requiredItems) {
+				handleStackDecrement(requiredItem, givenItem);
 			}
 		}
 
-		for (Entry<Item, Integer> remaining : required.entrySet()) {
-			if (remaining.getValue() > 0) {
-				throw new InsufficientItems(remaining.getValue() + " " + remaining.getKey().getUnlocalizedName());
+		for (ItemStack remainingRequired : requiredItems) {
+			if (remainingRequired.getCount() > 0) {
+				throw new InsufficientItems(remainingRequired.getCount() + " " + remainingRequired.getDisplayName());
 			}
 		}
 
-		return items;
+		return givenItems;
+	}
+
+	private static void handleStackDecrement(ItemStack requiredItem, ItemStack givenItem) {
+		if (!equals(requiredItem, givenItem)) {
+			return;
+		}
+
+		if (requiredItem.getCount() < 1 || givenItem.getCount() < 1) {
+			return;
+		}
+		int decrementBy = Math.min(requiredItem.getCount(), givenItem.getCount());
+		requiredItem.shrink(decrementBy);
+		givenItem.shrink(decrementBy);
+	}
+
+	private static boolean equals(ItemStack requiredItem, ItemStack givenItem) {
+		ItemStack givenCopy = givenItem.copy();
+		givenCopy.setCount(requiredItem.getCount());
+		return ItemStack.areItemStacksEqual(givenCopy, requiredItem);
 	}
 
 	public static class InsufficientItems extends Exception {
@@ -163,42 +235,76 @@ public class QuestGather implements Quest {
 		return items;
 	}
 
-
-
-	protected boolean removeQuestFromPlayer(QuestData quest) {
+	protected static boolean removeQuestFromPlayer(QuestData quest) {
 		return PlayerCivilizationCapabilityImpl.get(quest.getPlayer()).removeQuest(quest);
 	}
 
-	public Map<Item, Integer> getRequiredItems(QuestData data) {
-		Map<Item, Integer> items = new HashMap<Item, Integer>();
-		items.put(Items.DIAMOND, 10);
-		// TODO return i(data.getiData().get("type"));
-		// Integer[] a = { Item.getIdFromItem(Items.DIAMOND) };
+	public static void setRewardItems(QuestData data, List<ItemStack> rewards) {
+		setItemsToNbt(data, "rewards", rewards);
+	}
+
+	public static void setRequiredItems(QuestData data, List<ItemStack> required) {
+		setItemsToNbt(data, "required", required);
+	}
+
+	public static List<ItemStack> getRequiredItems(QuestData data) {
+		return getItemsFromNbt(data, "required");
+	}
+
+	public static List<ItemStack> getRewardItems(QuestData data) {
+		return getItemsFromNbt(data, "rewards");
+	}
+
+	public static List<ItemStack> getItemsFromNbt(QuestData data, String name) {
+		List<ItemStack> items = new ArrayList<ItemStack>();
+		NBTTagCompound c = getCustomNbtTag(data);
+		try {
+			NBTTagList list = (NBTTagList) c.getTag(name);
+			for (int i = 0; i < list.tagCount(); i++) {
+				items.add(new ItemStack(list.getCompoundTagAt(i)));
+			}
+			return items;
+		} catch (Exception e) {
+			return getDefaultItems(name);
+		}
+	}
+
+	private static List<ItemStack> getDefaultItems(String name) {
+		List<ItemStack> items = new ArrayList<ItemStack>();
+		items.add(new ItemStack(Items.DIAMOND, 13));
 		return items;
 	}
 
-	public void setRequiredItems(QuestData data, Map<Item, Integer> required) {
-		// data.getiData().put("type", cropType);
-		// TODO
+	public static void setItemsToNbt(QuestData data, String name, List<ItemStack> items) {
+		NBTTagCompound c = getCustomNbtTag(data);
+		NBTTagList list = new NBTTagList();
+		for (ItemStack stack : items) {
+			NBTTagCompound cStack = new NBTTagCompound();
+			stack.writeToNBT(cStack);
+			list.appendTag(cStack);
+		}
+		c.setTag(name, list);
 	}
 
-	public Integer getTargetAmount(QuestData data) {
-		return i(data.getiData().get("target"));
+	protected static NBTTagCompound getCustomNbtTag(QuestData data) {
+		try {
+			return (NBTTagCompound) data.getCustom();
+		} catch (Exception e) {
+			NBTTagCompound c = new NBTTagCompound();
+			data.setCustom(c);
+			return c;
+		}
 	}
 
-	public void setTargetAmount(QuestData data, Integer targetAmount) {
-		data.getiData().put("target", targetAmount);
-	}
-
-	public Integer getRewardRep(QuestData data) {
+	public static Integer getRewardRep(QuestData data) {
 		return i(data.getiData().get("rep"));
 	}
 
-	public void setRewardRep(QuestData data, Integer rewardRep) {
+	public static void setRewardRep(QuestData data, Integer rewardRep) {
 		data.getiData().put("rep", rewardRep);
 	}
 
-	private Integer i(Object o) {
+	private static Integer i(Object o) {
 		try {
 			return (Integer) o;
 		} catch (Exception e) {

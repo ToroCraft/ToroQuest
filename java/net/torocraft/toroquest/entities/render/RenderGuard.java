@@ -135,8 +135,4 @@ public class RenderGuard extends RenderBiped<EntityGuard> {
 
 	}
 	
-	protected void rotateCorpse(EntityGuard entityLiving, float p_77043_2_, float p_77043_3_, float partialTicks) {
-
-		super.rotateCorpse(entityLiving, p_77043_2_, p_77043_3_, partialTicks);
-	}
 }

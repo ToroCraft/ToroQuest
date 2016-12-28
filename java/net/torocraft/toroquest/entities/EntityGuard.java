@@ -118,7 +118,7 @@ public class EntityGuard extends EntityToroNpc {
 		super.setCivilization(civ);
 
 		if (areaAI != null) {
-			Province border = CivilizationUtil.getProvinceAt(worldObj, (int) posX / 16, (int) posZ / 16);
+			Province border = CivilizationUtil.getProvinceAt(world, (int) posX / 16, (int) posZ / 16);
 			if (border != null) {
 				areaAI.setCenter(border.chunkX * 16, border.chunkZ * 16);
 			}
@@ -161,7 +161,7 @@ public class EntityGuard extends EntityToroNpc {
 		this.prevLimbSwingAmount = this.limbSwingAmount;
 		double d0 = this.posX - this.prevPosX;
 		double d1 = this.posZ - this.prevPosZ;
-		float f = MathHelper.sqrt_double(d0 * d0 + d1 * d1) * 4.0F;
+		float f = MathHelper.sqrt(d0 * d0 + d1 * d1) * 4.0F;
 
 		if (f > 1.0F) {
 			f = 1.0F;
@@ -265,14 +265,14 @@ public class EntityGuard extends EntityToroNpc {
 						}
 
 						if (swordSweep) {
-							for (EntityLivingBase entitylivingbase : this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, targetEntity.getEntityBoundingBox().expand(1.0D, 0.25D, 1.0D))) {
+							for (EntityLivingBase entitylivingbase : this.world.getEntitiesWithinAABB(EntityLivingBase.class, targetEntity.getEntityBoundingBox().expand(1.0D, 0.25D, 1.0D))) {
 								if (entitylivingbase != this && entitylivingbase != targetEntity && !this.isOnSameTeam(entitylivingbase) && this.getDistanceSqToEntity(entitylivingbase) < 9.0D) {
 									entitylivingbase.knockBack(this, 0.4F, (double) MathHelper.sin(this.rotationYaw * 0.017453292F), (double) (-MathHelper.cos(this.rotationYaw * 0.017453292F)));
 									entitylivingbase.attackEntityFrom(DamageSource.causeMobDamage(this), 1.0F);
 								}
 							}
 
-							worldObj.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, this.getSoundCategory(), 1.0F, 1.0F);
+							world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, this.getSoundCategory(), 1.0F, 1.0F);
 							this.spawnSweepParticles();
 						}
 
@@ -285,19 +285,19 @@ public class EntityGuard extends EntityToroNpc {
 						}
 
 						if (criticalHit) {
-							this.worldObj.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, this.getSoundCategory(), 1.0F, 1.0F);
+							this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, this.getSoundCategory(), 1.0F, 1.0F);
 							this.onCriticalHit(targetEntity);
 						}
 
 						if (!criticalHit && !swordSweep) {
-							this.worldObj.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_STRONG, this.getSoundCategory(), 1.0F, 1.0F);
+							this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_STRONG, this.getSoundCategory(), 1.0F, 1.0F);
 						}
 
 						if (modifierForCreature > 0.0F) {
 							this.onEnchantmentCritical(targetEntity);
 						}
 
-						if (!worldObj.isRemote && targetEntity instanceof EntityPlayer) {
+						if (!world.isRemote && targetEntity instanceof EntityPlayer) {
 							EntityPlayer entityplayer = (EntityPlayer) targetEntity;
 							ItemStack itemstack2 = this.getHeldItemMainhand();
 							ItemStack itemstack3 = entityplayer.isHandActive() ? entityplayer.getActiveItemStack() : null;
@@ -306,7 +306,7 @@ public class EntityGuard extends EntityToroNpc {
 								float f3 = 0.25F + (float) EnchantmentHelper.getEfficiencyModifier(this) * 0.05F;
 								if (this.rand.nextFloat() < f3) {
 									entityplayer.getCooldownTracker().setCooldown(Items.SHIELD, 100);
-									this.worldObj.setEntityState(entityplayer, (byte) 30);
+									this.world.setEntityState(entityplayer, (byte) 30);
 								}
 							}
 						}
@@ -332,8 +332,8 @@ public class EntityGuard extends EntityToroNpc {
 						if (mainhandItem != null && entity instanceof EntityLivingBase) {
 							mainhandItem.getItem().hitEntity(mainhandItem, (EntityLivingBase) entity, this);
 
-							if (mainhandItem.func_190916_E() <= 0) {
-								this.setHeldItem(EnumHand.MAIN_HAND, (ItemStack) null);
+							if (mainhandItem.getCount() <= 0) {
+								this.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
 							}
 						}
 
@@ -344,15 +344,15 @@ public class EntityGuard extends EntityToroNpc {
 								targetEntity.setFire(fireAspectModiferOfGuard * 4);
 							}
 
-							if (worldObj instanceof WorldServer && damageDealt > 2.0F) {
+							if (world instanceof WorldServer && damageDealt > 2.0F) {
 								int k = (int) ((double) damageDealt * 0.5D);
-								((WorldServer) this.worldObj).spawnParticle(EnumParticleTypes.DAMAGE_INDICATOR, targetEntity.posX, targetEntity.posY + (double) (targetEntity.height * 0.5F), targetEntity.posZ, k, 0.1D, 0.0D, 0.1D, 0.2D,
+								((WorldServer) this.world).spawnParticle(EnumParticleTypes.DAMAGE_INDICATOR, targetEntity.posX, targetEntity.posY + (double) (targetEntity.height * 0.5F), targetEntity.posZ, k, 0.1D, 0.0D, 0.1D, 0.2D,
 										new int[0]);
 							}
 						}
 
 					} else {
-						this.worldObj.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_NODAMAGE, this.getSoundCategory(), 1.0F, 1.0F);
+						this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_NODAMAGE, this.getSoundCategory(), 1.0F, 1.0F);
 
 						if (setFireToTarget) {
 							targetEntity.extinguish();
@@ -373,8 +373,8 @@ public class EntityGuard extends EntityToroNpc {
 		double d0 = (double) (-MathHelper.sin(this.rotationYaw * 0.017453292F));
 		double d1 = (double) MathHelper.cos(this.rotationYaw * 0.017453292F);
 
-		if (this.worldObj instanceof WorldServer) {
-			((WorldServer) this.worldObj).spawnParticle(EnumParticleTypes.SWEEP_ATTACK, this.posX + d0, this.posY + (double) this.height * 0.5D, this.posZ + d1, 0, d0, 0.0D, d1, 0.0D, new int[0]);
+		if (this.world instanceof WorldServer) {
+			((WorldServer) this.world).spawnParticle(EnumParticleTypes.SWEEP_ATTACK, this.posX + d0, this.posY + (double) this.height * 0.5D, this.posZ + d1, 0, d0, 0.0D, d1, 0.0D, new int[0]);
 		}
 	}
 

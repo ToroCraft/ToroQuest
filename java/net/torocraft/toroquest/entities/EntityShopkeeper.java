@@ -60,7 +60,7 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 
 		if (!flag && isEntityAlive() && !isTrading() && !isChild() && !player.isSneaking()) {
 
-			if (!this.worldObj.isRemote) {
+			if (!this.world.isRemote) {
 
 				RepData rep = getReputation(player);
 
@@ -125,7 +125,7 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 	};
 
 	private void chat(EntityPlayer player, String message) {
-		player.addChatMessage(new TextComponentString(message));
+		player.sendMessage(new TextComponentString(message));
 	}
 
 	private static class RepData {
@@ -140,7 +140,7 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 			return rep;
 		}
 		
-		Province province = CivilizationUtil.getProvinceAt(worldObj, chunkCoordX, chunkCoordZ);
+		Province province = CivilizationUtil.getProvinceAt(world, chunkCoordX, chunkCoordZ);
 
 		if (province == null) {
 			return rep;

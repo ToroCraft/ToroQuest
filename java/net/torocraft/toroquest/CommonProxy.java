@@ -19,6 +19,7 @@ import net.torocraft.toroquest.generation.village.VillageHandlerShop;
 import net.torocraft.toroquest.generation.village.VillageHandlerTrophy;
 import net.torocraft.toroquest.gui.VillageLordGuiHandler;
 import net.torocraft.toroquest.item.ToroQuestItems;
+import net.torocraft.toroquest.material.ToolMaterials;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 
 public class CommonProxy {
@@ -39,6 +40,7 @@ public class CommonProxy {
 
 	public void init(FMLInitializationEvent e) {
 		PlayerCivilizationCapabilityImpl.register();
+		ToolMaterials.init();
 		ToroQuestItems.init();
 		ToroQuestBlocks.init();
 		WorldGenPlacer.init();

@@ -72,7 +72,7 @@ public class EventHandlers {
 		Entity toro = new EntityToro(world);
 
 		toro.setPosition(spawnPoint.getX(), spawnPoint.getY() + 1, spawnPoint.getZ());
-		world.spawnEntityInWorld(toro);
+		world.spawnEntity(toro);
 	}
 
 	@SubscribeEvent

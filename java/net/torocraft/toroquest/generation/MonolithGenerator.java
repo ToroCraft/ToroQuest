@@ -117,7 +117,7 @@ public class MonolithGenerator extends WorldGenerator {
 		setBlockAndNotifyAdequately(world, pos, Blocks.MOB_SPAWNER.getDefaultState());
 		TileEntityMobSpawner theSpawner = (TileEntityMobSpawner) world.getTileEntity(pos);
 		MobSpawnerBaseLogic logic = theSpawner.getSpawnerBaseLogic();
-		logic.func_190894_a(new ResourceLocation("magma_cube"));
+		logic.setEntityId(new ResourceLocation("magma_cube"));
 	}
 
 	private void setHeight(Random rand) {
@@ -129,7 +129,7 @@ public class MonolithGenerator extends WorldGenerator {
 		BlockPos entityPos = new BlockPos(pos.getX(), pos.getY() + (monolithHeight + underseaHeight + eyeFloatHeight) - 2, pos.getZ());
 		EntityMonolithEye e = new EntityMonolithEye(world);
 		e.setPosition(entityPos.getX() + .5, entityPos.getY() + .5, entityPos.getZ() + .5);
-		world.spawnEntityInWorld(e);
+		world.spawnEntity(e);
 	}
 
 	private BlockPos findSurface(World world, BlockPos start) {

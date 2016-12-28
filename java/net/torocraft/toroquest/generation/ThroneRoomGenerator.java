@@ -326,7 +326,7 @@ public class ThroneRoomGenerator extends WorldGenerator {
 		king.setPosition(origin.getX() + 15 + 0.5D, origin.getY() + 7, origin.getZ() + (length - 3) + 0.5D);
 		king.onInitialSpawn(world.getDifficultyForLocation(origin), (IEntityLivingData) null);
 		king.setLookAt(origin.add(15, king.getEyeHeight(), 0));
-		world.spawnEntityInWorld(king);
+		world.spawnEntity(king);
 	}
 
 	private void spawnRainbowGuards() {
@@ -354,7 +354,7 @@ public class ThroneRoomGenerator extends WorldGenerator {
 			entity.setLookAt(origin.add(x - 100, 4, z));
 		}
 		entity.onInitialSpawn(world.getDifficultyForLocation(origin), (IEntityLivingData) null);
-		world.spawnEntityInWorld(entity);
+		world.spawnEntity(entity);
 	}
 
 }

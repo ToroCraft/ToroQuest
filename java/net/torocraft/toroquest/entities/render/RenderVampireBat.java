@@ -22,6 +22,7 @@ public class RenderVampireBat extends RenderLiving<EntityVampireBat> {
 	 * Returns the location of an entity's texture. Doesn't seem to be called
 	 * unless you call Render.bindEntityTexture.
 	 */
+	@Override
 	protected ResourceLocation getEntityTexture(EntityVampireBat entity) {
 		return BAT_TEXTURES;
 	}
@@ -30,13 +31,15 @@ public class RenderVampireBat extends RenderLiving<EntityVampireBat> {
 	 * Allows the render to do state modifications necessary before the model is
 	 * rendered.
 	 */
+	@Override
 	protected void preRenderCallback(EntityVampireBat entitylivingbaseIn, float partialTickTime) {
 		GlStateManager.scale(0.5F, 0.5F, 0.5F);
 	}
 
-	protected void rotateCorpse(EntityVampireBat entityLiving, float p_77043_2_, float p_77043_3_, float partialTicks) {
+	@Override
+	protected void applyRotations(EntityVampireBat entityLiving, float p_77043_2_, float p_77043_3_, float partialTicks) {
 		bounceModel(p_77043_2_);
-		super.rotateCorpse(entityLiving, p_77043_2_, p_77043_3_, partialTicks);
+		super.applyRotations(entityLiving, p_77043_2_, p_77043_3_, partialTicks);
 	}
 
 	protected void bounceModel(float p_77043_2_) {

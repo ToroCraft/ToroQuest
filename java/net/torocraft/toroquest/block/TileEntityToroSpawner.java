@@ -138,7 +138,7 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 	}
 
 	public void update() {
-		if (!worldObj.isRemote && isRunTick() && withinRange()) {
+		if (!world.isRemote && isRunTick() && withinRange()) {
 			triggerSpawner();
 		}
 	}
@@ -147,11 +147,11 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 		for (String entityId : entityIds) {
 			spawnCreature(entityId);
 		}
-		worldObj.setBlockToAir(pos);
+		world.setBlockToAir(pos);
 	}
 
 	public void spawnCreature(String entityID) {
-		Random rand = worldObj.rand;
+		Random rand = world.rand;
 
 		Entity entity = getEntityForId(getWorld(), entityID);
 
@@ -164,7 +164,7 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 	}
 
 	private BlockPos findSuitableSpawnLocation() {
-		Random rand = worldObj.rand;
+		Random rand = world.rand;
 
 		if (spawnRadius < 1) {
 			return getPos();
@@ -188,7 +188,6 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 	}
 
 	private BlockPos findSurface(int x, int z) {
-		World world = worldObj;
 		BlockPos pos = getPos().add(x, -3, z);
 		IBlockState blockState;
 		int yOffset = 0;
@@ -254,10 +253,10 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 		double y = pos.getY();
 		double z = pos.getZ() + 0.5D;
 
-		entity.setLocationAndAngles(x, y, z, MathHelper.wrapDegrees(worldObj.rand.nextFloat() * 360.0F), 0.0F);
+		entity.setLocationAndAngles(x, y, z, MathHelper.wrapDegrees(world.rand.nextFloat() * 360.0F), 0.0F);
 		entity.rotationYawHead = entity.rotationYaw;
 		entity.renderYawOffset = entity.rotationYaw;
-		entity.onInitialSpawn(worldObj.getDifficultyForLocation(new BlockPos(entity)), (IEntityLivingData) null);
+		entity.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entity)), (IEntityLivingData) null);
 
 		entity.enablePersistence();
 
@@ -299,27 +298,27 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 			}
 		}
 
-		worldObj.spawnEntityInWorld(entity);
+		world.spawnEntity(entity);
 		entity.playLivingSound();
 		return true;
 	}
 
 	private void spawnCreature() {
-		EntityGuard entity = new EntityGuard(worldObj);
+		EntityGuard entity = new EntityGuard(world);
 		EntityLiving entityliving = (EntityLiving) entity;
-		entity.setLocationAndAngles((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, MathHelper.wrapDegrees(worldObj.rand.nextFloat() * 360.0F), 0.0F);
+		entity.setLocationAndAngles((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, MathHelper.wrapDegrees(world.rand.nextFloat() * 360.0F), 0.0F);
 		entityliving.rotationYawHead = entityliving.rotationYaw;
 		entityliving.renderYawOffset = entityliving.rotationYaw;
-		entityliving.onInitialSpawn(worldObj.getDifficultyForLocation(new BlockPos(entityliving)), (IEntityLivingData) null);
-		worldObj.spawnEntityInWorld(entity);
+		entityliving.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entityliving)), (IEntityLivingData) null);
+		world.spawnEntity(entity);
 	}
 
 	private boolean withinRange() {
-		return worldObj.isAnyPlayerWithinRangeAt((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, (double) this.triggerDistance);
+		return world.isAnyPlayerWithinRangeAt((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, (double) this.triggerDistance);
 	}
 
 	private boolean isRunTick() {
-		return worldObj.getTotalWorldTime() % 20L == 0L;
+		return world.getTotalWorldTime() % 20L == 0L;
 	}
 
 	@Nullable

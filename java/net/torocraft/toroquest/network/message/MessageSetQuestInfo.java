@@ -64,7 +64,7 @@ public class MessageSetQuestInfo implements IMessage {
 	public static class Worker {
 		public void work(MessageSetQuestInfo message) {
 			Minecraft minecraft = Minecraft.getMinecraft();
-			final EntityPlayer player = minecraft.thePlayer;
+			final EntityPlayer player = minecraft.player;
 
 			if (player == null) {
 				return;

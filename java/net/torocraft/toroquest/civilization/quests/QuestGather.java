@@ -62,7 +62,7 @@ public class QuestGather implements Quest {
 	}
 
 	private static QuestData questDarkOak(Province province, EntityPlayer player) {
-		Random rand = player.worldObj.rand;
+		Random rand = player.world.rand;
 		int roll = rand.nextInt(32);
 		QuestData data = baseQuest(province, player);
 		List<ItemStack> required = new ArrayList<ItemStack>();
@@ -77,7 +77,7 @@ public class QuestGather implements Quest {
 	}
 
 	private static QuestData quest2(Province province, EntityPlayer player) {
-		Random rand = player.worldObj.rand;
+		Random rand = player.world.rand;
 		QuestData data = baseQuest(province, player);
 		List<ItemStack> required = new ArrayList<ItemStack>();
 		required.add(new ItemStack(Items.FLINT_AND_STEEL, 1));
@@ -142,7 +142,7 @@ public class QuestGather implements Quest {
 	private String listItems(List<ItemStack> items) {
 		StringBuilder s = new StringBuilder();
 		for (ItemStack stack : items) {
-			s.append(" ").append(stack.func_190916_E()).append(" ").append(stack.getDisplayName());
+			s.append(" ").append(stack.getCount()).append(" ").append(stack.getDisplayName());
 		}
 		return s.toString();
 	}
@@ -160,7 +160,7 @@ public class QuestGather implements Quest {
 
 	@Override
 	public List<ItemStack> complete(QuestData data, List<ItemStack> items) {
-		Province province = loadProvice(data.getPlayer().worldObj, data.getPlayer().getPosition());
+		Province province = loadProvice(data.getPlayer().world, data.getPlayer().getPosition());
 
 		if (province == null || !province.id.equals(data.getProvinceId())) {
 			return null;
@@ -194,8 +194,8 @@ public class QuestGather implements Quest {
 		}
 
 		for (ItemStack remainingRequired : requiredItems) {
-			if (remainingRequired.func_190916_E() > 0) {
-				throw new InsufficientItems(remainingRequired.func_190916_E() + " " + remainingRequired.getDisplayName());
+			if (remainingRequired.getCount() > 0) {
+				throw new InsufficientItems(remainingRequired.getCount() + " " + remainingRequired.getDisplayName());
 			}
 		}
 
@@ -207,17 +207,17 @@ public class QuestGather implements Quest {
 			return;
 		}
 
-		if (requiredItem.func_190916_E() < 1 || givenItem.func_190916_E() < 1) {
+		if (requiredItem.getCount() < 1 || givenItem.getCount() < 1) {
 			return;
 		}
-		int decrementBy = Math.min(requiredItem.func_190916_E(), givenItem.func_190916_E());
-		requiredItem.func_190918_g(decrementBy);
-		givenItem.func_190918_g(decrementBy);
+		int decrementBy = Math.min(requiredItem.getCount(), givenItem.getCount());
+		requiredItem.shrink(decrementBy);
+		givenItem.shrink(decrementBy);
 	}
 
 	private static boolean equals(ItemStack requiredItem, ItemStack givenItem) {
 		ItemStack givenCopy = givenItem.copy();
-		givenCopy.func_190920_e(requiredItem.func_190916_E());
+		givenCopy.setCount(requiredItem.getCount());
 		return ItemStack.areItemStacksEqual(givenCopy, requiredItem);
 	}
 

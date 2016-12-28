@@ -72,7 +72,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 
 		entityIn.attackEntityFrom(ds, damage);
 		entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue());
-		this.worldObj.setEntityState(this, (byte) 15);
+		this.world.setEntityState(this, (byte) 15);
 		this.playSound(SoundEvents.ENTITY_GENERIC_EXPLODE, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 
 	}
@@ -162,12 +162,12 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 
 				if (this.tickCounter == 0) {
 					this.theEntity.setTargetedEntity(this.theEntity.getAttackTarget().getEntityId());
-					// this.theEntity.worldObj.setEntityState(this.theEntity,
+					// this.theEntity.world.setEntityState(this.theEntity,
 					// (byte) 21);
 				} else if (this.tickCounter >= this.theEntity.getAttackDuration()) {
 					float damage = 3.0F;
 
-					if (this.theEntity.worldObj.getDifficulty() == EnumDifficulty.HARD) {
+					if (this.theEntity.world.getDifficulty() == EnumDifficulty.HARD) {
 						damage += 3.0F;
 					}
 					
@@ -177,7 +177,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 					entitylivingbase.attackEntityFrom(DamageSource.causeMobDamage(this.theEntity), (float) this.theEntity.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue());
 					theEntity.attackedTarget = theEntity.getAttackTarget();
 					theEntity.setAttackTarget((EntityLivingBase) null);
-					theEntity.worldObj.setEntityState(theEntity, (byte) 15);
+					theEntity.world.setEntityState(theEntity, (byte) 15);
 					theEntity.playSound(SoundEvents.ENTITY_GENERIC_EXPLODE, 1.0F, 1.0F / (theEntity.getRNG().nextFloat() * 0.4F + 0.8F));
 				}
 
@@ -212,11 +212,11 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 	public EntityLivingBase getTargetedEntity() {
 		if (!this.hasTargetedEntity()) {
 			return null;
-		} else if (this.worldObj.isRemote) {
+		} else if (this.world.isRemote) {
 			if (this.targetedEntity != null) {
 				return this.targetedEntity;
 			} else {
-				Entity entity = this.worldObj.getEntityByID(((Integer) this.dataManager.get(TARGET_ENTITY)).intValue());
+				Entity entity = this.world.getEntityByID(((Integer) this.dataManager.get(TARGET_ENTITY)).intValue());
 
 				if (entity instanceof EntityLivingBase) {
 					this.targetedEntity = (EntityLivingBase) entity;
@@ -270,7 +270,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 
 	public void onLivingUpdate() {
 		updateLogic();
-		if (this.worldObj.isRemote) {
+		if (this.world.isRemote) {
 			spawnAuraParticle();
 		}
 
@@ -278,19 +278,19 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 	}
 
 	protected void updateLogic() {
-		if (this.worldObj.isRemote) {
+		if (this.world.isRemote) {
 			return;
 		}
 
 		handleAttachLogicUpdate();
 
 		if (this.rand.nextFloat() < 7.5E-4F) {
-			this.worldObj.setEntityState(this, (byte) 15);
+			this.world.setEntityState(this, (byte) 15);
 		}
 
-		if (worldObj.getTotalWorldTime() % 10L == 0L) {
+		if (world.getTotalWorldTime() % 10L == 0L) {
 			BlockPos down = pos.down();
-			if (worldObj.getBlockState(down).getBlock() != Blocks.OBSIDIAN) {
+			if (world.getBlockState(down).getBlock() != Blocks.OBSIDIAN) {
 				setHealth(0);
 			}
 		}
@@ -301,7 +301,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 	public void spawnAuraParticle() {
 		if (this.rand.nextDouble() <= 0.36D) {
 
-			this.worldObj.spawnParticle(EnumParticleTypes.DRAGON_BREATH, this.posX + this.rand.nextGaussian() * 0.06999999523162842D, this.posY + 1.5D + this.rand.nextGaussian() * 0.20999999523162842D,
+			this.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, this.posX + this.rand.nextGaussian() * 0.06999999523162842D, this.posY + 1.5D + this.rand.nextGaussian() * 0.20999999523162842D,
 					this.posZ + this.rand.nextGaussian() * 0.06999999523162842D, 0.0D, 0.0D, 0.0D, new int[0]);
 
 		}
@@ -310,7 +310,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 
 	@SideOnly(Side.CLIENT)
 	public void spawnAttackParticles() {
-		this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY + 1.5D, this.posZ, 0.0D, 0.0D, 0.0D, new int[0]);
+		this.world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY + 1.5D, this.posZ, 0.0D, 0.0D, 0.0D, new int[0]);
 	}
 
 	protected void handleAttachLogicUpdate() {
@@ -335,12 +335,12 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 	}
 
 	private void spawnParticles(double xSpeed, double ySpeed, double zSpeed) {
-		if (this.worldObj.isRemote) {
+		if (this.world.isRemote) {
 			for (int i = 0; i < 32; ++i) {
-				worldObj.spawnParticle(EnumParticleTypes.PORTAL, posX, posY, posZ, xSpeed, ySpeed, zSpeed, new int[0]);
+				world.spawnParticle(EnumParticleTypes.PORTAL, posX, posY, posZ, xSpeed, ySpeed, zSpeed, new int[0]);
 			}
 		} else {
-			this.worldObj.setEntityState(this, (byte) 42);
+			this.world.setEntityState(this, (byte) 42);
 		}
 
 	}
@@ -364,13 +364,13 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 	public void moveEntityWithHeading(float strafe, float forward) {
 		if (this.isInWater()) {
 			this.moveRelative(strafe, forward, 0.02F);
-			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 			this.motionX *= 0.800000011920929D;
 			this.motionY *= 0.800000011920929D;
 			this.motionZ *= 0.800000011920929D;
 		} else if (this.isInLava()) {
 			this.moveRelative(strafe, forward, 0.02F);
-			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 			this.motionX *= 0.5D;
 			this.motionY *= 0.5D;
 			this.motionZ *= 0.5D;
@@ -378,7 +378,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 			float f = 0.91F;
 
 			if (this.onGround) {
-				f = this.worldObj.getBlockState(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.getEntityBoundingBox().minY) - 1, MathHelper.floor_double(this.posZ))).getBlock().slipperiness * 0.91F;
+				f = this.world.getBlockState(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getEntityBoundingBox().minY) - 1, MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.91F;
 			}
 
 			float f1 = 0.16277136F / (f * f * f);
@@ -386,10 +386,10 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 			f = 0.91F;
 
 			if (this.onGround) {
-				f = this.worldObj.getBlockState(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.getEntityBoundingBox().minY) - 1, MathHelper.floor_double(this.posZ))).getBlock().slipperiness * 0.91F;
+				f = this.world.getBlockState(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getEntityBoundingBox().minY) - 1, MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.91F;
 			}
 
-			this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 			this.motionX *= (double) f;
 			this.motionY *= (double) f;
 			this.motionZ *= (double) f;
@@ -398,7 +398,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 		this.prevLimbSwingAmount = this.limbSwingAmount;
 		double d1 = this.posX - this.prevPosX;
 		double d0 = this.posZ - this.prevPosZ;
-		float f2 = MathHelper.sqrt_double(d1 * d1 + d0 * d0) * 4.0F;
+		float f2 = MathHelper.sqrt(d1 * d1 + d0 * d0) * 4.0F;
 
 		if (f2 > 1.0F) {
 			f2 = 1.0F;
@@ -413,7 +413,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 			return false;
 		}
 
-		if (!worldObj.isRemote) {
+		if (!world.isRemote) {
 			if (source instanceof EntityDamageSourceIndirect) {
 				redirectArrowAtAttacker(source);
 			} else {
@@ -451,15 +451,15 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 
 		int charge = 2 + rand.nextInt(10);
 
-		EntityArrow entityarrow = new EntityTippedArrow(this.worldObj, this);
+		EntityArrow entityarrow = new EntityTippedArrow(this.world, this);
 		double d0 = target.posX - this.posX;
 		double d1 = target.getEntityBoundingBox().minY + (double) (target.height / 3.0F) - entityarrow.posY;
 		double d2 = target.posZ - this.posZ;
-		double d3 = (double) MathHelper.sqrt_double(d0 * d0 + d2 * d2);
-		entityarrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float) (14 - this.worldObj.getDifficulty().getDifficultyId() * 4));
+		double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
+		entityarrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float) (14 - this.world.getDifficulty().getDifficultyId() * 4));
 		int i = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.POWER, this);
 		int j = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.PUNCH, this);
-		entityarrow.setDamage((double) (charge * 2.0F) + this.rand.nextGaussian() * 0.25D + (double) ((float) this.worldObj.getDifficulty().getDifficultyId() * 0.11F));
+		entityarrow.setDamage((double) (charge * 2.0F) + this.rand.nextGaussian() * 0.25D + (double) ((float) this.world.getDifficulty().getDifficultyId() * 0.11F));
 
 		if (i > 0) {
 			entityarrow.setDamage(entityarrow.getDamage() + (double) i * 0.5D + 0.5D);
@@ -474,6 +474,6 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 		}
 
 		this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
-		this.worldObj.spawnEntityInWorld(entityarrow);
+		this.world.spawnEntity(entityarrow);
 	}
 }

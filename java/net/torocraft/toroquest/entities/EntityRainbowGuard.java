@@ -174,19 +174,19 @@ public class EntityRainbowGuard extends EntityMob {
 	}
 
 	protected void wakeIfPlayerIsClose(boolean wakePartner) {
-		if (worldObj.getTotalWorldTime() % 30 != 0 || !isAtAttention()) {
+		if (world.getTotalWorldTime() % 30 != 0 || !isAtAttention()) {
 			return;
 		}
 
 		// TODO check if visible?
-		List<EntityPlayer> players = worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(getPosition()).expand(WAKE_DIAMETER, 6, WAKE_DIAMETER), EntitySelectors.CAN_AI_TARGET);
+		List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(getPosition()).expand(WAKE_DIAMETER, 6, WAKE_DIAMETER), EntitySelectors.CAN_AI_TARGET);
 
 		if (players.size() < 1) {
 			return;
 		}
 
 		if (wakePartner) {
-			List<EntityRainbowGuard> nearbyRainbowGuards = worldObj.getEntitiesWithinAABB(EntityRainbowGuard.class, getEntityBoundingBox().expand(5.0D, 4.0D, 2.0D));
+			List<EntityRainbowGuard> nearbyRainbowGuards = world.getEntitiesWithinAABB(EntityRainbowGuard.class, getEntityBoundingBox().expand(5.0D, 4.0D, 2.0D));
 			if (nearbyRainbowGuards != null && !nearbyRainbowGuards.isEmpty()) {
 				nearbyRainbowGuards.get(0).wokenByPartner();
 			}
@@ -195,7 +195,7 @@ public class EntityRainbowGuard extends EntityMob {
 		setAtAttention(false);
 		tasks.removeTask(new EntityAIStayCentered(this));
 
-		setAttackTarget(players.get(worldObj.rand.nextInt(players.size())));
+		setAttackTarget(players.get(world.rand.nextInt(players.size())));
 	}
 
 	protected void updateAITasks() {

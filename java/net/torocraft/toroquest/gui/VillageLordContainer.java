@@ -62,7 +62,7 @@ public class VillageLordContainer extends Container {
 			}
 		}
 
-		if(!player.worldObj.isRemote) {
+		if (!player.world.isRemote) {
 			this.inventory.updateClientQuest();
 		}
 	}
@@ -71,7 +71,7 @@ public class VillageLordContainer extends Container {
 	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
 		Slot slot = (Slot)this.inventorySlots.get(index);
         if(slot == null || !slot.getHasStack()) {
-        	return ItemStack.field_190927_a;
+			return ItemStack.EMPTY;
         }
         
         ItemStack sourceStack = slot.getStack();
@@ -79,20 +79,20 @@ public class VillageLordContainer extends Container {
         
         if(indexIsForAVanillaSlot(index)) {
         	if(!mergeItemStack(sourceStack, LORD_INVENTORY_FIRST_SLOT_INDEX, LORD_INVENTORY_FIRST_SLOT_INDEX + LORD_INVENTORY_SLOT_COUNT, false)) {
-        		return ItemStack.field_190927_a;
+				return ItemStack.EMPTY;
         	}
         } else if(indexIsForALordInventorySlot(index) || indexIsForLordOutputSlot(index)) {
         	if(!mergeStackFromLordToPlayer(sourceStack)) {
-        		return ItemStack.field_190927_a;
+				return ItemStack.EMPTY;
         	}
         } else {
-        	return ItemStack.field_190927_a;
+			return ItemStack.EMPTY;
         }
         
-        int stackSize = sourceStack.func_190916_E();
+		int stackSize = sourceStack.getCount();
         
         if(stackSize == 0) {
-        	slot.putStack(ItemStack.field_190927_a);
+			slot.putStack(ItemStack.EMPTY);
         } else {
         	slot.onSlotChanged();
         }

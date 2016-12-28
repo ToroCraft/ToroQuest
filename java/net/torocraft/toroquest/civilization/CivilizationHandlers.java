@@ -62,12 +62,12 @@ public class CivilizationHandlers {
 
 	@SubscribeEvent
 	public void handleEnterProvince(CivilizationEvent.Enter event) {
-		event.getEntityPlayer().addChatMessage(enteringMessage(event.getEntityPlayer(), event.province));
+		event.getEntityPlayer().sendMessage(enteringMessage(event.getEntityPlayer(), event.province));
 	}
 
 	@SubscribeEvent
 	public void handleLeaveProvince(CivilizationEvent.Leave event) {
-		event.getEntityPlayer().addChatMessage(leavingMessage(event.getEntityPlayer(), event.province));
+		event.getEntityPlayer().sendMessage(leavingMessage(event.getEntityPlayer(), event.province));
 	}
 
 	@SubscribeEvent
@@ -315,7 +315,7 @@ public class CivilizationHandlers {
 	}
 
 	private void chat(EntityPlayer player, String message) {
-		player.addChatMessage(new TextComponentString(message));
+		player.sendMessage(new TextComponentString(message));
 	}
 
 	@SubscribeEvent
@@ -444,7 +444,7 @@ public class CivilizationHandlers {
 			e.setCivilization(province.civilization);
 			e.setPosition(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5);
 			e.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(e)), (IEntityLivingData) null);
-			world.spawnEntityInWorld(e);
+			world.spawnEntity(e);
 		}
 
 	}

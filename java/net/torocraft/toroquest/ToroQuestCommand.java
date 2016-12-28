@@ -29,12 +29,12 @@ import net.torocraft.toroquest.gui.VillageLordGuiHandler;
 public class ToroQuestCommand extends CommandBase {
 
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return "tq";
 	}
 
 	@Override
-	public String getCommandUsage(ICommandSender sender) {
+	public String getUsage(ICommandSender sender) {
 		return "commands.torogen.usage";
 	}
 
@@ -128,7 +128,7 @@ public class ToroQuestCommand extends CommandBase {
 		String type = args[1];
 
 		if ("lord".equals(type)) {
-			player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+			player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), player.world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
 			return;
 		}
 
@@ -155,13 +155,13 @@ public class ToroQuestCommand extends CommandBase {
 			QuestDelegator quest = new QuestDelegator(new QuestData());
 			for (QuestData data : quests) {
 				quest.setData(data);
-				player.addChatMessage(new TextComponentString("----"));
-				player.addChatMessage(new TextComponentString(quest.getTitle()));
-				player.addChatMessage(new TextComponentString(quest.getDescription()));
+				player.sendMessage(new TextComponentString("----"));
+				player.sendMessage(new TextComponentString(quest.getTitle()));
+				player.sendMessage(new TextComponentString(quest.getDescription()));
 			}
 
 			if (quests.size() < 1) {
-				player.addChatMessage(new TextComponentString("No accepted quests"));
+				player.sendMessage(new TextComponentString("No accepted quests"));
 			}
 
 			return;
@@ -177,28 +177,28 @@ public class ToroQuestCommand extends CommandBase {
 			if (quest.getData() == null) {
 				throw new NullPointerException("next quest should never be null");
 			}
-			player.addChatMessage(new TextComponentString(quest.getTitle()));
+			player.sendMessage(new TextComponentString(quest.getTitle()));
 
 		} else if ("current".equals(sub)) {
 			QuestData data = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
 			if (data == null) {
-				player.addChatMessage(new TextComponentString("No quest has been accepted"));
+				player.sendMessage(new TextComponentString("No quest has been accepted"));
 			} else {
 				QuestDelegator quest = new QuestDelegator(data);
-				player.addChatMessage(new TextComponentString(quest.getTitle()));
-				player.addChatMessage(new TextComponentString(quest.getDescription()));
+				player.sendMessage(new TextComponentString(quest.getTitle()));
+				player.sendMessage(new TextComponentString(quest.getDescription()));
 			}
 		} else if ("accept".equals(sub)) {
 			List<ItemStack> startItems = pullHotbarItems(player);
 			List<ItemStack> returnItems = PlayerCivilizationCapabilityImpl.get(player).acceptQuest(startItems);
 
 			if (returnItems == null) {
-				player.addChatMessage(new TextComponentString("Quest not Accepted"));
+				player.sendMessage(new TextComponentString("Quest not Accepted"));
 				dropItems(player, startItems);
 			} else {
 				QuestDelegator quest = new QuestDelegator(PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province));
-				player.addChatMessage(new TextComponentString("Accepted: " + quest.getTitle()));
-				player.addChatMessage(new TextComponentString(quest.getDescription()));
+				player.sendMessage(new TextComponentString("Accepted: " + quest.getTitle()));
+				player.sendMessage(new TextComponentString(quest.getDescription()));
 				dropItems(player, returnItems);
 			}
 			
@@ -207,7 +207,7 @@ public class ToroQuestCommand extends CommandBase {
 			QuestData data = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
 
 			if (data == null) {
-				player.addChatMessage(new TextComponentString("No accepted quest to complete"));
+				player.sendMessage(new TextComponentString("No accepted quest to complete"));
 				return;
 			}
 
@@ -217,10 +217,10 @@ public class ToroQuestCommand extends CommandBase {
 			List<ItemStack> afterItems = PlayerCivilizationCapabilityImpl.get(player).completeQuest(beforeItems);
 
 			if (afterItems == null) {
-				player.addChatMessage(new TextComponentString("Quest not Completed"));
+				player.sendMessage(new TextComponentString("Quest not Completed"));
 				dropItems(player, beforeItems);
 			} else {
-				player.addChatMessage(new TextComponentString("Completed: " + curQuest.getTitle()));
+				player.sendMessage(new TextComponentString("Completed: " + curQuest.getTitle()));
 				dropItems(player, afterItems);
 			}
 
@@ -230,7 +230,7 @@ public class ToroQuestCommand extends CommandBase {
 				throw new WrongUsageException("commands.tq.quest_could_not_be_rejected", new Object[0]);
 			} else {
 				QuestDelegator quest = new QuestDelegator(data);
-				player.addChatMessage(new TextComponentString("Rejected: " + quest.getTitle()));
+				player.sendMessage(new TextComponentString("Rejected: " + quest.getTitle()));
 			}
 		} else {
 			throw new WrongUsageException("commands.tq.usage", new Object[0]);
@@ -244,7 +244,7 @@ public class ToroQuestCommand extends CommandBase {
 		for (int i = 0; i < inv.getSizeInventory(); i++) {
 			if (inv.getStackInSlot(i) != null && inv.isHotbar(i)) {
 				ItemStack stack = inv.getStackInSlot(i);
-				inv.setInventorySlotContents(i, ItemStack.field_190927_a);
+				inv.setInventorySlotContents(i, ItemStack.EMPTY);
 				items.add(stack);
 			}
 		}
@@ -254,14 +254,14 @@ public class ToroQuestCommand extends CommandBase {
 
 	private void dropItems(EntityPlayer player, List<ItemStack> items) {
 		for (ItemStack stack : items) {
-			EntityItem dropItem = new EntityItem(player.worldObj, player.posX, player.posY, player.posZ, stack);
+			EntityItem dropItem = new EntityItem(player.world, player.posX, player.posY, player.posZ, stack);
 			dropItem.setNoPickupDelay();
-			player.worldObj.spawnEntityInWorld(dropItem);
+			player.world.spawnEntity(dropItem);
 		}
 	}
 
 	@Override
-	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
 		List<String> tabOptions = new ArrayList<String>();
 
 		if (args.length == 0) {

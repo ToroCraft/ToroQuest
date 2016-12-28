@@ -287,7 +287,7 @@ public class BastionsLairGenerator extends WorldGenerator {
 		EntityBas e = new EntityBas(world);
 		e.setPosition(origin.getX() + 0.5, origin.getY() + walkwayHeight + 1, origin.getZ() + 0.5);
 		e.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(e)), (IEntityLivingData) null);
-		world.spawnEntityInWorld(e);
+		world.spawnEntity(e);
 	}
 
 }

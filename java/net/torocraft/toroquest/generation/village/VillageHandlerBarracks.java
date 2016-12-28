@@ -88,7 +88,7 @@ public class VillageHandlerBarracks implements IVillageCreationHandler {
 
 			EntityArmorStand stand = new EntityArmorStand(world);
 			stand.setLocationAndAngles((double) j + 0.5D, (double) k, (double) l + 0.5D, 90F, 0.0F);
-			world.spawnEntityInWorld(stand);
+			world.spawnEntity(stand);
 
 			List<String> entities = new ArrayList<String>();
 			entities.add(ToroQuest.MODID + ":guard");

@@ -3,7 +3,6 @@ package net.torocraft.toroquest.inventory;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -15,7 +14,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
-import net.torocraft.toroquest.civilization.quests.QuestFarm;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 import net.torocraft.toroquest.network.message.MessageSetItemReputationAmount;
@@ -64,17 +62,17 @@ public class VillageLordInventory implements IInventory {
 	@Override
 	public ItemStack decrStackSize(int index, int count) {
 		ItemStack slotStack = getStackInSlot(index);
-		int stackSize = slotStack.func_190916_E();
+		int stackSize = slotStack.getCount();
 		
 		ItemStack stackRemoved;
 		if(stackSize <= count) {
 			stackRemoved = slotStack;
-			setInventorySlotContents(index, ItemStack.field_190927_a);
+			setInventorySlotContents(index, ItemStack.EMPTY);
 			
 		} else {
 			stackRemoved = slotStack.splitStack(count);
 			if(stackSize == 0) {
-				setInventorySlotContents(index, ItemStack.field_190927_a);
+				setInventorySlotContents(index, ItemStack.EMPTY);
 			}
 		}
 		
@@ -86,7 +84,7 @@ public class VillageLordInventory implements IInventory {
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
 		ItemStack itemStack = getStackInSlot(index);
-		setInventorySlotContents(index, ItemStack.field_190927_a);
+		setInventorySlotContents(index, ItemStack.EMPTY);
 		return itemStack;
 	}
 
@@ -96,14 +94,14 @@ public class VillageLordInventory implements IInventory {
             return;
 		}
 
-		int stackSize = stack.func_190916_E();
+		int stackSize = stack.getCount();
 		
         if (stackSize > this.getInventoryStackLimit()) {
-            stack.func_190920_e(this.getInventoryStackLimit());
+			stack.setCount(this.getInventoryStackLimit());
         }
 
         if (stackSize == 0) {
-            stack = ItemStack.field_190927_a;
+			stack = ItemStack.EMPTY;
         }
 
         this.itemStacks[index] = stack;
@@ -116,7 +114,7 @@ public class VillageLordInventory implements IInventory {
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return true;
 	}
 	
@@ -156,7 +154,7 @@ public class VillageLordInventory implements IInventory {
 
 	@Override
 	public void clear() {
-		Arrays.fill(itemStacks, ItemStack.field_190927_a);
+		Arrays.fill(itemStacks, ItemStack.EMPTY);
 	}
 	
 	@Override
@@ -184,7 +182,7 @@ public class VillageLordInventory implements IInventory {
 	public void checkForReputation() {
 		Integer reputation = itemReputations.get(itemStacks[0].getItem());
 		if(reputation != null) {
-			updateClientReputation(reputation * itemStacks[0].func_190916_E());
+			updateClientReputation(reputation * itemStacks[0].getCount());
 		} else {
 			updateClientReputation(0);
 		}
@@ -199,7 +197,7 @@ public class VillageLordInventory implements IInventory {
 	}
 
 	@Override
-	public boolean func_191420_l() {
+	public boolean isEmpty() {
 		// TODO Auto-generated method stub
 		return false;
 	}

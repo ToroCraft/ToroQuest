@@ -70,7 +70,7 @@ public class ModelMonolithEye extends ModelBase {
 			vec3d2 = new Vec3d(vec3d2.xCoord, 0.0D, vec3d2.zCoord);
 			Vec3d vec3d3 = (new Vec3d(vec3d1.xCoord - vec3d.xCoord, 0.0D, vec3d1.zCoord - vec3d.zCoord)).normalize().rotateYaw(((float) Math.PI / 2F));
 			double d1 = vec3d2.dotProduct(vec3d3);
-			this.guardianEye.rotationPointX = MathHelper.sqrt_float((float) Math.abs(d1)) * 2.0F * (float) Math.signum(d1);
+			this.guardianEye.rotationPointX = MathHelper.sqrt((float) Math.abs(d1)) * 2.0F * (float) Math.signum(d1);
 		}
 
 		this.guardianEye.showModel = true;

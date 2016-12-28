@@ -126,7 +126,7 @@ public class EntityToro extends EntityTameable implements IMob {
 	}
 
 	public void notifyDataManagerChange(DataParameter<?> key) {
-		if (CHARGING.equals(key) && this.isCharging() && worldObj.isRemote) {
+		if (CHARGING.equals(key) && this.isCharging() && world.isRemote) {
 		}
 		super.notifyDataManagerChange(key);
 	}
@@ -153,7 +153,7 @@ public class EntityToro extends EntityTameable implements IMob {
 	@Override
 	public void onEntityUpdate() {
 		super.onEntityUpdate();
-		if (worldObj.getTotalWorldTime() % 100L == 0L) {
+		if (world.getTotalWorldTime() % 100L == 0L) {
 			// TODO why does the charge get out of sync with the attack target?
 			syncChargingWithAttackTarget();
 		}
@@ -202,7 +202,7 @@ public class EntityToro extends EntityTameable implements IMob {
 
 					if (this.rand.nextFloat() < f1) {
 						entityplayer.getCooldownTracker().setCooldown(Items.SHIELD, 100);
-						this.worldObj.setEntityState(entityplayer, (byte) 30);
+						this.world.setEntityState(entityplayer, (byte) 30);
 					}
 				}
 			}
@@ -221,7 +221,7 @@ public class EntityToro extends EntityTameable implements IMob {
 	}
 
 	public EntityCow createChild(EntityAgeable ageable) {
-		return new EntityCow(this.worldObj);
+		return new EntityCow(this.world);
 	}
 
 	public float getEyeHeight() {
@@ -243,7 +243,7 @@ public class EntityToro extends EntityTameable implements IMob {
 	@Override
 	public void onDeath(DamageSource cause) {
 		super.onDeath(cause);
-		if (!worldObj.isRemote) {
+		if (!world.isRemote) {
 			dropLoot();
 		}
 	}
@@ -255,14 +255,14 @@ public class EntityToro extends EntityTameable implements IMob {
 
 	protected void dropBeef() {
 		ItemStack stack = new ItemStack(Items.BEEF, rand.nextInt(3) + 2);
-		EntityItem dropItem = new EntityItem(worldObj, posX, posY, posZ, stack.copy());
-		worldObj.spawnEntityInWorld(dropItem);
+		EntityItem dropItem = new EntityItem(world, posX, posY, posZ, stack.copy());
+		world.spawnEntity(dropItem);
 	}
 
 	protected void dropLeather() {
 		ItemStack stack = new ItemStack(ItemToroLeather.INSTANCE, 1);
-		EntityItem dropItem = new EntityItem(worldObj, posX, posY, posZ, stack.copy());
-		worldObj.spawnEntityInWorld(dropItem);
+		EntityItem dropItem = new EntityItem(world, posX, posY, posZ, stack.copy());
+		world.spawnEntity(dropItem);
 	}
 
 	@Nullable

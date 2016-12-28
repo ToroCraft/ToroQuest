@@ -21,7 +21,7 @@ public class CivilizationOverlayHandler extends Hud {
 		int top = screenHeight - 5;
 
 
-		EntityPlayerSP player = mc.thePlayer;
+		EntityPlayerSP player = mc.player;
 		
 		if (player.dimension != 0) {
 			return;

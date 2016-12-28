@@ -62,7 +62,7 @@ public class QuestEnemyEncampment implements Quest {
 	public List<ItemStack> complete(QuestData data, List<ItemStack> in) {
 
 		if (getKills(data) < 1) {
-			data.getPlayer().addChatMessage(new TextComponentString("You didn't personally kill any from the encampment!"));
+			data.getPlayer().sendMessage(new TextComponentString("You didn't personally kill any from the encampment!"));
 			return null;
 		}
 
@@ -70,9 +70,9 @@ public class QuestEnemyEncampment implements Quest {
 
 		if (count > 0) {
 			if (count == 1) {
-				data.getPlayer().addChatMessage(new TextComponentString("You didn't kill all of them, there is one left!"));
+				data.getPlayer().sendMessage(new TextComponentString("You didn't kill all of them, there is one left!"));
 			} else {
-				data.getPlayer().addChatMessage(new TextComponentString("You didn't kill all of them, there are " + count + " left"));
+				data.getPlayer().sendMessage(new TextComponentString("You didn't kill all of them, there are " + count + " left"));
 			}
 			return null;
 		}
@@ -105,7 +105,7 @@ public class QuestEnemyEncampment implements Quest {
 				return entity.getTags().contains("encampment_quest") && entity.getTags().contains(data.getQuestId().toString());
 			}
 		};
-		return data.getPlayer().worldObj.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(getSpawnPosition(data)).expand(80, 40, 80), filter).size();
+		return data.getPlayer().world.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(getSpawnPosition(data)).expand(80, 40, 80), filter).size();
 	}
 
 	@Override
@@ -153,7 +153,7 @@ public class QuestEnemyEncampment implements Quest {
 			return null;
 		}
 
-		if (data.getPlayer().worldObj.isAnyPlayerWithinRangeAt((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), 60d)) {
+		if (data.getPlayer().world.isAnyPlayerWithinRangeAt((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), 60d)) {
 			return null;
 		}
 
@@ -323,7 +323,7 @@ public class QuestEnemyEncampment implements Quest {
 	private String getEnemyNames(QuestData data) {
 		String name = getEnemyType(data).get(0);
 		try {
-			Entity entity = TileEntityToroSpawner.getEntityForId(data.getPlayer().worldObj, name);
+			Entity entity = TileEntityToroSpawner.getEntityForId(data.getPlayer().world, name);
 			return entity.getName();
 		} catch (Exception e) {
 			System.out.println("failed to get name of entity [" + name + "] : " + e.getMessage());
@@ -334,7 +334,7 @@ public class QuestEnemyEncampment implements Quest {
 	private String listItems(List<ItemStack> items) {
 		StringBuilder s = new StringBuilder();
 		for (ItemStack stack : items) {
-			s.append(" ").append(stack.func_190916_E()).append(" ").append(stack.getDisplayName());
+			s.append(" ").append(stack.getCount()).append(" ").append(stack.getDisplayName());
 		}
 		return s.toString();
 	}

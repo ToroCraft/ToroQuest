@@ -45,7 +45,7 @@ public class QuestFarm implements Quest {
 			return;
 		}
 
-		Province provinceFarmedIn = loadProvice(event.getPlayer().worldObj, event.getBlockSnapshot().getPos());
+		Province provinceFarmedIn = loadProvice(event.getPlayer().world, event.getBlockSnapshot().getPos());
 
 		if (provinceFarmedIn == null || provinceFarmedIn.civilization == null) {
 			return;
@@ -60,7 +60,7 @@ public class QuestFarm implements Quest {
 			return;
 		}
 
-		Province provinceFarmedIn = loadProvice(event.getPlayer().worldObj, event.getPos());
+		Province provinceFarmedIn = loadProvice(event.getPlayer().world, event.getPos());
 
 		if (provinceFarmedIn == null || provinceFarmedIn.civilization == null) {
 			return;
@@ -87,7 +87,7 @@ public class QuestFarm implements Quest {
 	}
 
 	public boolean perform(DataWrapper quest, Block farmedCrop, boolean plant) {
-		if (quest.getData().getPlayer().worldObj.isRemote) {
+		if (quest.getData().getPlayer().world.isRemote) {
 			return false;
 		}
 
@@ -182,7 +182,7 @@ public class QuestFarm implements Quest {
 			return null;
 		}
 
-		Province province = loadProvice(quest.getPlayer().worldObj, quest.getPlayer().getPosition());
+		Province province = loadProvice(quest.getPlayer().world, quest.getPlayer().getPosition());
 
 		if (province == null || !province.id.equals(quest.getProvinceId())) {
 			return null;
@@ -192,7 +192,7 @@ public class QuestFarm implements Quest {
 
 		playerCiv.adjustPlayerReputation(quest.getCiv(), new DataWrapper().setData(quest).getRewardRep());
 
-		if (playerCiv.getPlayerReputation(province.civilization) > 100 && quest.getPlayer().worldObj.rand.nextInt(10) > 8) {
+		if (playerCiv.getPlayerReputation(province.civilization) > 100 && quest.getPlayer().world.rand.nextInt(10) > 8) {
 			ItemStack hoe = new ItemStack(Items.GOLDEN_HOE);
 			hoe.setStackDisplayName("Golden Hoe of " + province.name);
 			items.add(hoe);

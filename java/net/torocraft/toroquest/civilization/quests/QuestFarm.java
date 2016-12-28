@@ -1,5 +1,6 @@
 package net.torocraft.toroquest.civilization.quests;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -11,6 +12,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -74,6 +76,7 @@ public class QuestFarm implements Quest {
 	}
 
 	private void handleFarmQuest(EntityPlayer player, Province provinceFarmedIn, Block crop, boolean plant) {
+		//FIXME doesn't look like this checks if you're planting in the correct province
 		Set<QuestData> quests = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuests();
 		DataWrapper quest = new DataWrapper();
 		for (QuestData data : quests) {
@@ -138,9 +141,26 @@ public class QuestFarm implements Quest {
 		StringBuilder s = new StringBuilder();
 		s.append("- Plant ").append(q.getTargetAmount()).append(" ").append(cropName(q.getCropType())).append(" plants.\n");
 		s.append("- You have planted ").append(q.getCurrentAmount()).append(" so far.\n");
-		s.append("- Reward 2 emeralds\n");
+		s.append("- Reward: " + printRewards(q.data.getRewardItems()));
 		s.append("- Recieve ").append(q.getRewardRep()).append(" reputation");
 		return s.toString();
+	}
+
+	private String printRewards(List<ItemStack> rewardItems) {
+		if (rewardItems == null || rewardItems.isEmpty()) {
+			return "no items\n";
+		}
+		StringBuilder sb = new StringBuilder();
+		
+		for (ItemStack item : rewardItems) {
+			sb.append(item.getCount()).append(" ").append(item.getDisplayName());
+			if (item.getCount() > 1) {
+				sb.append("s");
+			}
+			sb.append("\n");
+		}
+		
+		return sb.toString();
 	}
 
 	@Override
@@ -160,8 +180,14 @@ public class QuestFarm implements Quest {
 
 		q.setCropType(rand.nextInt(CROP_TYPES.length));
 		q.setCurrentAmount(0);
-		q.setRewardRep(roll / 20);
-		q.setTargetAmount(roll);
+		q.setRewardRep(0); // was using MathHelper.clamp(roll / 10, 3, 8) :: I removed it because planting already gives rep
+		q.setTargetAmount(MathHelper.clamp(roll, 32, 100));
+		
+		
+		//FIXME doesn't actually work because it doesn't get persisted.  Need to add this to the NBTTagCompound somehow
+		ItemStack emeralds = new ItemStack(Items.EMERALD, MathHelper.clamp(q.getTargetAmount() / 32, 1, 4));
+		q.data.setRewardItems(new ArrayList<ItemStack>());
+		q.data.getRewardItems().add(emeralds);
 
 		return q.data;
 	}
@@ -184,7 +210,7 @@ public class QuestFarm implements Quest {
 
 		Province province = loadProvice(quest.getPlayer().world, quest.getPlayer().getPosition());
 
-		if (province == null || !province.id.equals(quest.getProvinceId())) {
+		if (province == null || province.id == null || !province.id.equals(quest.getProvinceId())) {
 			return null;
 		}
 
@@ -198,8 +224,7 @@ public class QuestFarm implements Quest {
 			items.add(hoe);
 		}
 
-		ItemStack emeralds = new ItemStack(Items.EMERALD, 2);
-		items.add(emeralds);
+		items.addAll(quest.getRewardItems());
 
 		return items;
 	}
@@ -212,7 +237,7 @@ public class QuestFarm implements Quest {
 		private QuestData data = new QuestData();
 		private Province provinceFarmedIn;
 		private Block farmedCrop;
-
+		
 		public QuestData getData() {
 			return data;
 		}

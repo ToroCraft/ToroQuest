@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
@@ -27,7 +28,6 @@ public class QuestGather implements Quest {
 	public static QuestGather INSTANCE;
 
 	public static int ID;
-
 
 	public static void init(int id) {
 		INSTANCE = new QuestGather();
@@ -169,17 +169,12 @@ public class QuestGather implements Quest {
 		try {
 			items = removeItems(getRequiredItems(data), items);
 		} catch (InsufficientItems ex) {
+			data.getPlayer().sendMessage(new TextComponentString("Missing " + ex.getMessage()));
 			return null;
 		}
 
-		if (!removeQuestFromPlayer(data)) {
-			return null;
-		}
-
-		PlayerCivilizationCapabilityImpl.get(data.getPlayer()).adjustPlayerReputation(data.getCiv(), getRewardRep(data));
-
+		PlayerCivilizationCapabilityImpl.get(data.getPlayer()).adjustReputation(data.getCiv(), getRewardRep(data));
 		items.addAll(getRewardItems(data));
-
 		return items;
 	}
 
@@ -216,9 +211,7 @@ public class QuestGather implements Quest {
 	}
 
 	private static boolean equals(ItemStack requiredItem, ItemStack givenItem) {
-		ItemStack givenCopy = givenItem.copy();
-		givenCopy.setCount(requiredItem.getCount());
-		return ItemStack.areItemStacksEqual(givenCopy, requiredItem);
+		return requiredItem.getItem() == givenItem.getItem();
 	}
 
 	public static class InsufficientItems extends Exception {
@@ -233,10 +226,6 @@ public class QuestGather implements Quest {
 			items.add(stack.copy());
 		}
 		return items;
-	}
-
-	protected static boolean removeQuestFromPlayer(QuestData quest) {
-		return PlayerCivilizationCapabilityImpl.get(quest.getPlayer()).removeQuest(quest);
 	}
 
 	public static void setRewardItems(QuestData data, List<ItemStack> rewards) {

@@ -76,7 +76,6 @@ public class QuestFarm implements Quest {
 	}
 
 	private void handleFarmQuest(EntityPlayer player, Province provinceFarmedIn, Block crop, boolean plant) {
-		//FIXME doesn't look like this checks if you're planting in the correct province
 		Set<QuestData> quests = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuests();
 		DataWrapper quest = new DataWrapper();
 		for (QuestData data : quests) {
@@ -204,7 +203,7 @@ public class QuestFarm implements Quest {
 
 	@Override
 	public List<ItemStack> complete(QuestData quest, List<ItemStack> items) {
-		if (!quest.getCompleted() || !removeQuestFromPlayer(quest)) {
+		if (!quest.getCompleted()) {
 			return null;
 		}
 
@@ -216,21 +215,20 @@ public class QuestFarm implements Quest {
 
 		PlayerCivilizationCapability playerCiv = PlayerCivilizationCapabilityImpl.get(quest.getPlayer());
 
-		playerCiv.adjustPlayerReputation(quest.getCiv(), new DataWrapper().setData(quest).getRewardRep());
+		playerCiv.adjustReputation(quest.getCiv(), new DataWrapper().setData(quest).getRewardRep());
 
-		if (playerCiv.getPlayerReputation(province.civilization) > 100 && quest.getPlayer().world.rand.nextInt(10) > 8) {
+		if (playerCiv.getReputation(province.civilization) > 100 && quest.getPlayer().world.rand.nextInt(10) > 8) {
 			ItemStack hoe = new ItemStack(Items.GOLDEN_HOE);
 			hoe.setStackDisplayName("Golden Hoe of " + province.name);
 			items.add(hoe);
 		}
 
-		items.addAll(quest.getRewardItems());
+		List<ItemStack> rewards = quest.getRewardItems();
+		if (rewards != null) {
+			items.addAll(rewards);
+		}
 
 		return items;
-	}
-
-	protected boolean removeQuestFromPlayer(QuestData quest) {
-		return PlayerCivilizationCapabilityImpl.get(quest.getPlayer()).removeQuest(quest);
 	}
 
 	public static class DataWrapper {

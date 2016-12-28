@@ -42,6 +42,12 @@ public interface Quest {
 
 	String getDescription(QuestData data);
 
+	/**
+	 * 
+	 * @param player
+	 * @param province
+	 * @return NULL if quest would not be completed
+	 */
 	QuestData generateQuestFor(EntityPlayer player, Province province);
 
 }

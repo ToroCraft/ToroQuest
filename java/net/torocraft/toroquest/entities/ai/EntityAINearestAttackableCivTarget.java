@@ -75,7 +75,7 @@ public class EntityAINearestAttackableCivTarget extends EntityAITarget {
 			return false;
 		}
 
-		int rep = PlayerCivilizationCapabilityImpl.get(target).getPlayerReputation(civ);
+		int rep = PlayerCivilizationCapabilityImpl.get(target).getReputation(civ);
 
 		return rep < -10;
 	}

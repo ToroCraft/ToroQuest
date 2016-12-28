@@ -88,7 +88,7 @@ public class ToroQuestCommand extends CommandBase {
 		if (province == null || province.civilization == null) {
 			throw new WrongUsageException("commands.tq.not_in_civ", new Object[0]);
 		}
-		PlayerCivilizationCapabilityImpl.get(player).setPlayerReputation(province.civilization, amount);
+		PlayerCivilizationCapabilityImpl.get(player).setReputation(province.civilization, amount);
 	}
 
 	private void genCommand(EntityPlayer player, String[] args) throws CommandException {

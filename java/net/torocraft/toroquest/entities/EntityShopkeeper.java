@@ -151,7 +151,7 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 		if (rep.civ == null) {
 			return rep;
 		}
-		rep.rep = ReputationLevel.fromReputation(PlayerCivilizationCapabilityImpl.get(player).getPlayerReputation(rep.civ));
+		rep.rep = ReputationLevel.fromReputation(PlayerCivilizationCapabilityImpl.get(player).getReputation(rep.civ));
 		return rep;
 	}
 

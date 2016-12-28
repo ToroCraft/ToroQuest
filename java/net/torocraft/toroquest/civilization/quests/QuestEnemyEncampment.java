@@ -92,7 +92,7 @@ public class QuestEnemyEncampment implements Quest {
 		ItemStack sword = new ItemStack(Items.GOLDEN_SWORD);
 		sword.addEnchantment(Enchantment.getEnchantmentByID(16), 5);
 		sword.addEnchantment(Enchantment.getEnchantmentByID(21), 3);
-		Province inProvince = PlayerCivilizationCapabilityImpl.get(data.getPlayer()).getPlayerInCivilization();
+		Province inProvince = PlayerCivilizationCapabilityImpl.get(data.getPlayer()).getInCivilization();
 		if (inProvince.id.equals(data.getProvinceId())) {
 			sword.setStackDisplayName("Golden Sword of " + inProvince.name);
 		}

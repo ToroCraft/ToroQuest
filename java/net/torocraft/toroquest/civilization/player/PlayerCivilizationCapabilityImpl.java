@@ -1,10 +1,7 @@
 package net.torocraft.toroquest.civilization.player;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
@@ -13,13 +10,8 @@ import java.util.concurrent.Callable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.torocraft.toroquest.civilization.CivilizationEvent;
@@ -37,16 +29,10 @@ import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 import net.torocraft.toroquest.network.message.MessagePlayerCivilizationSetInCiv;
 import net.torocraft.toroquest.network.message.MessageSetPlayerReputation;
 
-public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapability {
+public class PlayerCivilizationCapabilityImpl extends PlayerCivilization implements PlayerCivilizationCapability {
 
 	@CapabilityInject(PlayerCivilizationCapability.class)
 	public static Capability<PlayerCivilizationCapability> INSTANCE = null;
-
-	private Map<CivilizationType, Integer> reputations = new HashMap<CivilizationType, Integer>();
-	private Set<QuestData> quests = new HashSet<QuestData>();
-	private Set<QuestData> nextQuests = new HashSet<QuestData>();
-	private Integer completedQuests = 0;
-	private Province inCiv;
 
 	private final EntityPlayer player;
 
@@ -55,7 +41,7 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	}
 
 	@Override
-	public void setPlayerReputation(CivilizationType civ, int amount) {
+	public void setReputation(CivilizationType civ, int amount) {
 		if (civ == null) {
 			return;
 		}
@@ -67,14 +53,14 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	}
 
 	@Override
-	public void adjustPlayerReputation(CivilizationType civ, int amount) {
+	public void adjustReputation(CivilizationType civ, int amount) {
 		if (civ == null) {
 			return;
 		}
 		if (reputations.get(civ) == null) {
 			reputations.put(civ, 0);
 		}
-		setPlayerReputation(civ, reputations.get(civ) + amount);
+		setReputation(civ, reputations.get(civ) + amount);
 	}
 
 	@Override
@@ -89,11 +75,11 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 
 	@Override
 	public ReputationLevel getReputationLevel(CivilizationType civ) {
-		return ReputationLevel.fromReputation(getPlayerReputation(civ));
+		return ReputationLevel.fromReputation(getReputation(civ));
 	}
 
 	@Override
-	public int getPlayerReputation(CivilizationType civ) {
+	public int getReputation(CivilizationType civ) {
 		return i(reputations.get(civ));
 	}
 
@@ -106,7 +92,7 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 			return;
 		}
 
-		setPlayerInCivilization(curr);
+		setInCivilization(curr);
 
 		if (!player.getEntityWorld().isRemote) {
 			ToroQuestPacketHandler.INSTANCE.sendTo(new MessagePlayerCivilizationSetInCiv(inCiv), (EntityPlayerMP) player);
@@ -117,13 +103,13 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		}
 
 		if (curr != null) {
-			PlayerCivilizationCapabilityImpl.get(player).setPlayerInCivilization(curr);
+			PlayerCivilizationCapabilityImpl.get(player).setInCivilization(curr);
 			MinecraftForge.EVENT_BUS.post(new CivilizationEvent.Enter(player, curr));
 		}
 	}
 
 	@Override
-	public void setPlayerInCivilization(Province civ) {
+	public void setInCivilization(Province civ) {
 		inCiv = civ;
 	}
 
@@ -151,140 +137,13 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 	}
 
 	@Override
-	public Province getPlayerInCivilization() {
+	public Province getInCivilization() {
 		return inCiv;
-	}
-
-	@Override
-	public NBTTagCompound writeNBT() {
-		NBTTagCompound c = new NBTTagCompound();
-		c.setTag("reputations", buildNBTReputationList());
-		System.out.println("** Store Current Quests ------------------- ");
-		c.setTag("quests", buildQuestCompound(quests));
-		System.out.println("** Store Next Quests ------------------");
-		c.setTag("nextQuests", buildQuestCompound(nextQuests));
-		System.out.println("completedQuests = " + completedQuests);
-		c.setInteger("completedQuests", completedQuests);
-		if (inCiv != null) {
-			c.setTag("inCiv", inCiv.writeNBT());
-		} else {
-			c.removeTag("inCiv");
-		}
-		return c;
-	}
-
-	private NBTTagList buildQuestCompound(Set<QuestData> quests) {
-		NBTTagList repList = new NBTTagList();
-		for (QuestData data : quests) {
-			if (data == null) {
-				continue;
-			}
-			if (!data.isValid()) {
-				System.out.println("** INVALID Quest, skipping store: " + data.toString());
-				continue;
-			}
-			System.out.println("** Store Quest: " + data.toString());
-			repList.appendTag(data.writeNBT());
-		}
-		return repList;
-	}
-
-	private static String s(CivilizationType civ) {
-		try {
-			return civ.toString();
-		} catch (Exception e) {
-			return "";
-		}
-	}
-
-	protected NBTTagList buildNBTReputationList() {
-		NBTTagList repList = new NBTTagList();
-		for (Entry<CivilizationType, Integer> rep : reputations.entrySet()) {
-			if (rep.getValue() == null || rep.getKey() == null) {
-				continue;
-			}
-			repList.appendTag(buildNBTReputationListItem(rep.getKey(), rep.getValue()));
-		}
-		return repList;
-	}
-
-	public static NBTTagCompound buildNBTReputationListItem(CivilizationType civ, int rep) {
-		NBTTagCompound c = new NBTTagCompound();
-		c.setString("civ", s(civ));
-		c.setInteger("amount", rep);
-		return c;
-	}
-
-	@Override
-	public void readNBT(NBTBase nbt) {
-		if (nbt == null || !(nbt instanceof NBTTagCompound)) {
-			reputations = new HashMap<CivilizationType, Integer>();
-			inCiv = null;
-			return;
-		}
-
-		NBTTagCompound b = (NBTTagCompound) nbt;
-		reputations = readNBTReputationList(b.getTag("reputations"));
-		System.out.println("** Load Current Quests ------------------");
-		quests = readQuests(b.getTag("quests"));
-		System.out.println("** Load Next Quests ------------------");
-		nextQuests = readQuests(b.getTag("nextQuests"));
-
-		completedQuests = b.getInteger("completedQuests");
-		System.out.println("load completedQuests = " + completedQuests);
-
-		NBTBase civTag = b.getTag("inCiv");
-		if (civTag != null && civTag instanceof NBTTagCompound) {
-			inCiv = new Province();
-			inCiv.readNBT((NBTTagCompound) civTag);
-		} else {
-			inCiv = null;
-		}
-	}
-
-	private Set<QuestData> readQuests(NBTBase tag) {
-		Set<QuestData> quests = new HashSet<QuestData>();
-		if (tag == null || !(tag instanceof NBTTagList)) {
-			return quests;
-		}
-		NBTTagList list = (NBTTagList) tag;
-		for (int i = 0; i < list.tagCount(); i++) {
-			QuestData d = new QuestData();
-			d.readNBT(list.getCompoundTagAt(i), player);
-			if (!d.isValid()) {
-				System.out.println("** INVALID Quest, skipping load: " + d.toString());
-				continue;
-			}
-			System.out.println("** Load Quest: " + d.toString());
-			quests.add(d);
-		}
-		return quests;
-	}
-
-	private Map<CivilizationType, Integer> readNBTReputationList(NBTBase tag) {
-		Map<CivilizationType, Integer> reputations = new HashMap<CivilizationType, Integer>();
-		if (tag == null || !(tag instanceof NBTTagList)) {
-			return reputations;
-		}
-		NBTTagList list = (NBTTagList) tag;
-		for (int i = 0; i < list.tagCount(); i++) {
-			NBTTagCompound c = list.getCompoundTagAt(i);
-			reputations.put(e(c.getString("civ")), c.getInteger("amount"));
-		}
-		return reputations;
 	}
 
 	@Override
 	public String toString() {
 		return "Player Civilization Info: " + player.getName() + ": IN_CIV[" + inCiv + "]";
-	}
-
-	private CivilizationType e(String s) {
-		try {
-			return CivilizationType.valueOf(s);
-		} catch (Exception e) {
-			return null;
-		}
 	}
 
 	public static void register() {
@@ -310,27 +169,12 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		return player.getCapability(PlayerCivilizationCapabilityImpl.INSTANCE, null);
 	}
 
-	public static class PlayerCivilizationStorage implements IStorage<PlayerCivilizationCapability> {
-
-		@Override
-		public NBTBase writeNBT(Capability<PlayerCivilizationCapability> capability, PlayerCivilizationCapability instance, EnumFacing side) {
-			return instance.writeNBT();
-		}
-
-		@Override
-		public void readNBT(Capability<PlayerCivilizationCapability> capability, PlayerCivilizationCapability instance, EnumFacing side, NBTBase nbt) {
-			instance.readNBT(nbt);
-		}
-
-	}
-
 	@Override
 	public Set<QuestData> getCurrentQuests() {
 		return quests;
 	}
 
-	@Override
-	public boolean removeQuest(QuestData quest) {
+	private boolean removeQuest(QuestData quest) {
 		return quests.remove(quest);
 	}
 
@@ -361,29 +205,35 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		List<Quest> possibleQuests = new ArrayList<Quest>();
 		possibleQuests.add(QuestFarm.INSTANCE);
 		possibleQuests.add(QuestGather.INSTANCE);
-		if (getPlayerReputation(province.civilization) > 100) {
+		if (getReputation(province.civilization) > 100) {
 			possibleQuests.add(QuestEnemyEncampment.INSTANCE);
 		}
-		if (getPlayerReputation(province.civilization) > 200) {
+		if (getReputation(province.civilization) > 200) {
 			possibleQuests.add(QuestEnemyEncampment.INSTANCE);
 		}
-		if (getPlayerReputation(province.civilization) > 300) {
+		if (getReputation(province.civilization) > 300) {
 			possibleQuests.add(QuestEnemyEncampment.INSTANCE);
 		}
 
 		q = possibleQuests.get(rand.nextInt(possibleQuests.size())).generateQuestFor(player, province);
 
-		nextQuests.add(q);
-
-		if (!q.isValid()) {
-			throw new IllegalArgumentException("Invalid next quest generated: " + q.toString());
+		if (q == null) {
+			List<Quest> fallbackQuests = new ArrayList<Quest>();
+			fallbackQuests.add(QuestFarm.INSTANCE);
+			fallbackQuests.add(QuestGather.INSTANCE);
+			q = fallbackQuests.get(rand.nextInt(fallbackQuests.size())).generateQuestFor(player, province);
 		}
+
+		// FIXME remove this
+		q = QuestGather.INSTANCE.generateQuestFor(player, province);
+
+		nextQuests.add(q);
 		return q;
 	}
 
 	@Override
 	public List<ItemStack> acceptQuest(List<ItemStack> in) {
-		Province province = getPlayerInCivilization();
+		Province province = getInCivilization();
 		if (province == null) {
 			return null;
 		}
@@ -401,7 +251,7 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 
 	@Override
 	public QuestData rejectQuest() {
-		Province province = getPlayerInCivilization();
+		Province province = getInCivilization();
 		if (province == null) {
 			return null;
 		}
@@ -411,7 +261,9 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		}
 
 		if (removeQuest(data)) {
-			// TODO remove rep, not allowed to go negative
+			if (getReputation(province.civilization) > 10) {
+				adjustReputation(province.civilization, -10);
+			}
 			new QuestDelegator(data).reject();
 		}
 
@@ -420,7 +272,7 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 
 	@Override
 	public List<ItemStack> completeQuest(List<ItemStack> in) {
-		Province province = getPlayerInCivilization();
+		Province province = getInCivilization();
 		if (province == null) {
 			return null;
 		}
@@ -446,7 +298,18 @@ public class PlayerCivilizationCapabilityImpl implements PlayerCivilizationCapab
 		}
 
 		completedQuests++;
+
+		if (completedQuestsByProvince.get(province.id) == null) {
+			completedQuestsByProvince.put(province.id, 0);
+		}
+		completedQuestsByProvince.put(province.id, completedQuestsByProvince.get(province.id) + 1);
+
 		return reward;
+	}
+
+	@Override
+	public EntityPlayer getPlayer() {
+		return player;
 	}
 
 }

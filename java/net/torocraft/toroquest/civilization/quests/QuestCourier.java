@@ -18,6 +18,8 @@ import net.torocraft.toroquest.civilization.quests.util.Quest;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.civilization.quests.util.Quests;
 
+//TODO logic to listen to the village lord GUI and transform notes to replies
+
 public class QuestCourier implements Quest {
 	public static QuestCourier INSTANCE;
 
@@ -32,17 +34,56 @@ public class QuestCourier implements Quest {
 
 	@Override
 	public List<ItemStack> complete(QuestData data, List<ItemStack> in) {
+
+		ItemStack note = getNoteFromItems(data, in);
+
+		if (note == null) {
+			return null;
+		}
+
+		note.setCount(0);
+		in.remove(note);
+
+		List<ItemStack> rewards = getRewardItems(data);
+		if (rewards != null) {
+			in.addAll(rewards);
+		}
+
+		return in;
+	}
+
+	protected ItemStack getNoteFromItems(QuestData data, List<ItemStack> in) {
 		for (ItemStack s : in) {
-			if (s.hasTagCompound()) {
-				String to = s.getTagCompound().getString("toProvince");
-				if (getDeliverToProvinceId(data).toString().equals(to)) {
-					// TODO make sure this note is for this quest
-					s.setCount(0);
-					return in;
-				}
+			if (isReplyNoteForQuest(data, s)) {
+				return s;
 			}
 		}
 		return null;
+	}
+
+	protected boolean isReplyNoteForQuest(QuestData data, ItemStack item) {
+		if (!item.hasTagCompound() || !item.hasTagCompound()) {
+			return false;
+		}
+
+		String noteAddressedTo = item.getTagCompound().getString("toProvince");
+		String noteQuestId = item.getTagCompound().getString("questId");
+
+		if (noteAddressedTo == null || noteQuestId == null) {
+			return false;
+		}
+
+		/*
+		 * must be addressed to the province that created the quest
+		 */
+		if (!noteAddressedTo.equals(data.getProvinceId().toString())) {
+			return false;
+		}
+
+		/*
+		 * quest ID must match
+		 */
+		return noteQuestId.equals(data.getQuestId().toString());
 	}
 
 	@Override
@@ -56,6 +97,7 @@ public class QuestCourier implements Quest {
 		ItemStack note = new ItemStack(Items.PAPER);
 		note.setStackDisplayName("Deliver to the Lord of " + deliverToProvince.name);
 		note.setTagInfo("toProvince", new NBTTagString(deliverToProvince.id.toString()));
+		note.setTagInfo("questId", new NBTTagString(data.getQuestId().toString()));
 		in.add(note);
 		return in;
 	}

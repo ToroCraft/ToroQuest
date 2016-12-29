@@ -1,10 +1,10 @@
 package net.torocraft.toroquest.civilization.quests;
 
 /**
- * provide a special pick or shovel
+ * Bring back an artifact from a certain biome
  */
 
-public class QuestMine {
+public class QuestExplore {
 	public static int ID;
 
 	public static void init(int id) {

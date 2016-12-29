@@ -3,6 +3,7 @@ package net.torocraft.toroquest.civilization.quests.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.torocraft.toroquest.civilization.quests.QuestCourier;
 import net.torocraft.toroquest.civilization.quests.QuestEnemyEncampment;
 import net.torocraft.toroquest.civilization.quests.QuestFarm;
 import net.torocraft.toroquest.civilization.quests.QuestGather;
@@ -34,6 +35,7 @@ public class Quests {
 		QuestFarm.init(5);
 		QuestGather.init(6);
 		QuestEnemyEncampment.init(7);
+		QuestCourier.init(8);
 	}
 
 }

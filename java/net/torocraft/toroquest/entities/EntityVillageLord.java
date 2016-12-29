@@ -127,7 +127,7 @@ public class EntityVillageLord extends EntityToroNpc {
 			return;
 		}
 
-		PlayerCivilizationCapabilityImpl.get(player).adjustPlayerReputation(civ, -5);
+		PlayerCivilizationCapabilityImpl.get(player).adjustReputation(civ, -5);
 	}
 
 	private void callForHelp(EntityLivingBase attacker) {

@@ -191,7 +191,7 @@ public class CivilizationHandlers {
 		if (province == null || province.civilization == null) {
 			return;
 		}
-		PlayerCivilizationCapabilityImpl.get(player).adjustPlayerReputation(province.civilization, value);
+		PlayerCivilizationCapabilityImpl.get(player).adjustReputation(province.civilization, value);
 	}
 
 	private int blockValue(Block b) {
@@ -224,13 +224,13 @@ public class CivilizationHandlers {
 			return;
 		}
 
-		Province province = PlayerCivilizationCapabilityImpl.get(player).getPlayerInCivilization();
+		Province province = PlayerCivilizationCapabilityImpl.get(player).getInCivilization();
 
 		if (province == null || province.civilization == null) {
 			return;
 		}
 
-		PlayerCivilizationCapabilityImpl.get(player).adjustPlayerReputation(province.civilization, getRepuationAdjustmentFor(victum, province));
+		PlayerCivilizationCapabilityImpl.get(player).adjustReputation(province.civilization, getRepuationAdjustmentFor(victum, province));
 
 	}
 
@@ -289,7 +289,7 @@ public class CivilizationHandlers {
 	}
 
 	public static TextComponentString leavingMessage(EntityPlayer player, Province province) {
-		int rep = PlayerCivilizationCapabilityImpl.get(player).getPlayerReputation(province.civilization);
+		int rep = PlayerCivilizationCapabilityImpl.get(player).getReputation(province.civilization);
 		String s;
 		if (rep >= 10) {
 			s = province.civilization.getFriendlyLeavingMessage(province);
@@ -302,7 +302,7 @@ public class CivilizationHandlers {
 	}
 
 	public static TextComponentString enteringMessage(EntityPlayer player, Province province) {
-		int rep = PlayerCivilizationCapabilityImpl.get(player).getPlayerReputation(province.civilization);
+		int rep = PlayerCivilizationCapabilityImpl.get(player).getReputation(province.civilization);
 		String s;
 		if (rep >= 10) {
 			s = province.civilization.getFriendlyEnteringMessage(province);

@@ -10,7 +10,6 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Predicate;
 
-import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
@@ -42,7 +41,7 @@ import net.torocraft.toroquest.civilization.quests.util.Quest;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.civilization.quests.util.Quests;
 
-public class QuestEnemyEncampment implements Quest {
+public class QuestEnemyEncampment extends QuestBase implements Quest {
 	public static int ID;
 	public static QuestEnemyEncampment INSTANCE;
 
@@ -92,7 +91,7 @@ public class QuestEnemyEncampment implements Quest {
 		ItemStack sword = new ItemStack(Items.GOLDEN_SWORD);
 		sword.addEnchantment(Enchantment.getEnchantmentByID(16), 5);
 		sword.addEnchantment(Enchantment.getEnchantmentByID(21), 3);
-		Province inProvince = PlayerCivilizationCapabilityImpl.get(data.getPlayer()).getPlayerInCivilization();
+		Province inProvince = PlayerCivilizationCapabilityImpl.get(data.getPlayer()).getInCivilization();
 		if (inProvince.id.equals(data.getProvinceId())) {
 			sword.setStackDisplayName("Golden Sword of " + inProvince.name);
 		}
@@ -212,23 +211,7 @@ public class QuestEnemyEncampment implements Quest {
 		return pos.up();
 	}
 
-	private boolean isLiquid(IBlockState blockState) {
-		return blockState.getBlock() == Blocks.WATER || blockState.getBlock() == Blocks.LAVA;
-	}
 
-	private boolean isGroundBlock(IBlockState blockState) {
-		if (blockState.getBlock() == Blocks.LEAVES || blockState.getBlock() == Blocks.LEAVES2 || blockState.getBlock() == Blocks.LOG || blockState.getBlock() instanceof BlockBush) {
-			return false;
-		}
-		return blockState.isOpaqueCube();
-	}
-
-	private boolean cantBuildOver(IBlockState blockState) {
-		if (blockState.getBlock() == Blocks.LEAVES || blockState.getBlock() == Blocks.LEAVES2 || blockState.getBlock() instanceof BlockBush) {
-			return false;
-		}
-		return blockState.isOpaqueCube();
-	}
 
 	private void buildHut(QuestData data, BlockPos pos) {
 		World world = data.getPlayer().getEntityWorld();
@@ -301,23 +284,11 @@ public class QuestEnemyEncampment implements Quest {
 		StringBuilder s = new StringBuilder();
 		s.append("- Clear " + getEnemyNames(data) + " encampment\n");
 		if (getSpawnPosition(data) != null) {
-			s.append("- " + getDirections(data) + "\n");
+			s.append("- " + getDirections(getProvincePosition(), getSpawnPosition(data)) + "\n");
 		}
 		s.append("- Reward ").append(listItems(getRewardItems(data))).append("\n");
 		s.append("- Recieve ").append(getRewardRep(data)).append(" reputation");
 		return s.toString();
-	}
-
-	private String getDirections(QuestData data) {
-		// TODO Auto-generated method stub
-		// convert BlockPos into relative directions
-		// return "60 meters north";
-		BlockPos pos = getSpawnPosition(data);
-		if (pos == null) {
-			return "";
-		} else {
-			return pos.toString();
-		}
 	}
 
 	private String getEnemyNames(QuestData data) {
@@ -331,13 +302,6 @@ public class QuestEnemyEncampment implements Quest {
 		}
 	}
 
-	private String listItems(List<ItemStack> items) {
-		StringBuilder s = new StringBuilder();
-		for (ItemStack stack : items) {
-			s.append(" ").append(stack.getCount()).append(" ").append(stack.getDisplayName());
-		}
-		return s.toString();
-	}
 
 	@Override
 	public QuestData generateQuestFor(EntityPlayer player, Province province) {
@@ -418,80 +382,12 @@ public class QuestEnemyEncampment implements Quest {
 		c.setTag("enemies", list);
 	}
 
-	protected static NBTTagCompound getCustomNbtTag(QuestData data) {
-		try {
-			return (NBTTagCompound) data.getCustom();
-		} catch (Exception e) {
-			NBTTagCompound c = new NBTTagCompound();
-			data.setCustom(c);
-			return c;
-		}
-	}
-
-	public static Integer getRewardRep(QuestData data) {
-		return i(data.getiData().get("rep"));
-	}
-
-	public static void setRewardRep(QuestData data, Integer rewardRep) {
-		data.getiData().put("rep", rewardRep);
-	}
-
 	public static Integer getKills(QuestData data) {
 		return i(data.getiData().get("kills"));
 	}
 
 	public static void incrementKills(QuestData data) {
 		data.getiData().put("kills", getKills(data) + 1);
-	}
-
-	private static Integer i(Object o) {
-		if (o == null) {
-			return 0;
-		}
-		try {
-			return (Integer) o;
-		} catch (Exception e) {
-			return 0;
-		}
-	}
-
-	public static void setRewardItems(QuestData data, List<ItemStack> rewards) {
-		setItemsToNbt(data, "rewards", rewards);
-	}
-
-	public static List<ItemStack> getRewardItems(QuestData data) {
-		return getItemsFromNbt(data, "rewards");
-	}
-
-	public static List<ItemStack> getItemsFromNbt(QuestData data, String name) {
-		List<ItemStack> items = new ArrayList<ItemStack>();
-		NBTTagCompound c = getCustomNbtTag(data);
-		try {
-			NBTTagList list = (NBTTagList) c.getTag(name);
-			for (int i = 0; i < list.tagCount(); i++) {
-				items.add(new ItemStack(list.getCompoundTagAt(i)));
-			}
-			return items;
-		} catch (Exception e) {
-			return getDefaultItems(name);
-		}
-	}
-
-	private static List<ItemStack> getDefaultItems(String name) {
-		List<ItemStack> items = new ArrayList<ItemStack>();
-		items.add(new ItemStack(Items.DIAMOND, 13));
-		return items;
-	}
-
-	public static void setItemsToNbt(QuestData data, String name, List<ItemStack> items) {
-		NBTTagCompound c = getCustomNbtTag(data);
-		NBTTagList list = new NBTTagList();
-		for (ItemStack stack : items) {
-			NBTTagCompound cStack = new NBTTagCompound();
-			stack.writeToNBT(cStack);
-			list.appendTag(cStack);
-		}
-		c.setTag(name, list);
 	}
 
 	@SubscribeEvent

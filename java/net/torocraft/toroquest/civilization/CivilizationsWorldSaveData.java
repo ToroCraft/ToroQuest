@@ -49,13 +49,13 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 				return false;
 			}
 		}
-		
+
 		Structure newStructure = new Structure();
 		newStructure.type = type;
 		newStructure.chunkX = chunkX;
 		newStructure.chunkZ = chunkZ;
 		structures.add(newStructure);
-		
+
 		return true;
 	}
 
@@ -245,6 +245,13 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 		}
 		instance.world = world;
 		return instance;
+	}
+
+	@Override
+	public List<Province> getProvinces() {
+		List<Province> copy = new ArrayList<Province>();
+		copy.addAll(provinces);
+		return copy;
 	}
 
 }

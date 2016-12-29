@@ -13,17 +13,17 @@ import net.torocraft.toroquest.civilization.quests.util.QuestData;
 
 public interface PlayerCivilizationCapability {
 
-	void setPlayerReputation(CivilizationType civ, int amount);
+	void setReputation(CivilizationType civ, int amount);
 
-	void adjustPlayerReputation(CivilizationType civ, int amount);
+	void adjustReputation(CivilizationType civ, int amount);
 
-	int getPlayerReputation(CivilizationType civ);
+	int getReputation(CivilizationType civ);
 
 	ReputationLevel getReputationLevel(CivilizationType civ);
 
-	void setPlayerInCivilization(Province civ);
+	void setInCivilization(Province civ);
 
-	Province getPlayerInCivilization();
+	Province getInCivilization();
 
 	NBTTagCompound writeNBT();
 
@@ -57,11 +57,6 @@ public interface PlayerCivilizationCapability {
 	 * errors
 	 */
 	QuestData rejectQuest();
-
-	/**
-	 * @return returns true if the given quest was successfully removed
-	 */
-	boolean removeQuest(QuestData quest);
 
 	/**
 	 * get the current quest accepted for the given province or NULL is there is

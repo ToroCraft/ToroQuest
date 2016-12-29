@@ -46,7 +46,7 @@ public class MessagePlayerCivilizationSetInCiv implements IMessage {
 			if (player == null) {
 				return;
 			}
-			PlayerCivilizationCapabilityImpl.get(player).setPlayerInCivilization(message.province);
+			PlayerCivilizationCapabilityImpl.get(player).setInCivilization(message.province);
 		}
 
 		private String s(Province civ) {

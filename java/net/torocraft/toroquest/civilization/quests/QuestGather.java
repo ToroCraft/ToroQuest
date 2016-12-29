@@ -5,29 +5,23 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
-import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.civilization.quests.util.Quest;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.civilization.quests.util.Quests;
 
-public class QuestGather implements Quest {
+public class QuestGather extends QuestBase implements Quest {
 
 	public static QuestGather INSTANCE;
 
 	public static int ID;
-
 
 	public static void init(int id) {
 		INSTANCE = new QuestGather();
@@ -91,12 +85,6 @@ public class QuestGather implements Quest {
 		return data;
 	}
 
-	private static ItemStack createMetaBlockStack(Block block, int meta, int amount) {
-		ItemStack s = new ItemStack(block, amount);
-		s.setItemDamage(meta);
-		return s;
-	}
-
 	@Override
 	public QuestData generateQuestFor(EntityPlayer player, Province province) {
 		Random rand = player.getEntityWorld().rand;
@@ -111,11 +99,6 @@ public class QuestGather implements Quest {
 		default:
 			return quest1(province, player);
 		}
-	}
-
-
-	protected Province loadProvice(World world, BlockPos pos) {
-		return CivilizationUtil.getProvinceAt(world, pos.getX() / 16, pos.getZ() / 16);
 	}
 
 	@Override
@@ -139,15 +122,6 @@ public class QuestGather implements Quest {
 		return s.toString();
 	}
 
-	private String listItems(List<ItemStack> items) {
-		StringBuilder s = new StringBuilder();
-		for (ItemStack stack : items) {
-			s.append(" ").append(stack.getCount()).append(" ").append(stack.getDisplayName());
-		}
-		return s.toString();
-	}
-
-
 	@Override
 	public void reject(QuestData data) {
 
@@ -169,146 +143,12 @@ public class QuestGather implements Quest {
 		try {
 			items = removeItems(getRequiredItems(data), items);
 		} catch (InsufficientItems ex) {
+			data.getPlayer().sendMessage(new TextComponentString("Missing " + ex.getMessage()));
 			return null;
 		}
 
-		if (!removeQuestFromPlayer(data)) {
-			return null;
-		}
-
-		PlayerCivilizationCapabilityImpl.get(data.getPlayer()).adjustPlayerReputation(data.getCiv(), getRewardRep(data));
-
+		PlayerCivilizationCapabilityImpl.get(data.getPlayer()).adjustReputation(data.getCiv(), getRewardRep(data));
 		items.addAll(getRewardItems(data));
-
 		return items;
-	}
-
-	public static List<ItemStack> removeItems(List<ItemStack> requiredIn, List<ItemStack> itemsIn) throws InsufficientItems {
-		List<ItemStack> givenItems = copyItems(itemsIn);
-		List<ItemStack> requiredItems = copyItems(requiredIn);
-
-		for (ItemStack givenItem : givenItems) {
-			for (ItemStack requiredItem : requiredItems) {
-				handleStackDecrement(requiredItem, givenItem);
-			}
-		}
-
-		for (ItemStack remainingRequired : requiredItems) {
-			if (remainingRequired.getCount() > 0) {
-				throw new InsufficientItems(remainingRequired.getCount() + " " + remainingRequired.getDisplayName());
-			}
-		}
-
-		return givenItems;
-	}
-
-	private static void handleStackDecrement(ItemStack requiredItem, ItemStack givenItem) {
-		if (!equals(requiredItem, givenItem)) {
-			return;
-		}
-
-		if (requiredItem.getCount() < 1 || givenItem.getCount() < 1) {
-			return;
-		}
-		int decrementBy = Math.min(requiredItem.getCount(), givenItem.getCount());
-		requiredItem.shrink(decrementBy);
-		givenItem.shrink(decrementBy);
-	}
-
-	private static boolean equals(ItemStack requiredItem, ItemStack givenItem) {
-		ItemStack givenCopy = givenItem.copy();
-		givenCopy.setCount(requiredItem.getCount());
-		return ItemStack.areItemStacksEqual(givenCopy, requiredItem);
-	}
-
-	public static class InsufficientItems extends Exception {
-		public InsufficientItems(String message) {
-			super(message);
-		}
-	}
-
-	protected static List<ItemStack> copyItems(List<ItemStack> itemsIn) {
-		List<ItemStack> items = new ArrayList<ItemStack>();
-		for (ItemStack stack : itemsIn) {
-			items.add(stack.copy());
-		}
-		return items;
-	}
-
-	protected static boolean removeQuestFromPlayer(QuestData quest) {
-		return PlayerCivilizationCapabilityImpl.get(quest.getPlayer()).removeQuest(quest);
-	}
-
-	public static void setRewardItems(QuestData data, List<ItemStack> rewards) {
-		setItemsToNbt(data, "rewards", rewards);
-	}
-
-	public static void setRequiredItems(QuestData data, List<ItemStack> required) {
-		setItemsToNbt(data, "required", required);
-	}
-
-	public static List<ItemStack> getRequiredItems(QuestData data) {
-		return getItemsFromNbt(data, "required");
-	}
-
-	public static List<ItemStack> getRewardItems(QuestData data) {
-		return getItemsFromNbt(data, "rewards");
-	}
-
-	public static List<ItemStack> getItemsFromNbt(QuestData data, String name) {
-		List<ItemStack> items = new ArrayList<ItemStack>();
-		NBTTagCompound c = getCustomNbtTag(data);
-		try {
-			NBTTagList list = (NBTTagList) c.getTag(name);
-			for (int i = 0; i < list.tagCount(); i++) {
-				items.add(new ItemStack(list.getCompoundTagAt(i)));
-			}
-			return items;
-		} catch (Exception e) {
-			return getDefaultItems(name);
-		}
-	}
-
-	private static List<ItemStack> getDefaultItems(String name) {
-		List<ItemStack> items = new ArrayList<ItemStack>();
-		items.add(new ItemStack(Items.DIAMOND, 13));
-		return items;
-	}
-
-	public static void setItemsToNbt(QuestData data, String name, List<ItemStack> items) {
-		NBTTagCompound c = getCustomNbtTag(data);
-		NBTTagList list = new NBTTagList();
-		for (ItemStack stack : items) {
-			NBTTagCompound cStack = new NBTTagCompound();
-			stack.writeToNBT(cStack);
-			list.appendTag(cStack);
-		}
-		c.setTag(name, list);
-	}
-
-	protected static NBTTagCompound getCustomNbtTag(QuestData data) {
-		try {
-			return (NBTTagCompound) data.getCustom();
-		} catch (Exception e) {
-			NBTTagCompound c = new NBTTagCompound();
-			data.setCustom(c);
-			return c;
-		}
-	}
-
-	public static Integer getRewardRep(QuestData data) {
-		return i(data.getiData().get("rep"));
-	}
-
-	public static void setRewardRep(QuestData data, Integer rewardRep) {
-		data.getiData().put("rep", rewardRep);
-	}
-
-	private static Integer i(Object o) {
-		try {
-			return (Integer) o;
-		} catch (Exception e) {
-			return 0;
-		}
 	}
 }

@@ -11,14 +11,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapability;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
@@ -26,7 +23,7 @@ import net.torocraft.toroquest.civilization.quests.util.Quest;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.civilization.quests.util.Quests;
 
-public class QuestFarm implements Quest {
+public class QuestFarm extends QuestBase implements Quest {
 
 	private static final Block[] CROP_TYPES = { Blocks.CARROTS, Blocks.POTATOES, Blocks.WHEAT, Blocks.MELON_STEM, Blocks.PUMPKIN_STEM, Blocks.BEETROOTS };
 
@@ -71,12 +68,7 @@ public class QuestFarm implements Quest {
 		handleFarmQuest(event.getPlayer(), provinceFarmedIn, event.getState().getBlock(), false);
 	}
 
-	protected Province loadProvice(World world, BlockPos pos) {
-		return CivilizationUtil.getProvinceAt(world, pos.getX() / 16, pos.getZ() / 16);
-	}
-
 	private void handleFarmQuest(EntityPlayer player, Province provinceFarmedIn, Block crop, boolean plant) {
-		//FIXME doesn't look like this checks if you're planting in the correct province
 		Set<QuestData> quests = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuests();
 		DataWrapper quest = new DataWrapper();
 		for (QuestData data : quests) {
@@ -141,27 +133,12 @@ public class QuestFarm implements Quest {
 		StringBuilder s = new StringBuilder();
 		s.append("- Plant ").append(q.getTargetAmount()).append(" ").append(cropName(q.getCropType())).append(" plants.\n");
 		s.append("- You have planted ").append(q.getCurrentAmount()).append(" so far.\n");
-		s.append("- Reward: " + printRewards(q.data.getRewardItems()));
+		s.append("- Reward: " + listItems(q.data.getRewardItems()));
 		s.append("- Recieve ").append(q.getRewardRep()).append(" reputation");
 		return s.toString();
 	}
 
-	private String printRewards(List<ItemStack> rewardItems) {
-		if (rewardItems == null || rewardItems.isEmpty()) {
-			return "no items\n";
-		}
-		StringBuilder sb = new StringBuilder();
-		
-		for (ItemStack item : rewardItems) {
-			sb.append(item.getCount()).append(" ").append(item.getDisplayName());
-			if (item.getCount() > 1) {
-				sb.append("s");
-			}
-			sb.append("\n");
-		}
-		
-		return sb.toString();
-	}
+
 
 	@Override
 	public QuestData generateQuestFor(EntityPlayer player, Province province) {
@@ -204,7 +181,7 @@ public class QuestFarm implements Quest {
 
 	@Override
 	public List<ItemStack> complete(QuestData quest, List<ItemStack> items) {
-		if (!quest.getCompleted() || !removeQuestFromPlayer(quest)) {
+		if (!quest.getCompleted()) {
 			return null;
 		}
 
@@ -216,21 +193,20 @@ public class QuestFarm implements Quest {
 
 		PlayerCivilizationCapability playerCiv = PlayerCivilizationCapabilityImpl.get(quest.getPlayer());
 
-		playerCiv.adjustPlayerReputation(quest.getCiv(), new DataWrapper().setData(quest).getRewardRep());
+		playerCiv.adjustReputation(quest.getCiv(), new DataWrapper().setData(quest).getRewardRep());
 
-		if (playerCiv.getPlayerReputation(province.civilization) > 100 && quest.getPlayer().world.rand.nextInt(10) > 8) {
+		if (playerCiv.getReputation(province.civilization) > 100 && quest.getPlayer().world.rand.nextInt(10) > 8) {
 			ItemStack hoe = new ItemStack(Items.GOLDEN_HOE);
 			hoe.setStackDisplayName("Golden Hoe of " + province.name);
 			items.add(hoe);
 		}
 
-		items.addAll(quest.getRewardItems());
+		List<ItemStack> rewards = quest.getRewardItems();
+		if (rewards != null) {
+			items.addAll(rewards);
+		}
 
 		return items;
-	}
-
-	protected boolean removeQuestFromPlayer(QuestData quest) {
-		return PlayerCivilizationCapabilityImpl.get(quest.getPlayer()).removeQuest(quest);
 	}
 
 	public static class DataWrapper {

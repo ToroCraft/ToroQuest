@@ -27,7 +27,7 @@ public class CivilizationOverlayHandler extends Hud {
 			return;
 		}
 		
-		Province civ = PlayerCivilizationCapabilityImpl.get(player).getPlayerInCivilization();
+		Province civ = PlayerCivilizationCapabilityImpl.get(player).getInCivilization();
 
 		if (civ == null || civ.civilization == null) {
 			return;
@@ -41,7 +41,7 @@ public class CivilizationOverlayHandler extends Hud {
 		int textX = left - 18;
 		int textY = top - 25;
 
-		drawRightString(Integer.toString(PlayerCivilizationCapabilityImpl.get(player).getPlayerReputation(civ.civilization), 10) + " Rep", textX, textY, 0xffffff);
+		drawRightString(Integer.toString(PlayerCivilizationCapabilityImpl.get(player).getReputation(civ.civilization), 10) + " Rep", textX, textY, 0xffffff);
 		textY += 10;
 
 		drawRightString(PlayerCivilizationCapabilityImpl.get(player).getReputationLevel(civ.civilization).getLocalname(), textX, textY, 0xffffff);

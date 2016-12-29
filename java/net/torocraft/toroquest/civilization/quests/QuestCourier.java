@@ -8,11 +8,8 @@ import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.MinecraftForge;
-import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.quests.util.Quest;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
@@ -20,7 +17,7 @@ import net.torocraft.toroquest.civilization.quests.util.Quests;
 
 //TODO logic to listen to the village lord GUI and transform notes to replies
 
-public class QuestCourier implements Quest {
+public class QuestCourier extends QuestBase implements Quest {
 	public static QuestCourier INSTANCE;
 
 	public static int ID;
@@ -121,14 +118,6 @@ public class QuestCourier implements Quest {
 		return s.toString();
 	}
 
-	private String listItems(List<ItemStack> items) {
-		StringBuilder s = new StringBuilder();
-		for (ItemStack stack : items) {
-			s.append(" ").append(stack.getCount()).append(" ").append(stack.getDisplayName());
-		}
-		return s.toString();
-	}
-
 	@Override
 	public QuestData generateQuestFor(EntityPlayer player, Province questProvince) {
 		Province deliverToProvince = getDeliverToProvince(questProvince, player);
@@ -171,10 +160,6 @@ public class QuestCourier implements Quest {
 		return null;
 	}
 
-	protected List<Province> getAllProvinces(EntityPlayer player) {
-		return CivilizationsWorldSaveData.get(player.world).getProvinces();
-	}
-
 	private void setDeliverToProvinceId(QuestData data, UUID id) {
 		data.getsData().put("deliverTo", id.toString());
 	}
@@ -193,77 +178,12 @@ public class QuestCourier implements Quest {
 		throw new UnsupportedOperationException("Deliever to provice ID[" + id + "] was not found");
 	}
 
-	public static void setRewardItems(QuestData data, List<ItemStack> rewards) {
-		setItemsToNbt(data, "rewards", rewards);
-	}
-
-	public static List<ItemStack> getRewardItems(QuestData data) {
-		return getItemsFromNbt(data, "rewards");
-	}
-
-	public static List<ItemStack> getItemsFromNbt(QuestData data, String name) {
-		List<ItemStack> items = new ArrayList<ItemStack>();
-		NBTTagCompound c = getCustomNbtTag(data);
-		try {
-			NBTTagList list = (NBTTagList) c.getTag(name);
-			for (int i = 0; i < list.tagCount(); i++) {
-				items.add(new ItemStack(list.getCompoundTagAt(i)));
-			}
-			return items;
-		} catch (Exception e) {
-			return getDefaultItems(name);
-		}
-	}
-
-	private static List<ItemStack> getDefaultItems(String name) {
-		List<ItemStack> items = new ArrayList<ItemStack>();
-		items.add(new ItemStack(Items.DIAMOND, 13));
-		return items;
-	}
-
-	public static void setItemsToNbt(QuestData data, String name, List<ItemStack> items) {
-		NBTTagCompound c = getCustomNbtTag(data);
-		NBTTagList list = new NBTTagList();
-		for (ItemStack stack : items) {
-			NBTTagCompound cStack = new NBTTagCompound();
-			stack.writeToNBT(cStack);
-			list.appendTag(cStack);
-		}
-		c.setTag(name, list);
-	}
-
-	protected static NBTTagCompound getCustomNbtTag(QuestData data) {
-		try {
-			return (NBTTagCompound) data.getCustom();
-		} catch (Exception e) {
-			NBTTagCompound c = new NBTTagCompound();
-			data.setCustom(c);
-			return c;
-		}
-	}
-
-	public static Integer getRewardRep(QuestData data) {
-		return i(data.getiData().get("rep"));
-	}
-
-	public static void setRewardRep(QuestData data, Integer rewardRep) {
-		data.getiData().put("rep", rewardRep);
-	}
-
 	public static Integer getDistance(QuestData data) {
 		return i(data.getiData().get("distance"));
 	}
 
 	public static void setDistance(QuestData data, Integer distance) {
 		data.getiData().put("distance", distance);
-	}
-
-	private static Integer i(Object o) {
-		try {
-			return (Integer) o;
-		} catch (Exception e) {
-			return 0;
-		}
 	}
 
 }

@@ -170,13 +170,11 @@ public class QuestCourier extends QuestBase implements Quest {
 	}
 
 	private Province getDeliverToProvince(QuestData data) {
-		UUID id = UUID.fromString(data.getsData().get("deliverTo"));
-		for (Province p : getAllProvinces(data.getPlayer().world)) {
-			if (p.id.equals(id)) {
-				return p;
-			}
+		Province p = getProvinceById(data.getPlayer().world, data.getsData().get("deliverTo"));
+		if (p == null) {
+			throw new UnsupportedOperationException("Deliever to provice ID[" + data.getsData().get("deliverTo") + "] was not found");
 		}
-		throw new UnsupportedOperationException("Deliever to provice ID[" + id + "] was not found");
+		return p;
 	}
 
 	public static Integer getDistance(QuestData data) {

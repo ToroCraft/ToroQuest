@@ -4,6 +4,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.network.message.MessageQuestUpdate;
 import net.torocraft.toroquest.network.message.MessagePlayerCivilizationSetInCiv;
 import net.torocraft.toroquest.network.message.MessageRequestPlayerCivilizationSync;
 import net.torocraft.toroquest.network.message.MessageSetItemReputationAmount;
@@ -25,6 +26,8 @@ public class ToroQuestPacketHandler {
 
 	public static void init() {
 		INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(ToroQuest.MODID);
+		
+		INSTANCE.registerMessage(MessageQuestUpdate.Handler.class, MessageQuestUpdate.class, 6, Side.SERVER);
 		
 		INSTANCE.registerMessage(MessageSetQuestInfo.Handler.class, MessageSetQuestInfo.class, 5, Side.CLIENT);
 		

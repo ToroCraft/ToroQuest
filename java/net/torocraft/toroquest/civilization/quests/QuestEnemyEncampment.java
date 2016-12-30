@@ -284,7 +284,7 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 		StringBuilder s = new StringBuilder();
 		s.append("- Clear " + getEnemyNames(data) + " encampment\n");
 		if (getSpawnPosition(data) != null) {
-			s.append("- " + getDirections(getProvincePosition(), getSpawnPosition(data)) + "\n");
+			s.append("- " + getDirections(getProvincePosition(getQuestProvince(data)), getSpawnPosition(data)) + "\n");
 		}
 		s.append("- Reward ").append(listItems(getRewardItems(data))).append("\n");
 		s.append("- Recieve ").append(getRewardRep(data)).append(" reputation");

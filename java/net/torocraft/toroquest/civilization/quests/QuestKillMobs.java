@@ -1,21 +1,31 @@
 package net.torocraft.toroquest.civilization.quests;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.torocraft.toroquest.civilization.Province;
+import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapability;
+import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.civilization.quests.util.Quest;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.civilization.quests.util.Quests;
 
 public class QuestKillMobs extends QuestBase implements Quest {
 	
-	private static final EntityMob[] MOB_TYPES = {  };
+	private static final String[] MOB_TYPES = { "zombie", "skeleton", "creeper", "spider" };
 	
 	public static QuestKillMobs INSTANCE;
 	
@@ -27,23 +37,99 @@ public class QuestKillMobs extends QuestBase implements Quest {
 		MinecraftForge.EVENT_BUS.register(INSTANCE);
 		ID = id;
 	}
+	
+	@SubscribeEvent
+	public void onKill(LivingDeathEvent event) {
+		EntityPlayer player = null;
+		EntityLivingBase victim = (EntityLivingBase) event.getEntity();
+		DamageSource source = event.getSource();
+
+		if (source.getEntity() instanceof EntityPlayer) {
+			player = (EntityPlayer) source.getEntity();
+		}
+
+		if (player == null) {
+			return;
+		}
+		
+		Province province = PlayerCivilizationCapabilityImpl.get(player).getInCivilization();
+
+		if (province == null || province.civilization == null) {
+			return;
+		}
+		
+		handleKillMobsQuest(player, province, victim);
+	}
+		
+	private void handleKillMobsQuest(EntityPlayer player, Province provinceHuntedIn, EntityLivingBase victim) {
+		Set<QuestData> quests = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuests();
+				
+		DataWrapper quest = new DataWrapper();
+		for (QuestData data : quests) {			
+			quest.setData(data);
+			quest.huntedMob = EntityList.getEntityString(victim);
+			quest.provinceHuntedIn = provinceHuntedIn;
+			if (perform(quest)) {
+				return;
+			}
+		}
+	}
+
+	private boolean perform(DataWrapper quest) {
+		if (quest.getData().getPlayer().world.isRemote) {
+			return false;
+		}
+		
+		if (!quest.isApplicable()) {
+			return false;
+		}
+		
+		quest.setCurrentAmount(quest.getCurrentAmount() + 1);
+		
+		if (quest.getCurrentAmount() >= quest.getTargetAmount()) {
+			quest.data.setCompleted(true);
+		}
+		
+		return false;
+	}
 
 	@Override
-	public List<ItemStack> complete(QuestData data, List<ItemStack> in) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ItemStack> complete(QuestData quest, List<ItemStack> items) {
+		if (!quest.getCompleted()) {
+			return null;
+		}
+
+		Province province = loadProvince(quest.getPlayer().world, quest.getPlayer().getPosition());
+
+		if (province == null || province.id == null || !province.id.equals(quest.getProvinceId())) {
+			return null;
+		}
+
+		PlayerCivilizationCapability playerCiv = PlayerCivilizationCapabilityImpl.get(quest.getPlayer());
+
+		playerCiv.adjustReputation(quest.getCiv(), new DataWrapper().setData(quest).getRewardRep());
+
+		if (playerCiv.getReputation(province.civilization) > 100 && quest.getPlayer().world.rand.nextInt(10) > 8) {
+			ItemStack sword = new ItemStack(Items.GOLDEN_SWORD);
+			sword.setStackDisplayName("Golden Sword of " + province.name);
+			items.add(sword);
+		}
+
+		List<ItemStack> rewards = getRewardItems(quest);
+		if (rewards != null) {
+			items.addAll(rewards);
+		}
+
+		return items;
 	}
 
 	@Override
 	public void reject(QuestData data) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public List<ItemStack> accept(QuestData data, List<ItemStack> in) {
-		// TODO Auto-generated method stub
-		return null;
+		return in;
 	}
 
 	@Override
@@ -52,35 +138,62 @@ public class QuestKillMobs extends QuestBase implements Quest {
 			return "";
 		}
 		DataWrapper q = new DataWrapper().setData(data);
-		return "Kill " + q.getTargetAmount() + " " + q.getMobType() + " in " + getProvinceName(data.getPlayer(), data.getProvinceId());
+		return "Kill " + q.getTargetAmount() + " " + mobName(q.getMobType(), data.getPlayer()) + " in " + getProvinceName(data.getPlayer(), data.getProvinceId());
 	}
 
 	@Override
 	public String getDescription(QuestData data) {
-		// TODO Auto-generated method stub
-		return null;
+		if (data == null) {
+			return "";
+		}
+		DataWrapper q = new DataWrapper().setData(data);
+		StringBuilder s = new StringBuilder();
+		s.append("- Kill ").append(q.getTargetAmount()).append(" ").append(mobName(q.getMobType(), data.getPlayer())).append(" in ").append(getProvinceName(data.getPlayer(), data.getProvinceId())).append("\n");
+		s.append("- You have killed ").append(q.getCurrentAmount()).append(" currently.\n");
+		s.append("- Reward: " + listItems(getRewardItems(q.data)));
+		return s.toString();
+	}
+
+	private String mobName(Integer mobType, EntityPlayer player) {
+		Entity mob = EntityList.createEntityByID(mobType, player.world);
+		return mob.getName();
 	}
 
 	@Override
 	public QuestData generateQuestFor(EntityPlayer player, Province province) {
-		// TODO Auto-generated method stub
+		
+		Random rand = player.getEntityWorld().rand;
+		
+		DataWrapper q = new DataWrapper();
+		q.data.setCiv(province.civilization);
+		q.data.setPlayer(player);
+		q.data.setProvinceId(province.id);
+		q.data.setQuestId(UUID.randomUUID());
+		q.data.setQuestType(ID);
+		q.data.setCompleted(false);
+		
+		int roll = rand.nextInt(10);
+		
+		q.setMobType(rand.nextInt(MOB_TYPES.length));
+		q.setCurrentAmount(0);
+		q.setRewardRep(0);
+		q.setTargetAmount(20 + roll);
+		
+		ItemStack emeralds = new ItemStack(Items.EMERALD, q.getTargetAmount() / 6);
+		List<ItemStack> rewardItems = new ArrayList<ItemStack>();
+		rewardItems.add(emeralds);
+		setRewardItems(q.data, rewardItems);
+		
 		return null;
-	}
-	
-	private String getProvinceName(EntityPlayer player, UUID provinceId) {
-		Province province = getProvinceById(provinceId);
-		if (province == null) {
-			return "";
-		}
-		return province.name;
 	}
 	
 	public static class DataWrapper {
 		private QuestData data = new QuestData();
-		private Province provinceFarmedIn;
-		private Block farmedCrop;
+		private Province provinceHuntedIn;
+		private String huntedMob;
 		
 		public QuestData getData() {
+			EntityList.init();
 			return data;
 		}
 
@@ -89,20 +202,20 @@ public class QuestKillMobs extends QuestBase implements Quest {
 			return this;
 		}
 
-		public Province getProvinceFarmedIn() {
-			return provinceFarmedIn;
+		public Province getProvinceHuntedIn() {
+			return provinceHuntedIn;
 		}
 
-		public void setProvinceFarmedIn(Province provinceFarmedIn) {
-			this.provinceFarmedIn = provinceFarmedIn;
+		public void setProvinceHuntedIn(Province provinceHuntedIn) {
+			this.provinceHuntedIn = provinceHuntedIn;
 		}
 
-		public Block getFarmedCrop() {
-			return farmedCrop;
+		public String getHuntedMob() {
+			return huntedMob;
 		}
 
-		public void setFarmedCrop(Block farmedCrop) {
-			this.farmedCrop = farmedCrop;
+		public void setHuntedMob(String huntedMob) {
+			this.huntedMob = huntedMob;
 		}
 
 		public Integer getMobType() {
@@ -154,11 +267,11 @@ public class QuestKillMobs extends QuestBase implements Quest {
 		}
 
 		private boolean isInCorrectProvince() {
-			return data.getProvinceId().equals(getProvinceFarmedIn().id);
+			return data.getProvinceId().equals(getProvinceHuntedIn().id);
 		}
 		
 		private boolean isCorrectMob() {
-			return true;
+			return MOB_TYPES[getMobType()] == getHuntedMob();
 		}
 
 	}

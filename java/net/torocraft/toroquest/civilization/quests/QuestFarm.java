@@ -75,13 +75,13 @@ public class QuestFarm extends QuestBase implements Quest {
 			quest.setData(data);
 			quest.farmedCrop = crop;
 			quest.provinceFarmedIn = provinceFarmedIn;
-			if (perform(quest, crop, plant)) {
+			if (perform(quest, plant)) {
 				return;
 			}
 		}
 	}
 
-	public boolean perform(DataWrapper quest, Block farmedCrop, boolean plant) {
+	public boolean perform(DataWrapper quest, boolean plant) {
 		if (quest.getData().getPlayer().world.isRemote) {
 			return false;
 		}
@@ -131,14 +131,11 @@ public class QuestFarm extends QuestBase implements Quest {
 		}
 		DataWrapper q = new DataWrapper().setData(data);
 		StringBuilder s = new StringBuilder();
-		s.append("- Plant ").append(q.getTargetAmount()).append(" ").append(cropName(q.getCropType())).append(" plants.\n");
-		s.append("- You have planted ").append(q.getCurrentAmount()).append(" so far.\n");
-		s.append("- Reward: " + listItems(q.data.getRewardItems()));
-		s.append("- Recieve ").append(q.getRewardRep()).append(" reputation");
+		s.append("- Plant ").append(q.getTargetAmount()).append(" ").append(cropName(q.getCropType())).append(" in ").append(getProvinceName(data.getPlayer(), data.getProvinceId())).append("\n");
+		s.append("- You have planted ").append(q.getCurrentAmount()).append(" currently.\n");
+		s.append("- Reward: " + listItems(getRewardItems(q.data)));
 		return s.toString();
 	}
-
-
 
 	@Override
 	public QuestData generateQuestFor(EntityPlayer player, Province province) {
@@ -157,14 +154,13 @@ public class QuestFarm extends QuestBase implements Quest {
 
 		q.setCropType(rand.nextInt(CROP_TYPES.length));
 		q.setCurrentAmount(0);
-		q.setRewardRep(0); // was using MathHelper.clamp(roll / 10, 3, 8) :: I removed it because planting already gives rep
+		q.setRewardRep(0);
 		q.setTargetAmount(MathHelper.clamp(roll, 32, 100));
 		
-		
-		//FIXME doesn't actually work because it doesn't get persisted.  Need to add this to the NBTTagCompound somehow
 		ItemStack emeralds = new ItemStack(Items.EMERALD, MathHelper.clamp(q.getTargetAmount() / 32, 1, 4));
-		q.data.setRewardItems(new ArrayList<ItemStack>());
-		q.data.getRewardItems().add(emeralds);
+		List<ItemStack> rewardItems = new ArrayList<ItemStack>();
+		rewardItems.add(emeralds);
+		setRewardItems(q.data, rewardItems);
 
 		return q.data;
 	}
@@ -201,7 +197,7 @@ public class QuestFarm extends QuestBase implements Quest {
 			items.add(hoe);
 		}
 
-		List<ItemStack> rewards = quest.getRewardItems();
+		List<ItemStack> rewards = getRewardItems(quest);
 		if (rewards != null) {
 			items.addAll(rewards);
 		}

@@ -7,6 +7,7 @@ import java.util.UUID;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -229,5 +230,13 @@ public abstract class QuestBase implements Quest {
 			}
 		}
 		return null;
+	}
+	
+	protected String getProvinceName(EntityPlayer player, UUID provinceId) {
+		Province province = getProvinceById(player.world, provinceId);
+		if (province == null) {
+			return "";
+		}
+		return province.name;
 	}
 }

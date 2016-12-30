@@ -1,13 +1,11 @@
 package net.torocraft.toroquest.civilization.quests.util;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.torocraft.toroquest.civilization.CivilizationType;
@@ -20,7 +18,6 @@ public class QuestData {
 	private CivilizationType civ;
 	private transient EntityPlayer player;
 	private Boolean completed = false;
-	private List<ItemStack> rewardItems;
 	private Map<String, Integer> iData = new HashMap<String, Integer>();
 	private Map<String, String> sData = new HashMap<String, String>();
 	private NBTBase custom = new NBTTagCompound();
@@ -201,14 +198,6 @@ public class QuestData {
 
 	public void setCompleted(Boolean completed) {
 		this.completed = completed;
-	}
-
-	public List<ItemStack> getRewardItems() {
-		return rewardItems;
-	}
-
-	public void setRewardItems(List<ItemStack> rewardItems) {
-		this.rewardItems = rewardItems;
 	}
 
 	public Map<String, String> getsData() {

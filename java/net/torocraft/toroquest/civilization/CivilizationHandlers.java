@@ -214,7 +214,7 @@ public class CivilizationHandlers {
 	@SubscribeEvent
 	public void checkKillsInCivilization(LivingDeathEvent event) {
 		EntityPlayer player = null;
-		EntityLivingBase victum = (EntityLivingBase) event.getEntity();
+		EntityLivingBase victim = (EntityLivingBase) event.getEntity();
 		DamageSource source = event.getSource();
 
 		if (source.getEntity() instanceof EntityPlayer) {
@@ -231,7 +231,7 @@ public class CivilizationHandlers {
 			return;
 		}
 
-		PlayerCivilizationCapabilityImpl.get(player).adjustReputation(province.civilization, getRepuationAdjustmentFor(victum, province));
+		PlayerCivilizationCapabilityImpl.get(player).adjustReputation(province.civilization, getRepuationAdjustmentFor(victim, province));
 
 	}
 

@@ -22,6 +22,7 @@ import net.torocraft.toroquest.civilization.ReputationLevel;
 import net.torocraft.toroquest.civilization.quests.QuestEnemyEncampment;
 import net.torocraft.toroquest.civilization.quests.QuestFarm;
 import net.torocraft.toroquest.civilization.quests.QuestGather;
+import net.torocraft.toroquest.civilization.quests.QuestKillMobs;
 import net.torocraft.toroquest.civilization.quests.QuestMine;
 import net.torocraft.toroquest.civilization.quests.util.Quest;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
@@ -206,6 +207,9 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 		List<Quest> possibleQuests = new ArrayList<Quest>();
 		possibleQuests.add(QuestFarm.INSTANCE);
 		possibleQuests.add(QuestGather.INSTANCE);
+		possibleQuests.add(QuestMine.INSTANCE);
+		possibleQuests.add(QuestKillMobs.INSTANCE);
+
 		if (getReputation(province.civilization) > 100) {
 			possibleQuests.add(QuestEnemyEncampment.INSTANCE);
 		}
@@ -226,7 +230,7 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 		}
 
 		// FIXME remove this
-		q = QuestMine.INSTANCE.generateQuestFor(player, province);
+		// q = QuestMine.INSTANCE.generateQuestFor(player, province);
 
 		nextQuests.add(q);
 		return q;

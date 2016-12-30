@@ -85,8 +85,8 @@ public class QuestCourier extends QuestBase implements Quest {
 	}
 
 	@Override
-	public void reject(QuestData data) {
-
+	public List<ItemStack> reject(QuestData data, List<ItemStack> in) {
+		return in;
 	}
 
 	@Override

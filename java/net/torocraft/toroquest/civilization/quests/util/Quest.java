@@ -24,8 +24,9 @@ public interface Quest {
 	 * 
 	 * @param data
 	 *            the current quest data
+	 * @return items given back or NULL if failed to reject
 	 */
-	void reject(QuestData data);
+	List<ItemStack> reject(QuestData data, List<ItemStack> in);
 
 	/**
 	 * 

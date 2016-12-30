@@ -225,12 +225,25 @@ public class ToroQuestCommand extends CommandBase {
 			}
 
 		} else if ("reject".equals(sub)) {
-			QuestData data = PlayerCivilizationCapabilityImpl.get(player).rejectQuest();
+
+			QuestData data = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
+
 			if (data == null) {
-				throw new WrongUsageException("commands.tq.quest_could_not_be_rejected", new Object[0]);
+				player.sendMessage(new TextComponentString("No accepted quest to complete"));
+				return;
+			}
+
+			QuestDelegator curQuest = new QuestDelegator(data);
+
+			List<ItemStack> beforeItems = pullHotbarItems(player);
+			List<ItemStack> afterItems = PlayerCivilizationCapabilityImpl.get(player).rejectQuest(beforeItems);
+
+			if (afterItems == null) {
+				player.sendMessage(new TextComponentString("Unable to reject quest"));
+				dropItems(player, beforeItems);
 			} else {
-				QuestDelegator quest = new QuestDelegator(data);
-				player.sendMessage(new TextComponentString("Rejected: " + quest.getTitle()));
+				player.sendMessage(new TextComponentString("Rejected: " + curQuest.getTitle()));
+				dropItems(player, afterItems);
 			}
 		} else {
 			throw new WrongUsageException("commands.tq.usage", new Object[0]);

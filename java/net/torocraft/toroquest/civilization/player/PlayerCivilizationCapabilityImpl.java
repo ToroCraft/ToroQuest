@@ -250,7 +250,7 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 	}
 
 	@Override
-	public QuestData rejectQuest() {
+	public List<ItemStack> rejectQuest(List<ItemStack> in) {
 		Province province = getInCivilization();
 		if (province == null) {
 			return null;
@@ -264,10 +264,10 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 			if (getReputation(province.civilization) > 10) {
 				adjustReputation(province.civilization, -10);
 			}
-			new QuestDelegator(data).reject();
+			return new QuestDelegator(data).reject(in);
 		}
 
-		return getNextQuestFor(province);
+		return null;
 	}
 
 	@Override

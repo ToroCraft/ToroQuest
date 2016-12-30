@@ -42,8 +42,8 @@ public class QuestDelegator {
 		this.data = data;
 	}
 
-	public void reject() {
-		getTypedQuest(data).reject(data);
+	public List<ItemStack> reject(List<ItemStack> in) {
+		return getTypedQuest(data).reject(data, in);
 	}
 
 	public List<ItemStack> accept(List<ItemStack> in) {

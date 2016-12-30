@@ -156,8 +156,9 @@ public class QuestMine extends QuestBase {
 	}
 
 	@Override
-	public void reject(QuestData data) {
+	public List<ItemStack> reject(QuestData data, List<ItemStack> in) {
 		// TODO cost money or the tool to complete
+		return in;
 	}
 
 	@Override

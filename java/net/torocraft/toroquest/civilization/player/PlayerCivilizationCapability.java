@@ -56,7 +56,7 @@ public interface PlayerCivilizationCapability {
 	 * rejects the current quest and returns the next quest data or NULL on
 	 * errors
 	 */
-	QuestData rejectQuest();
+	List<ItemStack> rejectQuest(List<ItemStack> in);
 
 	/**
 	 * get the current quest accepted for the given province or NULL is there is

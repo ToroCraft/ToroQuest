@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -43,7 +42,8 @@ public class MessageQuestUpdate implements IMessage {
 			QuestData currentQuestData = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
 			
 			if(currentQuestData != null) {
-				PlayerCivilizationCapabilityImpl.get(player).rejectQuest();
+				// TODO handle input and output items
+				List<ItemStack> outputItems = PlayerCivilizationCapabilityImpl.get(player).rejectQuest(new ArrayList<ItemStack>());
 				QuestData nextQuest = PlayerCivilizationCapabilityImpl.get(player).getNextQuestFor(province);
 				ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetQuestInfo(province, null, nextQuest), (EntityPlayerMP) player);
 			} else {

@@ -225,7 +225,7 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 		}
 
 		// FIXME remove this
-		// q = QuestCourier.INSTANCE.generateQuestFor(player, province);
+		// q = QuestMine.INSTANCE.generateQuestFor(player, province);
 
 		nextQuests.add(q);
 		return q;

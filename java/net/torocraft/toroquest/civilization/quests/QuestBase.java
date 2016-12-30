@@ -2,6 +2,7 @@ package net.torocraft.toroquest.civilization.quests;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import net.minecraft.block.Block;
@@ -18,6 +19,7 @@ import net.minecraft.world.World;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData;
 import net.torocraft.toroquest.civilization.Province;
+import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.civilization.quests.util.Quest;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
 
@@ -238,7 +240,7 @@ public abstract class QuestBase implements Quest {
 		}
 		return null;
 	}
-	
+
 	protected String getProvinceName(EntityPlayer player, UUID provinceId) {
 		Province province = getProvinceById(player.world, provinceId);
 		if (province == null) {
@@ -246,4 +248,39 @@ public abstract class QuestBase implements Quest {
 		}
 		return province.name;
 	}
+
+	protected static QuestData getQuestById(EntityPlayer player, String questId) {
+		return getQuestById(player, UUID.fromString(questId));
+	}
+
+	protected static QuestData getQuestById(EntityPlayer player, UUID questId) {
+		Set<QuestData> quests = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuests();
+		if (quests == null) {
+			return null;
+		}
+		for (QuestData data : quests) {
+			if (data.getQuestId().equals(questId)) {
+				return data;
+			}
+		}
+		return null;
+	}
+
+	protected static List<ItemStack> removeEmptyItemStacks(List<ItemStack> givenItems) {
+		List<ItemStack> itemsToReturn = new ArrayList<ItemStack>();
+		for (ItemStack item : givenItems) {
+			if (!item.isEmpty()) {
+				itemsToReturn.add(item);
+			}
+		}
+		return itemsToReturn;
+	}
+
+	protected static void addRewardItems(QuestData data, List<ItemStack> givenItems) {
+		if (getRewardItems(data) == null || givenItems == null) {
+			return;
+		}
+		givenItems.addAll(getRewardItems(data));
+	}
+
 }

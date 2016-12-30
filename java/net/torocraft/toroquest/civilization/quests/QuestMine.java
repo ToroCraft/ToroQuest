@@ -121,14 +121,11 @@ public class QuestMine extends QuestBase {
 				if (item.getItem() instanceof ItemTool) {
 					toolIncluded = true;
 					item.setCount(0);
-					System.out.println("found tool for this quest");
 				} else {
-					System.out.println("was for this quest: sub " + item.getCount());
 					requiredLeft -= item.getCount();
 					item.setCount(0);
 				}
 			} else {
-				System.out.println("was NOT for this quest: sub " + item.getTagCompound());
 			}
 		}
 
@@ -148,7 +145,7 @@ public class QuestMine extends QuestBase {
 	}
 
 	protected boolean isForThisQuest(QuestData data, ItemStack item) {
-		if (!item.hasTagCompound()) {
+		if (!item.hasTagCompound() || item.isEmpty()) {
 			return false;
 		}
 		String wasMinedForQuestId = item.getTagCompound().getString("mine_quest");
@@ -157,8 +154,40 @@ public class QuestMine extends QuestBase {
 
 	@Override
 	public List<ItemStack> reject(QuestData data, List<ItemStack> in) {
-		// TODO cost money or the tool to complete
-		return in;
+		if (in == null) {
+			return null;
+		}
+
+		List<ItemStack> givenItems = copyItems(in);
+
+		boolean toolIncluded = false;
+		int emeraldRemainingCount = 5;
+
+		for (ItemStack item : givenItems) {
+			if (isForThisQuest(data, item)) {
+				if (item.getItem() instanceof ItemTool) {
+					toolIncluded = true;
+					item.setCount(0);
+				}
+			}
+		}
+
+		if (!toolIncluded) {
+			for (ItemStack item : givenItems) {
+				if (!item.isEmpty() && item.getItem() == Items.EMERALD) {
+					int decBy = Math.min(item.getCount(), emeraldRemainingCount);
+					emeraldRemainingCount -= decBy;
+					item.shrink(decBy);
+				}
+			}
+		}
+
+		if (!toolIncluded && emeraldRemainingCount > 0) {
+			data.getPlayer().sendMessage(new TextComponentString("Return the tool that was provided or 5 emeralds to pay for it"));
+			return null;
+		}
+
+		return removeEmptyItemStacks(givenItems);
 	}
 
 	@Override

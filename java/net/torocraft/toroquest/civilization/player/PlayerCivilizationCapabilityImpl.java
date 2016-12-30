@@ -22,6 +22,7 @@ import net.torocraft.toroquest.civilization.ReputationLevel;
 import net.torocraft.toroquest.civilization.quests.QuestEnemyEncampment;
 import net.torocraft.toroquest.civilization.quests.QuestFarm;
 import net.torocraft.toroquest.civilization.quests.QuestGather;
+import net.torocraft.toroquest.civilization.quests.QuestMine;
 import net.torocraft.toroquest.civilization.quests.util.Quest;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.civilization.quests.util.QuestDelegator;
@@ -225,7 +226,7 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 		}
 
 		// FIXME remove this
-		// q = QuestMine.INSTANCE.generateQuestFor(player, province);
+		q = QuestMine.INSTANCE.generateQuestFor(player, province);
 
 		nextQuests.add(q);
 		return q;
@@ -260,11 +261,17 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 			return null;
 		}
 
+		List<ItemStack> out = new QuestDelegator(data).reject(in);
+
+		if (out == null) {
+			return null;
+		}
+
 		if (removeQuest(data)) {
 			if (getReputation(province.civilization) > 10) {
 				adjustReputation(province.civilization, -10);
 			}
-			return new QuestDelegator(data).reject(in);
+			return out;
 		}
 
 		return null;

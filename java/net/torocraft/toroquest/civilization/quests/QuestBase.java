@@ -210,9 +210,8 @@ public abstract class QuestBase implements Quest {
 		}
 	}
 
-	protected static BlockPos getProvincePosition() {
-		// FIXME
-		return null;
+	protected static BlockPos getProvincePosition(Province province) {
+		return new BlockPos(province.chunkX * 16, 80, province.chunkZ * 16);
 	}
 
 	protected static List<Province> getAllProvinces(World world) {

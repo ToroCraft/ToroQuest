@@ -2,6 +2,7 @@ package net.torocraft.toroquest.civilization.quests;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
@@ -216,5 +217,18 @@ public abstract class QuestBase implements Quest {
 
 	protected static List<Province> getAllProvinces(World world) {
 		return CivilizationsWorldSaveData.get(world).getProvinces();
+	}
+
+	protected static Province getProvinceById(World world, String id) {
+		return getProvinceById(world, UUID.fromString(id));
+	}
+
+	protected static Province getProvinceById(World world, UUID id) {
+		for (Province p : getAllProvinces(world)) {
+			if (p.id.equals(id)) {
+				return p;
+			}
+		}
+		return null;
 	}
 }

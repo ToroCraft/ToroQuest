@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.quests.util.Quest;
@@ -120,7 +121,7 @@ public class QuestCourier extends QuestBase implements Quest {
 
 	@Override
 	public QuestData generateQuestFor(EntityPlayer player, Province questProvince) {
-		Province deliverToProvince = getDeliverToProvince(questProvince, player);
+		Province deliverToProvince = chooseRandomProvince(questProvince, player.world);
 		if (deliverToProvince == null) {
 			return null;
 		}
@@ -142,9 +143,9 @@ public class QuestCourier extends QuestBase implements Quest {
 		return data;
 	}
 
-	private Province getDeliverToProvince(Province questProvince, EntityPlayer player) {
+	public static Province chooseRandomProvince(Province exclude, World world) {
 
-		List<Province> provinces = getAllProvinces(player);
+		List<Province> provinces = getAllProvinces(world);
 		if (provinces.size() < 2) {
 			return null;
 		}
@@ -152,7 +153,7 @@ public class QuestCourier extends QuestBase implements Quest {
 		Collections.shuffle(provinces);
 
 		for (Province p : provinces) {
-			if (p.id != questProvince.id) {
+			if (exclude == null || p.id != exclude.id) {
 				return p;
 			}
 		}
@@ -170,7 +171,7 @@ public class QuestCourier extends QuestBase implements Quest {
 
 	private Province getDeliverToProvince(QuestData data) {
 		UUID id = UUID.fromString(data.getsData().get("deliverTo"));
-		for (Province p : getAllProvinces(data.getPlayer())) {
+		for (Province p : getAllProvinces(data.getPlayer().world)) {
 			if (p.id.equals(id)) {
 				return p;
 			}

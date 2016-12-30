@@ -2,11 +2,11 @@ package net.torocraft.toroquest.civilization.quests;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -210,12 +210,24 @@ public abstract class QuestBase implements Quest {
 		}
 	}
 
-	protected static BlockPos getProvincePosition() {
-		// FIXME
-		return null;
+	protected static BlockPos getProvincePosition(Province province) {
+		return new BlockPos(province.chunkX * 16, 80, province.chunkZ * 16);
 	}
 
-	protected static List<Province> getAllProvinces(EntityPlayer player) {
-		return CivilizationsWorldSaveData.get(player.world).getProvinces();
+	protected static List<Province> getAllProvinces(World world) {
+		return CivilizationsWorldSaveData.get(world).getProvinces();
+	}
+
+	protected static Province getProvinceById(World world, String id) {
+		return getProvinceById(world, UUID.fromString(id));
+	}
+
+	protected static Province getProvinceById(World world, UUID id) {
+		for (Province p : getAllProvinces(world)) {
+			if (p.id.equals(id)) {
+				return p;
+			}
+		}
+		return null;
 	}
 }

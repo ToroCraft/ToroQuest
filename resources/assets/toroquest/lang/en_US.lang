@@ -37,6 +37,9 @@ entity.village_lord.name=Village Lord
 entity.toroquest.shopkeeper.name=Shopkeeper
 entity.shopkeeper.name=Shopkeeper
 
+entity.toroquest.fugitive.name=Fugitive
+entity.fugitive.name=Fugitive
+
 entity.toroquest.vampire_bat.name=Vampire Bat
 entity.vampire_bat.name=Vampire Bat
 

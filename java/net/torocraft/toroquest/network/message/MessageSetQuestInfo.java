@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -12,6 +13,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
+import net.torocraft.toroquest.civilization.quests.util.QuestDelegator;
 import net.torocraft.toroquest.gui.VillageLordGuiContainer;
 
 public class MessageSetQuestInfo implements IMessage {
@@ -19,16 +21,37 @@ public class MessageSetQuestInfo implements IMessage {
 	private QuestMessage questMessage;
 	private String questMessageJson;
 	
+	private Province civ;
+	private QuestData currentQuest;
+	private QuestData nextQuest;
+	
 	public MessageSetQuestInfo() {
 
 	}
 
 	public MessageSetQuestInfo(Province civ, QuestData current, QuestData next) {
-		questMessage = new QuestMessage();
-		questMessage.civ = civ;
-		questMessage.current = current;
-		questMessage.next = next;
+		this.civ = civ;
+		this.currentQuest = current;
+		this.nextQuest = next;
+		createMessage();
 		serializeData();
+	}
+	
+	private void createMessage() {
+		questMessage = new QuestMessage();
+		questMessage.provinceName = civ.name;
+		
+		if(currentQuest != null) {
+			QuestDelegator quest = new QuestDelegator(currentQuest);
+			questMessage.questTitle = quest.getTitle();
+			questMessage.questDescription = quest.getDescription();
+			questMessage.accepted = true;
+		} else {
+			QuestDelegator quest = new QuestDelegator(nextQuest);
+			questMessage.questTitle = quest.getTitle();
+			questMessage.questDescription = quest.getDescription();
+			questMessage.accepted = false;
+		}
 	}
 	
 	@Override
@@ -43,7 +66,6 @@ public class MessageSetQuestInfo implements IMessage {
 	}
 	
 	private void serializeData() {
-		// FIXME look at the other fixme
 		if(questMessage != null) {
 			questMessageJson = new Gson().toJson(questMessage, QuestMessage.class);
 		} else {
@@ -52,12 +74,6 @@ public class MessageSetQuestInfo implements IMessage {
 	}
 	
 	private void deserializeData() {
-		// FIXME will crash on NBT tags which I just added and broke your stuff
-		// (your welcome, hehehehe), you might want to manually
-		// serialize each field in QuestMessage, it would be more efficient that
-		// way too. you
-		// can use ByteBufUtils.writeTag(buff, data.getCustom());
-
 		questMessage = new Gson().fromJson(questMessageJson, QuestMessage.class);
 	}
 	
@@ -70,9 +86,8 @@ public class MessageSetQuestInfo implements IMessage {
 				return;
 			}
 			
-			VillageLordGuiContainer.setProvince(message.questMessage.civ);
-			VillageLordGuiContainer.setCurrentQuest(message.questMessage.current);
-			VillageLordGuiContainer.setNextQuest(message.questMessage.next);
+			VillageLordGuiContainer.setProvinceName(message.questMessage.provinceName);
+			VillageLordGuiContainer.setQuestData(message.questMessage.questTitle, message.questMessage.questDescription, message.questMessage.accepted);
 		}
 	}
 
@@ -96,8 +111,9 @@ public class MessageSetQuestInfo implements IMessage {
 	}
 	
 	public static class QuestMessage {
-		public Province civ;
-		public QuestData current;
-		public QuestData next;
+		public String provinceName;
+		public String questTitle;
+		public String questDescription;
+		public boolean accepted;
 	}
 }

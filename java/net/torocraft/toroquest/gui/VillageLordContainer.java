@@ -13,8 +13,12 @@ public class VillageLordContainer extends Container {
 	private final int HOTBAR_SLOT_COUNT = 9;
 	private final int INVENTORY_ROW_COUNT = 3;
 	private final int INVENTORY_COLUMN_COUNT = 9;
-	private final int SUBMIT_ITEM_ROW_COUNT = 1;
-	private final int SUBMIT_ITEM_COLUMN_COUNT = 1;
+	private final int DONATE_ITEM_ROW_COUNT = 1;
+	private final int DONATE_ITEM_COLUMN_COUNT = 1;
+	private final int QUEST_INPUT_ITEM_ROW_COUNT = 3;
+	private final int QUEST_INPUT_ITEM_COLUMN_COUNT = 1;
+	private final int QUEST_OUTPUT_ITEM_ROW_COUNT = 3;
+	private final int QUEST_OUTPUT_ITEM_COLUMN_COUNT = 1;
 	
 	private final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + (INVENTORY_COLUMN_COUNT * INVENTORY_ROW_COUNT);
 	private final int LORD_INVENTORY_SLOT_COUNT = 1;
@@ -24,6 +28,8 @@ public class VillageLordContainer extends Container {
 	
 	private final int SLOT_X_SPACING = 18;
     private final int SLOT_Y_SPACING = 18;
+    
+    private final int QUEST_ITEM_SLOT_SPACING = 21;
 	
     private final int HOTBAR_XPOS = 8;
 	private final int HOTBAR_YPOS = 106 + 92;
@@ -31,8 +37,14 @@ public class VillageLordContainer extends Container {
 	private final int INVENTORY_XPOS = 8;
 	private final int INVENTORY_YPOS = 48 + 92;
 	
-	private final int SUBMIT_ITEM_XPOS = 83;
-	private final int SUBMIT_ITEM_YPOS = 17;
+	private final int DONATE_ITEM_XPOS = 83;
+	private final int DONATE_ITEM_YPOS = 17;
+	
+	private final int QUEST_INPUT_ITEM_XPOS = 8;
+	private final int QUEST_INPUT_ITEM_YPOS = 53;
+	
+	private final int QUEST_OUTPUT_ITEM_XPOS = 151;
+	private final int QUEST_OUTPUT_ITEM_YPOS = 53;
 	
 	private final VillageLordInventory inventory;
 	
@@ -53,12 +65,30 @@ public class VillageLordContainer extends Container {
 			}
 		}
 		
-		for (int x = 0; x < SUBMIT_ITEM_ROW_COUNT; x++) {
-			for(int y = 0; y < SUBMIT_ITEM_COLUMN_COUNT; y++) {
-				int slotNumber = x * SUBMIT_ITEM_COLUMN_COUNT + y;
-				int xPos = SUBMIT_ITEM_XPOS + y * SLOT_X_SPACING;
-				int yPos = SUBMIT_ITEM_YPOS + x * SLOT_Y_SPACING;
+		for (int x = 0; x < DONATE_ITEM_ROW_COUNT; x++) {
+			for(int y = 0; y < DONATE_ITEM_COLUMN_COUNT; y++) {
+				int slotNumber = x * DONATE_ITEM_COLUMN_COUNT + y;
+				int xPos = DONATE_ITEM_XPOS + y * SLOT_X_SPACING;
+				int yPos = DONATE_ITEM_YPOS + x * SLOT_Y_SPACING;
 				addSlotToContainer(new Slot(inventory, slotNumber, xPos, yPos));
+			}
+		}
+		
+		for (int x = 0; x < QUEST_INPUT_ITEM_ROW_COUNT; x++) {
+			for(int y = 0; y < QUEST_INPUT_ITEM_COLUMN_COUNT; y++) {
+				int slotNumber = x * QUEST_INPUT_ITEM_COLUMN_COUNT + y;
+				int xPos = QUEST_INPUT_ITEM_XPOS + y * QUEST_ITEM_SLOT_SPACING;
+				int yPos = QUEST_INPUT_ITEM_YPOS + x * QUEST_ITEM_SLOT_SPACING;
+				addSlotToContainer(new Slot(inventory, slotNumber, xPos, yPos));
+			}
+		}
+		
+		for (int x = 0; x < QUEST_OUTPUT_ITEM_ROW_COUNT; x++) {
+			for(int y = 0; y < QUEST_OUTPUT_ITEM_COLUMN_COUNT; y++) {
+				int slotNumber = x * QUEST_OUTPUT_ITEM_COLUMN_COUNT + y;
+				int xPos = QUEST_OUTPUT_ITEM_XPOS + y * QUEST_ITEM_SLOT_SPACING;
+				int yPos = QUEST_OUTPUT_ITEM_YPOS + x * QUEST_ITEM_SLOT_SPACING;
+				addSlotToContainer(new SlotOutput(inventory, slotNumber, xPos, yPos));
 			}
 		}
 

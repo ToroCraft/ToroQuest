@@ -134,7 +134,7 @@ public class QuestGather extends QuestBase implements Quest {
 
 	@Override
 	public List<ItemStack> complete(QuestData data, List<ItemStack> items) {
-		Province province = loadProvice(data.getPlayer().world, data.getPlayer().getPosition());
+		Province province = loadProvince(data.getPlayer().world, data.getPlayer().getPosition());
 
 		if (province == null || !province.id.equals(data.getProvinceId())) {
 			return null;

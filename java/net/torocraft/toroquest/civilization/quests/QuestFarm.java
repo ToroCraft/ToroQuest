@@ -44,7 +44,7 @@ public class QuestFarm extends QuestBase implements Quest {
 			return;
 		}
 
-		Province provinceFarmedIn = loadProvice(event.getPlayer().world, event.getBlockSnapshot().getPos());
+		Province provinceFarmedIn = loadProvince(event.getPlayer().world, event.getBlockSnapshot().getPos());
 
 		if (provinceFarmedIn == null || provinceFarmedIn.civilization == null) {
 			return;
@@ -59,7 +59,7 @@ public class QuestFarm extends QuestBase implements Quest {
 			return;
 		}
 
-		Province provinceFarmedIn = loadProvice(event.getPlayer().world, event.getPos());
+		Province provinceFarmedIn = loadProvince(event.getPlayer().world, event.getPos());
 
 		if (provinceFarmedIn == null || provinceFarmedIn.civilization == null) {
 			return;
@@ -185,7 +185,7 @@ public class QuestFarm extends QuestBase implements Quest {
 			return null;
 		}
 
-		Province province = loadProvice(quest.getPlayer().world, quest.getPlayer().getPosition());
+		Province province = loadProvince(quest.getPlayer().world, quest.getPlayer().getPosition());
 
 		if (province == null || province.id == null || !province.id.equals(quest.getProvinceId())) {
 			return null;

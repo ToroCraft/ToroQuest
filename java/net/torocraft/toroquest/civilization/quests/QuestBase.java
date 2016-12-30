@@ -27,7 +27,7 @@ public abstract class QuestBase implements Quest {
 		return s;
 	}
 
-	protected static Province loadProvice(World world, BlockPos pos) {
+	protected static Province loadProvince(World world, BlockPos pos) {
 		return CivilizationUtil.getProvinceAt(world, pos.getX() / 16, pos.getZ() / 16);
 	}
 

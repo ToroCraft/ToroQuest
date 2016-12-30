@@ -210,6 +210,13 @@ public abstract class QuestBase implements Quest {
 		}
 	}
 
+	/**
+	 * @return the province that gave the quest
+	 */
+	protected static Province getQuestProvince(QuestData data) {
+		return getProvinceById(data.getPlayer().world, data.getProvinceId());
+	}
+
 	protected static BlockPos getProvincePosition(Province province) {
 		return new BlockPos(province.chunkX * 16, 80, province.chunkZ * 16);
 	}

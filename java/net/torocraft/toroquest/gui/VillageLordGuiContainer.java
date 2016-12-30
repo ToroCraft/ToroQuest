@@ -15,6 +15,8 @@ import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.civilization.quests.util.QuestDelegator;
 import net.torocraft.toroquest.inventory.VillageLordInventory;
+import net.torocraft.toroquest.network.ToroQuestPacketHandler;
+import net.torocraft.toroquest.network.message.MessageQuestUpdate;
 
 public class VillageLordGuiContainer extends GuiContainer {
 
@@ -27,9 +29,11 @@ public class VillageLordGuiContainer extends GuiContainer {
 	private static long mousePressed = 0;
 	
 	private static int availableReputation = 100;
-	private static Province civ;
-	private static QuestData currentQuest;
-	private static QuestData nextQuest;
+	
+	private static String civName = "";
+	private static String questTitle = "";
+	private static String questDescription = "";
+	private static boolean questAccepted = false;
 	
 	private QuestDelegator quest = new QuestDelegator(new QuestData());
 	
@@ -53,9 +57,9 @@ public class VillageLordGuiContainer extends GuiContainer {
 			drawDonateButton(mouseX, mouseY);
 		//}
 			
-		if(currentQuest != null) {
+		if(questAccepted) {
 			drawAbandonButton(mouseX, mouseY);
-		} else if(nextQuest != null) {
+		} else {
 			drawAcceptButton(mouseX, mouseY);
 		}
 	}
@@ -71,8 +75,7 @@ public class VillageLordGuiContainer extends GuiContainer {
 	}
 	
 	private void drawGuiTitle(int xPos, int yPos) {
-		if(civ != null)
-			fontRendererObj.drawString("Lord of " + civ.name, xPos, yPos, Color.darkGray.getRGB());
+		fontRendererObj.drawString("Lord of " + this.civName, xPos, yPos, Color.darkGray.getRGB());
 	}
 	
 	private void drawDonateButton(int mouseX, int mouseY) {
@@ -92,16 +95,18 @@ public class VillageLordGuiContainer extends GuiContainer {
 		if (Mouse.getEventButtonState() && Mouse.getEventButton() != -1) {
 			if (acceptButton.mousePressed(mc, mouseX, mouseY) && mouseCooldownOver()) {
 				mousePressed = Minecraft.getSystemTime();
+				ToroQuestPacketHandler.INSTANCE.sendToServer(new MessageQuestUpdate());
 			}
 		}
 	}
 	
 	private void drawAbandonButton(int mouseX, int mouseY) {
-		GuiButton abandonButton = new GuiButton(0, guiLeft + 105, guiTop + 114, buttonWidth, buttonHeight, "Accept");
+		GuiButton abandonButton = new GuiButton(0, guiLeft + 105, guiTop + 114, buttonWidth, buttonHeight, "Abandon");
 		abandonButton.drawButton(mc, mouseX, mouseY);
 		if (Mouse.getEventButtonState() && Mouse.getEventButton() != -1) {
 			if (abandonButton.mousePressed(mc, mouseX, mouseY) && mouseCooldownOver()) {
 				mousePressed = Minecraft.getSystemTime();
+				ToroQuestPacketHandler.INSTANCE.sendToServer(new MessageQuestUpdate());
 			}
 		}
 	}
@@ -110,31 +115,23 @@ public class VillageLordGuiContainer extends GuiContainer {
 		fontRendererObj.drawString(String.valueOf(availableReputation) + " Rep. for", xPos + 13, yPos + 15, Color.darkGray.getRGB());
 	}
 	
-	private void drawQuestTitle(int xPos, int yPos) {
-		if(currentQuest != null) {
-			quest.setData(currentQuest);
-		} else if(nextQuest != null) {
-			quest.setData(nextQuest);		
-		}
-		
-		fontRendererObj.drawString(quest.getTitle(), xPos + 2, yPos + 35, Color.darkGray.getRGB());
-		fontRendererObj.drawSplitString(quest.getDescription(), xPos + 25, yPos + 50, 115, Color.darkGray.getRGB());
+	private void drawQuestTitle(int xPos, int yPos) {		
+		fontRendererObj.drawString(questTitle, xPos + 2, yPos + 35, Color.darkGray.getRGB());
+		fontRendererObj.drawSplitString(questDescription, xPos + 25, yPos + 50, 115, Color.darkGray.getRGB());
 	}
 	
-	public static void setProvince(Province province) {
-		civ = province;
+	public static void setProvinceName(String name) {
+		civName = name;
 	}
 	
 	public static void setAvailableReputation(int rep) {
 		availableReputation = rep;
 	}
 
-	public static void setCurrentQuest(QuestData quest) {
-		currentQuest = quest;
-	}
-	
-	public static void setNextQuest(QuestData quest) {
-		nextQuest = quest;
+	public static void setQuestData(String title, String description, boolean accepted) {
+		questTitle = title;
+		questDescription = description;
+		questAccepted = accepted;
 	}
 	
 	private boolean hasReputation() {

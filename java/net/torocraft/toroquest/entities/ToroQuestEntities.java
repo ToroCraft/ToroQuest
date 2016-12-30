@@ -14,5 +14,6 @@ public class ToroQuestEntities {
 		EntitySentry.init(id++);
 		EntityRainbowGuard.init(id++);
 		EntityRainbowKing.init(id++);
+		EntityFugitive.init(id++);
 	}
 }

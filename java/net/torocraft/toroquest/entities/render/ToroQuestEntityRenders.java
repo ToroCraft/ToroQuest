@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.torocraft.toroquest.entities.EntityBas;
+import net.torocraft.toroquest.entities.EntityFugitive;
 import net.torocraft.toroquest.entities.EntityGuard;
 import net.torocraft.toroquest.entities.EntityMage;
 import net.torocraft.toroquest.entities.EntityMonolithEye;
@@ -30,6 +31,7 @@ public class ToroQuestEntityRenders {
 		EntityRainbowGuard.registerRenders();
 		EntityRainbowKing.registerRenders();
 		EntityVillageLord.registerRenders();
+		EntityFugitive.registerRenders();
 	}
 	
 	public static void registerMageRenderer() {

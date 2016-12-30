@@ -6,7 +6,6 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -215,7 +214,7 @@ public abstract class QuestBase implements Quest {
 		return null;
 	}
 
-	protected static List<Province> getAllProvinces(EntityPlayer player) {
-		return CivilizationsWorldSaveData.get(player.world).getProvinces();
+	protected static List<Province> getAllProvinces(World world) {
+		return CivilizationsWorldSaveData.get(world).getProvinces();
 	}
 }

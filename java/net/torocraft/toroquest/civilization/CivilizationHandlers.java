@@ -46,6 +46,7 @@ import net.torocraft.toroquest.EventHandlers.SyncTask;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapability;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
+import net.torocraft.toroquest.entities.EntityFugitive;
 import net.torocraft.toroquest.entities.EntitySentry;
 import net.torocraft.toroquest.entities.EntityToroNpc;
 import net.torocraft.toroquest.entities.EntityVampireBat;
@@ -238,6 +239,10 @@ public class CivilizationHandlers {
 
 		if (province == null || province.civilization == null) {
 			return 0;
+		}
+
+		if (victim instanceof EntityFugitive) {
+			return 20;
 		}
 
 		if (victim instanceof EntityVillager) {

@@ -115,7 +115,7 @@ public class QuestCourier extends QuestBase implements Quest {
 		s.append("- Deliver a note to " + deliverToProvince.name + " and return the reply\n");
 		s.append("- Location: [" + deliverToProvince.chunkX * 16 + ", " + deliverToProvince.chunkZ * 16 + "] " + getDistance(data) + "m\n");
 		s.append("- Reward ").append(listItems(getRewardItems(data))).append("\n");
-		s.append("- Recieve ").append(getRewardRep(data)).append(" reputation");
+		s.append("- Receive ").append(getRewardRep(data)).append(" reputation");
 		return s.toString();
 	}
 

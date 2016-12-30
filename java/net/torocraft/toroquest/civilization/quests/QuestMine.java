@@ -99,7 +99,7 @@ public class QuestMine extends QuestBase {
 		s.append("- Mine " + getTargetAmount(data) + " blocks of " + getBlockType(data).getLocalizedName() + "\n");
 		s.append("- Use and return the provided tool\n");
 		s.append("- Reward ").append(listItems(getRewardItems(data))).append("\n");
-		s.append("- Recieve ").append(getRewardRep(data)).append(" reputation");
+		s.append("- Receive ").append(getRewardRep(data)).append(" reputation");
 		return s.toString();
 	}
 

@@ -287,7 +287,7 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 			s.append("- " + getDirections(getProvincePosition(getQuestProvince(data)), getSpawnPosition(data)) + "\n");
 		}
 		s.append("- Reward ").append(listItems(getRewardItems(data))).append("\n");
-		s.append("- Recieve ").append(getRewardRep(data)).append(" reputation");
+		s.append("- Receive ").append(getRewardRep(data)).append(" reputation");
 		return s.toString();
 	}
 

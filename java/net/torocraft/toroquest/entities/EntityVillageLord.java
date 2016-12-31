@@ -1,6 +1,9 @@
 package net.torocraft.toroquest.entities;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -20,7 +23,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.IInventoryChangedListener;
-import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -61,40 +63,52 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		});
 	}
 
-	protected VillageLordInventory inventory;
+	protected Map<UUID, VillageLordInventory> inventories = new HashMap<UUID, VillageLordInventory>();
+
+	// protected VillageLordInventory inventory;
 
 	public EntityVillageLord(World world) {
 		super(world, null);
-		initHorseChest();
+		initInventory();
 	}
 
 	protected int getInventorySize() {
 		return 9;
 	}
 
-	public IVillageLordInventory getInventory() {
-		return inventory;
+	public IVillageLordInventory getInventory(UUID playerId) {
+		if (inventories.get(playerId) == null) {
+			inventories.put(playerId, new VillageLordInventory(this, "VillageLordInventory", this.getInventorySize()));
+		}
+		return inventories.get(playerId);
 	}
 
-	protected void initHorseChest() {
-		InventoryBasic containerhorsechest = this.inventory;
-		this.inventory = new VillageLordInventory(this, "HorseChest", this.getInventorySize());
-		this.inventory.setCustomName(this.getName());
+	protected void initInventories() {
+		for(){
+			
+		}
+	}
 
-		if (containerhorsechest != null) {
-			containerhorsechest.removeInventoryChangeListener(this);
-			int i = Math.min(containerhorsechest.getSizeInventory(), this.inventory.getSizeInventory());
+
+	protected VillageLordInventory initInventory(VillageLordInventory prevInventory) {
+		VillageLordInventory newInventory = new VillageLordInventory(this, "VillageLordInventory", this.getInventorySize());
+		newInventory.setCustomName(this.getName());
+
+		if (prevInventory != null) {
+			prevInventory.removeInventoryChangeListener(this);
+			int i = Math.min(prevInventory.getSizeInventory(), newInventory.getSizeInventory());
 
 			for (int j = 0; j < i; ++j) {
-				ItemStack itemstack = containerhorsechest.getStackInSlot(j);
+				ItemStack itemstack = prevInventory.getStackInSlot(j);
 
 				if (!itemstack.isEmpty()) {
-					this.inventory.setInventorySlotContents(j, itemstack.copy());
+					newInventory.setInventorySlotContents(j, itemstack.copy());
 				}
 			}
 		}
 
-		this.inventory.addInventoryChangeListener(this);
+		newInventory.addInventoryChangeListener(this);
+		return newInventory;
 	}
 
 	public void openGUI(EntityPlayer player) {
@@ -244,7 +258,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		System.out.println("*** read from NBT");
 
 		NBTTagList nbttaglist = compound.getTagList("Items", 10);
-		this.initHorseChest();
+		this.initInventory();
 
 		for (int i = 0; i < nbttaglist.tagCount(); ++i) {
 			NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);

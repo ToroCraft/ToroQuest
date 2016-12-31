@@ -1,24 +1,35 @@
 package net.torocraft.toroquest.civilization.player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.torocraft.toroquest.civilization.quests.QuestBase;
+import net.torocraft.toroquest.network.ToroQuestPacketHandler;
+import net.torocraft.toroquest.network.message.MessageSetItemReputationAmount;
 
 public class VillageLordInventory implements IVillageLordInventory {
 
 	private final List<ItemStack> itemStacks;
 	private final EntityPlayer player;
 	
+	private static int DONATE_BOX_INDEX = 8;
+	
+	private Map<Item,Integer> itemReputations = new HashMap<Item,Integer>();
+	
 	public VillageLordInventory(EntityPlayer player, List<ItemStack> items) {
 		this.player = player;
 		this.itemStacks = items;
 		sizeList(items, 9);
+		loadItemList();
 
 		// TODO auto drop items over index 9
 	}
@@ -102,6 +113,7 @@ public class VillageLordInventory implements IVillageLordInventory {
 
 		itemStacks.set(index, stack);
 		markDirty();
+		checkForReputation();
 	}
 
 	@Override
@@ -232,5 +244,22 @@ public class VillageLordInventory implements IVillageLordInventory {
 			dropItem.setNoPickupDelay();
 			player.world.spawnEntity(dropItem);
 		}
+	}
+	
+	public void checkForReputation() {
+		Integer reputation = itemReputations.get(itemStacks.get(DONATE_BOX_INDEX).getItem());
+		if(reputation != null) {
+			updateClientReputation(reputation * itemStacks.get(DONATE_BOX_INDEX).getCount());
+		} else {
+			updateClientReputation(0);
+		}
+	}
+	
+	private void updateClientReputation(Integer rep) {
+		ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetItemReputationAmount(rep), (EntityPlayerMP)this.player);
+	}
+	
+	private void loadItemList() {
+		itemReputations.put(Item.getItemById(3), 100);
 	}
 }

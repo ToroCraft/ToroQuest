@@ -27,14 +27,12 @@ public class VillageLordGuiContainer extends GuiContainer {
 	private static final int MOUSE_COOLDOWN = 200;
 	private static long mousePressed = 0;
 	
-	private static int availableReputation = 100;
+	private static int availableReputation = 0;
 	
 	private static String civName = "";
 	private static String questTitle = "";
 	private static String questDescription = "";
 	private static boolean questAccepted = false;
-	
-	private QuestDelegator quest = new QuestDelegator(new QuestData());
 	
 	public VillageLordGuiContainer() {
 		this(null, null, null);
@@ -51,10 +49,7 @@ public class VillageLordGuiContainer extends GuiContainer {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(guiTexture);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
-		//if(hasReputation()) {
-			drawDonateButton(mouseX, mouseY);
-		//}
+		drawDonateButton(mouseX, mouseY);
 			
 		if(questAccepted) {
 			drawAbandonButton(mouseX, mouseY);

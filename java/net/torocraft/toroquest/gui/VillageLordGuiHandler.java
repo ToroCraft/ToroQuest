@@ -1,9 +1,14 @@
 package net.torocraft.toroquest.gui;
 
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import net.torocraft.toroquest.inventory.VillageLordInventory;
+import net.torocraft.toroquest.entities.EntityVillageLord;
 
 public class VillageLordGuiHandler implements IGuiHandler {
 
@@ -16,7 +21,7 @@ public class VillageLordGuiHandler implements IGuiHandler {
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		if (ID == VILLAGE_LORD_GUI_ID) {
-			return new VillageLordContainer(player, new VillageLordInventory(), world);
+			return new VillageLordContainer(player, getVillageLordInventory(world, x, y, z), world);
 		}
 		return null;
 	}
@@ -24,8 +29,37 @@ public class VillageLordGuiHandler implements IGuiHandler {
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		if (ID == VILLAGE_LORD_GUI_ID) {
-			return new VillageLordGuiContainer(player, new VillageLordInventory(), world);
+			return new VillageLordGuiContainer(player, getVillageLordInventory(world, x, y, z), world);
 		}
 		return null;
+	}
+	
+	
+	private IInventory getVillageLordInventory(World world, int x, int y, int z) {
+		EntityVillageLord lord = getVillageLord(world, x, y, z);
+		if(lord == null){
+			return null;
+		}
+		return lord.getInventory();
+	}
+	
+
+	private EntityVillageLord getVillageLord(World world, int x, int y, int z) {
+		// TODO is this really the best way to get the village lord reference,
+		// what if there is another close by?
+		//
+		// maybe start with a search box of 1x1x1 and expand if none found
+
+		// maybe take the last clicked on lord in the player cap
+
+		List<EntityVillageLord> lords;
+		for (int i = 1; i < 5; i++) {
+			lords = world.getEntitiesWithinAABB(EntityVillageLord.class, new AxisAlignedBB(new BlockPos(x, y, z)).expand(i, i, i));
+			if (lords != null && lords.size() > 0) {
+				return lords.get(0);
+			}
+		}
+
+		throw new NullPointerException("village lord not found");
 	}
 }

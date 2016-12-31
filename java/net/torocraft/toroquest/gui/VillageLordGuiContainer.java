@@ -9,12 +9,11 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.civilization.quests.util.QuestDelegator;
-import net.torocraft.toroquest.inventory.VillageLordInventory;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 import net.torocraft.toroquest.network.message.MessageQuestUpdate;
 
@@ -41,7 +40,7 @@ public class VillageLordGuiContainer extends GuiContainer {
 		this(null, null, null);
 	}
 	
-	public VillageLordGuiContainer(EntityPlayer player, VillageLordInventory inventory, World world) {
+	public VillageLordGuiContainer(EntityPlayer player, IInventory inventory, World world) {
 		super(new VillageLordContainer(player, inventory, world));
 		xSize = 176;
 		ySize = 222;

@@ -6,7 +6,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.torocraft.toroquest.inventory.VillageLordInventory;
 
 public class VillageLordContainer extends Container {
 
@@ -46,9 +45,9 @@ public class VillageLordContainer extends Container {
 	private final int QUEST_OUTPUT_ITEM_XPOS = 151;
 	private final int QUEST_OUTPUT_ITEM_YPOS = 53;
 	
-	private final VillageLordInventory inventory;
+	private final IInventory inventory;
 	
-	public VillageLordContainer(EntityPlayer player, VillageLordInventory inventory, World world) {
+	public VillageLordContainer(EntityPlayer player, IInventory inventory, World world) {
 		this.inventory = inventory;
 		this.inventory.openInventory(player);
 		
@@ -93,7 +92,7 @@ public class VillageLordContainer extends Container {
 		}
 
 		if (!player.world.isRemote) {
-			this.inventory.updateClientQuest();
+			// FIXME this.inventory.updateClientQuest();
 		}
 	}
 	
@@ -161,7 +160,7 @@ public class VillageLordContainer extends Container {
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
-		this.inventory.checkForReputation();
+		// FIXME this.inventory.checkForReputation();
 	}
 	
 	public class SlotOutput extends Slot {

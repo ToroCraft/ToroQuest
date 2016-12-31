@@ -9,6 +9,7 @@ import com.google.common.base.Predicate;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.ai.EntityAILookIdle;
@@ -16,11 +17,19 @@ import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ContainerHorseChest;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.IInventoryChangedListener;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.datafix.DataFixer;
+import net.minecraft.util.datafix.FixTypes;
+import net.minecraft.util.datafix.walkers.ItemStackDataLists;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
@@ -34,20 +43,9 @@ import net.torocraft.toroquest.entities.render.RenderVillageLord;
 import net.torocraft.toroquest.gui.VillageLordGuiHandler;
 import net.torocraft.toroquest.item.armor.ItemRoyalArmor;
 
-/*
- * on damage, remove rep
- * 
- * 
- * 
- */
-
-public class EntityVillageLord extends EntityToroNpc {
+public class EntityVillageLord extends EntityToroNpc implements IInventoryChangedListener {
 
 	public static String NAME = "village_lord";
-
-	public EntityVillageLord(World world) {
-		super(world, null);
-	}
 
 	public static void init(int entityId) {
 		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityVillageLord.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0xeca58c, 0xba12c8);
@@ -62,12 +60,55 @@ public class EntityVillageLord extends EntityToroNpc {
 		});
 	}
 
+	protected ContainerHorseChest horseChest;
+
+	public EntityVillageLord(World world) {
+		super(world, null);
+		initHorseChest();
+	}
+
+	protected int getInventorySize() {
+		return 9;
+	}
+
+	public IInventory getInventory() {
+		return horseChest;
+	}
+
+	protected void initHorseChest() {
+		ContainerHorseChest containerhorsechest = this.horseChest;
+		this.horseChest = new ContainerHorseChest("HorseChest", this.getInventorySize());
+		this.horseChest.setCustomName(this.getName());
+
+		if (containerhorsechest != null) {
+			containerhorsechest.removeInventoryChangeListener(this);
+			int i = Math.min(containerhorsechest.getSizeInventory(), this.horseChest.getSizeInventory());
+
+			for (int j = 0; j < i; ++j) {
+				ItemStack itemstack = containerhorsechest.getStackInSlot(j);
+
+				if (!itemstack.isEmpty()) {
+					this.horseChest.setInventorySlotContents(j, itemstack.copy());
+				}
+			}
+		}
+
+		this.horseChest.addInventoryChangeListener(this);
+	}
+
+	public void openGUI(EntityPlayer player) {
+		if (world.isRemote) {
+			return;
+		}
+		horseChest.setCustomName(getName());
+		player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+	}
+
 	@Override
 	protected boolean processInteract(EntityPlayer player, EnumHand hand) {
 		if (this.isEntityAlive() && !this.isChild()) {
 			if (!this.world.isRemote) {
-				player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), world,
-						player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+				openGUI(player);
 			}
 			return true;
 		} else {
@@ -150,6 +191,73 @@ public class EntityVillageLord extends EntityToroNpc {
 		for (EntityToroNpc entity : help) {
 			entity.setAttackTarget(attacker);
 		}
+	}
+
+	@Override
+	public void onInventoryChanged(IInventory invBasic) {
+		// TODO Auto-generated method stub
+		// System.out.println("onInventoryChanged");
+	}
+
+	public void onDeath(DamageSource cause) {
+		super.onDeath(cause);
+
+		if (world.isRemote || horseChest == null) {
+			return;
+		}
+
+		for (int i = 0; i < horseChest.getSizeInventory(); ++i) {
+			ItemStack itemstack = horseChest.getStackInSlot(i);
+			if (!itemstack.isEmpty()) {
+				entityDropItem(itemstack, 0.0F);
+			}
+		}
+
+	}
+
+	public void writeEntityToNBT(NBTTagCompound compound) {
+		super.writeEntityToNBT(compound);
+
+		System.out.println("*** write from NBT");
+
+		NBTTagList nbttaglist = new NBTTagList();
+
+		for (int i = 2; i < this.horseChest.getSizeInventory(); ++i) {
+			ItemStack itemstack = this.horseChest.getStackInSlot(i);
+
+			if (!itemstack.isEmpty()) {
+				NBTTagCompound nbttagcompound = new NBTTagCompound();
+				nbttagcompound.setByte("Slot", (byte) i);
+				itemstack.writeToNBT(nbttagcompound);
+				nbttaglist.appendTag(nbttagcompound);
+			}
+		}
+
+		compound.setTag("Items", nbttaglist);
+
+	}
+
+	public void readEntityFromNBT(NBTTagCompound compound) {
+		super.readEntityFromNBT(compound);
+
+		System.out.println("*** read from NBT");
+
+		NBTTagList nbttaglist = compound.getTagList("Items", 10);
+		this.initHorseChest();
+
+		for (int i = 0; i < nbttaglist.tagCount(); ++i) {
+			NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
+			int j = nbttagcompound.getByte("Slot") & 255;
+
+			if (j >= 2 && j < this.horseChest.getSizeInventory()) {
+				this.horseChest.setInventorySlotContents(j, new ItemStack(nbttagcompound));
+			}
+		}
+	}
+
+	public static void registerFixesVillageLord(DataFixer fixer) {
+		EntityLiving.registerFixesMob(fixer, EntityVillageLord.class);
+		fixer.registerWalker(FixTypes.ENTITY, new ItemStackDataLists(EntityVillageLord.class, new String[] { "Items" }));
 	}
 
 }

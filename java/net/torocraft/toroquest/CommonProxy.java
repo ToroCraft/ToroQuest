@@ -1,5 +1,6 @@
 package net.torocraft.toroquest;
 
+import net.minecraft.util.datafix.DataFixer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -10,6 +11,7 @@ import net.torocraft.toroquest.civilization.CivilizationGeneratorHandlers;
 import net.torocraft.toroquest.civilization.CivilizationHandlers;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.civilization.quests.util.Quests;
+import net.torocraft.toroquest.entities.EntityVillageLord;
 import net.torocraft.toroquest.entities.ToroQuestEntities;
 import net.torocraft.toroquest.generation.WorldGenPlacer;
 import net.torocraft.toroquest.generation.village.VillageHandlerBarracks;
@@ -35,7 +37,12 @@ public class CommonProxy {
 		VillageHandlerBarracks.init();
 		ToroQuestPacketHandler.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(ToroQuest.INSTANCE, new VillageLordGuiHandler());
+
+		DataFixer datafixer = new DataFixer(922);
+		EntityVillageLord.registerFixesVillageLord(datafixer);
+
 		Quests.init();
+
 	}
 
 	public void init(FMLInitializationEvent e) {

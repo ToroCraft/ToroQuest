@@ -8,6 +8,7 @@ public class Province {
 
 	public UUID id;
 	public String name;
+	public boolean hasLord;
 	public int chunkX;
 	public int chunkZ;
 
@@ -32,6 +33,7 @@ public class Province {
 		lowerVillageBoundZ = c.getInteger("lZ");
 		upperVillageBoundZ = c.getInteger("uZ");
 		civilization = e(c.getString("civilization"));
+		hasLord = c.getBoolean("hasLord");
 		computeSize();
 	}
 
@@ -82,6 +84,7 @@ public class Province {
 		c.setInteger("uX", upperVillageBoundX);
 		c.setInteger("lZ", lowerVillageBoundZ);
 		c.setInteger("uZ", upperVillageBoundZ);
+		c.setBoolean("hasLord", hasLord);
 		if (name != null && name.trim().length() > 0) {
 			c.setString("name", name);
 		}

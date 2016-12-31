@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,8 +17,6 @@ import net.torocraft.toroquest.civilization.quests.QuestBase;
 public class VillageLordInventory extends InventoryBasic implements IVillageLordInventory {
 	private final EntityVillageLord lord;
 	private static int DONATE_BOX_INDEX = 8;
-
-	private EntityPlayer player;
 
 	public VillageLordInventory(EntityVillageLord lord, String inventoryTitle, int slotCount) {
 		super(inventoryTitle, false, slotCount);
@@ -70,7 +67,7 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 
 	@Override
 	public ItemStack getDonationItem() {
-		return removeStackFromSlot(DONATE_BOX_INDEX);
+		return getStackInSlot(DONATE_BOX_INDEX);
 	}
 
 	@Override

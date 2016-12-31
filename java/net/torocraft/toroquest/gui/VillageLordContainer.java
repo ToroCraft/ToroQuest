@@ -111,10 +111,6 @@ public class VillageLordContainer extends Container {
 		}
 
 		// FIXME add change handler for donation item: checkForReputation();
-
-		if (!player.world.isRemote) {
-			// FIXME this.inventory.updateClientQuest();
-		}
 	}
 	
 	@Override
@@ -181,7 +177,7 @@ public class VillageLordContainer extends Container {
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
-		// FIXME this.inventory.checkForReputation();
+		checkForReputation();
 	}
 	
 	public class SlotOutput extends Slot {
@@ -197,11 +193,13 @@ public class VillageLordContainer extends Container {
 	}
 
 	private void checkForReputation() {
-		Integer reputation = itemReputations.get(inventory.getDonationItem());
-		if (reputation != null) {
-			updateClientReputation(reputation * inventory.getDonationItem().getCount());
-		} else {
-			updateClientReputation(0);
+		if(!player.world.isRemote) {
+			Integer reputation = itemReputations.get(inventory.getDonationItem().getItem());
+			if (reputation != null) {
+				updateClientReputation(reputation * inventory.getDonationItem().getCount());
+			} else {
+				updateClientReputation(0);
+			}
 		}
 	}
 
@@ -210,10 +208,12 @@ public class VillageLordContainer extends Container {
 	}
 
 	private void updateClientQuest() {
-		Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), player.chunkCoordX, player.chunkCoordZ);
-		QuestData currentQuest = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
-		QuestData nextQuest = PlayerCivilizationCapabilityImpl.get(player).getNextQuestFor(province);
-		ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetQuestInfo(province, currentQuest, nextQuest), (EntityPlayerMP) player);
+		if(!player.world.isRemote) {
+			Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), player.chunkCoordX, player.chunkCoordZ);
+			QuestData currentQuest = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
+			QuestData nextQuest = PlayerCivilizationCapabilityImpl.get(player).getNextQuestFor(province);
+			ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetQuestInfo(province, currentQuest, nextQuest), (EntityPlayerMP) player);
+		}
 	}
 
 	private void loadItemList() {

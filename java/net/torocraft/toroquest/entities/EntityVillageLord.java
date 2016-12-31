@@ -40,6 +40,8 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.CivilizationType;
+import net.torocraft.toroquest.civilization.CivilizationUtil;
+import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.player.IVillageLordInventory;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.render.RenderVillageLord;
@@ -70,6 +72,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 	public EntityVillageLord(World world) {
 		super(world, null);
 		initInventories();
+		updateProvince();
 	}
 
 	protected int getInventorySize() {
@@ -270,5 +273,8 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		EntityLiving.registerFixesMob(fixer, EntityVillageLord.class);
 		fixer.registerWalker(FixTypes.ENTITY, new ItemStackDataLists(EntityVillageLord.class, new String[] { "Items" }));
 	}
-
+	
+	private void updateProvince() {
+		Province province = CivilizationUtil.getProvinceAt(world, chunkCoordX, chunkCoordY);
+	}
 }

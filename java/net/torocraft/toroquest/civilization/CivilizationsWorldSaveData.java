@@ -148,6 +148,7 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 		province.chunkZ = chunkZ;
 		province.civilization = randomCivilizationType();
 		province.name = ProvinceNames.random(new Random());
+		province.hasLord = false;
 		province.lowerVillageBoundX = chunkX;
 		province.upperVillageBoundX = chunkX;
 		province.lowerVillageBoundZ = chunkZ;

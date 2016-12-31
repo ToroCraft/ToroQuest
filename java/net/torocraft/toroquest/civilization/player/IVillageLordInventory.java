@@ -6,7 +6,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 public interface IVillageLordInventory extends IInventory {
-
+	
 	List<ItemStack> getGivenItems();
 
 	void setGivenItems(List<ItemStack> items);

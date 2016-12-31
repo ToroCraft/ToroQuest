@@ -43,7 +43,7 @@ public class VillageLordGuiContainer extends GuiContainer {
 	public VillageLordGuiContainer(EntityPlayer player, IInventory inventory, World world) {
 		super(new VillageLordContainer(player, inventory, world));
 		xSize = 176;
-		ySize = 222;
+		ySize = 239;
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class VillageLordGuiContainer extends GuiContainer {
 	}
 	
 	private void drawAcceptButton(int mouseX, int mouseY) {
-		GuiButton acceptButton = new GuiButton(0, guiLeft + 105, guiTop + 114, buttonWidth, buttonHeight, "Accept");
+		GuiButton acceptButton = new GuiButton(0, guiLeft + 105, guiTop + 130, buttonWidth, buttonHeight, "Accept");
 		acceptButton.drawButton(mc, mouseX, mouseY);
 		if (Mouse.getEventButtonState() && Mouse.getEventButton() != -1) {
 			if (acceptButton.mousePressed(mc, mouseX, mouseY) && mouseCooldownOver()) {
@@ -100,7 +100,7 @@ public class VillageLordGuiContainer extends GuiContainer {
 	}
 	
 	private void drawAbandonButton(int mouseX, int mouseY) {
-		GuiButton abandonButton = new GuiButton(0, guiLeft + 105, guiTop + 114, buttonWidth, buttonHeight, "Abandon");
+		GuiButton abandonButton = new GuiButton(0, guiLeft + 105, guiTop + 130, buttonWidth, buttonHeight, "Abandon");
 		abandonButton.drawButton(mc, mouseX, mouseY);
 		if (Mouse.getEventButtonState() && Mouse.getEventButton() != -1) {
 			if (abandonButton.mousePressed(mc, mouseX, mouseY) && mouseCooldownOver()) {

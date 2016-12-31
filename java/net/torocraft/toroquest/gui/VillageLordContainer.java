@@ -1,13 +1,28 @@
 package net.torocraft.toroquest.gui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.torocraft.toroquest.civilization.CivilizationUtil;
+import net.torocraft.toroquest.civilization.Province;
+import net.torocraft.toroquest.civilization.player.IVillageLordInventory;
+import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
+import net.torocraft.toroquest.civilization.quests.util.QuestData;
+import net.torocraft.toroquest.network.ToroQuestPacketHandler;
+import net.torocraft.toroquest.network.message.MessageSetItemReputationAmount;
+import net.torocraft.toroquest.network.message.MessageSetQuestInfo;
 
 public class VillageLordContainer extends Container {
+
+	private Map<Item, Integer> itemReputations = new HashMap<Item, Integer>();
 
 	private final int HOTBAR_SLOT_COUNT = 9;
 	private final int INVENTORY_ROW_COUNT = 3;
@@ -43,12 +58,18 @@ public class VillageLordContainer extends Container {
 	private final int QUEST_OUTPUT_ITEM_XPOS = 151;
 	private final int QUEST_OUTPUT_ITEM_YPOS = 53;
 	
-	private final IInventory inventory;
+	private final IVillageLordInventory inventory;
+	private final EntityPlayer player;
 	
-	public VillageLordContainer(EntityPlayer player, IInventory inventory, World world) {
+	public VillageLordContainer(EntityPlayer player, IVillageLordInventory inventory, World world) {
+		this.player = player;
 		this.inventory = inventory;
 		this.inventory.openInventory(player);
+
+		loadItemList();
+		updateClientQuest();
 		
+
 		for (int x = 0; x < HOTBAR_SLOT_COUNT; x++) {
 			addSlotToContainer(new Slot(player.inventory, x, HOTBAR_XPOS + SLOT_X_SPACING * x, HOTBAR_YPOS));
 		}
@@ -88,6 +109,8 @@ public class VillageLordContainer extends Container {
 				addSlotToContainer(new SlotOutput(this.inventory, slotNumber, xPos, yPos));
 			}
 		}
+
+		// FIXME add change handler for donation item: checkForReputation();
 
 		if (!player.world.isRemote) {
 			// FIXME this.inventory.updateClientQuest();
@@ -171,5 +194,29 @@ public class VillageLordContainer extends Container {
 		public boolean isItemValid(ItemStack stack) {
 			return false;
 		}
+	}
+
+	private void checkForReputation() {
+		Integer reputation = itemReputations.get(inventory.getDonationItem());
+		if (reputation != null) {
+			updateClientReputation(reputation * inventory.getDonationItem().getCount());
+		} else {
+			updateClientReputation(0);
+		}
+	}
+
+	private void updateClientReputation(Integer rep) {
+		ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetItemReputationAmount(rep), (EntityPlayerMP) player);
+	}
+
+	private void updateClientQuest() {
+		Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), player.chunkCoordX, player.chunkCoordZ);
+		QuestData currentQuest = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
+		QuestData nextQuest = PlayerCivilizationCapabilityImpl.get(player).getNextQuestFor(province);
+		ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetQuestInfo(province, currentQuest, nextQuest), (EntityPlayerMP) player);
+	}
+
+	private void loadItemList() {
+		itemReputations.put(Item.getItemById(3), 100);
 	}
 }

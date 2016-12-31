@@ -1,11 +1,14 @@
 package net.torocraft.toroquest.civilization.player;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.torocraft.toroquest.civilization.quests.QuestBase;
 
 public class VillageLordInventory implements IVillageLordInventory {
 
@@ -15,9 +18,17 @@ public class VillageLordInventory implements IVillageLordInventory {
 	public VillageLordInventory(EntityPlayer player, List<ItemStack> items) {
 		this.player = player;
 		this.itemStacks = items;
+		sizeList(items, 9);
+
 		// TODO auto drop items over index 9
 	}
 	
+	private void sizeList(List<?> list, int size) {
+		while (list.size() < size) {
+			list.add(null);
+		}
+	}
+
 	@Override
 	public String getName() {
 		return "Village Lord Inventory";
@@ -81,6 +92,7 @@ public class VillageLordInventory implements IVillageLordInventory {
 		int stackSize = stack.getCount();
 		
         if (stackSize > this.getInventoryStackLimit()) {
+			// TODO drop the rest?
 			stack.setCount(this.getInventoryStackLimit());
         }
 
@@ -148,37 +160,77 @@ public class VillageLordInventory implements IVillageLordInventory {
 
 	@Override
 	public List<ItemStack> getGivenItems() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ItemStack> items = new ArrayList<ItemStack>();
+		for (int i = 0; i < 4; i++) {
+			items.add(removeStackFromSlot(i));
+		}
+		return items;
 	}
 
 	@Override
 	public void setGivenItems(List<ItemStack> items) {
-		// TODO Auto-generated method stub
-
+		items = QuestBase.removeEmptyItemStacks(items);
+		items = dropOverItems(items, 4);
+		for (int i = 0; i < 4; i++) {
+			setInventorySlotContents(i, items.get(i));
+		}
 	}
 
 	@Override
 	public List<ItemStack> getReturnItems() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ItemStack> items = new ArrayList<ItemStack>();
+		for (int i = 0; i < 4; i++) {
+			items.add(removeStackFromSlot(i + 4));
+		}
+		return items;
 	}
 
 	@Override
 	public void setReturnItems(List<ItemStack> items) {
-		// TODO Auto-generated method stub
-
+		items = QuestBase.removeEmptyItemStacks(items);
+		items = dropOverItems(items, 4);
+		for (int i = 0; i < 4; i++) {
+			setInventorySlotContents(i + 4, items.get(i));
+		}
 	}
 
 	@Override
 	public ItemStack getDonationItem() {
-		// TODO Auto-generated method stub
-		return null;
+		return removeStackFromSlot(8);
 	}
 
 	@Override
 	public void setDonationItem(ItemStack item) {
-		// TODO Auto-generated method stub
+		if (item.isEmpty()) {
+			return;
+		}
+		setInventorySlotContents(8, item);
+	}
 
+	private List<ItemStack> dropOverItems(List<ItemStack> items, int maxIndex) {
+		if (items.size() <= maxIndex) {
+			return items;
+		}
+
+		List<ItemStack> over = new ArrayList<ItemStack>();
+		for (int i = maxIndex; i < items.size(); i++) {
+			over.add(items.get(i));
+		}
+
+		for (ItemStack item : over) {
+			items.remove(item);
+		}
+
+		dropItems(over);
+
+		return items;
+	}
+
+	private void dropItems(List<ItemStack> items) {
+		for (ItemStack stack : items) {
+			EntityItem dropItem = new EntityItem(player.world, player.posX, player.posY, player.posZ, stack);
+			dropItem.setNoPickupDelay();
+			player.world.spawnEntity(dropItem);
+		}
 	}
 }

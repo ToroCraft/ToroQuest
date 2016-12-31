@@ -266,7 +266,7 @@ public abstract class QuestBase implements Quest {
 		return null;
 	}
 
-	protected static List<ItemStack> removeEmptyItemStacks(List<ItemStack> givenItems) {
+	public static List<ItemStack> removeEmptyItemStacks(List<ItemStack> givenItems) {
 		List<ItemStack> itemsToReturn = new ArrayList<ItemStack>();
 		for (ItemStack item : givenItems) {
 			if (!item.isEmpty()) {

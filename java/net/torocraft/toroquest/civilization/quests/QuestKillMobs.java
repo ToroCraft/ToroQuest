@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -67,7 +68,7 @@ public class QuestKillMobs extends QuestBase implements Quest {
 		DataWrapper quest = new DataWrapper();
 		for (QuestData data : quests) {			
 			quest.setData(data);
-			quest.huntedMob = EntityList.getEntityString(victim);
+			quest.huntedMob = EntityList.getKey(victim).getResourcePath();
 			quest.provinceHuntedIn = provinceHuntedIn;
 			if (perform(quest)) {
 				return;
@@ -90,7 +91,7 @@ public class QuestKillMobs extends QuestBase implements Quest {
 			quest.data.setCompleted(true);
 		}
 		
-		return false;
+		return true;
 	}
 
 	@Override
@@ -156,7 +157,7 @@ public class QuestKillMobs extends QuestBase implements Quest {
 	}
 
 	private String mobName(Integer mobType, EntityPlayer player) {
-		Entity mob = EntityList.createEntityByID(mobType, player.world);
+		Entity mob = EntityList.createEntityByIDFromName(new ResourceLocation(MOB_TYPES[mobType]), player.world);
 		return mob.getName();
 	}
 
@@ -178,14 +179,14 @@ public class QuestKillMobs extends QuestBase implements Quest {
 		q.setMobType(rand.nextInt(MOB_TYPES.length));
 		q.setCurrentAmount(0);
 		q.setRewardRep(0);
-		q.setTargetAmount(20 + roll);
+		q.setTargetAmount(10 + roll);
 		
 		ItemStack emeralds = new ItemStack(Items.EMERALD, q.getTargetAmount() / 6);
 		List<ItemStack> rewardItems = new ArrayList<ItemStack>();
 		rewardItems.add(emeralds);
 		setRewardItems(q.data, rewardItems);
 		
-		return null;
+		return q.data;
 	}
 	
 	public static class DataWrapper {
@@ -194,7 +195,6 @@ public class QuestKillMobs extends QuestBase implements Quest {
 		private String huntedMob;
 		
 		public QuestData getData() {
-			EntityList.init();
 			return data;
 		}
 
@@ -272,7 +272,7 @@ public class QuestKillMobs extends QuestBase implements Quest {
 		}
 		
 		private boolean isCorrectMob() {
-			return MOB_TYPES[getMobType()] == getHuntedMob();
+			return MOB_TYPES[getMobType()].equals(getHuntedMob());
 		}
 
 	}

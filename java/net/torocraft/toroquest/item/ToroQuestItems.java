@@ -17,6 +17,7 @@ public class ToroQuestItems {
 		ItemToroArmor.init();
 		ItemReinforcedDiamondArmor.init();
 		ItemSamuraiArmor.init();
+		ItemBattleAxe.init();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -28,6 +29,7 @@ public class ToroQuestItems {
 		ItemToroLeather.registerRenders();
 		ItemObsidianSword.registerRenders();
 		ItemFireSword.registerRenders();
+		ItemBattleAxe.registerRenders();
 	}
 
 }

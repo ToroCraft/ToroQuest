@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.torocraft.toroquest.civilization.ReputationLevel;
+import net.torocraft.toroquest.item.ItemBattleAxe;
 
 public class ShopkeeperTradesForWater {
 	public static MerchantRecipeList trades(EntityPlayer player, ReputationLevel rep) {
@@ -27,7 +28,7 @@ public class ShopkeeperTradesForWater {
 		}
 		
 		if (rep.equals(ReputationLevel.FRIEND) || rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
-			
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 3), new ItemStack(Items.EMERALD, rep.adjustPrice(5)), new ItemStack(ItemBattleAxe.INSTANCE)));
 		}
 
 		if (rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {

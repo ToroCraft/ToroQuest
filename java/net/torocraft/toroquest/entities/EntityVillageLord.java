@@ -222,7 +222,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 
 		NBTTagList nbttaglist = new NBTTagList();
 
-		for (int i = 2; i < this.horseChest.getSizeInventory(); ++i) {
+		for (int i = 0; i < this.horseChest.getSizeInventory(); ++i) {
 			ItemStack itemstack = this.horseChest.getStackInSlot(i);
 
 			if (!itemstack.isEmpty()) {
@@ -249,7 +249,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 			NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
 			int j = nbttagcompound.getByte("Slot") & 255;
 
-			if (j >= 2 && j < this.horseChest.getSizeInventory()) {
+			if (j < this.horseChest.getSizeInventory()) {
 				this.horseChest.setInventorySlotContents(j, new ItemStack(nbttagcompound));
 			}
 		}

@@ -3,11 +3,11 @@ package net.torocraft.toroquest.gui;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.torocraft.toroquest.civilization.player.IVillageLordInventory;
 import net.torocraft.toroquest.entities.EntityVillageLord;
 
 public class VillageLordGuiHandler implements IGuiHandler {
@@ -35,7 +35,7 @@ public class VillageLordGuiHandler implements IGuiHandler {
 	}
 	
 	
-	private IInventory getVillageLordInventory(World world, int x, int y, int z) {
+	private IVillageLordInventory getVillageLordInventory(World world, int x, int y, int z) {
 		EntityVillageLord lord = getVillageLord(world, x, y, z);
 		if(lord == null){
 			return null;

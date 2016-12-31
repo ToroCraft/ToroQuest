@@ -17,10 +17,10 @@ import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ContainerHorseChest;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.IInventoryChangedListener;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -38,6 +38,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.CivilizationType;
+import net.torocraft.toroquest.civilization.player.IVillageLordInventory;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.render.RenderVillageLord;
 import net.torocraft.toroquest.gui.VillageLordGuiHandler;
@@ -60,7 +61,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		});
 	}
 
-	protected ContainerHorseChest horseChest;
+	protected VillageLordInventory inventory;
 
 	public EntityVillageLord(World world) {
 		super(world, null);
@@ -71,36 +72,36 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		return 9;
 	}
 
-	public IInventory getInventory() {
-		return horseChest;
+	public IVillageLordInventory getInventory() {
+		return inventory;
 	}
 
 	protected void initHorseChest() {
-		ContainerHorseChest containerhorsechest = this.horseChest;
-		this.horseChest = new ContainerHorseChest("HorseChest", this.getInventorySize());
-		this.horseChest.setCustomName(this.getName());
+		InventoryBasic containerhorsechest = this.inventory;
+		this.inventory = new VillageLordInventory(this, "HorseChest", this.getInventorySize());
+		this.inventory.setCustomName(this.getName());
 
 		if (containerhorsechest != null) {
 			containerhorsechest.removeInventoryChangeListener(this);
-			int i = Math.min(containerhorsechest.getSizeInventory(), this.horseChest.getSizeInventory());
+			int i = Math.min(containerhorsechest.getSizeInventory(), this.inventory.getSizeInventory());
 
 			for (int j = 0; j < i; ++j) {
 				ItemStack itemstack = containerhorsechest.getStackInSlot(j);
 
 				if (!itemstack.isEmpty()) {
-					this.horseChest.setInventorySlotContents(j, itemstack.copy());
+					this.inventory.setInventorySlotContents(j, itemstack.copy());
 				}
 			}
 		}
 
-		this.horseChest.addInventoryChangeListener(this);
+		this.inventory.addInventoryChangeListener(this);
 	}
 
 	public void openGUI(EntityPlayer player) {
 		if (world.isRemote) {
 			return;
 		}
-		horseChest.setCustomName(getName());
+		inventory.setCustomName(getName());
 		player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
 	}
 
@@ -202,12 +203,12 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 	public void onDeath(DamageSource cause) {
 		super.onDeath(cause);
 
-		if (world.isRemote || horseChest == null) {
+		if (world.isRemote || inventory == null) {
 			return;
 		}
 
-		for (int i = 0; i < horseChest.getSizeInventory(); ++i) {
-			ItemStack itemstack = horseChest.getStackInSlot(i);
+		for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+			ItemStack itemstack = inventory.getStackInSlot(i);
 			if (!itemstack.isEmpty()) {
 				entityDropItem(itemstack, 0.0F);
 			}
@@ -222,8 +223,8 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 
 		NBTTagList nbttaglist = new NBTTagList();
 
-		for (int i = 0; i < this.horseChest.getSizeInventory(); ++i) {
-			ItemStack itemstack = this.horseChest.getStackInSlot(i);
+		for (int i = 0; i < this.inventory.getSizeInventory(); ++i) {
+			ItemStack itemstack = this.inventory.getStackInSlot(i);
 
 			if (!itemstack.isEmpty()) {
 				NBTTagCompound nbttagcompound = new NBTTagCompound();
@@ -249,8 +250,8 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 			NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
 			int j = nbttagcompound.getByte("Slot") & 255;
 
-			if (j < this.horseChest.getSizeInventory()) {
-				this.horseChest.setInventorySlotContents(j, new ItemStack(nbttagcompound));
+			if (j < this.inventory.getSizeInventory()) {
+				this.inventory.setInventorySlotContents(j, new ItemStack(nbttagcompound));
 			}
 		}
 	}

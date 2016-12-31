@@ -14,6 +14,7 @@ import net.minecraft.entity.monster.EntityGhast;
 import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityShulker;
+import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.passive.EntityVillager;
@@ -281,7 +282,7 @@ public class CivilizationHandlers {
 	}
 
 	private boolean isHostileMob(EntityLivingBase victim) {
-		return victim instanceof EntityMob || victim instanceof EntityMagmaCube || victim instanceof EntityGhast || victim instanceof EntityShulker;
+		return victim instanceof EntityMob || victim instanceof EntitySlime || victim instanceof EntityMagmaCube || victim instanceof EntityGhast || victim instanceof EntityShulker;
 	}
 
 	@SubscribeEvent

@@ -235,7 +235,7 @@ public class QuestMine extends QuestBase {
 			s.append("- Above level ").append(getMinDepth(data)).append("\n");
 		}
 		s.append("- Use and return the provided tool\n");
-		s.append("- Reward ").append(listItems(getRewardItems(data))).append("\n");
+		s.append("- Reward ").append(listItems(getRewardItems(data)));
 		s.append("- Receive ").append(getRewardRep(data)).append(" reputation");
 		return s.toString();
 	}

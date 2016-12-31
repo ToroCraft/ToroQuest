@@ -116,8 +116,8 @@ public class QuestGather extends QuestBase implements Quest {
 			return "";
 		}
 		StringBuilder s = new StringBuilder();
-		s.append("- Gather ").append(listItems(getRequiredItems(data))).append("\n");
-		s.append("- Reward ").append(listItems(getRewardItems(data))).append("\n");
+		s.append("- Gather ").append(listItems(getRequiredItems(data)));
+		s.append("- Reward ").append(listItems(getRewardItems(data)));
 		s.append("- Receive ").append(getRewardRep(data)).append(" reputation");
 		return s.toString();
 	}

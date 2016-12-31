@@ -21,6 +21,7 @@ import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityI
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.civilization.quests.util.QuestDelegator;
 import net.torocraft.toroquest.generation.BastionsLairGenerator;
+import net.torocraft.toroquest.generation.GraveyardGenerator;
 import net.torocraft.toroquest.generation.MageTowerGenerator;
 import net.torocraft.toroquest.generation.MonolithGenerator;
 import net.torocraft.toroquest.generation.ThroneRoomGenerator;
@@ -114,6 +115,11 @@ public class ToroQuestCommand extends CommandBase {
 
 		if ("monolith".equals(structure)) {
 			new MonolithGenerator().generate(player.getEntityWorld(), player.getEntityWorld().rand, player.getPosition());
+			return;
+		}
+
+		if ("graveyard".equals(structure)) {
+			new GraveyardGenerator().generate(player.getEntityWorld(), player.getEntityWorld().rand, player.getPosition());
 			return;
 		}
 
@@ -301,6 +307,7 @@ public class ToroQuestCommand extends CommandBase {
 				tabOptions.add("mage_tower");
 				tabOptions.add("bastions_lair");
 				tabOptions.add("monolith");
+				tabOptions.add("graveyard");
 			} else if ("gui".equals(args[0])) {
 				tabOptions.add("lord");
 			} else if ("quest".equals(args[0])) {

@@ -26,7 +26,7 @@ public class WorldGenPlacer implements IWorldGenerator {
 			return;
 		}
 
-		int roll = random.nextInt(4);
+		int roll = random.nextInt(5);
 
 		switch (roll) {
 		case 0:
@@ -40,6 +40,9 @@ public class WorldGenPlacer implements IWorldGenerator {
 			break;
 		case 3:
 			genThroneRoom(world, random, chunkX, chunkZ);
+			break;
+		case 4:
+			genGraveyard(world, random, chunkX, chunkZ);
 			break;
 		}
 	}
@@ -83,6 +86,13 @@ public class WorldGenPlacer implements IWorldGenerator {
 		BlockPos pos = new BlockPos(chunkX * 16 + random.nextInt(16), y, chunkZ * 16 + random.nextInt(16));
 		if (new ThroneRoomGenerator().generate(world, random, pos)) {
 			System.out.println("ToroQuest Gen Placer: Throne Room " + pos);
+		}
+	}
+
+	private void genGraveyard(World world, Random random, int chunkX, int chunkZ) {
+		BlockPos pos = new BlockPos(chunkX * 16 + random.nextInt(16), world.getActualHeight(), chunkZ * 16 + random.nextInt(16));
+		if (new GraveyardGenerator().generate(world, random, pos)) {
+			System.out.println("ToroQuest Gen Placer: Graveyard " + pos);
 		}
 	}
 

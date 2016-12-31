@@ -67,7 +67,7 @@ public class VillageLordContainer extends Container {
 				int slotNumber = x * DONATE_ITEM_COLUMN_COUNT + y + 8;
 				int xPos = DONATE_ITEM_XPOS + y * SLOT_X_SPACING;
 				int yPos = DONATE_ITEM_YPOS + x * SLOT_Y_SPACING;
-				addSlotToContainer(new Slot(inventory, slotNumber, xPos, yPos));
+				addSlotToContainer(new Slot(this.inventory, slotNumber, xPos, yPos));
 			}
 		}
 		
@@ -76,7 +76,7 @@ public class VillageLordContainer extends Container {
 				int slotNumber = x * QUEST_INPUT_ITEM_COLUMN_COUNT + y;
 				int xPos = QUEST_INPUT_ITEM_XPOS + y * SLOT_X_SPACING;
 				int yPos = QUEST_INPUT_ITEM_YPOS + x * SLOT_Y_SPACING;
-				addSlotToContainer(new Slot(inventory, slotNumber, xPos, yPos));
+				addSlotToContainer(new Slot(this.inventory, slotNumber, xPos, yPos));
 			}
 		}
 		
@@ -85,7 +85,7 @@ public class VillageLordContainer extends Container {
 				int slotNumber = x * QUEST_OUTPUT_ITEM_COLUMN_COUNT + y + 4;
 				int xPos = QUEST_OUTPUT_ITEM_XPOS + y * SLOT_X_SPACING;
 				int yPos = QUEST_OUTPUT_ITEM_YPOS + x * SLOT_Y_SPACING;
-				addSlotToContainer(new SlotOutput(inventory, slotNumber, xPos, yPos));
+				addSlotToContainer(new SlotOutput(this.inventory, slotNumber, xPos, yPos));
 			}
 		}
 

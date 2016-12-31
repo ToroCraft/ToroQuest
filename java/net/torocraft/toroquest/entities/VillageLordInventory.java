@@ -1,31 +1,59 @@
 package net.torocraft.toroquest.entities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.torocraft.toroquest.civilization.CivilizationUtil;
+import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.player.IVillageLordInventory;
+import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.civilization.quests.QuestBase;
+import net.torocraft.toroquest.civilization.quests.util.QuestData;
+import net.torocraft.toroquest.network.ToroQuestPacketHandler;
+import net.torocraft.toroquest.network.message.MessageSetItemReputationAmount;
+import net.torocraft.toroquest.network.message.MessageSetQuestInfo;
 
 public class VillageLordInventory extends InventoryBasic implements IVillageLordInventory {
 	private final EntityVillageLord lord;
-
+	private static int DONATE_BOX_INDEX = 8;
+	
+	private Map<Item,Integer> itemReputations = new HashMap<Item,Integer>();
+	
+	private EntityPlayer player;
+	
 	public VillageLordInventory(EntityVillageLord lord, String inventoryTitle, int slotCount) {
 		super(inventoryTitle, false, slotCount);
 		this.lord = lord;
+		loadItemList();
 	}
 
 	@SideOnly(Side.CLIENT)
 	public VillageLordInventory(EntityVillageLord lord, ITextComponent inventoryTitle, int slotCount) {
 		super(inventoryTitle, slotCount);
 		this.lord = lord;
+		loadItemList();
 	}
 
+	@Override 
+	public void openInventory(EntityPlayer player) {
+		super.openInventory(player);
+		this.player = player;
+		
+		if(player != null && !player.world.isRemote)
+			updateClientQuest();
+	}
+	
 	@Override
 	public List<ItemStack> getGivenItems() {
 		List<ItemStack> items = new ArrayList<ItemStack>();
@@ -64,7 +92,7 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 
 	@Override
 	public ItemStack getDonationItem() {
-		return removeStackFromSlot(8);
+		return removeStackFromSlot(DONATE_BOX_INDEX);
 	}
 
 	@Override
@@ -72,7 +100,7 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 		if (item.isEmpty()) {
 			return;
 		}
-		setInventorySlotContents(8, item);
+		setInventorySlotContents(DONATE_BOX_INDEX, item);
 	}
 
 	private List<ItemStack> dropOverItems(List<ItemStack> items, int maxIndex) {
@@ -100,5 +128,36 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 			dropItem.setNoPickupDelay();
 			lord.world.spawnEntity(dropItem);
 		}
+	}
+	
+	@Override
+	public void setInventorySlotContents(int index, ItemStack stack) {
+		super.setInventorySlotContents(index, stack);
+		if(player != null && !player.world.isRemote)
+			checkForReputation();
+	}
+	
+	private void checkForReputation() {
+		Integer reputation = itemReputations.get(getStackInSlot(DONATE_BOX_INDEX).getItem());
+		if(reputation != null) {
+			updateClientReputation(reputation * getStackInSlot(DONATE_BOX_INDEX).getCount());
+		} else {
+			updateClientReputation(0);
+		}
+	}
+	
+	private void updateClientReputation(Integer rep) {
+		ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetItemReputationAmount(rep), (EntityPlayerMP)player);
+	}
+	
+	private void updateClientQuest(){
+		Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), player.chunkCoordX, player.chunkCoordZ);
+		QuestData currentQuest = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
+		QuestData nextQuest = PlayerCivilizationCapabilityImpl.get(player).getNextQuestFor(province);
+		ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetQuestInfo(province, currentQuest, nextQuest), (EntityPlayerMP) player);
+	}
+	
+	private void loadItemList() {
+		itemReputations.put(Item.getItemById(3), 100);
 	}
 }

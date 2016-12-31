@@ -6,6 +6,8 @@ import java.util.List;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -101,4 +103,29 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 			lord.world.spawnEntity(dropItem);
 		}
 	}
+
+	public NBTTagList saveAllItems() {
+		NBTTagList list = new NBTTagList();
+		for (int i = 0; i < getSizeInventory(); ++i) {
+			ItemStack itemstack = (ItemStack) getStackInSlot(i);
+			if (!itemstack.isEmpty()) {
+				NBTTagCompound nbttagcompound = new NBTTagCompound();
+				nbttagcompound.setByte("Slot", (byte) i);
+				itemstack.writeToNBT(nbttagcompound);
+				list.appendTag(nbttagcompound);
+			}
+		}
+		return list;
+	}
+
+	public void loadAllItems(NBTTagList list) {
+		for (int i = 0; i < list.tagCount(); ++i) {
+			NBTTagCompound nbttagcompound = list.getCompoundTagAt(i);
+			int slot = nbttagcompound.getByte("Slot") & 255;
+			if (slot >= 0 && slot < getSizeInventory()) {
+				setInventorySlotContents(slot, new ItemStack(nbttagcompound));
+			}
+		}
+	}
+
 }

@@ -21,7 +21,7 @@ public class VillageLordGuiHandler implements IGuiHandler {
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		if (ID == VILLAGE_LORD_GUI_ID) {
-			return new VillageLordContainer(player, getVillageLordInventory(world, x, y, z), world);
+			return new VillageLordContainer(player, getVillageLordInventory(world, player, x, y, z), world);
 		}
 		return null;
 	}
@@ -29,18 +29,18 @@ public class VillageLordGuiHandler implements IGuiHandler {
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		if (ID == VILLAGE_LORD_GUI_ID) {
-			return new VillageLordGuiContainer(player, getVillageLordInventory(world, x, y, z), world);
+			return new VillageLordGuiContainer(player, getVillageLordInventory(world, player, x, y, z), world);
 		}
 		return null;
 	}
 	
 	
-	private IVillageLordInventory getVillageLordInventory(World world, int x, int y, int z) {
+	private IVillageLordInventory getVillageLordInventory(World world, EntityPlayer player, int x, int y, int z) {
 		EntityVillageLord lord = getVillageLord(world, x, y, z);
 		if(lord == null){
 			return null;
 		}
-		return lord.getInventory();
+		return lord.getInventory(player.getUniqueID());
 	}
 	
 

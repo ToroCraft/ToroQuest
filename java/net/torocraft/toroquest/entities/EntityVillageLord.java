@@ -3,6 +3,7 @@ package net.torocraft.toroquest.entities;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -25,7 +26,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.IInventoryChangedListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -69,7 +69,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 
 	public EntityVillageLord(World world) {
 		super(world, null);
-		initInventory();
+		initInventories();
 	}
 
 	protected int getInventorySize() {
@@ -84,11 +84,11 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 	}
 
 	protected void initInventories() {
-		for(){
-			
+		Map<UUID, VillageLordInventory> newInventories = new HashMap<UUID, VillageLordInventory>();
+		for (UUID playerId : inventories.keySet()) {
+			newInventories.put(playerId, initInventory(inventories.get(playerId)));
 		}
 	}
-
 
 	protected VillageLordInventory initInventory(VillageLordInventory prevInventory) {
 		VillageLordInventory newInventory = new VillageLordInventory(this, "VillageLordInventory", this.getInventorySize());
@@ -115,7 +115,8 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		if (world.isRemote) {
 			return;
 		}
-		inventory.setCustomName(getName());
+		IVillageLordInventory inventory = getInventory(player.getUniqueID());
+		// inventory.setCustomName(getName());
 		player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
 	}
 
@@ -217,39 +218,37 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 	public void onDeath(DamageSource cause) {
 		super.onDeath(cause);
 
-		if (world.isRemote || inventory == null) {
+		if (world.isRemote || inventories == null) {
 			return;
 		}
 
+		for (IVillageLordInventory inventory : inventories.values()) {
+			dropInventory(inventory);
+		}
+
+	}
+
+	protected void dropInventory(IVillageLordInventory inventory) {
+		if (inventory == null) {
+			return;
+		}
 		for (int i = 0; i < inventory.getSizeInventory(); ++i) {
 			ItemStack itemstack = inventory.getStackInSlot(i);
 			if (!itemstack.isEmpty()) {
 				entityDropItem(itemstack, 0.0F);
 			}
 		}
-
 	}
 
 	public void writeEntityToNBT(NBTTagCompound compound) {
 		super.writeEntityToNBT(compound);
-
 		System.out.println("*** write from NBT");
 
-		NBTTagList nbttaglist = new NBTTagList();
-
-		for (int i = 0; i < this.inventory.getSizeInventory(); ++i) {
-			ItemStack itemstack = this.inventory.getStackInSlot(i);
-
-			if (!itemstack.isEmpty()) {
-				NBTTagCompound nbttagcompound = new NBTTagCompound();
-				nbttagcompound.setByte("Slot", (byte) i);
-				itemstack.writeToNBT(nbttagcompound);
-				nbttaglist.appendTag(nbttagcompound);
-			}
+		NBTTagCompound c = new NBTTagCompound();
+		for (Entry<UUID, VillageLordInventory> e : inventories.entrySet()) {
+			c.setTag(e.getKey().toString(), e.getValue().saveAllItems());
 		}
-
-		compound.setTag("Items", nbttaglist);
-
+		compound.setTag("Items", c);
 	}
 
 	public void readEntityFromNBT(NBTTagCompound compound) {
@@ -257,16 +256,13 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 
 		System.out.println("*** read from NBT");
 
-		NBTTagList nbttaglist = compound.getTagList("Items", 10);
-		this.initInventory();
-
-		for (int i = 0; i < nbttaglist.tagCount(); ++i) {
-			NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
-			int j = nbttagcompound.getByte("Slot") & 255;
-
-			if (j < this.inventory.getSizeInventory()) {
-				this.inventory.setInventorySlotContents(j, new ItemStack(nbttagcompound));
-			}
+		NBTTagCompound c = compound.getCompoundTag("Items");
+		// TODO this seem very inefficient
+		inventories = new HashMap<UUID, VillageLordInventory>();
+		for (String sPlayerId : c.getKeySet()) {
+			VillageLordInventory inv = new VillageLordInventory(this, "VillageLordInventory", getInventorySize());
+			inv.loadAllItems(c.getTagList(sPlayerId, 10));
+			inventories.put(UUID.fromString(sPlayerId), inv);
 		}
 	}
 

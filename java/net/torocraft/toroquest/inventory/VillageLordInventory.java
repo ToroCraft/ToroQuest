@@ -21,7 +21,7 @@ import net.torocraft.toroquest.network.message.MessageSetQuestInfo;
 
 public class VillageLordInventory implements IInventory {
 
-	private static final int SUBMIT_ITEM_COUNT = 7;
+	private static final int SUBMIT_ITEM_COUNT = 9;
 	
 	private Map<Item,Integer> itemReputations = new HashMap<Item,Integer>();
 	

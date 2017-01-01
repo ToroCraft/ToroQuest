@@ -102,7 +102,7 @@ public class QuestCourier extends QuestBase implements Quest {
 
 	@Override
 	public String getTitle(QuestData data) {
-		return "Courier";
+		return "quests.courier.title";
 	}
 
 	@Override
@@ -111,11 +111,14 @@ public class QuestCourier extends QuestBase implements Quest {
 			return "";
 		}
 		Province deliverToProvince = getDeliverToProvince(data);
+
 		StringBuilder s = new StringBuilder();
-		s.append("- Deliver a note to " + deliverToProvince.name + " and return the reply\n");
-		s.append("- Location: [" + deliverToProvince.chunkX * 16 + ", " + deliverToProvince.chunkZ * 16 + "] " + getDistance(data) + "m\n");
-		s.append("- Reward ").append(listItems(getRewardItems(data))).append("\n");
-		s.append("- Receive ").append(getRewardRep(data)).append(" reputation");
+		s.append("quests.courier.description");
+		s.append("|").append(deliverToProvince.name);
+		s.append("|").append("[" + deliverToProvince.chunkX * 16 + ", " + deliverToProvince.chunkZ * 16 + "]");
+		s.append("|").append(getDistance(data));
+		s.append("|").append(listItems(getRewardItems(data)));
+		s.append("|").append(getRewardRep(data));
 		return s.toString();
 	}
 

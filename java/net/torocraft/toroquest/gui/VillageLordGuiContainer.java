@@ -1,6 +1,7 @@
 package net.torocraft.toroquest.gui;
 
 import java.awt.Color;
+import java.util.Arrays;
 
 import org.lwjgl.input.Mouse;
 
@@ -8,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -69,6 +71,7 @@ public class VillageLordGuiContainer extends GuiContainer {
 	}
 	
 	private void drawGuiTitle(int xPos, int yPos) {
+		// TODO lang
 		fontRendererObj.drawString("Lord of " + this.civName, xPos, yPos, Color.darkGray.getRGB());
 	}
 	
@@ -109,6 +112,7 @@ public class VillageLordGuiContainer extends GuiContainer {
 	}
 	
 	private void drawReputationDisplay(int xPos, int yPos) {
+		// TODO lang
 		fontRendererObj.drawString(String.valueOf(availableReputation) + " Rep. for", xPos + 13, yPos + 15, Color.darkGray.getRGB());
 	}
 	
@@ -117,6 +121,24 @@ public class VillageLordGuiContainer extends GuiContainer {
 		fontRendererObj.drawSplitString(questDescription, xPos + 25, yPos + 50, 115, Color.darkGray.getRGB());
 	}
 	
+	private static String translateDescription(String in) {
+		if (in == null || in.trim().length() < 1) {
+			return "";
+		}
+		String[] parts = in.split("\\|");
+		if (parts.length == 1) {
+			return parts[0];
+		}
+		Object[] parameters = Arrays.copyOfRange(parts, 1, parts.length);
+
+		System.out.println("Lang: ");
+		for (String p : parts) {
+			System.out.println("  " + p);
+		}
+
+		return I18n.format(parts[0], parameters);
+	}
+
 	public static void setProvinceName(String name) {
 		civName = name;
 	}
@@ -126,8 +148,8 @@ public class VillageLordGuiContainer extends GuiContainer {
 	}
 
 	public static void setQuestData(String title, String description, boolean accepted) {
-		questTitle = title;
-		questDescription = description;
+		questTitle = I18n.format(title);
+		questDescription = translateDescription(description);
 		questAccepted = accepted;
 	}
 	

@@ -43,17 +43,15 @@ public abstract class QuestBase implements Quest {
 		return s.toString();
 	}
 
+	// FIXME needs to be worked into the lang file
 	protected static String listItems(List<ItemStack> rewardItems) {
 		if (rewardItems == null || rewardItems.isEmpty()) {
-			return "no items\n";
+			return "no_items";
 		}
 		StringBuilder sb = new StringBuilder();
 
 		for (ItemStack item : rewardItems) {
 			sb.append(item.getCount()).append(" ").append(item.getDisplayName());
-			if (item.getCount() > 1) {
-				sb.append("s");
-			}
 			sb.append("\n");
 		}
 

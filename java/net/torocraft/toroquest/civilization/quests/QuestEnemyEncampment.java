@@ -28,7 +28,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -61,7 +61,7 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 	public List<ItemStack> complete(QuestData data, List<ItemStack> in) {
 
 		if (getKills(data) < 1) {
-			data.getPlayer().sendMessage(new TextComponentString("You didn't personally kill any from the encampment!"));
+			data.getPlayer().sendMessage(new TextComponentTranslation("quests.enemey_encampment.wasnt_you"));
 			return null;
 		}
 
@@ -69,9 +69,9 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 
 		if (count > 0) {
 			if (count == 1) {
-				data.getPlayer().sendMessage(new TextComponentString("You didn't kill all of them, there is one left!"));
+				data.getPlayer().sendMessage(new TextComponentTranslation("quests.enemey_encampment.one_left"));
 			} else {
-				data.getPlayer().sendMessage(new TextComponentString("You didn't kill all of them, there are " + count + " left"));
+				data.getPlayer().sendMessage(new TextComponentTranslation("quests.enemey_encampment.some_left", count));
 			}
 			return null;
 		}
@@ -93,6 +93,7 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 		sword.addEnchantment(Enchantment.getEnchantmentByID(21), 3);
 		Province inProvince = PlayerCivilizationCapabilityImpl.get(data.getPlayer()).getInCivilization();
 		if (inProvince.id.equals(data.getProvinceId())) {
+			// TODO lang
 			sword.setStackDisplayName("Golden Sword of " + inProvince.name);
 		}
 		in.add(sword);
@@ -273,7 +274,7 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 		if (data == null) {
 			return "";
 		}
-		return "Clear Encampment";
+		return "quests.enemey_encampment.title";
 	}
 
 	@Override
@@ -282,12 +283,15 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 			return "";
 		}
 		StringBuilder s = new StringBuilder();
-		s.append("- Clear " + getEnemyNames(data) + " encampment\n");
+		s.append("quests.enemey_encampment.description");
+		s.append("|").append(getEnemyNames(data));
 		if (getSpawnPosition(data) != null) {
-			s.append("- " + getDirections(getProvincePosition(getQuestProvince(data)), getSpawnPosition(data)) + "\n");
+			s.append("|").append(getDirections(getProvincePosition(getQuestProvince(data)), getSpawnPosition(data)));
+		} else {
+			s.append("|").append(" ");
 		}
-		s.append("- Reward ").append(listItems(getRewardItems(data))).append("\n");
-		s.append("- Receive ").append(getRewardRep(data)).append(" reputation");
+		s.append("|").append(listItems(getRewardItems(data)));
+		s.append("|").append(getRewardRep(data));
 		return s.toString();
 	}
 

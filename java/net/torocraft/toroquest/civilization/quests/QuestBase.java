@@ -52,7 +52,6 @@ public abstract class QuestBase implements Quest {
 
 		for (ItemStack item : rewardItems) {
 			sb.append(item.getCount()).append(" ").append(item.getDisplayName());
-			sb.append("\n");
 		}
 
 		return sb.toString();

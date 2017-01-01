@@ -121,13 +121,13 @@ public class VillageLordGuiContainer extends GuiContainer {
 		fontRendererObj.drawSplitString(questDescription, xPos + 25, yPos + 50, 115, Color.darkGray.getRGB());
 	}
 	
-	private static String translateDescription(String in) {
+	private static String translate(String in) {
 		if (in == null || in.trim().length() < 1) {
 			return "";
 		}
 		String[] parts = in.split("\\|");
 		if (parts.length == 1) {
-			return parts[0];
+			return I18n.format(parts[0]);
 		}
 		Object[] parameters = Arrays.copyOfRange(parts, 1, parts.length);
 
@@ -148,8 +148,8 @@ public class VillageLordGuiContainer extends GuiContainer {
 	}
 
 	public static void setQuestData(String title, String description, boolean accepted) {
-		questTitle = I18n.format(title);
-		questDescription = translateDescription(description);
+		questTitle = translate(title);
+		questDescription = translate(description);
 		questAccepted = accepted;
 	}
 	

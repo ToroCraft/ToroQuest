@@ -383,7 +383,14 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 	}
 
 	public static Integer getKills(QuestData data) {
-		return i(data.getiData().get("kills"));
+		return coalesce(i(data.getiData().get("kills")), 0);
+	}
+
+	private static Integer coalesce(Integer i, int j) {
+		if (i == null) {
+			return j;
+		}
+		return i;
 	}
 
 	public static void incrementKills(QuestData data) {

@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.torocraft.toroquest.civilization.player.IVillageLordInventory;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 import net.torocraft.toroquest.network.message.MessageQuestUpdate;
+import net.torocraft.toroquest.network.message.MessageQuestUpdate.Action;
 
 public class VillageLordGuiContainer extends GuiContainer {
 
@@ -51,6 +52,7 @@ public class VillageLordGuiContainer extends GuiContainer {
 			
 		if(questAccepted) {
 			drawAbandonButton(mouseX, mouseY);
+			drawCompleteButton(mouseX, mouseY);
 		} else {
 			drawAcceptButton(mouseX, mouseY);
 		}
@@ -82,23 +84,26 @@ public class VillageLordGuiContainer extends GuiContainer {
 	}
 	
 	private void drawAcceptButton(int mouseX, int mouseY) {
-		GuiButton acceptButton = new GuiButton(0, guiLeft + 105, guiTop + 130, buttonWidth, buttonHeight, "Accept");
-		acceptButton.drawButton(mc, mouseX, mouseY);
-		if (Mouse.getEventButtonState() && Mouse.getEventButton() != -1) {
-			if (acceptButton.mousePressed(mc, mouseX, mouseY) && mouseCooldownOver()) {
-				mousePressed = Minecraft.getSystemTime();
-				ToroQuestPacketHandler.INSTANCE.sendToServer(new MessageQuestUpdate());
-			}
-		}
+		drawActionButton("Accept", Action.ACCEPT, mouseX, mouseY, 0);
+	}
+
+	private void drawCompleteButton(int mouseX, int mouseY) {
+		drawActionButton("Complete", Action.COMPLETE, mouseX, mouseY, 0);
 	}
 	
 	private void drawAbandonButton(int mouseX, int mouseY) {
-		GuiButton abandonButton = new GuiButton(0, guiLeft + 105, guiTop + 130, buttonWidth, buttonHeight, "Abandon");
+		drawActionButton("Abandon", Action.REJECT, mouseX, mouseY, -70);
+	}
+
+	protected void drawActionButton(String label, Action action, int mouseX, int mouseY, int xOffset) {
+		GuiButton abandonButton = new GuiButton(0, guiLeft + 105 + xOffset, guiTop + 130, buttonWidth, buttonHeight, label);
 		abandonButton.drawButton(mc, mouseX, mouseY);
 		if (Mouse.getEventButtonState() && Mouse.getEventButton() != -1) {
 			if (abandonButton.mousePressed(mc, mouseX, mouseY) && mouseCooldownOver()) {
 				mousePressed = Minecraft.getSystemTime();
-				ToroQuestPacketHandler.INSTANCE.sendToServer(new MessageQuestUpdate());
+				MessageQuestUpdate message = new MessageQuestUpdate();
+				message.action = action;
+				ToroQuestPacketHandler.INSTANCE.sendToServer(message);
 			}
 		}
 	}

@@ -44,7 +44,7 @@ public class VillageLordGuiHandler implements IGuiHandler {
 	}
 	
 
-	private EntityVillageLord getVillageLord(World world, int x, int y, int z) {
+	public static EntityVillageLord getVillageLord(World world, int x, int y, int z) {
 		// TODO is this really the best way to get the village lord reference,
 		// what if there is another close by?
 		//

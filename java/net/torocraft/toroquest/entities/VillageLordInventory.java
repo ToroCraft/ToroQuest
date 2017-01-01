@@ -43,7 +43,11 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 		items = QuestBase.removeEmptyItemStacks(items);
 		items = dropOverItems(items, 4);
 		for (int i = 0; i < 4; i++) {
-			setInventorySlotContents(i, items.get(i));
+			if (i >= items.size()) {
+				setInventorySlotContents(i, ItemStack.EMPTY);
+			} else {
+				setInventorySlotContents(i, items.get(i));
+			}
 		}
 	}
 
@@ -61,7 +65,11 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 		items = QuestBase.removeEmptyItemStacks(items);
 		items = dropOverItems(items, 4);
 		for (int i = 0; i < 4; i++) {
-			setInventorySlotContents(i + 4, items.get(i));
+			if (i >= items.size()) {
+				setInventorySlotContents(i + 4, ItemStack.EMPTY);
+			} else {
+				setInventorySlotContents(i + 4, items.get(i));
+			}
 		}
 	}
 

@@ -1,6 +1,5 @@
 package net.torocraft.toroquest.network.message;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
@@ -14,50 +13,120 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
+import net.torocraft.toroquest.civilization.player.IVillageLordInventory;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
+import net.torocraft.toroquest.entities.EntityVillageLord;
+import net.torocraft.toroquest.gui.VillageLordGuiHandler;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 
 public class MessageQuestUpdate implements IMessage {
 
-	public MessageQuestUpdate() {
-		
+	public static enum Action {
+		ACCEPT, REJECT, COMPLETE
 	}
-	
+
+	public Action action;
+
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		buf.readInt();
+		action = Action.values()[buf.readInt()];
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		buf.writeInt(1);
-		
+		buf.writeInt(action.ordinal());
 	}
 	
 	public static class Worker {
+
+		private final Action action;
+
+		public Worker(Action action) {
+			this.action = action;
+		}
 
 		void work(MessageQuestUpdate message, EntityPlayer player) {
 			Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), player.chunkCoordX, player.chunkCoordZ);
 			QuestData currentQuestData = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
 			
-			if(currentQuestData != null) {
-				// TODO handle input and output items
-				List<ItemStack> outputItems = PlayerCivilizationCapabilityImpl.get(player).rejectQuest(new ArrayList<ItemStack>());
-				QuestData nextQuest = PlayerCivilizationCapabilityImpl.get(player).getNextQuestFor(province);
-				ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetQuestInfo(province, null, nextQuest), (EntityPlayerMP) player);
-			} else {
-				List<ItemStack> outputItems = PlayerCivilizationCapabilityImpl.get(player).acceptQuest(new ArrayList<ItemStack>());
-				if(outputItems == null) {
-					
-				}
-				QuestData currentQuest = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
-				ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetQuestInfo(province, currentQuest, null), (EntityPlayerMP) player);
+			EntityVillageLord lord = VillageLordGuiHandler.getVillageLord(player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
+			IVillageLordInventory inventory = lord.getInventory(player.getUniqueID());
+
+			switch (action) {
+			case ACCEPT:
+				processAccept(player, province, inventory);
+				break;
+			case COMPLETE:
+				processComplete(player, province, inventory);
+				break;
+
+			case REJECT:
+				processReject(player, province, inventory);
+				break;
+
+			default:
+				throw new IllegalArgumentException("invalid quest action [" + action + "]");
 			}
+
+		}
+
+		protected void processAccept(EntityPlayer player, Province province, IVillageLordInventory inventory) {
+			System.out.println("processing accept");
+
+			List<ItemStack> inputItems = inventory.getGivenItems();
+			List<ItemStack> outputItems = PlayerCivilizationCapabilityImpl.get(player).acceptQuest(inputItems);
+
+			if(outputItems == null) {
+				inventory.setGivenItems(inputItems);
+				return;
+			}
+
+			// TODO drop items already in the output slots
+			inventory.setReturnItems(outputItems);
+
+			QuestData currentQuest = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
+			ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetQuestInfo(province, currentQuest, null), (EntityPlayerMP) player);
+		}
+
+		protected void processReject(EntityPlayer player, Province province, IVillageLordInventory inventory) {
+			System.out.println("processing reject");
+
+			List<ItemStack> inputItems = inventory.getGivenItems();
+			List<ItemStack> outputItems = PlayerCivilizationCapabilityImpl.get(player).rejectQuest(inputItems);
+
+			if (outputItems == null) {
+				inventory.setGivenItems(inputItems);
+				return;
+			}
+
+			// TODO drop items already in the output slots
+			inventory.setReturnItems(outputItems);
+
+			QuestData nextQuest = PlayerCivilizationCapabilityImpl.get(player).getNextQuestFor(province);
+			ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetQuestInfo(province, null, nextQuest), (EntityPlayerMP) player);
+		}
+
+		protected void processComplete(EntityPlayer player, Province province, IVillageLordInventory inventory) {
+			System.out.println("processing complete");
+
+			List<ItemStack> inputItems = inventory.getGivenItems();
+			List<ItemStack> outputItems = PlayerCivilizationCapabilityImpl.get(player).completeQuest(inputItems);
+
+			if (outputItems == null) {
+				inventory.setGivenItems(inputItems);
+				return;
+			}
+
+			// TODO drop items already in the output slots
+			inventory.setReturnItems(outputItems);
+
+			QuestData nextQuest = PlayerCivilizationCapabilityImpl.get(player).getNextQuestFor(province);
+			ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetQuestInfo(province, null, nextQuest), (EntityPlayerMP) player);
 		}
 	}
 
-	public static class Handler implements IMessageHandler<MessageQuestUpdate,IMessage> {
+	public static class Handler implements IMessageHandler<MessageQuestUpdate, IMessage> {
 
 		@Override
 		public IMessage onMessage(final MessageQuestUpdate message, MessageContext ctx) {
@@ -76,7 +145,7 @@ public class MessageQuestUpdate implements IMessage {
 			worldServer.addScheduledTask(new Runnable() {
 				@Override
 				public void run() {
-					new Worker().work(message, player);
+					new Worker(message.action).work(message, player);
 				}
 			});
 

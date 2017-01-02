@@ -7,8 +7,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import net.torocraft.toroquest.civilization.player.IVillageLordInventory;
 import net.torocraft.toroquest.entities.EntityVillageLord;
+import net.torocraft.toroquest.inventory.IVillageLordInventory;
 
 public class VillageLordGuiHandler implements IGuiHandler {
 

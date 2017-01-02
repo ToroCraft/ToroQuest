@@ -2,7 +2,6 @@ package net.torocraft.toroquest.civilization.player;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -33,8 +32,6 @@ public interface PlayerCivilizationCapability {
 	void readNBT(NBTBase c);
 
 	void updatePlayerLocation(int chunkX, int chunkZ);
-
-	IVillageLordInventory getVillageLordInventory(UUID provinceId);
 
 	/**
 	 * get a Set of all quests currently accepted by the player

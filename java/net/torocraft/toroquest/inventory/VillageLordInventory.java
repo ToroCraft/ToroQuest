@@ -1,204 +1,138 @@
 package net.torocraft.toroquest.inventory;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.torocraft.toroquest.civilization.CivilizationUtil;
-import net.torocraft.toroquest.civilization.Province;
-import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
-import net.torocraft.toroquest.civilization.quests.util.QuestData;
-import net.torocraft.toroquest.network.ToroQuestPacketHandler;
-import net.torocraft.toroquest.network.message.MessageSetItemReputationAmount;
-import net.torocraft.toroquest.network.message.MessageSetQuestInfo;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import net.torocraft.toroquest.civilization.quests.QuestBase;
+import net.torocraft.toroquest.entities.EntityVillageLord;
 
-public class VillageLordInventory implements IInventory {
+public class VillageLordInventory extends InventoryBasic implements IVillageLordInventory {
+	private final EntityVillageLord lord;
+	private static int DONATE_BOX_INDEX = 8;
 
-	private static final int SUBMIT_ITEM_COUNT = 9;
-	
-	private Map<Item,Integer> itemReputations = new HashMap<Item,Integer>();
-	
-	private ItemStack[] itemStacks = new ItemStack[SUBMIT_ITEM_COUNT];
-	
-	private EntityPlayer player;
-	
-	public VillageLordInventory() {
-		this.clear();
-		loadItemList();
+	public VillageLordInventory(EntityVillageLord lord, String inventoryTitle, int slotCount) {
+		super(inventoryTitle, false, slotCount);
+		this.lord = lord;
 	}
-	
-	@Override
-	public String getName() {
-		return "Village Lord Inventory";
+
+	@SideOnly(Side.CLIENT)
+	public VillageLordInventory(EntityVillageLord lord, ITextComponent inventoryTitle, int slotCount) {
+		super(inventoryTitle, slotCount);
+		this.lord = lord;
 	}
 
 	@Override
-	public boolean hasCustomName() {
-		return false;
-	}
-
-	@Override
-	public ITextComponent getDisplayName() {
-		return new TextComponentString(this.getName());
-	}
-
-	@Override
-	public int getSizeInventory() {
-		return itemStacks.length;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int index) {
-		return itemStacks[index];
-	}
-
-	@Override
-	public ItemStack decrStackSize(int index, int count) {
-		ItemStack slotStack = getStackInSlot(index);
-		int stackSize = slotStack.getCount();
-		
-		ItemStack stackRemoved;
-		if(stackSize <= count) {
-			stackRemoved = slotStack;
-			setInventorySlotContents(index, ItemStack.EMPTY);
-			
-		} else {
-			stackRemoved = slotStack.splitStack(count);
-			if(stackSize == 0) {
-				setInventorySlotContents(index, ItemStack.EMPTY);
-			}
+	public List<ItemStack> getGivenItems() {
+		List<ItemStack> items = new ArrayList<ItemStack>();
+		for (int i = 0; i < 4; i++) {
+			items.add(removeStackFromSlot(i));
 		}
-		
-		markDirty();
-		
-		return stackRemoved;
+		return items;
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(int index) {
-		ItemStack itemStack = getStackInSlot(index);
-		setInventorySlotContents(index, ItemStack.EMPTY);
-		return itemStack;
-	}
-
-	@Override
-	public void setInventorySlotContents(int index, ItemStack stack) {
-		if (index < 0 || index >= this.getSizeInventory()) {
-            return;
-		}
-
-		int stackSize = stack.getCount();
-		
-        if (stackSize > this.getInventoryStackLimit()) {
-			stack.setCount(this.getInventoryStackLimit());
-        }
-
-        if (stackSize == 0) {
-			stack = ItemStack.EMPTY;
-        }
-
-        this.itemStacks[index] = stack;
-        this.markDirty();
-	}
-
-	@Override
-	public int getInventoryStackLimit() {
-		return 64;
-	}
-
-	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
-		return true;
-	}
-	
-	@Override
-	public void openInventory(EntityPlayer player) {
-		this.player = player;
-	}
-
-	@Override
-	public void closeInventory(EntityPlayer player) {
-		
-		for(int x = 0; x < getSizeInventory(); x++) {
-			if(itemStacks[x] != null) {
-				player.dropItem(itemStacks[x], false);
+	public void setGivenItems(List<ItemStack> items) {
+		// dropItems(getGivenItems());
+		items = QuestBase.removeEmptyItemStacks(items);
+		items = dropOverItems(items, 4);
+		for (int i = 0; i < 4; i++) {
+			if (i >= items.size()) {
+				setInventorySlotContents(i, ItemStack.EMPTY);
+			} else {
+				setInventorySlotContents(i, items.get(i));
 			}
 		}
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
-		return true;
-	}
-
-	@Override
-	public int getField(int id) {
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value) {
-	}
-
-	@Override
-	public int getFieldCount() {
-		return 0;
-	}
-
-	@Override
-	public void clear() {
-		Arrays.fill(itemStacks, ItemStack.EMPTY);
-	}
-	
-	@Override
-	public void markDirty() {
-		
-	}
-	
-	public static void logItemStack(ItemStack stack) {
-		if (stack == null) {
-			return;
+	public List<ItemStack> getReturnItems() {
+		List<ItemStack> items = new ArrayList<ItemStack>();
+		for (int i = 0; i < 4; i++) {
+			items.add(removeStackFromSlot(i + 4));
 		}
-		System.out.println("LOGGING ITEM STACK");
-		System.out.println("type:" + Item.getIdFromItem(stack.getItem()));
-		System.out.println("subType:" + stack.getMetadata());
-		System.out.println("NBT: " + String.valueOf(stack.getTagCompound()));
-	}
-	
-	public void updateClientQuest(){
-		Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), player.chunkCoordX, player.chunkCoordZ);
-		QuestData currentQuest = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
-		QuestData nextQuest = PlayerCivilizationCapabilityImpl.get(player).getNextQuestFor(province);
-		ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetQuestInfo(province, currentQuest, nextQuest), (EntityPlayerMP) player);
+		return items;
 	}
 
-	public void checkForReputation() {
-		Integer reputation = itemReputations.get(itemStacks[0].getItem());
-		if(reputation != null) {
-			updateClientReputation(reputation * itemStacks[0].getCount());
-		} else {
-			updateClientReputation(0);
+	@Override
+	public void setReturnItems(List<ItemStack> items) {
+		// dropItems(getReturnItems());
+		items = QuestBase.removeEmptyItemStacks(items);
+		items = dropOverItems(items, 4);
+		for (int i = 0; i < 4; i++) {
+			if (i >= items.size()) {
+				setInventorySlotContents(i + 4, ItemStack.EMPTY);
+			} else {
+				setInventorySlotContents(i + 4, items.get(i));
+			}
 		}
 	}
-	
-	private void updateClientReputation(Integer rep) {
-		ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetItemReputationAmount(rep), (EntityPlayerMP)this.player);
-	}
-	
-	private void loadItemList() {
-		itemReputations.put(Item.getItemById(3), 100);
+
+	@Override
+	public ItemStack getDonationItem() {
+		return getStackInSlot(DONATE_BOX_INDEX);
 	}
 
 	@Override
-	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+	public void setDonationItem(ItemStack item) {
+		setInventorySlotContents(DONATE_BOX_INDEX, item);
+	}
+
+	private List<ItemStack> dropOverItems(List<ItemStack> items, int maxIndex) {
+		if (items.size() <= maxIndex) {
+			return items;
+		}
+
+		List<ItemStack> over = new ArrayList<ItemStack>();
+		for (int i = maxIndex; i < items.size(); i++) {
+			over.add(items.get(i));
+		}
+
+		for (ItemStack item : over) {
+			items.remove(item);
+		}
+
+		dropItems(over);
+
+		return items;
+	}
+
+	private void dropItems(List<ItemStack> items) {
+		for (ItemStack stack : items) {
+			EntityItem dropItem = new EntityItem(lord.world, lord.posX, lord.posY, lord.posZ, stack);
+			dropItem.setNoPickupDelay();
+			lord.world.spawnEntity(dropItem);
+		}
+	}
+
+	public NBTTagList saveAllItems() {
+		NBTTagList list = new NBTTagList();
+		for (int i = 0; i < getSizeInventory(); ++i) {
+			ItemStack itemstack = (ItemStack) getStackInSlot(i);
+			if (!itemstack.isEmpty()) {
+				NBTTagCompound nbttagcompound = new NBTTagCompound();
+				nbttagcompound.setByte("Slot", (byte) i);
+				itemstack.writeToNBT(nbttagcompound);
+				list.appendTag(nbttagcompound);
+			}
+		}
+		return list;
+	}
+
+	public void loadAllItems(NBTTagList list) {
+		for (int i = 0; i < list.tagCount(); ++i) {
+			NBTTagCompound nbttagcompound = list.getCompoundTagAt(i);
+			int slot = nbttagcompound.getByte("Slot") & 255;
+			if (slot >= 0 && slot < getSizeInventory()) {
+				setInventorySlotContents(slot, new ItemStack(nbttagcompound));
+			}
+		}
 	}
 }

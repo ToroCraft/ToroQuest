@@ -7,7 +7,6 @@ import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
@@ -18,9 +17,9 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
-import net.torocraft.toroquest.civilization.player.IVillageLordInventory;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
+import net.torocraft.toroquest.inventory.IVillageLordInventory;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 import net.torocraft.toroquest.network.message.MessageSetItemReputationAmount;
 import net.torocraft.toroquest.network.message.MessageSetQuestInfo;
@@ -136,9 +135,7 @@ public class VillageLordContainer extends Container {
 
 			@Override
 			public void sendSlotContents(Container containerToSend, int slotInd, ItemStack stack) {
-				if (inputSlot.contains(slotInd)) {
-					inputItemUpdated(containerToSend, slotInd, stack);
-				} else if (slotInd == donationGuiSlotId) {
+				if (slotInd == donationGuiSlotId) {
 					donationItemUpdated(stack);
 				}
 			}
@@ -155,102 +152,8 @@ public class VillageLordContainer extends Container {
 		});
 	}
 
-	private void inputItemUpdated(Container containerToSend, int slotInd, ItemStack stack) {
-		System.out.println("inputItemUpdated() stack[" + stack.toString() + "]");
-		handleWrittingReplyNote(containerToSend, slotInd, stack);
-	}
-
-	protected void handleWrittingReplyNote(final Container containerToSend, final int slotInd, final ItemStack stack) {
-
-		if (player.world.isRemote) {
-			return;
-		}
-
-		if (stack.getItem() != Items.PAPER || !stack.hasTagCompound()) {
-			return;
-		}
-
-		String sToProvinceId = stack.getTagCompound().getString("toProvince");
-		String sQuestId = stack.getTagCompound().getString("questId");
-
-		if (isEmpty(sToProvinceId) || isEmpty(sQuestId)) {
-			return;
-		}
-
-		final ItemStack reply = stack.copy();
-
-
-		List<ItemStack> returns = new ArrayList<ItemStack>(1);
-		returns.add(reply);
-
-		// FIXME this change is not detected on the GUI
-
-
-		// updateClientQuest();
-
-		//
-
-		// detectAndSendChanges();
-
-		// inventory.setReturnItems(returns);
-
-		// inventory.setInventorySlotContents(5, reply);
-
-		// this.inventorySlots.get(outputSlot.get(1)).putStack(reply);
-
-		// this.inventory.markDirty();
-
-		((EntityPlayerMP) player).getServerWorld().addScheduledTask(new Runnable() {
-
-			@Override
-			public void run() {
-				containerToSend.putStackInSlot(slotInd, ItemStack.EMPTY);
-				containerToSend.putStackInSlot(outputSlot.get(0), reply);
-
-				// detectAndSendChanges();
-
-				// updateOutputSlots();
-
-				// Slot s = inventorySlots.get();
-
-				// s.putStack(reply);
-
-				// s.onSlotChanged();
-
-				// s.onSlotChange(p_75220_1_, p_75220_2_);
-
-				// detectAndSendChanges();
-			}
-		});
-
-		// detectAndSendChanges();
-	}
-
-	private void updateOutputSlots() {
-		for (Integer slotId : outputSlot) {
-			System.out.println("update slot " + slotId);
-			((Slot) this.inventorySlots.get(slotId)).onSlotChanged();
-
-			/*
-			 * for (int j = 0; j < this.listeners.size(); ++j) {
-			 * ((IContainerListener)this.listeners.get(j)).sendSlotContents(
-			 * this, slotId, itemstack1); }
-			 */
-
-			// slotClick(slotId, 0, ClickType.PICKUP, player);
-
-		}
-	}
-
-	private boolean isSet(String s) {
-		return s != null && s.trim().length() > 0;
-	}
-
-	private boolean isEmpty(String s) {
-		return !isSet(s);
-	}
-
 	private void donationItemUpdated(ItemStack stack) {
+		// TODO send update packet
 		System.out.println("donationItemUpdated() " + stack.toString());
 	}
 
@@ -284,7 +187,6 @@ public class VillageLordContainer extends Container {
 			slot.onSlotChanged();
 		}
 
-		// slot.onPickupFromSlot(player, sourceStack);
 		return copyOfSourceStack;
 	}
 

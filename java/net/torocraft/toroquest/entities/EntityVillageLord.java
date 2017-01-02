@@ -42,10 +42,11 @@ import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
-import net.torocraft.toroquest.civilization.player.IVillageLordInventory;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.render.RenderVillageLord;
 import net.torocraft.toroquest.gui.VillageLordGuiHandler;
+import net.torocraft.toroquest.inventory.IVillageLordInventory;
+import net.torocraft.toroquest.inventory.VillageLordInventory;
 import net.torocraft.toroquest.item.armor.ItemRoyalArmor;
 
 public class EntityVillageLord extends EntityToroNpc implements IInventoryChangedListener {
@@ -118,7 +119,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		}
 		IVillageLordInventory inventory = getInventory(player.getUniqueID());
 		// inventory.setCustomName(getName());
-		player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+		player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), world, getPosition().getX(), getPosition().getY(), getPosition().getZ());
 	}
 
 	@Override

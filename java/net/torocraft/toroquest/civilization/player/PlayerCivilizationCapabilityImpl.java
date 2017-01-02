@@ -1,13 +1,10 @@
 package net.torocraft.toroquest.civilization.player;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.Callable;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -325,16 +322,6 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 	@Override
 	public EntityPlayer getPlayer() {
 		return player;
-	}
-
-	private Map<UUID, IVillageLordInventory> inventoryCache = new HashMap<UUID, IVillageLordInventory>();
-
-	@Override
-	public IVillageLordInventory getVillageLordInventory(UUID provinceId) {
-		if (inventoryCache.get(provinceId) == null) {
-			inventoryCache.put(provinceId, new VillageLordInventory(player, villageLordInventories.get(provinceId)));
-		}
-		return inventoryCache.get(provinceId);
 	}
 
 }

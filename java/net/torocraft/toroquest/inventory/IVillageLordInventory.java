@@ -1,4 +1,4 @@
-package net.torocraft.toroquest.civilization.player;
+package net.torocraft.toroquest.inventory;
 
 import java.util.List;
 

@@ -13,7 +13,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.torocraft.toroquest.civilization.player.IVillageLordInventory;
+import net.torocraft.toroquest.inventory.IVillageLordInventory;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 import net.torocraft.toroquest.network.message.MessageQuestUpdate;
 import net.torocraft.toroquest.network.message.MessageQuestUpdate.Action;
@@ -82,6 +82,10 @@ public class VillageLordGuiContainer extends GuiContainer {
 			if (submitButton.mousePressed(mc, mouseX, mouseY) && mouseCooldownOver()) {
 				mousePressed = Minecraft.getSystemTime();
 				availableReputation = 10;
+				mousePressed = Minecraft.getSystemTime();
+				MessageQuestUpdate message = new MessageQuestUpdate();
+				message.action = Action.DONATE;
+				ToroQuestPacketHandler.INSTANCE.sendToServer(message);
 			}
 		}
 	}

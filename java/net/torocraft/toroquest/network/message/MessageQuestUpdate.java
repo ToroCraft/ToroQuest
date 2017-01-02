@@ -1,10 +1,13 @@
 package net.torocraft.toroquest.network.message;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -13,17 +16,17 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
-import net.torocraft.toroquest.civilization.player.IVillageLordInventory;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.entities.EntityVillageLord;
 import net.torocraft.toroquest.gui.VillageLordGuiHandler;
+import net.torocraft.toroquest.inventory.IVillageLordInventory;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 
 public class MessageQuestUpdate implements IMessage {
 
 	public static enum Action {
-		ACCEPT, REJECT, COMPLETE
+		ACCEPT, REJECT, COMPLETE, DONATE
 	}
 
 	public Action action;
@@ -65,10 +68,73 @@ public class MessageQuestUpdate implements IMessage {
 				processReject(player, province, inventory);
 				break;
 
+			case DONATE:
+				processDonate(player, province, inventory);
+				break;
+
 			default:
 				throw new IllegalArgumentException("invalid quest action [" + action + "]");
 			}
 
+		}
+
+		private void processDonate(EntityPlayer player, Province province, IVillageLordInventory inventory) {
+			System.out.println("processing donate");
+			ItemStack donation = inventory.getDonationItem();
+			inventory.setDonationItem(ItemStack.EMPTY);
+
+			List<ItemStack> returns = new ArrayList<ItemStack>();
+			returns.add(donation);
+			inventory.setReturnItems(returns);
+		}
+
+		// TODO implement note replies
+		protected void handleWrittingReplyNote(final Container containerToSend, final int slotInd, final ItemStack stack) {
+
+			if (stack.getItem() != Items.PAPER || !stack.hasTagCompound()) {
+				return;
+			}
+
+			System.out.println("handleWrittingReplyNote");
+
+			String sToProvinceId = stack.getTagCompound().getString("toProvince");
+			String sQuestId = stack.getTagCompound().getString("questId");
+
+			// if (isEmpty(sToProvinceId) || isEmpty(sQuestId)) {
+			// return;
+			// }
+
+			containerToSend.putStackInSlot(slotInd, ItemStack.EMPTY);
+			// containerToSend.putStackInSlot(outputSlot.get(0), stack);
+
+			// List<ItemStack> returns = new ArrayList<ItemStack>(1);
+			// returns.add(stack);
+
+			// inventory.setInventorySlotContents(3, stack);
+			// inventory.setInventorySlotContents(8, stack);
+
+			// updateOutputSlots();
+
+			// detectAndSendChanges();
+			// updateOutputSlots();
+
+			// FIXME this change is not detected on the GUI
+
+			// updateClientQuest();
+
+			//
+
+			// detectAndSendChanges();
+
+			// inventory.setReturnItems(returns);
+
+			// inventory.setInventorySlotContents(5, reply);
+
+			// this.inventorySlots.get(outputSlot.get(1)).putStack(reply);
+
+			// this.inventory.markDirty();
+
+			// detectAndSendChanges();
 		}
 
 		protected void processAccept(EntityPlayer player, Province province, IVillageLordInventory inventory) {
@@ -152,4 +218,13 @@ public class MessageQuestUpdate implements IMessage {
 			return null;
 		}
 	}
+
+	private boolean isSet(String s) {
+		return s != null && s.trim().length() > 0;
+	}
+
+	private boolean isEmpty(String s) {
+		return !isSet(s);
+	}
+
 }

@@ -14,8 +14,6 @@ import net.torocraft.toroquest.inventory.IVillageLordInventory;
 
 public class MessageSetItemReputationAmount implements IMessage {
 
-	// itemReputations.put(Item.getItemById(3), 100);
-
 	public static enum MessageCode {
 		EMPTY, NOTE, DONATION
 	};
@@ -41,13 +39,11 @@ public class MessageSetItemReputationAmount implements IMessage {
 			return;
 		}
 
-		// FIXME lookup from table
-		reputation = 10;
+		reputation = MessageQuestUpdate.getRepForDonation(item);
 		messageCode = MessageCode.DONATION;
-
 	}
 
-	private boolean isNoteForLord(ItemStack stack) {
+	public static boolean isNoteForLord(ItemStack stack) {
 
 		if (stack.getItem() != Items.PAPER || !stack.hasTagCompound()) {
 			return false;
@@ -116,11 +112,11 @@ public class MessageSetItemReputationAmount implements IMessage {
 		}	
 	}
 
-	private boolean isSet(String s) {
+	public static boolean isSet(String s) {
 		return s != null && s.trim().length() > 0;
 	}
 
-	private boolean isEmpty(String s) {
+	public static boolean isEmpty(String s) {
 		return !isSet(s);
 	}
 }

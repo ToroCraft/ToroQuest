@@ -4,9 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
+import net.minecraft.item.ItemTool;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -19,6 +26,8 @@ import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.entities.EntityVillageLord;
 import net.torocraft.toroquest.gui.VillageLordGuiHandler;
 import net.torocraft.toroquest.inventory.IVillageLordInventory;
+import net.torocraft.toroquest.item.ItemFireSword;
+import net.torocraft.toroquest.item.ItemObsidianSword;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 
 public class MessageQuestUpdate implements IMessage {
@@ -38,7 +47,7 @@ public class MessageQuestUpdate implements IMessage {
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(action.ordinal());
 	}
-	
+
 	public static class Worker {
 
 		private final Action action;
@@ -50,7 +59,7 @@ public class MessageQuestUpdate implements IMessage {
 		void work(MessageQuestUpdate message, EntityPlayer player) {
 			Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), player.chunkCoordX, player.chunkCoordZ);
 			QuestData currentQuestData = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
-			
+
 			EntityVillageLord lord = VillageLordGuiHandler.getVillageLord(player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
 			IVillageLordInventory inventory = lord.getInventory(player.getUniqueID());
 
@@ -77,16 +86,36 @@ public class MessageQuestUpdate implements IMessage {
 		}
 
 		private void processDonate(EntityPlayer player, Province province, IVillageLordInventory inventory) {
-			System.out.println("processing donate");
 			ItemStack donation = inventory.getDonationItem();
-			inventory.setDonationItem(ItemStack.EMPTY);
 
-			List<ItemStack> returns = new ArrayList<ItemStack>();
-			returns.add(donation);
-			inventory.setReturnItems(returns);
+			if (MessageSetItemReputationAmount.isNoteForLord(donation)) {
+				writeReplyNote(inventory, donation);
+				return;
+			}
+
+			int rep = getRepForDonation(donation);
+			if (rep > 0) {
+				PlayerCivilizationCapabilityImpl.get(player).adjustReputation(province.civilization, rep);
+				inventory.setDonationItem(ItemStack.EMPTY);
+			}
 		}
 
+		private void writeReplyNote(IVillageLordInventory inventory, ItemStack donation) {
+			String sToProvinceId = donation.getTagCompound().getString("toProvince");
+			String sQuestId = donation.getTagCompound().getString("questId");
 
+			if (isEmpty(sToProvinceId) || isEmpty(sQuestId)) {
+				return;
+			}
+
+			inventory.setDonationItem(ItemStack.EMPTY);
+			donation.setStackDisplayName("Reply Note");
+			donation.getTagCompound().setBoolean("reply", true);
+
+			List<ItemStack> l = new ArrayList<ItemStack>(1);
+			l.add(donation);
+			inventory.setReturnItems(l);
+		}
 
 		protected void processAccept(EntityPlayer player, Province province, IVillageLordInventory inventory) {
 			System.out.println("processing accept");
@@ -94,7 +123,7 @@ public class MessageQuestUpdate implements IMessage {
 			List<ItemStack> inputItems = inventory.getGivenItems();
 			List<ItemStack> outputItems = PlayerCivilizationCapabilityImpl.get(player).acceptQuest(inputItems);
 
-			if(outputItems == null) {
+			if (outputItems == null) {
 				inventory.setGivenItems(inputItems);
 				return;
 			}
@@ -170,12 +199,69 @@ public class MessageQuestUpdate implements IMessage {
 		}
 	}
 
-	private boolean isSet(String s) {
+	private static boolean isSet(String s) {
 		return s != null && s.trim().length() > 0;
 	}
 
-	private boolean isEmpty(String s) {
+	private static boolean isEmpty(String s) {
 		return !isSet(s);
+	}
+
+	public static int getRepForDonation(ItemStack item) {
+
+		if (item.isEmpty()) {
+			return 0;
+		}
+
+		if (item.getItem() instanceof ItemTool) {
+			ToolMaterial material = ((ItemTool) item.getItem()).getToolMaterial();
+			switch (material) {
+			case DIAMOND:
+				return 2;
+			case GOLD:
+				return 1;
+			default:
+				return 0;
+			}
+		}
+
+		if (item.getItem() instanceof ItemSword) {
+			String material = ((ItemSword) item.getItem()).getToolMaterialName();
+
+			if (item.getItem() == ItemObsidianSword.INSTANCE || item.getItem() == ItemFireSword.INSTANCE) {
+				return 3;
+			}
+
+			if ("DIAMOND".equals(material)) {
+				return 2;
+			} else if ("GOLD".equals(material)) {
+				return 1;
+			} else {
+				return 0;
+			}
+
+		}
+
+		if (item.getItem() == Items.DIAMOND) {
+			return 1 * item.getCount();
+		}
+
+		if (item.getItem() == Items.EMERALD) {
+			return 2 * item.getCount();
+		}
+
+		if (item.getItem() instanceof ItemBlock) {
+			Block block = ((ItemBlock) item.getItem()).block;
+			if (Blocks.DIAMOND_BLOCK == block) {
+				return 9 * item.getCount();
+			}
+
+			if (Blocks.EMERALD_BLOCK == block) {
+				return 18 * item.getCount();
+			}
+		}
+
+		return 0;
 	}
 
 }

@@ -82,6 +82,7 @@ civilization.reputation_level.villain=Villian
 quest.gui.title=Lord of %s
 quest.gui.rep_for=%d Rep. for
 quest.gui.reply=get reply
+quest.gui.stolen_item=return item
 quest.gui.empty=give items
 quest.gui.button.donate=Give
 quest.gui.button.accept=Accept
@@ -91,8 +92,12 @@ quest.gui.button.reject=Abandon
 quests.no_items=no items
 quests.courier.title=§lCourier§r
 quests.courier.description=Deliver a note to %s and return the reply\nLocation %s\nDistance %s meters\nReward %s\nRecieve %s reputation
+
 quests.enemey_encampment.title=§lClear Encampment§r
 quests.enemey_encampment.description=Clear %s encampment\n%s\nReward %s\nRecieve %s reputation
 quests.enemey_encampment.wasnt_you=You didn't personally kill any from the encampment!
 quests.enemey_encampment.one_left=You didn't kill all of them, there is one left!
 quests.enemey_encampment.some_left=You didn't kill all of them, there are %i left.
+
+quests.bounty_hunter.title=§lBounty Hunter§r
+quests.bounty_hunter.description=Capture and return a fugitive hiding in %s\nLocation %s\nReward %s\nRecieve %s reputation

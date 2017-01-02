@@ -16,7 +16,7 @@ import net.torocraft.toroquest.inventory.IVillageLordInventory;
 public class MessageSetItemReputationAmount implements IMessage {
 
 	public static enum MessageCode {
-		EMPTY, NOTE, DONATION
+		EMPTY, NOTE, STOLEN_ITEM, DONATION
 	};
 
 	public int reputation = 0;
@@ -40,8 +40,48 @@ public class MessageSetItemReputationAmount implements IMessage {
 			return;
 		}
 
+		if (isStolenItemForProvince(inventory.getProvince(), item)) {
+			reputation = 0;
+			messageCode = MessageCode.STOLEN_ITEM;
+			return;
+		}
+
 		reputation = MessageQuestUpdate.getRepForDonation(item);
 		messageCode = MessageCode.DONATION;
+	}
+
+	public static boolean isStolenItemForProvince(Province inProvince, ItemStack stack) {
+		if (!stack.hasTagCompound()) {
+			System.out.println("stolen: missing tag compound");
+			return false;
+		}
+
+		if (inProvince == null) {
+			System.out.println("stolen: in province is null");
+			return false;
+
+		}
+
+		String sToProvinceId = stack.getTagCompound().getString("provinceId");
+		Boolean isStolen = stack.getTagCompound().getBoolean("isStolen");
+
+		if (isEmpty(sToProvinceId)) {
+			System.out.println("stolen: no province set");
+			return false;
+		}
+
+		if (!isStolen) {
+			System.out.println("stolen: missing stolen flag");
+			return false;
+		}
+
+		if (inProvince.id.toString().equals(sToProvinceId)) {
+			System.out.println("stolen: Is stolen item");
+			return true;
+		} else {
+			System.out.println("stolen: not for this province: " + inProvince.id.toString() + " != " + sToProvinceId);
+			return false;
+		}
 	}
 
 	public static boolean isNoteForLord(Province inProvince, ItemStack stack) {

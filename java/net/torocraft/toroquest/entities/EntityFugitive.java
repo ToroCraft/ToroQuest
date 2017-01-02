@@ -76,7 +76,7 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 	}
 
 	private void dropLoot() {
-		if (rand.nextInt(100) > 70) {
+		if (rand.nextInt(6) == 0) {
 			dropItem(randomStolenItem());
 		}
 	}
@@ -103,6 +103,7 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 
 		String id = stolenFrom.id.toString();
 		stolenItem.getTagCompound().setString("provinceId", id);
+		stolenItem.getTagCompound().setBoolean("isStolen", true);
 		stolenItem.setStackDisplayName("Stolen " + stolenItem.getDisplayName() + " of " + stolenFrom.name);
 	}
 

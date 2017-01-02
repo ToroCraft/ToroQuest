@@ -425,7 +425,7 @@ public class CivilizationHandlers {
 		BlockPos randomNearbySpot = position.add(randomSpawnDistance(world.rand), 0, randomSpawnDistance(world.rand));
 
 		if (world.rand.nextInt(50) != 0) {
-			// return;
+			return;
 		}
 
 		Province province = CivilizationUtil.getProvinceAt(world, randomNearbySpot.getX() / 16, randomNearbySpot.getZ() / 16);
@@ -452,8 +452,6 @@ public class CivilizationHandlers {
 		e.setPosition(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5);
 		e.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(e)), (IEntityLivingData) null);
 		world.spawnEntity(e);
-
-		System.out.println("spawning fugutive");
 	}
 
 	protected void spawnSentry(BlockPos position, World world) {

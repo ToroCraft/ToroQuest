@@ -122,6 +122,9 @@ public class VillageLordGuiContainer extends GuiContainer {
 		} else if (MessageCode.NOTE.equals(donateMessageCode)) {
 			fontRendererObj.drawString(I18n.format("quest.gui.reply"), xPos + 13, yPos + 15, Color.darkGray.getRGB());
 
+		} else if (MessageCode.STOLEN_ITEM.equals(donateMessageCode)) {
+			fontRendererObj.drawString(I18n.format("quest.gui.stolen_item"), xPos + 13, yPos + 15, Color.darkGray.getRGB());
+
 		} else {
 			fontRendererObj.drawString(I18n.format("quest.gui.empty"), xPos + 13, yPos + 15, Color.darkGray.getRGB());
 

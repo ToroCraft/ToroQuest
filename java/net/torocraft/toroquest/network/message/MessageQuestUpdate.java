@@ -93,11 +93,26 @@ public class MessageQuestUpdate implements IMessage {
 				return;
 			}
 
+			if (MessageSetItemReputationAmount.isStolenItemForProvince(province, donation)) {
+				handleReturnStolenItem(player, province, inventory, donation);
+				return;
+			}
+
 			int rep = getRepForDonation(donation);
 			if (rep > 0) {
 				PlayerCivilizationCapabilityImpl.get(player).adjustReputation(province.civilization, rep);
 				inventory.setDonationItem(ItemStack.EMPTY);
 			}
+		}
+
+		private void handleReturnStolenItem(EntityPlayer player, Province province, IVillageLordInventory inventory, ItemStack stack) {
+			System.out.println("handleReturnStolenItem");
+			inventory.setDonationItem(ItemStack.EMPTY);
+			ItemStack emeralds = new ItemStack(Items.EMERALD, 2 + player.world.rand.nextInt(3));
+			List<ItemStack> l = new ArrayList<ItemStack>(1);
+			l.add(emeralds);
+			inventory.setReturnItems(l);
+			PlayerCivilizationCapabilityImpl.get(player).adjustReputation(province.civilization, 2 + player.world.rand.nextInt(3));
 		}
 
 		private void writeReplyNote(IVillageLordInventory inventory, ItemStack donation) {

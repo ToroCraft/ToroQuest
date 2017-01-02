@@ -136,11 +136,10 @@ public class QuestKillMobs extends QuestBase implements Quest {
 
 	@Override
 	public String getTitle(QuestData data) {
-		if (data == null) {
-			return "";
-		}
-		DataWrapper q = new DataWrapper().setData(data);
-		return "Kill " + q.getTargetAmount() + " " + mobName(q.getMobType(), data.getPlayer()) + " in " + getProvinceName(data.getPlayer(), data.getProvinceId());
+		return "quests.kill_mobs.title";
+		// return "Kill " + q.getTargetAmount() + " " + mobName(q.getMobType(),
+		// data.getPlayer()) + " in " + getProvinceName(data.getPlayer(),
+		// data.getProvinceId());
 	}
 
 	@Override
@@ -150,9 +149,12 @@ public class QuestKillMobs extends QuestBase implements Quest {
 		}
 		DataWrapper q = new DataWrapper().setData(data);
 		StringBuilder s = new StringBuilder();
-		s.append("- Kill ").append(q.getTargetAmount()).append(" ").append(mobName(q.getMobType(), data.getPlayer())).append(" in ").append(getProvinceName(data.getPlayer(), data.getProvinceId())).append("\n");
-		s.append("- You have killed ").append(q.getCurrentAmount()).append(" currently.\n");
-		s.append("- Reward: " + listItems(getRewardItems(q.data)));
+		s.append("quests.kill_mobs.description");
+		s.append("|").append(q.getTargetAmount());
+		s.append("|").append(mobName(q.getMobType(), data.getPlayer()));
+		s.append("|").append(getProvinceName(data.getPlayer(), data.getProvinceId()));
+		s.append("|").append(q.getCurrentAmount());
+		s.append("|").append(listItems(getRewardItems(q.data)));
 		return s.toString();
 	}
 

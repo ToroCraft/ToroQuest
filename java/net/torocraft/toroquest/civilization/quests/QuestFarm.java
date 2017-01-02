@@ -105,11 +105,7 @@ public class QuestFarm extends QuestBase implements Quest {
 
 	@Override
 	public String getTitle(QuestData data) {
-		if (data == null) {
-			return "";
-		}
-		DataWrapper q = new DataWrapper().setData(data);
-		return "Plant " + q.getTargetAmount() + " " + cropName(q.getCropType()) + " Plants";
+		return "quests.farm.title";
 	}
 
 	private String cropName(Integer i) {
@@ -131,9 +127,12 @@ public class QuestFarm extends QuestBase implements Quest {
 		}
 		DataWrapper q = new DataWrapper().setData(data);
 		StringBuilder s = new StringBuilder();
-		s.append("- Plant ").append(q.getTargetAmount()).append(" ").append(cropName(q.getCropType())).append(" in ").append(getProvinceName(data.getPlayer(), data.getProvinceId())).append("\n");
-		s.append("- You have planted ").append(q.getCurrentAmount()).append(" currently.\n");
-		s.append("- Reward: " + listItems(getRewardItems(q.data)));
+		s.append("quests.farm.description");
+		s.append("|").append(q.getTargetAmount());
+		s.append("|").append(cropName(q.getCropType()));
+		s.append("|").append(getProvinceName(data.getPlayer(), data.getProvinceId()));
+		s.append("|").append(q.getCurrentAmount());
+		s.append("|").append(listItems(getRewardItems(data)));
 		return s.toString();
 	}
 

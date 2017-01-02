@@ -216,7 +216,7 @@ public class QuestMine extends QuestBase {
 
 	@Override
 	public String getTitle(QuestData data) {
-		return "Mine Quest";
+		return "quests.mine.title";
 	}
 
 	@Override
@@ -224,19 +224,23 @@ public class QuestMine extends QuestBase {
 		if (data == null) {
 			return "";
 		}
-
 		StringBuilder s = new StringBuilder();
-		s.append("- Mine " + getTargetAmount(data) + " blocks of " + BLOCK_TYPES[getBlockType(data)].getLocalizedName() + "\n");
-		if (getMaxDepth(data) > 0 && getMinDepth(data) > 0) {
-			s.append("- Between level " + getMinDepth(data) + " and " + getMaxDepth(data)).append("\n");
-		} else if (getMaxDepth(data) > 0) {
-			s.append("- Below level " + getMaxDepth(data)).append("\n");
-		} else if (getMinDepth(data) > 0) {
-			s.append("- Above level ").append(getMinDepth(data)).append("\n");
-		}
-		s.append("- Use and return the provided tool\n");
-		s.append("- Reward ").append(listItems(getRewardItems(data)));
-		s.append("- Receive ").append(getRewardRep(data)).append(" reputation");
+		s.append("quests.mine.description");
+		s.append("|").append(getTargetAmount(data));
+		s.append("|").append(BLOCK_TYPES[getBlockType(data)].getLocalizedName());
+		s.append("|").append(listItems(getRewardItems(data)));
+		s.append("|").append(getRewardRep(data));
+
+		/*
+		 * TODO implement different messages based on depth
+		 * 
+		 * if (getMaxDepth(data) > 0 && getMinDepth(data) > 0) {
+		 * s.append("- Between level " + getMinDepth(data) + " and " +
+		 * getMaxDepth(data)).append("\n"); } else if (getMaxDepth(data) > 0) {
+		 * s.append("- Below level " + getMaxDepth(data)).append("\n"); } else
+		 * if (getMinDepth(data) > 0) {
+		 * s.append("- Above level ").append(getMinDepth(data)).append("\n"); }
+		 */
 		return s.toString();
 	}
 

@@ -101,3 +101,15 @@ quests.enemey_encampment.some_left=You didn't kill all of them, there are %i lef
 
 quests.bounty_hunter.title=§lBounty Hunter§r
 quests.bounty_hunter.description=Capture and return a fugitive hiding in %s\nLocation %s\nReward %s\nRecieve %s reputation
+
+quests.farm.title=§lFarm Quest§r
+quests.farm.description=Plant %s %s in %s\nYou have planted %s\nReward %s
+
+quests.gather.title=§lGather Quest§r
+quests.gather.description=Gather %s\nReward %s\nRecieve %s reputation
+
+quests.kill_mobs.title=§lKill Mobs§r
+quests.kill_mobs.description=Kill %s %s in %s\nYou have killed %s\nReward %s
+
+quests.mine.title=§lMine in Province§r
+quests.mine.description=Mine %s blocks of %s in this province\nLower than level 30\nUse and return provided tool\nReward %s\nRecieve %s reputation

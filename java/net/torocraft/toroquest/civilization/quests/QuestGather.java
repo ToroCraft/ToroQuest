@@ -13,6 +13,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
+import net.torocraft.toroquest.civilization.quests.QuestFarm.DataWrapper;
 import net.torocraft.toroquest.civilization.quests.util.Quest;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.civilization.quests.util.Quests;
@@ -103,11 +104,7 @@ public class QuestGather extends QuestBase implements Quest {
 
 	@Override
 	public String getTitle(QuestData data) {
-		if (data == null) {
-			return "";
-		}
-
-		return "Gather Items";
+		return "quests.gather.title";
 	}
 
 	@Override
@@ -115,10 +112,12 @@ public class QuestGather extends QuestBase implements Quest {
 		if (data == null) {
 			return "";
 		}
+		DataWrapper q = new DataWrapper().setData(data);
 		StringBuilder s = new StringBuilder();
-		s.append("- Gather ").append(listItems(getRequiredItems(data)));
-		s.append("- Reward ").append(listItems(getRewardItems(data)));
-		s.append("- Receive ").append(getRewardRep(data)).append(" reputation");
+		s.append("quests.gather.description");
+		s.append("|").append(listItems(getRequiredItems(data)));
+		s.append("|").append(listItems(getRewardItems(data)));
+		s.append("|").append(getRewardRep(data));
 		return s.toString();
 	}
 

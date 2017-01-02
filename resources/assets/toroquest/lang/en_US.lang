@@ -79,6 +79,15 @@ civilization.reputation_level.outcast=Outcast
 civilization.reputation_level.enemy=Enemy
 civilization.reputation_level.villain=Villian
 
+quest.gui.title=Lord of %s
+quest.gui.rep_for=%d Rep. for
+quest.gui.reply=get reply
+quest.gui.empty=give items
+quest.gui.button.donate=Give
+quest.gui.button.accept=Accept
+quest.gui.button.complete=Complete
+quest.gui.button.reject=Abandon
+
 quests.no_items=no items
 quests.courier.title=§lCourier§r
 quests.courier.description=Deliver a note to %s and return the reply\n§5Location§8§0 %s\n§5Distance§8§0 %s meters\n§5Reward§8§0 %s\n§5Recieve§8§0 %s reputation§r

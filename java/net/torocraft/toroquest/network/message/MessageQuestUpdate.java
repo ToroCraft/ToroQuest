@@ -6,8 +6,6 @@ import java.util.List;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -88,54 +86,7 @@ public class MessageQuestUpdate implements IMessage {
 			inventory.setReturnItems(returns);
 		}
 
-		// TODO implement note replies
-		protected void handleWrittingReplyNote(final Container containerToSend, final int slotInd, final ItemStack stack) {
 
-			if (stack.getItem() != Items.PAPER || !stack.hasTagCompound()) {
-				return;
-			}
-
-			System.out.println("handleWrittingReplyNote");
-
-			String sToProvinceId = stack.getTagCompound().getString("toProvince");
-			String sQuestId = stack.getTagCompound().getString("questId");
-
-			// if (isEmpty(sToProvinceId) || isEmpty(sQuestId)) {
-			// return;
-			// }
-
-			containerToSend.putStackInSlot(slotInd, ItemStack.EMPTY);
-			// containerToSend.putStackInSlot(outputSlot.get(0), stack);
-
-			// List<ItemStack> returns = new ArrayList<ItemStack>(1);
-			// returns.add(stack);
-
-			// inventory.setInventorySlotContents(3, stack);
-			// inventory.setInventorySlotContents(8, stack);
-
-			// updateOutputSlots();
-
-			// detectAndSendChanges();
-			// updateOutputSlots();
-
-			// FIXME this change is not detected on the GUI
-
-			// updateClientQuest();
-
-			//
-
-			// detectAndSendChanges();
-
-			// inventory.setReturnItems(returns);
-
-			// inventory.setInventorySlotContents(5, reply);
-
-			// this.inventorySlots.get(outputSlot.get(1)).putStack(reply);
-
-			// this.inventory.markDirty();
-
-			// detectAndSendChanges();
-		}
 
 		protected void processAccept(EntityPlayer player, Province province, IVillageLordInventory inventory) {
 			System.out.println("processing accept");

@@ -17,6 +17,8 @@ import net.torocraft.toroquest.inventory.IVillageLordInventory;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
 import net.torocraft.toroquest.network.message.MessageQuestUpdate;
 import net.torocraft.toroquest.network.message.MessageQuestUpdate.Action;
+import net.torocraft.toroquest.network.message.MessageSetItemReputationAmount;
+import net.torocraft.toroquest.network.message.MessageSetItemReputationAmount.MessageCode;
 
 public class VillageLordGuiContainer extends GuiContainer {
 
@@ -28,7 +30,8 @@ public class VillageLordGuiContainer extends GuiContainer {
 	private static final int MOUSE_COOLDOWN = 200;
 	private static long mousePressed = 0;
 	
-	private static int availableReputation = 0;
+	private static int donateRepForItem = 0;
+	private static MessageCode donateMessageCode = MessageCode.EMPTY;
 	
 	private static String civName = "";
 	private static String questTitle = "";
@@ -66,22 +69,19 @@ public class VillageLordGuiContainer extends GuiContainer {
 		final int LABEL_XPOS = 5;
 		final int LABEL_YPOS = 5;
 		drawGuiTitle(LABEL_XPOS, LABEL_YPOS);
-		drawReputationDisplay(LABEL_XPOS, LABEL_YPOS);
+		updateReputationDisplay(LABEL_XPOS, LABEL_YPOS);
 		drawQuestTitle(LABEL_XPOS, LABEL_YPOS);
 	}
 	
 	private void drawGuiTitle(int xPos, int yPos) {
-		// TODO lang
-		fontRendererObj.drawString("Lord of " + this.civName, xPos, yPos, Color.darkGray.getRGB());
+		fontRendererObj.drawString(I18n.format("quest.gui.title", this.civName), xPos, yPos, Color.darkGray.getRGB());
 	}
 	
 	private void drawDonateButton(int mouseX, int mouseY) {
-		GuiButton submitButton = new GuiButton(0, guiLeft + 105, guiTop + 15, buttonWidth, buttonHeight, "Donate");
+		GuiButton submitButton = new GuiButton(0, guiLeft + 105, guiTop + 15, buttonWidth, buttonHeight, I18n.format("quest.gui.button.donate"));
 		submitButton.drawButton(mc, mouseX, mouseY);
 		if (Mouse.getEventButtonState() && Mouse.getEventButton() != -1) {
 			if (submitButton.mousePressed(mc, mouseX, mouseY) && mouseCooldownOver()) {
-				mousePressed = Minecraft.getSystemTime();
-				availableReputation = 10;
 				mousePressed = Minecraft.getSystemTime();
 				MessageQuestUpdate message = new MessageQuestUpdate();
 				message.action = Action.DONATE;
@@ -91,19 +91,19 @@ public class VillageLordGuiContainer extends GuiContainer {
 	}
 	
 	private void drawAcceptButton(int mouseX, int mouseY) {
-		drawActionButton("Accept", Action.ACCEPT, mouseX, mouseY, 0);
+		drawActionButton("quest.gui.button.accept", Action.ACCEPT, mouseX, mouseY, 0);
 	}
 
 	private void drawCompleteButton(int mouseX, int mouseY) {
-		drawActionButton("Complete", Action.COMPLETE, mouseX, mouseY, 0);
+		drawActionButton("quest.gui.button.complete", Action.COMPLETE, mouseX, mouseY, 0);
 	}
 	
 	private void drawAbandonButton(int mouseX, int mouseY) {
-		drawActionButton("Abandon", Action.REJECT, mouseX, mouseY, -70);
+		drawActionButton("quest.gui.button.reject", Action.REJECT, mouseX, mouseY, -70);
 	}
 
 	protected void drawActionButton(String label, Action action, int mouseX, int mouseY, int xOffset) {
-		GuiButton abandonButton = new GuiButton(0, guiLeft + 105 + xOffset, guiTop + 130, buttonWidth, buttonHeight, label);
+		GuiButton abandonButton = new GuiButton(0, guiLeft + 105 + xOffset, guiTop + 130, buttonWidth, buttonHeight, I18n.format(label));
 		abandonButton.drawButton(mc, mouseX, mouseY);
 		if (Mouse.getEventButtonState() && Mouse.getEventButton() != -1) {
 			if (abandonButton.mousePressed(mc, mouseX, mouseY) && mouseCooldownOver()) {
@@ -115,11 +115,23 @@ public class VillageLordGuiContainer extends GuiContainer {
 		}
 	}
 	
-	private void drawReputationDisplay(int xPos, int yPos) {
-		// TODO lang
-		fontRendererObj.drawString(String.valueOf(availableReputation) + " Rep. for", xPos + 13, yPos + 15, Color.darkGray.getRGB());
+	private void updateReputationDisplay(int xPos, int yPos) {
+		if (MessageCode.DONATION.equals(donateMessageCode)) {
+			fontRendererObj.drawString(I18n.format("quest.gui.rep_for", donateRepForItem), xPos + 13, yPos + 15, Color.darkGray.getRGB());
+
+		} else if (MessageCode.NOTE.equals(donateMessageCode)) {
+			fontRendererObj.drawString(I18n.format("quest.gui.reply"), xPos + 13, yPos + 15, Color.darkGray.getRGB());
+
+		} else {
+			fontRendererObj.drawString(I18n.format("quest.gui.empty"), xPos + 13, yPos + 15, Color.darkGray.getRGB());
+
+		}
 	}
 	
+	private boolean isSet(String s) {
+		return s != null && s.trim().length() > 0;
+	}
+
 	private void drawQuestTitle(int xPos, int yPos) {		
 		fontRendererObj.drawString(questTitle, xPos + 2, yPos + 35, Color.darkGray.getRGB());
 		fontRendererObj.drawSplitString(questDescription, xPos + 25, yPos + 50, 115, Color.darkGray.getRGB());
@@ -147,21 +159,15 @@ public class VillageLordGuiContainer extends GuiContainer {
 		civName = name;
 	}
 	
-	public static void setAvailableReputation(int rep) {
-		availableReputation = rep;
+	public static void setDonateInfo(MessageSetItemReputationAmount message) {
+		donateRepForItem = message.reputation;
+		donateMessageCode = message.messageCode;
 	}
 
 	public static void setQuestData(String title, String description, boolean accepted) {
 		questTitle = translate(title);
 		questDescription = translate(description);
 		questAccepted = accepted;
-	}
-	
-	private boolean hasReputation() {
-		if(availableReputation > 0) {
-			return true;
-		}
-		return false;
 	}
 	
 	private boolean mouseCooldownOver() {

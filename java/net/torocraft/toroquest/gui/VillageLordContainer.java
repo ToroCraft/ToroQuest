@@ -1,9 +1,7 @@
 package net.torocraft.toroquest.gui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -11,7 +9,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
@@ -25,8 +22,6 @@ import net.torocraft.toroquest.network.message.MessageSetItemReputationAmount;
 import net.torocraft.toroquest.network.message.MessageSetQuestInfo;
 
 public class VillageLordContainer extends Container {
-
-	private Map<Item, Integer> itemReputations = new HashMap<Item, Integer>();
 
 	private final int HOTBAR_SLOT_COUNT = 9;
 	private final int INVENTORY_ROW_COUNT = 3;
@@ -74,8 +69,8 @@ public class VillageLordContainer extends Container {
 		this.inventory = inventory;
 		this.inventory.openInventory(player);
 
-		loadItemList();
 		updateClientQuest();
+		updateDonationInfo();
 
 		int guiSlotIndex = 0;
 
@@ -153,8 +148,8 @@ public class VillageLordContainer extends Container {
 	}
 
 	private void donationItemUpdated(ItemStack stack) {
-		// TODO send update packet
 		System.out.println("donationItemUpdated() " + stack.toString());
+		updateDonationInfo();
 	}
 
 	@Override
@@ -229,19 +224,10 @@ public class VillageLordContainer extends Container {
 		}
 	}
 
-	private void checkForReputation() {
+	private void updateDonationInfo() {
 		if (!player.world.isRemote) {
-			Integer reputation = itemReputations.get(inventory.getDonationItem().getItem());
-			if (reputation != null) {
-				updateClientReputation(reputation * inventory.getDonationItem().getCount());
-			} else {
-				updateClientReputation(0);
-			}
+			ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetItemReputationAmount(inventory), (EntityPlayerMP) player);
 		}
-	}
-
-	private void updateClientReputation(Integer rep) {
-		ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetItemReputationAmount(rep), (EntityPlayerMP) player);
 	}
 
 	private void updateClientQuest() {
@@ -251,10 +237,6 @@ public class VillageLordContainer extends Container {
 			QuestData nextQuest = PlayerCivilizationCapabilityImpl.get(player).getNextQuestFor(province);
 			ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetQuestInfo(province, currentQuest, nextQuest), (EntityPlayerMP) player);
 		}
-	}
-
-	private void loadItemList() {
-		itemReputations.put(Item.getItemById(3), 100);
 	}
 
 }

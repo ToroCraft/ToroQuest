@@ -29,7 +29,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.Province;
-import net.torocraft.toroquest.civilization.quests.QuestCourier;
+import net.torocraft.toroquest.civilization.quests.QuestBase;
 import net.torocraft.toroquest.entities.render.RenderFugitive;
 
 public class EntityFugitive extends EntityVillager implements IMerchant {
@@ -92,7 +92,7 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 	}
 
 	protected void setProvince(ItemStack stolenItem) {
-		Province stolenFrom = QuestCourier.chooseRandomProvince(null, world);
+		Province stolenFrom = QuestBase.chooseRandomProvince(null, world);
 		if (stolenFrom == null) {
 			return;
 		}

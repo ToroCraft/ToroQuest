@@ -1,6 +1,7 @@
 package net.torocraft.toroquest.civilization.quests;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -278,6 +279,24 @@ public abstract class QuestBase implements Quest {
 			return;
 		}
 		givenItems.addAll(getRewardItems(data));
+	}
+
+	public static Province chooseRandomProvince(Province exclude, World world) {
+
+		List<Province> provinces = getAllProvinces(world);
+		if (provinces.size() < 2) {
+			return null;
+		}
+
+		Collections.shuffle(provinces);
+
+		for (Province p : provinces) {
+			if (exclude == null || p.id != exclude.id) {
+				return p;
+			}
+		}
+
+		return null;
 	}
 
 }

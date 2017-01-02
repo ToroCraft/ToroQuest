@@ -1,7 +1,6 @@
 package net.torocraft.toroquest.civilization.quests;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,7 +9,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.quests.util.Quest;
@@ -151,23 +149,6 @@ public class QuestCourier extends QuestBase implements Quest {
 		return data;
 	}
 
-	public static Province chooseRandomProvince(Province exclude, World world) {
-
-		List<Province> provinces = getAllProvinces(world);
-		if (provinces.size() < 2) {
-			return null;
-		}
-
-		Collections.shuffle(provinces);
-
-		for (Province p : provinces) {
-			if (exclude == null || p.id != exclude.id) {
-				return p;
-			}
-		}
-
-		return null;
-	}
 
 	private void setDeliverToProvinceId(QuestData data, UUID id) {
 		data.getsData().put("deliverTo", id.toString());

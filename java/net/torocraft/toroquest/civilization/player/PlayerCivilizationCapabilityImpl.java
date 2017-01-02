@@ -212,6 +212,7 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 		possibleQuests.add(QuestKillMobs.INSTANCE);
 
 		if (getReputation(province.civilization) > 100) {
+			possibleQuests.add(QuestCourier.INSTANCE);
 			possibleQuests.add(QuestEnemyEncampment.INSTANCE);
 		}
 		if (getReputation(province.civilization) > 200) {
@@ -230,8 +231,8 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 			q = fallbackQuests.get(rand.nextInt(fallbackQuests.size())).generateQuestFor(player, province);
 		}
 
-		// FIXME remove this
-		q = QuestCourier.INSTANCE.generateQuestFor(player, province);
+		// Testing Override
+		// q = QuestCourier.INSTANCE.generateQuestFor(player, province);
 
 		nextQuests.add(q);
 		return q;

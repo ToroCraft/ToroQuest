@@ -27,7 +27,7 @@ public class VillageLordGuiContainer extends GuiContainer {
 	private static final int buttonWidth = 59;
 	private static final int buttonHeight = 19;
 	
-	private static final int MOUSE_COOLDOWN = 200;
+	private static final int MOUSE_COOLDOWN = 100;
 	private static long mousePressed = 0;
 	
 	private static int donateRepForItem = 0;
@@ -146,12 +146,6 @@ public class VillageLordGuiContainer extends GuiContainer {
 			return I18n.format(parts[0]);
 		}
 		Object[] parameters = Arrays.copyOfRange(parts, 1, parts.length);
-
-		System.out.println("Lang: ");
-		for (String p : parts) {
-			System.out.println("  " + p);
-		}
-
 		return I18n.format(parts[0], parameters);
 	}
 

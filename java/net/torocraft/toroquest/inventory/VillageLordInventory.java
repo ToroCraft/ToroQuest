@@ -11,6 +11,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData;
+import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.quests.QuestBase;
 import net.torocraft.toroquest.entities.EntityVillageLord;
 
@@ -40,7 +42,7 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 
 	@Override
 	public void setGivenItems(List<ItemStack> items) {
-		// dropItems(getGivenItems());
+		dropItems(getGivenItems());
 		items = QuestBase.removeEmptyItemStacks(items);
 		items = dropOverItems(items, 4);
 		for (int i = 0; i < 4; i++) {
@@ -63,7 +65,7 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 
 	@Override
 	public void setReturnItems(List<ItemStack> items) {
-		// dropItems(getReturnItems());
+		dropItems(getReturnItems());
 		items = QuestBase.removeEmptyItemStacks(items);
 		items = dropOverItems(items, 4);
 		for (int i = 0; i < 4; i++) {
@@ -134,5 +136,10 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 				setInventorySlotContents(slot, new ItemStack(nbttagcompound));
 			}
 		}
+	}
+
+	@Override
+	public Province getProvince() {
+		return CivilizationsWorldSaveData.get(lord.world).atLocation(lord.chunkCoordX, lord.chunkCoordZ);
 	}
 }

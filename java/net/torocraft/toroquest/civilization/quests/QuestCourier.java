@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.torocraft.toroquest.civilization.Province;
@@ -64,24 +65,27 @@ public class QuestCourier extends QuestBase implements Quest {
 			return false;
 		}
 
-		String noteAddressedTo = item.getTagCompound().getString("toProvince");
 		String noteQuestId = item.getTagCompound().getString("questId");
+		Boolean isReply = item.getTagCompound().getBoolean("reply");
 
-		if (noteAddressedTo == null || noteQuestId == null) {
+		if (noteQuestId == null) {
 			return false;
 		}
 
-		/*
-		 * must be addressed to the province that created the quest
-		 */
-		if (!noteAddressedTo.equals(data.getProvinceId().toString())) {
+		if (!isReply) {
+			data.getPlayer().sendMessage(new TextComponentString("This is not a reply note"));
 			return false;
 		}
 
 		/*
 		 * quest ID must match
 		 */
-		return noteQuestId.equals(data.getQuestId().toString());
+		if (!noteQuestId.equals(data.getQuestId().toString())) {
+			data.getPlayer().sendMessage(new TextComponentString("This reply is not for your current quest"));
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
@@ -140,7 +144,8 @@ public class QuestCourier extends QuestBase implements Quest {
 		setRewardRep(data, 5 + (getDistance(data) / 50));
 
 		List<ItemStack> rewards = new ArrayList<ItemStack>(1);
-		ItemStack emeralds = new ItemStack(Items.EMERALD, 4 + (getDistance(data) / 80));
+		ItemStack emeralds = new ItemStack(Items.EMERALD, 4 + (getDistance(data) / 200));
+		rewards.add(emeralds);
 		setRewardItems(data, rewards);
 
 		return data;

@@ -1,16 +1,13 @@
 package net.torocraft.toroquest.civilization.player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -30,13 +27,10 @@ public abstract class PlayerCivilization {
 	protected Integer completedQuests = 0;
 	protected Province inCiv;
 
-	protected Map<UUID, List<ItemStack>> villageLordInventories;
-
 	public abstract EntityPlayer getPlayer();
 
 	public NBTTagCompound writeNBT() {
 		NBTTagCompound c = new NBTTagCompound();
-		c.setTag("villageLordInventories", buildVillageLordInvetory());
 		c.setTag("reputations", buildNBTReputationList());
 		c.setTag("quests", buildQuestCompound(quests));
 		c.setTag("nextQuests", buildQuestCompound(nextQuests));
@@ -49,41 +43,6 @@ public abstract class PlayerCivilization {
 			c.removeTag("inCiv");
 		}
 		return c;
-	}
-
-	// TODO not tested
-	private NBTTagCompound buildVillageLordInvetory() {
-		NBTTagCompound c = new NBTTagCompound();
-		for (Entry<UUID, List<ItemStack>> e : villageLordInventories.entrySet()) {
-			NBTTagList list = new NBTTagList();
-			for (ItemStack item : e.getValue()) {
-				NBTTagCompound itemCompound = new NBTTagCompound();
-				item.writeToNBT(itemCompound);
-				list.appendTag(itemCompound);
-			}
-			c.setTag(e.getKey().toString(), list);
-		}
-		System.out.println("writing inventory: " + c);
-		return c;
-	}
-
-	// TODO not tested
-	private Map<UUID, List<ItemStack>> readVillageLordInvetory(NBTTagCompound c) {
-		System.out.println("Reading inventory: " + c);
-		Map<UUID, List<ItemStack>> m = new HashMap<UUID, List<ItemStack>>();
-		for (String sProvinceUuid : c.getKeySet()) {
-			try {
-				List<ItemStack> items = new ArrayList<ItemStack>();
-				NBTTagList list = (NBTTagList) c.getTag(sProvinceUuid);
-				for (int i = 0; i < list.tagCount(); i++) {
-					items.add(new ItemStack(list.getCompoundTagAt(i)));
-				}
-				m.put(UUID.fromString(sProvinceUuid), items);
-			} catch (Exception ignore) {
-				ignore.printStackTrace();
-			}
-		}
-		return m;
 	}
 
 	protected NBTTagList buildNBTReputationList() {
@@ -115,7 +74,6 @@ public abstract class PlayerCivilization {
 		NBTTagCompound c = new NBTTagCompound();
 		for (Entry<UUID, Integer> e : completedQuestsByProvince.entrySet()) {
 			if (e.getKey() != null && e.getValue() != null) {
-				System.out.println("Saving province quest count: " + e.getKey() + "=" + e.getValue());
 				c.setInteger(e.getKey().toString(), e.getValue());
 			}
 		}
@@ -145,7 +103,6 @@ public abstract class PlayerCivilization {
 		}
 
 		NBTTagCompound b = (NBTTagCompound) nbt;
-		villageLordInventories = readVillageLordInvetory(b.getCompoundTag("villageLordInventories"));
 		reputations = readNBTReputationList(b.getTag("reputations"));
 		quests = readQuests(b.getTag("quests"));
 		nextQuests = readQuests(b.getTag("nextQuests"));
@@ -196,9 +153,7 @@ public abstract class PlayerCivilization {
 		for (String provinceId : tag.getKeySet()) {
 			try {
 				m.put(UUID.fromString(provinceId), tag.getInteger(provinceId));
-				System.out.println("Load province quest count: " + provinceId + "=" + tag.getInteger(provinceId));
 			} catch (Exception e) {
-				System.out.println("Failed to read quest count for province: " + e.getMessage());
 			}
 		}
 		return m;

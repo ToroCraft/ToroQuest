@@ -60,7 +60,6 @@ public class MessageSetPlayerReputation implements IMessage {
 	}
 
 	public static class Handler implements IMessageHandler<MessageSetPlayerReputation, IMessage> {
-
 		@Override
 		public IMessage onMessage(final MessageSetPlayerReputation message, MessageContext ctx) {
 			if (ctx.side != Side.CLIENT) {
@@ -76,7 +75,6 @@ public class MessageSetPlayerReputation implements IMessage {
 
 			return null;
 		}
-
 	}
 
 	private static String s(CivilizationType civ) {

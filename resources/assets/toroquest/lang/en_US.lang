@@ -90,7 +90,7 @@ quest.gui.button.reject=Abandon
 
 quests.no_items=no items
 quests.courier.title=§lCourier§r
-quests.courier.description=Deliver a note to %s and return the reply\n§5Location§8§0 %s\n§5Distance§8§0 %s meters\n§5Reward§8§0 %s\n§5Recieve§8§0 %s reputation§r
+quests.courier.description=Deliver a note to %s and return the reply\nLocation %s\nDistance %s meters\nReward %s\nRecieve %s reputation
 quests.enemey_encampment.title=§lClear Encampment§r
 quests.enemey_encampment.description=Clear %s encampment\n%s\nReward %s\nRecieve %s reputation
 quests.enemey_encampment.wasnt_you=You didn't personally kill any from the encampment!

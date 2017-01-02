@@ -88,7 +88,7 @@ public class MessageQuestUpdate implements IMessage {
 		private void processDonate(EntityPlayer player, Province province, IVillageLordInventory inventory) {
 			ItemStack donation = inventory.getDonationItem();
 
-			if (MessageSetItemReputationAmount.isNoteForLord(donation)) {
+			if (MessageSetItemReputationAmount.isNoteForLord(province, donation)) {
 				writeReplyNote(inventory, donation);
 				return;
 			}
@@ -118,7 +118,6 @@ public class MessageQuestUpdate implements IMessage {
 		}
 
 		protected void processAccept(EntityPlayer player, Province province, IVillageLordInventory inventory) {
-			System.out.println("processing accept");
 
 			List<ItemStack> inputItems = inventory.getGivenItems();
 			List<ItemStack> outputItems = PlayerCivilizationCapabilityImpl.get(player).acceptQuest(inputItems);
@@ -128,7 +127,6 @@ public class MessageQuestUpdate implements IMessage {
 				return;
 			}
 
-			// TODO drop items already in the output slots
 			inventory.setReturnItems(outputItems);
 
 			QuestData currentQuest = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
@@ -136,7 +134,6 @@ public class MessageQuestUpdate implements IMessage {
 		}
 
 		protected void processReject(EntityPlayer player, Province province, IVillageLordInventory inventory) {
-			System.out.println("processing reject");
 
 			List<ItemStack> inputItems = inventory.getGivenItems();
 			List<ItemStack> outputItems = PlayerCivilizationCapabilityImpl.get(player).rejectQuest(inputItems);
@@ -146,7 +143,6 @@ public class MessageQuestUpdate implements IMessage {
 				return;
 			}
 
-			// TODO drop items already in the output slots
 			inventory.setReturnItems(outputItems);
 
 			QuestData nextQuest = PlayerCivilizationCapabilityImpl.get(player).getNextQuestFor(province);
@@ -154,7 +150,6 @@ public class MessageQuestUpdate implements IMessage {
 		}
 
 		protected void processComplete(EntityPlayer player, Province province, IVillageLordInventory inventory) {
-			System.out.println("processing complete");
 
 			List<ItemStack> inputItems = inventory.getGivenItems();
 			List<ItemStack> outputItems = PlayerCivilizationCapabilityImpl.get(player).completeQuest(inputItems);
@@ -164,7 +159,6 @@ public class MessageQuestUpdate implements IMessage {
 				return;
 			}
 
-			// TODO drop items already in the output slots
 			inventory.setReturnItems(outputItems);
 
 			QuestData nextQuest = PlayerCivilizationCapabilityImpl.get(player).getNextQuestFor(province);

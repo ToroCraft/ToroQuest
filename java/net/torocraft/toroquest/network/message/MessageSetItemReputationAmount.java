@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
+import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.gui.VillageLordGuiContainer;
 import net.torocraft.toroquest.inventory.IVillageLordInventory;
 
@@ -33,7 +34,7 @@ public class MessageSetItemReputationAmount implements IMessage {
 			return;
 		}
 
-		if (isNoteForLord(item)) {
+		if (isNoteForLord(inventory.getProvince(), item)) {
 			reputation = 0;
 			messageCode = MessageCode.NOTE;
 			return;
@@ -43,22 +44,26 @@ public class MessageSetItemReputationAmount implements IMessage {
 		messageCode = MessageCode.DONATION;
 	}
 
-	public static boolean isNoteForLord(ItemStack stack) {
+	public static boolean isNoteForLord(Province inProvince, ItemStack stack) {
 
 		if (stack.getItem() != Items.PAPER || !stack.hasTagCompound()) {
 			return false;
 		}
 
-		String sToProvinceId = stack.getTagCompound().getString("toProvince");
-		String sQuestId = stack.getTagCompound().getString("questId");
-
-		if (isEmpty(sToProvinceId) || isEmpty(sQuestId)) {
+		if (inProvince == null) {
 			return false;
 		}
 
-		return true;
-	}
+		String sToProvinceId = stack.getTagCompound().getString("toProvince");
+		String sQuestId = stack.getTagCompound().getString("questId");
+		Boolean isReply = stack.getTagCompound().getBoolean("reply");
 
+		if (isEmpty(sToProvinceId) || isEmpty(sQuestId) || isReply) {
+			return false;
+		}
+
+		return inProvince.id.toString().equals(sToProvinceId);
+	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
@@ -79,7 +84,7 @@ public class MessageSetItemReputationAmount implements IMessage {
 		buf.writeInt(reputation);
 		buf.writeInt(messageCode.ordinal());
 	}
-	
+
 	public static class Worker {
 		public void work(MessageSetItemReputationAmount message) {
 			Minecraft minecraft = Minecraft.getMinecraft();
@@ -88,7 +93,7 @@ public class MessageSetItemReputationAmount implements IMessage {
 			if (player == null) {
 				return;
 			}
-			
+
 			VillageLordGuiContainer.setDonateInfo(message);
 		}
 	}
@@ -109,7 +114,7 @@ public class MessageSetItemReputationAmount implements IMessage {
 			});
 
 			return null;
-		}	
+		}
 	}
 
 	public static boolean isSet(String s) {

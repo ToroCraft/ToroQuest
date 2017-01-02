@@ -148,7 +148,6 @@ public class VillageLordContainer extends Container {
 	}
 
 	private void donationItemUpdated(ItemStack stack) {
-		System.out.println("donationItemUpdated() " + stack.toString());
 		updateDonationInfo();
 	}
 

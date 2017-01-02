@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.torocraft.toroquest.civilization.Province;
 
 public interface IVillageLordInventory extends IInventory {
 	
@@ -18,5 +19,7 @@ public interface IVillageLordInventory extends IInventory {
 	ItemStack getDonationItem();
 
 	void setDonationItem(ItemStack item);
+
+	Province getProvince();
 
 }

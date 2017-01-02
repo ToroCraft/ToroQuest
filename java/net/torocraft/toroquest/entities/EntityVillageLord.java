@@ -213,8 +213,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 
 	@Override
 	public void onInventoryChanged(IInventory invBasic) {
-		// TODO Auto-generated method stub
-		// System.out.println("onInventoryChanged");
+
 	}
 
 	public void onDeath(DamageSource cause) {
@@ -244,7 +243,6 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 
 	public void writeEntityToNBT(NBTTagCompound compound) {
 		super.writeEntityToNBT(compound);
-		System.out.println("*** write from NBT");
 
 		NBTTagCompound c = new NBTTagCompound();
 		for (Entry<UUID, VillageLordInventory> e : inventories.entrySet()) {
@@ -255,8 +253,6 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 
 	public void readEntityFromNBT(NBTTagCompound compound) {
 		super.readEntityFromNBT(compound);
-
-		System.out.println("*** read from NBT");
 
 		NBTTagCompound c = compound.getCompoundTag("Items");
 		// TODO this seem very inefficient

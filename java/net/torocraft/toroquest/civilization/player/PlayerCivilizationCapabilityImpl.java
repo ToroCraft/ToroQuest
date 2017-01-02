@@ -22,6 +22,7 @@ import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.ReputationLevel;
+import net.torocraft.toroquest.civilization.quests.QuestCourier;
 import net.torocraft.toroquest.civilization.quests.QuestEnemyEncampment;
 import net.torocraft.toroquest.civilization.quests.QuestFarm;
 import net.torocraft.toroquest.civilization.quests.QuestGather;
@@ -233,7 +234,7 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 		}
 
 		// FIXME remove this
-		// q = QuestMine.INSTANCE.generateQuestFor(player, province);
+		q = QuestCourier.INSTANCE.generateQuestFor(player, province);
 
 		nextQuests.add(q);
 		return q;

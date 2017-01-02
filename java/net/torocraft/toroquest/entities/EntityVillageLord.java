@@ -67,8 +67,6 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 
 	protected Map<UUID, VillageLordInventory> inventories = new HashMap<UUID, VillageLordInventory>();
 
-	// protected VillageLordInventory inventory;
-
 	public EntityVillageLord(World world) {
 		super(world, null);
 		initInventories();

@@ -40,6 +40,7 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 
 	@Override
 	public void setGivenItems(List<ItemStack> items) {
+		dropItems(getGivenItems());
 		items = QuestBase.removeEmptyItemStacks(items);
 		items = dropOverItems(items, 4);
 		for (int i = 0; i < 4; i++) {
@@ -62,6 +63,7 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 
 	@Override
 	public void setReturnItems(List<ItemStack> items) {
+		dropItems(getReturnItems());
 		items = QuestBase.removeEmptyItemStacks(items);
 		items = dropOverItems(items, 4);
 		for (int i = 0; i < 4; i++) {

@@ -50,7 +50,6 @@ import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityI
 import net.torocraft.toroquest.entities.EntityFugitive;
 import net.torocraft.toroquest.entities.EntitySentry;
 import net.torocraft.toroquest.entities.EntityToroNpc;
-import net.torocraft.toroquest.entities.EntityVampireBat;
 import net.torocraft.toroquest.entities.EntityVillageLord;
 import net.torocraft.toroquest.util.TaskRunner;
 
@@ -419,6 +418,42 @@ public class CivilizationHandlers {
 		}
 
 		spawnSentry(player.getPosition(), world);
+		spawnFugitive(player.getPosition(), world);
+	}
+
+	private void spawnFugitive(BlockPos position, World world) {
+		BlockPos randomNearbySpot = position.add(randomSpawnDistance(world.rand), 0, randomSpawnDistance(world.rand));
+
+		if (world.rand.nextInt(50) != 0) {
+			// return;
+		}
+
+		Province province = CivilizationUtil.getProvinceAt(world, randomNearbySpot.getX() / 16, randomNearbySpot.getZ() / 16);
+
+		if (province == null) {
+			return;
+		}
+
+		BlockPos spawnPos = findSpawnLocationFrom(world, randomNearbySpot);
+
+		if (spawnPos == null) {
+			return;
+		}
+
+		int localFugitiveCount = world.getEntitiesWithinAABB(EntityFugitive.class, new AxisAlignedBB(spawnPos).expand(50, 40, 50)).size();
+
+		if (localFugitiveCount > 1) {
+			return;
+		}
+
+		int count = world.rand.nextInt(3) + 1;
+
+		EntityFugitive e = new EntityFugitive(world);
+		e.setPosition(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5);
+		e.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(e)), (IEntityLivingData) null);
+		world.spawnEntity(e);
+
+		System.out.println("spawning fugutive");
 	}
 
 	protected void spawnSentry(BlockPos position, World world) {
@@ -437,7 +472,7 @@ public class CivilizationHandlers {
 		}
 
 		int localMobCount = world.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(spawnPos).expand(50, 16, 50)).size();
-		int localSentryCount = world.getEntitiesWithinAABB(EntityVampireBat.class, new AxisAlignedBB(spawnPos).expand(50, 40, 50)).size();
+		int localSentryCount = world.getEntitiesWithinAABB(EntitySentry.class, new AxisAlignedBB(spawnPos).expand(50, 40, 50)).size();
 
 		if (localSentryCount > 5 + (localMobCount / 10)) {
 			return;

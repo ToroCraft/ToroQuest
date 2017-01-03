@@ -15,8 +15,6 @@ import net.torocraft.toroquest.civilization.quests.util.Quest;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.civilization.quests.util.Quests;
 
-//TODO logic to listen to the village lord GUI and transform notes to replies
-
 public class QuestCourier extends QuestBase implements Quest {
 	public static QuestCourier INSTANCE;
 

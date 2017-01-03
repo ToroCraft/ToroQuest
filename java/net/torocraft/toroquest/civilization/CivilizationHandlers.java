@@ -63,12 +63,16 @@ public class CivilizationHandlers {
 
 	@SubscribeEvent
 	public void handleEnterProvince(CivilizationEvent.Enter event) {
-		event.getEntityPlayer().sendMessage(enteringMessage(event.getEntityPlayer(), event.province));
+		// TODO translations must be done on client
+		// event.getEntityPlayer().sendMessage(enteringMessage(event.getEntityPlayer(),
+		// event.province));
 	}
 
 	@SubscribeEvent
 	public void handleLeaveProvince(CivilizationEvent.Leave event) {
-		event.getEntityPlayer().sendMessage(leavingMessage(event.getEntityPlayer(), event.province));
+		// TODO translations must be done on client
+		// event.getEntityPlayer().sendMessage(leavingMessage(event.getEntityPlayer(),
+		// event.province));
 	}
 
 	@SubscribeEvent

@@ -18,7 +18,6 @@ import net.torocraft.toroquest.generation.village.VillageHandlerBarracks;
 import net.torocraft.toroquest.generation.village.VillageHandlerGuardTower;
 import net.torocraft.toroquest.generation.village.VillageHandlerKeep;
 import net.torocraft.toroquest.generation.village.VillageHandlerShop;
-import net.torocraft.toroquest.generation.village.VillageHandlerTrophy;
 import net.torocraft.toroquest.gui.VillageLordGuiHandler;
 import net.torocraft.toroquest.item.ToroQuestItems;
 import net.torocraft.toroquest.material.ToolMaterials;
@@ -31,7 +30,7 @@ public class CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new EventHandlers());
 		MinecraftForge.EVENT_BUS.register(new CivilizationHandlers());
 		VillageHandlerKeep.init();
-		VillageHandlerTrophy.init();
+		// VillageHandlerTrophy.init();
 		VillageHandlerShop.init();
 		VillageHandlerGuardTower.init();
 		VillageHandlerBarracks.init();

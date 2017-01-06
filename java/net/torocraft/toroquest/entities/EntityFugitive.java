@@ -76,7 +76,7 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 	}
 
 	private void dropLoot() {
-		if (rand.nextInt(6) == 0) {
+		if (rand.nextInt(4) == 0) {
 			dropItem(randomStolenItem());
 		}
 	}

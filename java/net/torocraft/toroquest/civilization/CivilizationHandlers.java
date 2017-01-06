@@ -428,7 +428,7 @@ public class CivilizationHandlers {
 	private void spawnFugitive(BlockPos position, World world) {
 		BlockPos randomNearbySpot = position.add(randomSpawnDistance(world.rand), 0, randomSpawnDistance(world.rand));
 
-		if (world.rand.nextInt(50) != 0) {
+		if (world.rand.nextInt(100) != 0) {
 			return;
 		}
 

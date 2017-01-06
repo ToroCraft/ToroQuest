@@ -74,9 +74,8 @@ public class Province {
 	}
 
 	public NBTTagCompound writeNBT() {
-		System.out.println("saving ID " + id.toString());
 		NBTTagCompound c = new NBTTagCompound();
-		c.setString("id", id.toString());
+		c.setString("id", s(id));
 		c.setString("civilization", s(civilization));
 		c.setInteger("chunkX", chunkX);
 		c.setInteger("chunkZ", chunkZ);
@@ -89,6 +88,14 @@ public class Province {
 			c.setString("name", name);
 		}
 		return c;
+	}
+
+	private String s(UUID s) {
+		try {
+			return s.toString();
+		} catch (Exception e) {
+			return "";
+		}
 	}
 
 	@Override

@@ -246,7 +246,7 @@ public class CivilizationHandlers {
 		}
 
 		if (victim instanceof EntityFugitive) {
-			return 20;
+			return 5;
 		}
 
 		if (victim instanceof EntityVillager) {
@@ -428,7 +428,7 @@ public class CivilizationHandlers {
 	private void spawnFugitive(BlockPos position, World world) {
 		BlockPos randomNearbySpot = position.add(randomSpawnDistance(world.rand), 0, randomSpawnDistance(world.rand));
 
-		if (world.rand.nextInt(100) != 0) {
+		if (world.rand.nextInt(200) != 0) {
 			return;
 		}
 

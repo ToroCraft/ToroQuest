@@ -41,8 +41,10 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.civilization.CivilizationDataAccessor;
 import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
+import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.render.RenderVillageLord;
@@ -69,12 +71,19 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		});
 	}
 
+	@Override
+	public void onLivingUpdate() {
+		super.onLivingUpdate();
+		if (world.getTotalWorldTime() % 1000 == 0 && !isDead) {
+			setHasLord(true);
+		}
+	}
+
 	protected Map<UUID, VillageLordInventory> inventories = new HashMap<UUID, VillageLordInventory>();
 
 	public EntityVillageLord(World world) {
 		super(world, null);
 		initInventories();
-		updateProvince();
 	}
 
 	protected int getInventorySize() {
@@ -121,7 +130,6 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 			return;
 		}
 		IVillageLordInventory inventory = getInventory(player.getUniqueID());
-		// inventory.setCustomName(getName());
 		player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), world, getPosition().getX(), getPosition().getY(), getPosition().getZ());
 	}
 
@@ -142,6 +150,9 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		tasks.addTask(1, new EntityAIPanic(this, 1.0D));
 		tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		tasks.addTask(8, new EntityAILookIdle(this));
+		if (!isDead) {
+			setHasLord(true);
+		}
 	}
 
 	@Nullable
@@ -149,6 +160,9 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		livingdata = super.onInitialSpawn(difficulty, livingdata);
 		setCanPickUpLoot(false);
 		addArmor();
+		if (!isDead) {
+			setHasLord(true);
+		}
 		return livingdata;
 	}
 
@@ -222,6 +236,8 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 	public void onDeath(DamageSource cause) {
 		super.onDeath(cause);
 
+		// TODO set no lord
+
 		if (world.isRemote || inventories == null) {
 			return;
 		}
@@ -231,7 +247,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		}
 
 		achievement(cause);
-
+		setHasLord(false);
 	}
 
 	protected void achievement(DamageSource cause) {
@@ -268,9 +284,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 
 	public void readEntityFromNBT(NBTTagCompound compound) {
 		super.readEntityFromNBT(compound);
-
 		NBTTagCompound c = compound.getCompoundTag("Items");
-		// TODO this seem very inefficient
 		inventories = new HashMap<UUID, VillageLordInventory>();
 		for (String sPlayerId : c.getKeySet()) {
 			VillageLordInventory inv = new VillageLordInventory(this, "VillageLordInventory", getInventorySize());
@@ -284,7 +298,20 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		fixer.registerWalker(FixTypes.ENTITY, new ItemStackDataLists(EntityVillageLord.class, new String[] { "Items" }));
 	}
 
-	private void updateProvince() {
+	private void setHasLord(boolean hasLord) {
 		Province province = CivilizationUtil.getProvinceAt(world, chunkCoordX, chunkCoordY);
+		if (province == null) {
+			return;
+		}
+		CivilizationDataAccessor worldData = CivilizationsWorldSaveData.get(world);
+		if (worldData.provinceHasLord(province.id) == hasLord) {
+			return;
+		}
+
+		if (isDead && hasLord) {
+			hasLord = false;
+		}
+
+		worldData.setProvinceHasLord(province.id, hasLord);
 	}
 }

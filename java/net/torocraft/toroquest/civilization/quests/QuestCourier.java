@@ -126,7 +126,7 @@ public class QuestCourier extends QuestBase implements Quest {
 
 	@Override
 	public QuestData generateQuestFor(EntityPlayer player, Province questProvince) {
-		Province deliverToProvince = chooseRandomProvince(questProvince, player.world);
+		Province deliverToProvince = chooseRandomProvince(questProvince, player.world, true);
 		if (deliverToProvince == null) {
 			return null;
 		}

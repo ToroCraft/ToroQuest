@@ -295,7 +295,7 @@ public abstract class QuestBase implements Quest {
 		givenItems.addAll(getRewardItems(data));
 	}
 
-	public static Province chooseRandomProvince(Province exclude, World world) {
+	public static Province chooseRandomProvince(Province exclude, World world, boolean mustHaveLord) {
 
 		List<Province> provinces = getAllProvinces(world);
 		if (provinces.size() < 2) {
@@ -305,9 +305,15 @@ public abstract class QuestBase implements Quest {
 		Collections.shuffle(provinces);
 
 		for (Province p : provinces) {
-			if (exclude == null || p.id != exclude.id) {
-				return p;
+			if (exclude != null && p.id == exclude.id) {
+				continue;
 			}
+
+			if (mustHaveLord && !p.hasLord) {
+				continue;
+			}
+
+			return p;
 		}
 
 		return null;

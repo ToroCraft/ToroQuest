@@ -140,6 +140,28 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 		return province;
 	}
 
+	@Override
+	public void setProvinceHasLord(UUID provinceId, boolean hasLord) {
+		for (Province p : provinces) {
+			if (provinceId.equals(p.id)) {
+				System.out.println("Setting Province " + p.name + " Village Lord Status: " + hasLord);
+				p.hasLord = hasLord;
+				markDirty();
+				return;
+			}
+		}
+	}
+
+	@Override
+	public boolean provinceHasLord(UUID provinceId) {
+		for (Province p : provinces) {
+			if (provinceId.equals(p.id)) {
+				return p.hasLord;
+			}
+		}
+		return false;
+	}
+
 	protected Province buildNewProvince(int chunkX, int chunkZ) {
 		Province province;
 		province = new Province();

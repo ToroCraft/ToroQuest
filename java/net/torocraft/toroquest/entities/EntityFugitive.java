@@ -109,7 +109,7 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 	}
 
 	protected void setProvince(ItemStack stolenItem) {
-		Province stolenFrom = QuestBase.chooseRandomProvince(null, world);
+		Province stolenFrom = QuestBase.chooseRandomProvince(null, world, true);
 		if (stolenFrom == null) {
 			return;
 		}

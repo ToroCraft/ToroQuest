@@ -232,12 +232,11 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 
 		if (getReputation(province.civilization) > 100) {
 			possibleQuests.add(QuestCourier.INSTANCE);
-			possibleQuests.add(QuestEnemyEncampment.INSTANCE);
 		}
 		if (getReputation(province.civilization) > 200) {
 			possibleQuests.add(QuestEnemyEncampment.INSTANCE);
 		}
-		if (getReputation(province.civilization) > 300) {
+		if (getReputation(province.civilization) > 500) {
 			possibleQuests.add(QuestEnemyEncampment.INSTANCE);
 		}
 

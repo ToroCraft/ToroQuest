@@ -56,9 +56,7 @@ public class QuestBountyHunter extends QuestBase {
 		if (data == null) {
 			return "";
 		}
-
 		Province deliverToProvince = getLocation(data);
-
 		StringBuilder s = new StringBuilder();
 		s.append("quests.bounty_hunter.description");
 		s.append("|").append(deliverToProvince.name);
@@ -71,7 +69,7 @@ public class QuestBountyHunter extends QuestBase {
 
 	@Override
 	public QuestData generateQuestFor(EntityPlayer player, Province province) {
-		Province locationProvince = chooseRandomProvince(province, player.world);
+		Province locationProvince = chooseRandomProvince(province, player.world, true);
 		if (locationProvince == null) {
 			return null;
 		}

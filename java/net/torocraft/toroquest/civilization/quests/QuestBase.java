@@ -44,17 +44,25 @@ public abstract class QuestBase implements Quest {
 		return s.toString();
 	}
 
-	// FIXME needs to be worked into the lang file
 	protected static String listItems(List<ItemStack> rewardItems) {
 		if (rewardItems == null || rewardItems.isEmpty()) {
-			return "no_items";
+			return "";
 		}
 		StringBuilder sb = new StringBuilder();
 
-		for (ItemStack item : rewardItems) {
-			sb.append(item.getCount()).append(" ").append(item.getDisplayName());
-		}
+		sb.append("L:");
 
+		boolean first = true;
+		for (ItemStack item : rewardItems) {
+			if (first) {
+				first = false;
+			} else {
+				sb.append(";");
+			}
+			sb.append(item.getItem().getUnlocalizedName());
+			sb.append(",");
+			sb.append(item.getCount());
+		}
 		return sb.toString();
 	}
 
@@ -200,15 +208,21 @@ public abstract class QuestBase implements Quest {
 	}
 
 	protected static String getDirections(BlockPos from, BlockPos to) {
-		// TODO Auto-generated method stub
-		// convert BlockPos into relative directions
-		// return "60 meters north";
-
-		if (to == null) {
+		if (from == null || to == null) {
 			return "";
-		} else {
-			return to.toString();
 		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("D:");
+
+		long distance = Math.round(from.getDistance(to.getX(), to.getY(), to.getZ()));
+		int x = to.getX();
+		int z = to.getY();
+
+		sb.append(distance);
+		sb.append(";").append(x);
+		sb.append(";").append(z);
+		return sb.toString();
 	}
 
 	/**

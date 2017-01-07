@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 import net.torocraft.toroquest.civilization.Province;
@@ -111,12 +112,13 @@ public class QuestCourier extends QuestBase implements Quest {
 			return "";
 		}
 		Province deliverToProvince = getDeliverToProvince(data);
+		BlockPos from = data.getPlayer().getPosition();
+		BlockPos to = new BlockPos(deliverToProvince.chunkX * 16, from.getY(), deliverToProvince.chunkZ * 16);
 
 		StringBuilder s = new StringBuilder();
 		s.append("quests.courier.description");
 		s.append("|").append(deliverToProvince.name);
-		s.append("|").append("[" + deliverToProvince.chunkX * 16 + ", " + deliverToProvince.chunkZ * 16 + "]");
-		s.append("|").append(getDistance(data));
+		s.append("|").append(getDirections(from, to));
 		s.append("|").append(listItems(getRewardItems(data)));
 		s.append("|").append(getRewardRep(data));
 		return s.toString();

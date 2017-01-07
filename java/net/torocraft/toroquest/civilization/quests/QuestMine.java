@@ -230,17 +230,6 @@ public class QuestMine extends QuestBase {
 		s.append("|").append(BLOCK_TYPES[getBlockType(data)].getLocalizedName());
 		s.append("|").append(listItems(getRewardItems(data)));
 		s.append("|").append(getRewardRep(data));
-
-		/*
-		 * TODO implement different messages based on depth
-		 * 
-		 * if (getMaxDepth(data) > 0 && getMinDepth(data) > 0) {
-		 * s.append("- Between level " + getMinDepth(data) + " and " +
-		 * getMaxDepth(data)).append("\n"); } else if (getMaxDepth(data) > 0) {
-		 * s.append("- Below level " + getMaxDepth(data)).append("\n"); } else
-		 * if (getMinDepth(data) > 0) {
-		 * s.append("- Above level ").append(getMinDepth(data)).append("\n"); }
-		 */
 		return s.toString();
 	}
 

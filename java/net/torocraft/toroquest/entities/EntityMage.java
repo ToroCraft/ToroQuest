@@ -43,6 +43,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionType;
 import net.minecraft.potion.PotionUtils;
+import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumParticleTypes;
@@ -63,6 +64,8 @@ import net.torocraft.toroquest.ToroQuest;
  */
 
 public class EntityMage extends EntityMob implements IRangedAttackMob {
+
+	public static Achievement MAGE_ACHIEVEMNT = new Achievement("mage", "mage", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
 
 	private static final UUID MODIFIER_UUID = UUID.fromString("5CD17E52-A79A-43D3-A529-90FDE04B181E");
 	private static final AttributeModifier MODIFIER = (new AttributeModifier(MODIFIER_UUID, "Drinking speed penalty", -0.25D, 0)).setSaved(false);
@@ -95,6 +98,17 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 		super.onDeath(cause);
 		if (!world.isRemote) {
 			dropLoot();
+			achievement(cause);
+		}
+	}
+
+	protected void achievement(DamageSource cause) {
+		if (world.isRemote) {
+			return;
+		}
+		Entity entity = cause.getEntity();
+		if (entity != null && entity instanceof EntityPlayer) {
+			((EntityPlayer) entity).addStat(MAGE_ACHIEVEMNT);
 		}
 	}
 

@@ -7,6 +7,7 @@ import com.google.common.base.Predicate;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.item.EntityItem;
@@ -17,6 +18,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -35,6 +37,8 @@ import net.torocraft.toroquest.entities.render.RenderFugitive;
 public class EntityFugitive extends EntityVillager implements IMerchant {
 
 	public static String NAME = "fugitive";
+
+	public static Achievement BOUNTY_HUNTER_ACHIEVEMNT = new Achievement("bounty_hunter", "bounty_hunter", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
 
 	public static void init(int entityId) {
 		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityFugitive.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0x000000, 0xe0d6b9);
@@ -70,8 +74,21 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 	@Override
 	public void onDeath(DamageSource cause) {
 		super.onDeath(cause);
+
+		achievement(cause);
+
 		if (!world.isRemote) {
 			dropLoot();
+		}
+	}
+
+	protected void achievement(DamageSource cause) {
+		if (world.isRemote) {
+			return;
+		}
+		Entity entity = cause.getEntity();
+		if (entity != null && entity instanceof EntityPlayer) {
+			((EntityPlayer) entity).addStat(BOUNTY_HUNTER_ACHIEVEMNT);
 		}
 	}
 

@@ -6,6 +6,7 @@ import com.google.common.base.Predicate;
 
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -31,6 +32,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.CivilizationType;
+import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.entities.ai.EntityAINearestAttackableCivTarget;
 import net.torocraft.toroquest.entities.render.RenderSentry;
 
@@ -100,6 +102,30 @@ public class EntitySentry extends EntityToroNpc {
 			setAttackTarget((EntityLivingBase) source.getEntity());
 		}
 		return true;
+	}
+
+	public boolean attackEntityAsMob(Entity victum) {
+		super.attackEntityAsMob(victum);
+		removeTargetIfNotFoe(victum);
+		return true;
+	}
+
+	private void removeTargetIfNotFoe(Entity victum) {
+		if (victum instanceof EntityPlayer) {
+			if (!isFoe((EntityPlayer) victum)) {
+				setAttackTarget(null);
+			}
+		}
+	}
+
+	protected boolean isFoe(EntityPlayer target) {
+		EntityToroNpc npc = (EntityToroNpc) this;
+		CivilizationType civ = npc.getCivilization();
+		if (civ == null) {
+			return false;
+		}
+		int rep = PlayerCivilizationCapabilityImpl.get(target).getReputation(civ);
+		return rep < -10;
 	}
 
 	@Nullable

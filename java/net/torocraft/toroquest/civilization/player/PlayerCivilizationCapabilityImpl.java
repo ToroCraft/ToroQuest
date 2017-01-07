@@ -9,7 +9,9 @@ import java.util.concurrent.Callable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.Achievement;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -37,6 +39,12 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 	@CapabilityInject(PlayerCivilizationCapability.class)
 	public static Capability<PlayerCivilizationCapability> INSTANCE = null;
 
+	public static Achievement FRIEND_ACHIEVEMNT = new Achievement("civilization_friend", "civilization_friend", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
+	public static Achievement ALLY_ACHIEVEMNT = new Achievement("civilization_ally", "civilization_ally", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
+	public static Achievement HERO_ACHIEVEMNT = new Achievement("civilization_hero", "civilization_hero", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
+
+	public static Achievement FIRST_QUEST_ACHIEVEMNT = new Achievement("first_quest", "first_quest", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
+
 	private final EntityPlayer player;
 
 	public PlayerCivilizationCapabilityImpl(EntityPlayer player) {
@@ -52,6 +60,17 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 		if (!player.getEntityWorld().isRemote) {
 			ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetPlayerReputation(civ, amount), (EntityPlayerMP) player);
 			MinecraftForge.EVENT_BUS.post(new CivilizationEvent.ReputationChange(player, civ, amount));
+
+			ReputationLevel level = ReputationLevel.fromReputation(amount);
+
+			if (ReputationLevel.FRIEND.equals(level)) {
+				player.addStat(FRIEND_ACHIEVEMNT);
+			} else if (ReputationLevel.ALLY.equals(level)) {
+				player.addStat(ALLY_ACHIEVEMNT);
+			} else if (ReputationLevel.HERO.equals(level)) {
+				player.addStat(HERO_ACHIEVEMNT);
+			}
+
 		}
 	}
 
@@ -316,6 +335,8 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 			completedQuestsByProvince.put(province.id, 0);
 		}
 		completedQuestsByProvince.put(province.id, completedQuestsByProvince.get(province.id) + 1);
+
+		player.addStat(FIRST_QUEST_ACHIEVEMNT);
 
 		return reward;
 	}

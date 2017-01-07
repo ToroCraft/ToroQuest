@@ -21,11 +21,13 @@ import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.IInventoryChangedListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -52,6 +54,7 @@ import net.torocraft.toroquest.item.armor.ItemRoyalArmor;
 public class EntityVillageLord extends EntityToroNpc implements IInventoryChangedListener {
 
 	public static String NAME = "village_lord";
+	public static Achievement LORD_ACHIEVEMNT = new Achievement("village_lord", "village_lord", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
 
 	public static void init(int entityId) {
 		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityVillageLord.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0xeca58c, 0xba12c8);
@@ -227,6 +230,18 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 			dropInventory(inventory);
 		}
 
+		achievement(cause);
+
+	}
+
+	protected void achievement(DamageSource cause) {
+		if (world.isRemote) {
+			return;
+		}
+		Entity entity = cause.getEntity();
+		if (entity != null && entity instanceof EntityPlayer) {
+			((EntityPlayer) entity).addStat(LORD_ACHIEVEMNT);
+		}
 	}
 
 	protected void dropInventory(IVillageLordInventory inventory) {
@@ -268,7 +283,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		EntityLiving.registerFixesMob(fixer, EntityVillageLord.class);
 		fixer.registerWalker(FixTypes.ENTITY, new ItemStackDataLists(EntityVillageLord.class, new String[] { "Items" }));
 	}
-	
+
 	private void updateProvince() {
 		Province province = CivilizationUtil.getProvinceAt(world, chunkCoordX, chunkCoordY);
 	}

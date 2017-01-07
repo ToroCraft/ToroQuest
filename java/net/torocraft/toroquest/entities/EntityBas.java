@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -22,6 +23,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.ResourceLocation;
@@ -38,6 +40,8 @@ import net.torocraft.toroquest.entities.render.RenderBas;
 public class EntityBas extends EntitySkeleton {
 
 	public static String NAME = "bas";
+
+	public static Achievement BASTION_ACHIEVEMNT = new Achievement("bastion", "bastion", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
 
 	public static void init(int entityId) {
 		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityBas.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0xffffff, 0x909090);
@@ -111,7 +115,6 @@ public class EntityBas extends EntitySkeleton {
 		targetTasks.addTask(1, new EntityAIHurtByTarget(this, false, new Class[0]));
 		targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
 	}
-
 
 	private void spawnLimitedBats() {
 		if (world.isRemote) {
@@ -217,6 +220,17 @@ public class EntityBas extends EntitySkeleton {
 		super.onDeath(cause);
 		if (!world.isRemote) {
 			dropLoot();
+			achievement(cause);
+		}
+	}
+
+	protected void achievement(DamageSource cause) {
+		if (world.isRemote) {
+			return;
+		}
+		Entity entity = cause.getEntity();
+		if (entity != null && entity instanceof EntityPlayer) {
+			((EntityPlayer) entity).addStat(BASTION_ACHIEVEMNT);
 		}
 	}
 

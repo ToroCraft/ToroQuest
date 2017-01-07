@@ -1,4 +1,12 @@
 #PARSE_ESCAPES
+achievement.civilization_friend=Friend
+achievement.civilization_ally=Ally
+achievement.civilization_hero=Hero
+achievement.first_quest=Quester
+achievement.bounty_hunter=Bounty Hunter
+achievement.bastion=Bastion Slayer
+achievement.mage=Mage Slayer
+achievement.village_lord=King Slayer
 item.obsidian_sword.name=Obsidian Sword
 item.fire_sword.name=Fire Sword
 item.diamond_battle_axe.name=Diamond Battle Axe

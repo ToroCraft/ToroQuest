@@ -421,7 +421,7 @@ public class CivilizationHandlers {
 			return;
 		}
 
-		spawnSentry(player.getPosition(), world);
+		spawnSentry(player, player.getPosition(), world);
 		spawnFugitive(player.getPosition(), world);
 	}
 
@@ -458,12 +458,16 @@ public class CivilizationHandlers {
 		world.spawnEntity(e);
 	}
 
-	protected void spawnSentry(BlockPos position, World world) {
+	protected void spawnSentry(EntityPlayer player, BlockPos position, World world) {
 		BlockPos randomNearbySpot = position.add(randomSpawnDistance(world.rand), 0, randomSpawnDistance(world.rand));
 
 		Province province = CivilizationUtil.getProvinceAt(world, randomNearbySpot.getX() / 16, randomNearbySpot.getZ() / 16);
 
 		if (province == null) {
+			return;
+		}
+
+		if (!province.hasLord) {
 			return;
 		}
 
@@ -473,10 +477,17 @@ public class CivilizationHandlers {
 			return;
 		}
 
-		int localMobCount = world.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(spawnPos).expand(50, 16, 50)).size();
 		int localSentryCount = world.getEntitiesWithinAABB(EntitySentry.class, new AxisAlignedBB(spawnPos).expand(50, 40, 50)).size();
 
-		if (localSentryCount > 5 + (localMobCount / 10)) {
+		int rep = PlayerCivilizationCapabilityImpl.get(player).getReputation(province.civilization);
+
+		int extraSpawns = 0;
+
+		if (rep < -10) {
+			extraSpawns = Math.round(-rep / 50f);
+		}
+
+		if (localSentryCount > (5 + extraSpawns)) {
 			return;
 		}
 

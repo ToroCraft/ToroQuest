@@ -146,7 +146,7 @@ public class EntityToroNpc extends EntityCreature {
 		pledgeAllegianceIfUnaffiliated();
 	}
 
-	private void pledgeAllegianceIfUnaffiliated() {
+	protected void pledgeAllegianceIfUnaffiliated() {
 
 		if (world.getTotalWorldTime() % 80L != 0L) {
 			return;

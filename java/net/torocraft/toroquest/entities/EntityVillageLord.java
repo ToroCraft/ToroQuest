@@ -74,9 +74,14 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		if (world.getTotalWorldTime() % 1000 == 0 && !isDead) {
+		if (world.getTotalWorldTime() % 500 == 0 && isEntityAlive()) {
 			setHasLord(true);
 		}
+	}
+
+	protected void pledgeAllegianceIfUnaffiliated() {
+		this.pledgeAllegianceIfUnaffiliated();
+		setHasLord(true);
 	}
 
 	protected Map<UUID, VillageLordInventory> inventories = new HashMap<UUID, VillageLordInventory>();
@@ -150,7 +155,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		tasks.addTask(1, new EntityAIPanic(this, 1.0D));
 		tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		tasks.addTask(8, new EntityAILookIdle(this));
-		if (!isDead) {
+		if (isEntityAlive()) {
 			setHasLord(true);
 		}
 	}
@@ -160,7 +165,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		livingdata = super.onInitialSpawn(difficulty, livingdata);
 		setCanPickUpLoot(false);
 		addArmor();
-		if (!isDead) {
+		if (isEntityAlive()) {
 			setHasLord(true);
 		}
 		return livingdata;
@@ -308,7 +313,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 			return;
 		}
 
-		if (isDead && hasLord) {
+		if (!isEntityAlive() && hasLord) {
 			hasLord = false;
 		}
 

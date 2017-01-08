@@ -1,6 +1,10 @@
 
 #ToroQuest
 
+<img src="http://i.imgur.com/d205mNY.png" width="400">
+
+[Read the Wiki](https://github.com/ToroCraft/ToroQuest/wiki)
+
 ##Development Environment Setup
 Download the desired version of Forge MDK from https://files.minecraftforge.net/ and unzip the MDK into a new dirctory. After the MDK is unzipped, clone this repo into the `src` directory as `main`. Then you will need to either copy or link the `build.gradle` from the repository to the root of the MDK, replacing the original one. 
 

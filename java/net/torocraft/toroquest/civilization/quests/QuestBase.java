@@ -217,7 +217,7 @@ public abstract class QuestBase implements Quest {
 
 		long distance = Math.round(from.getDistance(to.getX(), to.getY(), to.getZ()));
 		int x = to.getX();
-		int z = to.getY();
+		int z = to.getZ();
 
 		sb.append(distance);
 		sb.append(";").append(x);

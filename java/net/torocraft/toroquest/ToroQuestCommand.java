@@ -16,6 +16,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
+import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.civilization.quests.util.QuestData;
@@ -63,6 +64,8 @@ public class ToroQuestCommand extends CommandBase {
 
 		if ("rep".equals(command)) {
 			adjustRep(player, args);
+		} else if ("list".equals(command)) {
+			listCommand(player, args);
 		} else if ("gen".equals(command)) {
 			genCommand(player, args);
 		} else if ("gui".equals(command)) {
@@ -72,6 +75,15 @@ public class ToroQuestCommand extends CommandBase {
 		} else {
 			throw new WrongUsageException("commands.tq.usage", new Object[0]);
 		}
+	}
+
+	private void listCommand(EntityPlayer player, String[] args) throws CommandException {
+		List<Province> provinces = CivilizationsWorldSaveData.get(player.world).getProvinces();
+		StringBuilder sb = new StringBuilder();
+		for (Province province : provinces) {
+			sb.append(province.toString());
+		}
+		player.sendMessage(new TextComponentString(sb.toString()));
 	}
 
 	private void adjustRep(EntityPlayer player, String[] args) throws CommandException {
@@ -293,6 +305,7 @@ public class ToroQuestCommand extends CommandBase {
 				tabOptions.add("gen");
 				tabOptions.add("gui");
 				tabOptions.add("quest");
+				tabOptions.add("list");
 			} else {
 				if (command.startsWith("r")) {
 					tabOptions.add("rep");

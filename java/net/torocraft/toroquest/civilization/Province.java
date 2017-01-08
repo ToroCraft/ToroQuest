@@ -100,7 +100,15 @@ public class Province {
 
 	@Override
 	public String toString() {
-		return "Province [" + id + "] of " + civilization + " at chunk " + chunkX + "," + chunkZ + " with an area of " + area;
+		StringBuilder sb = new StringBuilder();
+		sb.append(name).append(" of ").append(s(civilization).toLowerCase());
+		sb.append(" at [").append(chunkX * 16).append(",").append(chunkZ * 16).append("]");
+		if (hasLord) {
+			sb.append(" has lord");
+		} else {
+			sb.append(" no lord");
+		}
+		return sb.toString();
 	}
 
 	private String s(CivilizationType civ) {

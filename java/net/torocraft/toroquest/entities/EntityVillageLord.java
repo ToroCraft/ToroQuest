@@ -80,7 +80,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 	}
 
 	protected void pledgeAllegianceIfUnaffiliated() {
-		this.pledgeAllegianceIfUnaffiliated();
+		super.pledgeAllegianceIfUnaffiliated();
 		setHasLord(true);
 	}
 

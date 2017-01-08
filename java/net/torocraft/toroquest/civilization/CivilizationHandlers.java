@@ -349,6 +349,10 @@ public class CivilizationHandlers {
 		}
 	}
 
+	private int getFarmRepAmount(Random rand) {
+		return rand.nextInt(5) == 0 ? 1 : 0;
+	}
+
 	@SubscribeEvent
 	public void farm(PlaceEvent event) {
 		if (event.getPlayer() == null) {
@@ -366,7 +370,7 @@ public class CivilizationHandlers {
 			}
 
 			BlockPos pos = event.getBlockSnapshot().getPos();
-			adjustPlayerRep(event.getPlayer(), pos.getX() / 16, pos.getZ() / 16, 1);
+			adjustPlayerRep(event.getPlayer(), pos.getX() / 16, pos.getZ() / 16, getFarmRepAmount(event.getWorld().rand));
 
 		}
 	}
@@ -379,7 +383,7 @@ public class CivilizationHandlers {
 			List<EntityPlayer> players = event.getWorld().getEntitiesWithinAABB(EntityPlayer.class, bb);
 			if (players != null && players.size() > 0) {
 				for (EntityPlayer player : players) {
-					adjustPlayerRep(player, pos.getX() / 16, pos.getZ() / 16, -1);
+					adjustPlayerRep(player, pos.getX() / 16, pos.getZ() / 16, -getFarmRepAmount(event.getWorld().rand));
 				}
 			}
 		}
@@ -393,7 +397,7 @@ public class CivilizationHandlers {
 
 		if (isCrop(event.getState().getBlock())) {
 			BlockPos pos = event.getPos();
-			adjustPlayerRep(event.getPlayer(), pos.getX() / 16, pos.getZ() / 16, -1);
+			adjustPlayerRep(event.getPlayer(), pos.getX() / 16, pos.getZ() / 16, -getFarmRepAmount(event.getWorld().rand));
 		}
 	}
 

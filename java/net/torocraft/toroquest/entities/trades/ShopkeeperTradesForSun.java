@@ -30,10 +30,11 @@ public class ShopkeeperTradesForSun {
 		}
 
 		if (rep.equals(ReputationLevel.FRIEND) || rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 3), new ItemStack(Items.EMERALD, rep.adjustPrice(5)), new ItemStack(ItemBattleAxe.INSTANCE)));
+
 		}
 		
 		if (rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 3), new ItemStack(Items.EMERALD, rep.adjustPrice(5)), new ItemStack(ItemBattleAxe.INSTANCE)));
 			recipeList.add(new MerchantRecipe(new ItemStack(ItemToroLeather.INSTANCE, 5), new ItemStack(Items.EMERALD, 5), new ItemStack(ItemSamuraiArmor.helmetItem)));
 			recipeList.add(new MerchantRecipe(new ItemStack(ItemToroLeather.INSTANCE, 7), new ItemStack(Items.EMERALD, 5), new ItemStack(ItemSamuraiArmor.leggingsItem)));
 			recipeList.add(new MerchantRecipe(new ItemStack(ItemToroLeather.INSTANCE, 4), new ItemStack(Items.EMERALD, 5), new ItemStack(ItemSamuraiArmor.bootsItem)));

@@ -32,11 +32,11 @@ public class ShopkeeperTradesForFire {
 		}
 		
 		if (rep.equals(ReputationLevel.FRIEND) || rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(5)), new ItemStack(Blocks.MAGMA, 3), new ItemStack(ItemFireSword.INSTANCE)));
+
 		}
 
 		if (rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
-
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(5)), new ItemStack(Blocks.MAGMA, 3), new ItemStack(ItemFireSword.INSTANCE)));
 		}
 
 		if (rep.equals(ReputationLevel.HERO)) {

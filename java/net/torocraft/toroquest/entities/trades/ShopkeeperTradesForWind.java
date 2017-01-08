@@ -28,10 +28,11 @@ public class ShopkeeperTradesForWind {
 		}
 
 		if (rep.equals(ReputationLevel.FRIEND) || rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 3), new ItemStack(Items.EMERALD, rep.adjustPrice(5)), new ItemStack(ItemBattleAxe.INSTANCE)));
+
 		}
 
 		if (rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 3), new ItemStack(Items.EMERALD, rep.adjustPrice(5)), new ItemStack(ItemBattleAxe.INSTANCE)));
 			recipeList.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 5), new ItemStack(Items.EMERALD, 5), new ItemStack(ItemRoyalArmor.helmetItem)));
 			recipeList.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 7), new ItemStack(Items.EMERALD, 5), new ItemStack(ItemRoyalArmor.leggingsItem)));
 			recipeList.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 4), new ItemStack(Items.EMERALD, 5), new ItemStack(ItemRoyalArmor.bootsItem)));

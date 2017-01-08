@@ -144,7 +144,6 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 	public void setProvinceHasLord(UUID provinceId, boolean hasLord) {
 		for (Province p : provinces) {
 			if (provinceId.equals(p.id)) {
-				System.out.println("Setting Province " + p.name + " Village Lord Status: " + hasLord);
 				p.hasLord = hasLord;
 				markDirty();
 				return;

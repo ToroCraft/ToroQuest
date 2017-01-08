@@ -79,8 +79,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		}
 	}
 
-	protected void pledgeAllegianceIfUnaffiliated() {
-		super.pledgeAllegianceIfUnaffiliated();
+	public void onPledgeAllegiance() {
 		setHasLord(true);
 	}
 
@@ -304,7 +303,8 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 	}
 
 	private void setHasLord(boolean hasLord) {
-		Province province = CivilizationUtil.getProvinceAt(world, chunkCoordX, chunkCoordY);
+		Province province = CivilizationUtil.getProvinceAt(world, chunkCoordX, chunkCoordZ);
+
 		if (province == null) {
 			return;
 		}

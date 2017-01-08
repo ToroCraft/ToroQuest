@@ -81,7 +81,7 @@ public class ToroQuestCommand extends CommandBase {
 		List<Province> provinces = CivilizationsWorldSaveData.get(player.world).getProvinces();
 		StringBuilder sb = new StringBuilder();
 		for (Province province : provinces) {
-			sb.append(province.toString());
+			sb.append(province.toString()).append("\n");
 		}
 		player.sendMessage(new TextComponentString(sb.toString()));
 	}

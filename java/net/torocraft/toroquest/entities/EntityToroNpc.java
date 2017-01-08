@@ -146,7 +146,7 @@ public class EntityToroNpc extends EntityCreature {
 		pledgeAllegianceIfUnaffiliated();
 	}
 
-	protected void pledgeAllegianceIfUnaffiliated() {
+	private void pledgeAllegianceIfUnaffiliated() {
 
 		if (world.getTotalWorldTime() % 80L != 0L) {
 			return;
@@ -167,6 +167,11 @@ public class EntityToroNpc extends EntityCreature {
 		}
 
 		setCivilization(civ.civilization);
+		onPledgeAllegiance();
+	}
+
+	public void onPledgeAllegiance() {
+
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package net.torocraft.toroquest;
 
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -8,8 +9,10 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.torocraft.toroquest.configuration.ConfigurationHandler;
 
-@Mod (modid = ToroQuest.MODID, name = ToroQuest.MODNAME, version = ToroQuest.VERSION)
+@Mod (modid = ToroQuest.MODID, name = ToroQuest.MODNAME, version = ToroQuest.VERSION,
+		guiFactory = "net.torocraft." + ToroQuest.MODID + ".gui.GuiFactoryToroQuest")
 public class ToroQuest {
 
 	
@@ -26,6 +29,9 @@ public class ToroQuest {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
 	    proxy.preInit(e);
+	    
+	    ConfigurationHandler.init(e.getSuggestedConfigurationFile());
+		MinecraftForge.EVENT_BUS.register(new ConfigurationHandler());
 	}
 
 	@EventHandler

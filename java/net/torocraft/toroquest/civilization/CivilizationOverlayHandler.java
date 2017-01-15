@@ -3,23 +3,28 @@ package net.torocraft.toroquest.civilization;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
+import net.torocraft.toroquest.configuration.ConfigurationHandler;
 import net.torocraft.toroquest.util.Hud;
 import net.torocraft.toroquest.util.ToroGuiUtils;
 
 public class CivilizationOverlayHandler extends Hud {
 
+	String displayPosition;
+	private final int PADDING_FROM_EDGE = 5;
+	int screenWidth;
+	int screenHeight;
+	
+	int badgeWidth = 20;
+	int badgeHeight = 25;
+	
 	public CivilizationOverlayHandler(Minecraft mc) {
 		super(mc, 20, 10);
 	}
 
-
 	@Override
 	public void render(int screenWidth, int screenHeight) {
-
-		int left = screenWidth - 5;
-
-		int top = screenHeight - 5;
-
+		this.screenWidth = screenWidth;
+		this.screenHeight = screenHeight;
 
 		EntityPlayerSP player = mc.player;
 		
@@ -32,34 +37,86 @@ public class CivilizationOverlayHandler extends Hud {
 		if (civ == null || civ.civilization == null) {
 			return;
 		}
+		
+		displayPosition = ConfigurationHandler.repDisplayPosition;
 
-		drawCurrentCivilizationIcon(left, top, civ, player);
+		drawCurrentCivilizationIcon(civ, player);
 	}
 
-	private void drawCurrentCivilizationIcon(int left, int top, Province civ, EntityPlayerSP player) {
-
-		int textX = left - 18;
-		int textY = top - 25;
-
-		drawRightString(Integer.toString(PlayerCivilizationCapabilityImpl.get(player).getReputation(civ.civilization), 10) + " Rep", textX, textY, 0xffffff);
-		textY += 10;
-
-		drawRightString(PlayerCivilizationCapabilityImpl.get(player).getReputationLevel(civ.civilization).getLocalname(), textX, textY, 0xffffff);
-		textY += 10;
-
-		drawRightString(civ.name, textX, textY, 0xffffff);
-		textY += 10;
-
-		ToroGuiUtils.drawOverlayIcon(mc, left - 16, top - 25, 0, 96, 20, 27);
-		ToroGuiUtils.drawOverlayIcon(mc, left - 14, top - 22, iconIndex(civ.civilization), 0);
+	private void drawCurrentCivilizationIcon(Province civ, EntityPlayerSP player) {
+		drawReputationText(civ, player);
+		drawCivilizationBadge(civ.civilization);
 	}
+	
+	private void drawReputationText(Province civ, EntityPlayerSP player) {
+		int textX = determineTextX();
+		int textY = determineIconY();
+		
+		if (displayPosition.contains("RIGHT")) {
+			drawRightString(Integer.toString(PlayerCivilizationCapabilityImpl.get(player).getReputation(civ.civilization), 10) + " Rep", textX, textY, 0xffffff);
+			textY += 10;
 
-	private String s(ReputationLevel reputationLevel) {
-		try {
-			return reputationLevel.toString();
-		} catch (Exception e) {
-			return "";
+			drawRightString(PlayerCivilizationCapabilityImpl.get(player).getReputationLevel(civ.civilization).getLocalname(), textX, textY, 0xffffff);
+			textY += 10;
+
+			drawRightString(civ.name, textX, textY, 0xffffff);
+		} else {
+			drawString(Integer.toString(PlayerCivilizationCapabilityImpl.get(player).getReputation(civ.civilization), 10) + " Rep", textX, textY, 0xffffff);
+			textY += 10;
+
+			drawString(PlayerCivilizationCapabilityImpl.get(player).getReputationLevel(civ.civilization).getLocalname(), textX, textY, 0xffffff);
+			textY += 10;
+
+			drawString(civ.name, textX, textY, 0xffffff);
 		}
+	}
+
+	private void drawCivilizationBadge(CivilizationType civType) {
+		int badgeX = determineBadgeX();
+		int badgeY = determineIconY();
+		
+		ToroGuiUtils.drawOverlayIcon(mc, badgeX - 2, badgeY, 0, 96, 20, 27);
+		ToroGuiUtils.drawOverlayIcon(mc, badgeX, badgeY + 3, iconIndex(civType), 0);
+	}
+
+	private int determineTextX() {
+		if (displayPosition.equals("CUSTOM")) {
+			return ConfigurationHandler.repDisplayX + badgeWidth;
+		}
+		
+		if (displayPosition.contains("RIGHT")) {
+			return screenWidth - PADDING_FROM_EDGE - badgeWidth;
+		}
+		
+		if (displayPosition.contains("CENTER")) {
+			return (screenWidth + badgeWidth + PADDING_FROM_EDGE) / 2;
+		}
+		
+		return PADDING_FROM_EDGE + badgeWidth;
+	}
+	
+	private int determineBadgeX() {
+		if (displayPosition.equals("CUSTOM")) {
+			return ConfigurationHandler.repDisplayX;
+		}
+		if (displayPosition.contains("RIGHT")) {
+			return screenWidth - badgeWidth;
+		}
+		if (displayPosition.contains("CENTER")) {
+			return (screenWidth - badgeWidth) / 2;
+		}
+		return PADDING_FROM_EDGE;
+	}
+	
+	private int determineIconY() {
+		if (displayPosition.equals("CUSTOM")) {
+			return ConfigurationHandler.repDisplayY;
+		}
+		if (displayPosition.contains("BOTTOM")) {
+			return screenHeight - PADDING_FROM_EDGE - badgeHeight;
+		}
+		
+		return PADDING_FROM_EDGE;
 	}
 
 	private int iconIndex(CivilizationType civ) {
@@ -80,6 +137,5 @@ public class CivilizationOverlayHandler extends Hud {
 			return 0;
 		}
 	}
-
 
 }

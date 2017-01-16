@@ -12,7 +12,7 @@ public class CivilizationClientHandlers {
 
 	@SubscribeEvent
 	public void onPostRenderOverlay(RenderGameOverlayEvent.Pre event) {
-		if (event.getType() != ElementType.TEXT) {
+		if (event.getType() != ElementType.HOTBAR) {
 			return;
 		}
 		ScaledResolution resolution = event.getResolution();

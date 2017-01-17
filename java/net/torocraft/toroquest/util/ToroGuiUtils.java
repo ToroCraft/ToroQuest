@@ -19,27 +19,27 @@ public class ToroGuiUtils {
 	public static final int DEFAULT_ICON_TEXTURE_HEIGTH = 16;
 
 	public static void drawOverlayIcon(Minecraft mc, int left, int top, int horizontalIconIndex, int verrticalIconIndex) {
-		// GlStateManager.pushMatrix();
+
 		mc.getTextureManager().bindTexture(ICONS);
 		GlStateManager.disableDepth();
 		GlStateManager.enableBlend();
 
-		ToroGuiUtils.drawTexturedModalRect(left, top, horizontalIconIndex * DEFAULT_ICON_TEXTURE_WIDTH, verrticalIconIndex * DEFAULT_ICON_TEXTURE_HEIGTH,
-				DEFAULT_ICON_TEXTURE_WIDTH, DEFAULT_ICON_TEXTURE_HEIGTH);
+		ToroGuiUtils.drawTexturedModalRect(left, top, horizontalIconIndex * DEFAULT_ICON_TEXTURE_WIDTH,
+				verrticalIconIndex * DEFAULT_ICON_TEXTURE_HEIGTH, DEFAULT_ICON_TEXTURE_WIDTH, DEFAULT_ICON_TEXTURE_HEIGTH);
 
-		// GlStateManager.popMatrix();
+		GlStateManager.enableDepth();
+		GlStateManager.disableBlend();
 	}
 
 	public static void drawOverlayIcon(Minecraft mc, int x, int y, int textureX, int textureY, int width, int height) {
-		// GlStateManager.pushMatrix();
-
 		mc.getTextureManager().bindTexture(ICONS);
 		GlStateManager.disableDepth();
 		GlStateManager.enableBlend();
 
 		ToroGuiUtils.drawTexturedModalRect(x, y, textureX, textureY, width, height);
 
-		// GlStateManager.popMatrix();
+		GlStateManager.enableDepth();
+		GlStateManager.disableBlend();
 	}
 
 	public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {

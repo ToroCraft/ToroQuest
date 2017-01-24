@@ -21,6 +21,7 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
@@ -144,10 +145,44 @@ public class EntitySentry extends EntityToroNpc {
 	}
 
 	protected void addArmor() {
-		setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(Items.LEATHER_HELMET, 1));
-		setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(Items.LEATHER_BOOTS, 1));
-		setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(Items.LEATHER_LEGGINGS, 1));
-		setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(Items.LEATHER_CHESTPLATE, 1));
+		setItemStackToSlot(EntityEquipmentSlot.HEAD, colorArmor(new ItemStack(Items.LEATHER_HELMET, 1)));
+		setItemStackToSlot(EntityEquipmentSlot.FEET, colorArmor(new ItemStack(Items.LEATHER_BOOTS, 1)));
+		setItemStackToSlot(EntityEquipmentSlot.LEGS, colorArmor(new ItemStack(Items.LEATHER_LEGGINGS, 1)));
+		setItemStackToSlot(EntityEquipmentSlot.CHEST, colorArmor(new ItemStack(Items.LEATHER_CHESTPLATE, 1)));
+	}
+
+	protected ItemStack colorArmor(ItemStack stack) {
+		if (getCivilization() == null) {
+			return stack;
+		}
+		ItemArmor armor = (ItemArmor) stack.getItem();
+		armor.setColor(stack, determineColorByCiv());
+		return stack;
+	}
+
+	private int determineColorByCiv() {
+		int color = 0;
+		switch (getCivilization()) {
+			case EARTH:
+				color = 6717235;
+				break;
+			case FIRE:
+				color = 0xff9900;
+				break;
+			case MOON:
+				color = 0x333333;
+				break;
+			case SUN:
+				color = 0xffff00;
+				break;
+			case WATER:
+				color = 0x2B65EC;
+				break;
+			case WIND:
+				color = 0xffffff;
+				break;
+		}
+		return color;
 	}
 
 }

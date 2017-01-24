@@ -22,6 +22,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -100,7 +101,15 @@ public class CivilizationHandlers {
 		if (cap == null) {
 			return;
 		}
-		event.getEntityPlayer().getEntityData().setTag(ToroQuest.MODID + ".playerCivilization", cap.writeNBT());
+		
+		NBTTagCompound civData = cap.writeNBT();
+		
+		if(civData == null || civData.getTag("reputations") == null || ((NBTTagList)civData.getTag("reputations")).tagCount() < 1){
+			System.out.println("Not writing empty ToroQuest data for player " + event.getEntityPlayer().getName());
+			return;
+		}
+		
+		event.getEntityPlayer().getEntityData().setTag(ToroQuest.MODID + ".playerCivilization", civData);
 	}
 
 	@SubscribeEvent

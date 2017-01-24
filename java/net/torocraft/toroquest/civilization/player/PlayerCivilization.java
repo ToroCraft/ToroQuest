@@ -94,14 +94,22 @@ public abstract class PlayerCivilization {
 		c.setInteger("amount", rep);
 		return c;
 	}
+	
+	private HashMap<CivilizationType, Integer> defaultRepMap() {
+		HashMap<CivilizationType, Integer> repMap = new HashMap<CivilizationType, Integer>();
+		for(CivilizationType civ : CivilizationType.values()){
+			repMap.put(civ, 0);
+		}
+		return repMap;
+	}
 
 	public void readNBT(NBTBase nbt) {
 		if (nbt == null || !(nbt instanceof NBTTagCompound)) {
-			reputations = new HashMap<CivilizationType, Integer>();
+			reputations = defaultRepMap();
 			inCiv = null;
 			return;
 		}
-
+		
 		NBTTagCompound b = (NBTTagCompound) nbt;
 		reputations = readNBTReputationList(b.getTag("reputations"));
 		quests = readQuests(b.getTag("quests"));
@@ -136,7 +144,7 @@ public abstract class PlayerCivilization {
 	}
 
 	private Map<CivilizationType, Integer> readNBTReputationList(NBTBase tag) {
-		Map<CivilizationType, Integer> reputations = new HashMap<CivilizationType, Integer>();
+		Map<CivilizationType, Integer> reputations = defaultRepMap();
 		if (tag == null || !(tag instanceof NBTTagList)) {
 			return reputations;
 		}

@@ -17,7 +17,7 @@ public class PotionRoyal extends Potion {
 		
 		
 		setRegistryName(ToroQuest.MODID, NAME);
-		setPotionName("effect." + NAME);
+		setPotionName("effect." + getRegistryName().toString());
 		
 		
 		

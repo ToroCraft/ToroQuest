@@ -11,6 +11,7 @@ import net.torocraft.toroquest.civilization.CivilizationGeneratorHandlers;
 import net.torocraft.toroquest.civilization.CivilizationHandlers;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.civilization.quests.util.Quests;
+import net.torocraft.toroquest.entities.EntitySpawning;
 import net.torocraft.toroquest.entities.EntityVillageLord;
 import net.torocraft.toroquest.entities.ToroQuestEntities;
 import net.torocraft.toroquest.generation.WorldGenPlacer;
@@ -22,6 +23,8 @@ import net.torocraft.toroquest.gui.VillageLordGuiHandler;
 import net.torocraft.toroquest.item.ToroQuestItems;
 import net.torocraft.toroquest.material.ToolMaterials;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
+import net.torocraft.toroquest.potion.PotionRoyal;
+import net.torocraft.toroquest.potion.Potions;
 
 public class CommonProxy {
 
@@ -29,6 +32,7 @@ public class CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new CivilizationGeneratorHandlers());
 		MinecraftForge.EVENT_BUS.register(new EventHandlers());
 		MinecraftForge.EVENT_BUS.register(new CivilizationHandlers());
+		MinecraftForge.EVENT_BUS.register(new EntitySpawning());
 		VillageHandlerKeep.init();
 		// VillageHandlerTrophy.init();
 		VillageHandlerShop.init();
@@ -36,6 +40,8 @@ public class CommonProxy {
 		VillageHandlerBarracks.init();
 		ToroQuestPacketHandler.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(ToroQuest.INSTANCE, new VillageLordGuiHandler());
+		
+		
 
 		DataFixer datafixer = new DataFixer(922);
 		EntityVillageLord.registerFixesVillageLord(datafixer);

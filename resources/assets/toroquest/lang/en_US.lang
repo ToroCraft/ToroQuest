@@ -29,6 +29,16 @@ item.toro_armor_chestplate.name=Toro Chestplate
 item.toro_leather.name=Toro Leather
 item.torch_arrow.name=Torch Arrow
 
+effect.royalty=Royalty
+potion.effect.toroquest\:royalty=Potion of Royalty
+splash_potion.effect.toroquest\:royalty=Splash Potion of Royalty
+lingering_splash_potion.effect.toroquest\:royalty=Lingering Potion of Royalty
+
+effect.loyalty=Loyalty
+potion.effect.toroquest\:loyalty=Potion of Loyalty
+splash_potion.effect.toroquest\:loyalty=Splash Potion of Loyalty
+lingering_potion.effect.toroquest\:loyalty=Lingering Potion of Loyalty
+
 entity.toroquest.monolitheye.name=Overseer
 entity.monolitheye.name=Overseer
 

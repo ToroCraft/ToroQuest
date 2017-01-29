@@ -1,0 +1,12 @@
+Some Observations about Motion.
+Sir Isaac Newton
+
+Only those bodyes which are absolutely hard are exactly reflected acording to those rules. Now the bodyes here amongst us (being an aggregate of smaller other bodyes) haue a relenting softnesse & springynesse, which makes their contact be for some time & in more points then one. And the touching surfaces during the time of contact doe slide one upon another more or lesse or not at all acording to their roughnesse. And few or none of these bodyes haue a springynesse soe strong, as to force them one from another with the same vigor that they came together. Besides that their motions are continually impeded & slackened by the mediums in which they move. Now hee that would prescribe rules for the reflections of these compound bodies, must consider in how many points the two bodies touch at their meeting, the position & pression of every point, which their planes of contact &c: & how all these are varyed every moment during the time of contact by the more or lesse relenting softnesse or springynesse of those bodies & their various slidings. And also what effect the air or other mediums compressed betwixt the bodies may haue.
+
+2 These are some cases of Reflections of bodies absolutely hard to which these rules extend not: As when two bodies meet with their angular point, or in more points <83v> then one at once; Or with their superficies. But these cases are rare.
+
+3 In all reflections of any bodies what ever this rule is true that the common center of two or more bodies changeth not its state of motion or rest by the reflection of those bodies one amongst another.
+
+4 Motion may be lost by reflection. As Figure if two equall Globes A & α with equall motions from D & δ done in the perpendicular lines DA & δα, hit one another when the center of the body α is in the line DA. Then the body A shall loose all its motion & yet the motion of α is not doubled. For completing the square Bβ, the body α shall move in the Diagonall αC, & arrive at C but at the same time it would haue arrived at β without reflection. see the third section.
+
+5 Motion may be gained by reflection. For if the body α return with the same motion back again from C to α. The two bodyes A & α after reflection shall regain the same equall motions in the lines AD & αδ (though backwards) which they had at first.

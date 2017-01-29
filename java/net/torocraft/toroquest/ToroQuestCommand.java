@@ -27,6 +27,8 @@ import net.torocraft.toroquest.generation.MageTowerGenerator;
 import net.torocraft.toroquest.generation.MonolithGenerator;
 import net.torocraft.toroquest.generation.ThroneRoomGenerator;
 import net.torocraft.toroquest.gui.VillageLordGuiHandler;
+import net.torocraft.toroquest.util.BookCreator;
+import net.torocraft.toroquest.util.BookCreator.BookTypes;
 
 public class ToroQuestCommand extends CommandBase {
 
@@ -72,10 +74,19 @@ public class ToroQuestCommand extends CommandBase {
 			guiCommand(player, args);
 		} else if ("quest".equals(command)) {
 			questCommand(player, args);
+		} else if ("book".equals(command)) {
+			bookCommand(player, args);
 		} else {
 			throw new WrongUsageException("commands.tq.usage", new Object[0]);
 		}
 	}
+	
+	private void bookCommand(EntityPlayer player, String[] args) throws CommandException {
+		List<ItemStack> items = new ArrayList<ItemStack>();
+		items.add(BookCreator.createBook(BookTypes.CIV_LORE, "test"));
+		dropItems(player, items);
+	}
+
 
 	private void listCommand(EntityPlayer player, String[] args) throws CommandException {
 		List<Province> provinces = CivilizationsWorldSaveData.get(player.world).getProvinces();
@@ -273,7 +284,7 @@ public class ToroQuestCommand extends CommandBase {
 		InventoryPlayer inv = player.inventory;
 
 		for (int i = 0; i < inv.getSizeInventory(); i++) {
-			if (inv.getStackInSlot(i) != null && inv.isHotbar(i)) {
+			if (inv.getStackInSlot(i) != null && InventoryPlayer.isHotbar(i)) {
 				ItemStack stack = inv.getStackInSlot(i);
 				inv.setInventorySlotContents(i, ItemStack.EMPTY);
 				items.add(stack);
@@ -306,6 +317,7 @@ public class ToroQuestCommand extends CommandBase {
 				tabOptions.add("gui");
 				tabOptions.add("quest");
 				tabOptions.add("list");
+				tabOptions.add("book");
 			} else {
 				if (command.startsWith("r")) {
 					tabOptions.add("rep");

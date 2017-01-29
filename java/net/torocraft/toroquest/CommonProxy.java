@@ -1,5 +1,7 @@
 package net.torocraft.toroquest;
 
+import java.io.File;
+
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -11,6 +13,7 @@ import net.torocraft.toroquest.civilization.CivilizationGeneratorHandlers;
 import net.torocraft.toroquest.civilization.CivilizationHandlers;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.civilization.quests.util.Quests;
+import net.torocraft.toroquest.config.ToroQuestConfiguration;
 import net.torocraft.toroquest.entities.EntitySpawning;
 import net.torocraft.toroquest.entities.EntityVillageLord;
 import net.torocraft.toroquest.entities.ToroQuestEntities;
@@ -23,12 +26,15 @@ import net.torocraft.toroquest.gui.VillageLordGuiHandler;
 import net.torocraft.toroquest.item.ToroQuestItems;
 import net.torocraft.toroquest.material.ToolMaterials;
 import net.torocraft.toroquest.network.ToroQuestPacketHandler;
-import net.torocraft.toroquest.potion.PotionRoyal;
-import net.torocraft.toroquest.potion.Potions;
 
 public class CommonProxy {
 
+	
 	public void preInit(FMLPreInitializationEvent e) {
+		//configDirectory = new File(e.getModConfigurationDirectory(), ToroQuest.MODID);
+
+		initConfig(e.getSuggestedConfigurationFile());
+
 		MinecraftForge.EVENT_BUS.register(new CivilizationGeneratorHandlers());
 		MinecraftForge.EVENT_BUS.register(new EventHandlers());
 		MinecraftForge.EVENT_BUS.register(new CivilizationHandlers());
@@ -40,14 +46,17 @@ public class CommonProxy {
 		VillageHandlerBarracks.init();
 		ToroQuestPacketHandler.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(ToroQuest.INSTANCE, new VillageLordGuiHandler());
-		
-		
 
 		DataFixer datafixer = new DataFixer(922);
 		EntityVillageLord.registerFixesVillageLord(datafixer);
 
 		Quests.init();
 
+	}
+
+	private void initConfig(File configFile) {
+		ToroQuestConfiguration.init(configFile);
+		MinecraftForge.EVENT_BUS.register(new ToroQuestConfiguration());
 	}
 
 	public void init(FMLInitializationEvent e) {

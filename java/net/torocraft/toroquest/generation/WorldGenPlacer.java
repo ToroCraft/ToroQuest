@@ -9,6 +9,7 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData;
+import net.torocraft.toroquest.config.ToroQuestConfiguration;
 
 public class WorldGenPlacer implements IWorldGenerator {
 
@@ -22,7 +23,7 @@ public class WorldGenPlacer implements IWorldGenerator {
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
-		if (random.nextInt(LOW_CHANCE) != 0 || world.provider.getDimension() != 0) {
+		if (random.nextInt(ToroQuestConfiguration.structureSpawnChance) != 0 || world.provider.getDimension() != 0) {
 			return;
 		}
 

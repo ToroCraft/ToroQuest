@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.storage.MapStorage;
 import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.config.ToroQuestConfiguration;
 
 public class CivilizationsWorldSaveData extends WorldSavedData implements CivilizationDataAccessor {
 
@@ -42,10 +43,10 @@ public class CivilizationsWorldSaveData extends WorldSavedData implements Civili
 		}
 
 		for (Structure s : structures) {
-			if (s.distanceSqFrom(chunkX, chunkZ) < 500) {
+			if (s.distanceSqFrom(chunkX, chunkZ) < ToroQuestConfiguration.structureMinDistance) {
 				return false;
 			}
-			if (type.equals(s.type) && s.distanceSqFrom(chunkX, chunkZ) < 4000) {
+			if (type.equals(s.type) && s.distanceSqFrom(chunkX, chunkZ) < ToroQuestConfiguration.structureMinDistanceBetweenSame) {
 				return false;
 			}
 		}

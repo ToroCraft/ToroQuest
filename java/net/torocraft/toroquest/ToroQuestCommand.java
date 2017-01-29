@@ -83,7 +83,7 @@ public class ToroQuestCommand extends CommandBase {
 	
 	private void bookCommand(EntityPlayer player, String[] args) throws CommandException {
 		List<ItemStack> items = new ArrayList<ItemStack>();
-		items.add(BookCreator.createBook(BookTypes.CIV_LORE, "test"));
+		items.add(BookCreator.createBook(BookTypes.CIV_LORE, "pantheon_unbiased_book_1"));
 		dropItems(player, items);
 	}
 

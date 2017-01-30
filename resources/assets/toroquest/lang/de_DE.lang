@@ -1,0 +1,134 @@
+#PARSE_ESCAPES
+achievement.civilization_friend=Freund
+achievement.civilization_ally=Verbündeter
+achievement.civilization_hero=Held
+achievement.first_quest=Quester
+achievement.bounty_hunter=Kopfgeldjäger
+achievement.bastion=Bastionseroberer
+achievement.mage=Hexenjäger
+achievement.village_lord=Königsmörder
+item.obsidian_sword.name=Obsidianschwert
+item.fire_sword.name=Feuerschwert
+item.diamond_battle_axe.name=Diamantene Schlachtaxt
+item.reinforced_diamond_boots.name=Verstärkte Diamantstiefel
+item.reinforced_diamond_helmet.name=Verstärkter Diamanthelm
+item.reinforced_diamond_leggings.name=Verstärkte Diamantbeinschützer
+item.reinforced_diamond_chestplate.name=Verstärkter Diamantbrustpanzer
+item.royal_boots.name=Herrschaftliche Stiefel
+item.royal_helmet.name=Herrschaftlicher Helm
+item.royal_leggings.name=Herrschaftliche Beinschützer
+item.royal_chestplate.name=Herrschaftlicher Brustpanzer
+item.samurai_boots.name=Samurai-Rock
+item.samurai_helmet.name=Samurai-Helm
+item.samurai_leggings.name=Samurai-Beinschützer
+item.samurai_chestplate.name=Samurai-Brustpanzer
+item.toro_armor_boots.name=Torolederstiefel
+item.toro_armor_helmet.name=Torolederhelm
+item.toro_armor_leggings.name=Torolederhose
+item.toro_armor_chestplate.name=Torolederrüstung
+item.toro_leather.name=Toroleder
+item.torch_arrow.name=Fackelpfeil
+
+effect.toroquest\:royalty=Herrschaft
+potion.effect.toroquest\:royalty=Trank der Herrschaft
+splash_potion.effect.toroquest\:royalty=Wurftrank der Herrschaft
+lingering_splash_potion.effect.toroquest\:royalty=Verweiltrank der Herrschaft
+
+effect.toroquest\:loyalty=Loyalität
+potion.effect.toroquest\:loyalty=Trank der Loyalität
+splash_potion.effect.toroquest\:loyalty=Wurftrank der Loyalität
+lingering_potion.effect.toroquest\:loyalty=Verweiltrank der Loyalität
+
+entity.toroquest.monolitheye.name=Aufseher
+entity.monolitheye.name=Aufseher
+
+entity.toroquest.mage.name=Magier
+entity.mage.name=Magier
+
+entity.toroquest.toro.name=Toro
+entity.toro.name=Toro
+
+entity.toroquest.guard.name=Gardist
+entity.guard.name=Gardist
+
+entity.toroquest.village_lord.name=Dorfherr
+entity.village_lord.name=Dorfherr
+
+entity.toroquest.shopkeeper.name=Verkäufer
+entity.shopkeeper.name=Verkäufer
+
+entity.toroquest.fugitive.name=Flüchtiger
+entity.fugitive.name=Flüchtiger
+
+entity.toroquest.vampire_bat.name=Vampirfledermaus
+entity.vampire_bat.name=Vampirfledermaus
+
+entity.toroquest.bas.name=Lord Bastion
+entity.bas.name=Lord Bastion
+
+entity.toroquest.sentry.name=Wächter
+entity.sentry.name=Wächter
+
+entity.toroquest.rainbow_guard.name=Regenbogengardist
+entity.rainbow_guard.name=Regenbogengardist
+
+entity.toroquest.rainbow_king.name=Regenbogenkönig
+entity.rainbow_king.name=Regenbogenkönig
+
+civilization.earth.name=Terra
+civilization.wind.name=Gustaberg
+civilization.fire.name=Lumens
+civilization.moon.name=Wolf
+civilization.sun.name=Solaris
+civilization.water.name=Aquarius
+civilization.entering.friendly=Willkommen zurück in %s von %s
+civilization.entering.neutral=Sie betreten %s von %s
+civilization.entering.hostile=Éindringling in %s von %s
+civilization.leaving.friendly=Lebewohl aus %s von %s
+civilization.leaving.neutral=Sie verlassen %s von %s
+civilization.leaving.hostile=Entkommen aus %s von %s
+
+
+civilization.reputation_level.hero=Held
+civilization.reputation_level.ally=Verbündeter
+civilization.reputation_level.friend=Freund
+civilization.reputation_level.drifter=Besucher
+civilization.reputation_level.outcast=Ausgestoßener
+civilization.reputation_level.enemy=Feind
+civilization.reputation_level.villain=Erzfeind
+
+quest.gui.title=Herr von %s
+quest.gui.rep_for=%d Rep. für
+quest.gui.reply=Antwort
+quest.gui.stolen_item=Zurückgeben
+quest.gui.empty=Geben
+quest.gui.button.donate=Spenden
+quest.gui.button.accept=Annehmen
+quest.gui.button.complete=Abschließen
+quest.gui.button.reject=Aufgeben
+quest.directions=%s meter nach %s,%s
+
+quests.no_items=Keine Gegenstände
+quests.courier.title=§lKurier§r
+quests.courier.description=§lÜberbringe§r eine Botschaft an %s bringe die Antwort zurück\n§lLocation§r %s\n§lReward§r %s\n§lRecieve§r %s Reputation
+
+quests.enemey_encampment.title=§lLager Erobern§r
+quests.enemey_encampment.description=§lErobere§r %s Lager\n§lLocation§r %s\n§lReward§r %s\n§lRecieve§r %s Reputation
+quests.enemey_encampment.wasnt_you=You didn't personally kill any from the encampment!
+quests.enemey_encampment.one_left=Du hast nicht alle getötet, einer ist übrig!
+quests.enemey_encampment.some_left=Du hast nicht alle getötet, es sind noch %i übrig.
+
+quests.bounty_hunter.title=§lKopfgeldjäger§r
+quests.bounty_hunter.description=Fange und bring uns den flüchtigen Kriminellen %s\n§lLocation %s\n§lReward§r %s\n§lRecieve§r %s reputation
+
+quests.farm.title=§lFarmer Quest§r
+quests.farm.description=§lPflanze§r %s %s Pflanzen in %s\nDu hast %s\n§lReward§r % gepflanzt 
+
+quests.gather.title=§lSammler Quest§r
+quests.gather.description=§lSammle§r %s\n§lReward§r %s\n§lRecieve§r %s reputation
+
+quests.kill_mobs.title=§lJage Mobs§r
+quests.kill_mobs.description=§lErbeute§r %s %s Mobs in %s\nDu hast %s\n§lReward§r %s erbeutet
+
+quests.mine.title=§lErzabbau in Provinz§r
+quests.mine.description=§lMine§r %s Blöcke %s in dieser Provinz\n§lniedriger§r nals Level 30\n§lUse§r und bringe das gestellte Werkzeug zurück \n§lReward§r %s\n§lRecieve§r %s reputation

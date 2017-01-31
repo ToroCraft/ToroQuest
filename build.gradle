@@ -12,12 +12,12 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.11.2-2-a1"
+version = "1.11.2-2-a2"
 group= "net.torocraft.toroquest"
 archivesBaseName = "toroquest"
 
 minecraft {
-    version = "1.11.2-13.20.0.2224"
+    version = "1.11.2-13.20.0.2226"
     runDir = "run"
     mappings = "snapshot_20161220"
 }

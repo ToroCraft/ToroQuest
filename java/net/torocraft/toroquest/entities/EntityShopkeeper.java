@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +17,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.village.MerchantRecipeList;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -39,7 +41,8 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 	public static String NAME = "shopkeeper";
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityShopkeeper.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0x000000, 0xe0d6b9);
+		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityShopkeeper.class, NAME, entityId, ToroQuest.INSTANCE, 60,
+				2, true, 0x000000, 0xe0d6b9);
 	}
 
 	public static void registerRenders() {
@@ -53,6 +56,11 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 
 	public EntityShopkeeper(World worldIn) {
 		super(worldIn, 3);
+	}
+
+	@Override
+	public IEntityLivingData finalizeMobSpawn(DifficultyInstance p_190672_1_, @Nullable IEntityLivingData p_190672_2_, boolean p_190672_3_) {
+		return p_190672_2_;
 	}
 
 	public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
@@ -112,7 +120,6 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 		}
 	};
 
-
 	/**
 	 * Get the formatted ChatComponent that will be used for the sender's
 	 * username in chat
@@ -139,13 +146,13 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 		if (player == null) {
 			return rep;
 		}
-		
+
 		Province province = CivilizationUtil.getProvinceAt(world, chunkCoordX, chunkCoordZ);
 
 		if (province == null) {
 			return rep;
 		}
-		
+
 		rep.civ = province.civilization;
 
 		if (rep.civ == null) {

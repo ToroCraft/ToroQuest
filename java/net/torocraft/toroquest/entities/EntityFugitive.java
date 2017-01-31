@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.item.EntityItem;
@@ -23,8 +24,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -63,6 +64,11 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 		return false;
+	}
+	
+	@Override
+	public IEntityLivingData finalizeMobSpawn(DifficultyInstance p_190672_1_, @Nullable IEntityLivingData p_190672_2_, boolean p_190672_3_) {
+		return p_190672_2_;
 	}
 
 	protected void initEntityAI() {
@@ -140,10 +146,6 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 		textcomponenttranslation.getStyle().setInsertion(this.getCachedUniqueIdString());
 		return textcomponenttranslation;
 	};
-
-	private void chat(EntityPlayer player, String message) {
-		player.sendMessage(new TextComponentString(message));
-	}
 
 	public static final Predicate<EntityPlayer> PLAYER_WITH_LEAD = new Predicate<EntityPlayer>() {
 		public boolean apply(@Nullable EntityPlayer player) {

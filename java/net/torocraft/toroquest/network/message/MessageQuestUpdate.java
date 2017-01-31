@@ -10,6 +10,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
@@ -97,11 +99,20 @@ public class MessageQuestUpdate implements IMessage {
 				return;
 			}
 
-			int rep = getRepForDonation(donation);
-			if (rep > 0) {
-				PlayerCivilizationCapabilityImpl.get(player).adjustReputation(province.civilization, rep);
+			DonationReward reward = getRepForDonation(donation);
+			if (reward != null) {
+				PlayerCivilizationCapabilityImpl.get(player).adjustReputation(province.civilization, reward.rep);
 				inventory.setDonationItem(ItemStack.EMPTY);
+				inventory.setReturnItems(l(new ItemStack(reward.item)));
 			}
+		}
+
+		private <T> List<T> l(T... items) {
+			List<T> l = new ArrayList<T>();
+			for (T item : items) {
+				l.add(item);
+			}
+			return l;
 		}
 
 		private void handleReturnStolenItem(EntityPlayer player, Province province, IVillageLordInventory inventory, ItemStack stack) {
@@ -214,21 +225,35 @@ public class MessageQuestUpdate implements IMessage {
 		return !isSet(s);
 	}
 
-	public static int getRepForDonation(ItemStack item) {
+	public static class DonationReward {
+		public DonationReward() {
+
+		}
+
+		public DonationReward(int rep, Item item) {
+			this.rep = rep;
+			this.item = item;
+		}
+
+		public Item item;
+		public int rep;
+	}
+
+	public static DonationReward getRepForDonation(ItemStack item) {
 
 		if (item.isEmpty()) {
-			return 0;
+			return null;
 		}
 
 		if (item.getItem() instanceof ItemTool) {
 			ToolMaterial material = ((ItemTool) item.getItem()).getToolMaterial();
 			switch (material) {
 			case DIAMOND:
-				return 2;
+				return new DonationReward(2, null);
 			case GOLD:
-				return 1;
+				return new DonationReward(1, null);
 			default:
-				return 0;
+				return null;
 			}
 		}
 
@@ -236,39 +261,76 @@ public class MessageQuestUpdate implements IMessage {
 			String material = ((ItemSword) item.getItem()).getToolMaterialName();
 
 			if (item.getItem() == ItemObsidianSword.INSTANCE || item.getItem() == ItemFireSword.INSTANCE) {
-				return 3;
+				return new DonationReward(3, null);
 			}
 
 			if ("DIAMOND".equals(material)) {
-				return 2;
+				return new DonationReward(2, null);
 			} else if ("GOLD".equals(material)) {
-				return 1;
+				return new DonationReward(1, null);
 			} else {
-				return 0;
+				return null;
 			}
 
 		}
 
 		if (item.getItem() == Items.DIAMOND) {
-			return 1 * item.getCount();
+			return new DonationReward(1 * item.getCount(), null);
 		}
 
 		if (item.getItem() == Items.EMERALD) {
-			return 2 * item.getCount();
+			return new DonationReward(2 * item.getCount(), null);
 		}
 
 		if (item.getItem() instanceof ItemBlock) {
 			Block block = ((ItemBlock) item.getItem()).block;
 			if (Blocks.DIAMOND_BLOCK == block) {
-				return 9 * item.getCount();
+				return new DonationReward(9 * item.getCount(), null);
 			}
 
 			if (Blocks.EMERALD_BLOCK == block) {
-				return 18 * item.getCount();
+				return new DonationReward(18 * item.getCount(), null);
 			}
 		}
 
-		return 0;
+		DonationReward reward = new DonationReward();
+
+		if (is(item, Items.BREAD, Items.POTATO, Items.APPLE)) {
+
+			reward.rep = 3 * MathHelper.floor(item.getCount() / 16);
+		}
+
+		if (is(item, Items.CARROT, Items.BEETROOT)) {
+			reward.rep = 2 * MathHelper.floor(item.getCount() / 16);
+		}
+
+		if (is(item, Items.WHEAT)) {
+			reward.rep = 1 * MathHelper.floor(item.getCount() / 16);
+		}
+
+		if (is(item, Items.CHICKEN, Items.COOKED_CHICKEN, Items.PORKCHOP, Items.COOKED_PORKCHOP, Items.MUTTON, Items.COOKED_MUTTON, Items.RABBIT,
+				Items.COOKED_RABBIT, Items.FISH, Items.COOKED_FISH, Items.BEEF, Items.COOKED_BEEF)) {
+			reward.rep = 4 * MathHelper.floor(item.getCount() / 16);
+		}
+
+		if (reward.rep == 0) {
+			return null;
+		}
+
+		if (item.getCount() >= 64) {
+			reward.item = Items.GOLD_NUGGET;
+		}
+
+		return reward;
+	}
+
+	private static boolean is(ItemStack stack, Item... items) {
+		for (Item item : items) {
+			if (stack.getItem() == item) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

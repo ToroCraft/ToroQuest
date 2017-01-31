@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.gui.VillageLordGuiContainer;
 import net.torocraft.toroquest.inventory.IVillageLordInventory;
+import net.torocraft.toroquest.network.message.MessageQuestUpdate.DonationReward;
 
 public class MessageSetItemReputationAmount implements IMessage {
 
@@ -46,18 +47,24 @@ public class MessageSetItemReputationAmount implements IMessage {
 			return;
 		}
 
-		reputation = MessageQuestUpdate.getRepForDonation(item);
-		messageCode = MessageCode.DONATION;
+		DonationReward reward = MessageQuestUpdate.getRepForDonation(item);
+
+		if (reward != null) {
+			reputation = reward.rep;
+			messageCode = MessageCode.DONATION;
+			return;
+		}
+
+		reputation = 0;
+		messageCode = MessageCode.EMPTY;
 	}
 
 	public static boolean isStolenItemForProvince(Province inProvince, ItemStack stack) {
 		if (!stack.hasTagCompound()) {
-			System.out.println("stolen: missing tag compound");
 			return false;
 		}
 
 		if (inProvince == null) {
-			System.out.println("stolen: in province is null");
 			return false;
 
 		}
@@ -66,20 +73,16 @@ public class MessageSetItemReputationAmount implements IMessage {
 		Boolean isStolen = stack.getTagCompound().getBoolean("isStolen");
 
 		if (isEmpty(sToProvinceId)) {
-			System.out.println("stolen: no province set");
 			return false;
 		}
 
 		if (!isStolen) {
-			System.out.println("stolen: missing stolen flag");
 			return false;
 		}
 
 		if (inProvince.id.toString().equals(sToProvinceId)) {
-			System.out.println("stolen: Is stolen item");
 			return true;
 		} else {
-			System.out.println("stolen: not for this province: " + inProvince.id.toString() + " != " + sToProvinceId);
 			return false;
 		}
 	}
@@ -113,7 +116,7 @@ public class MessageSetItemReputationAmount implements IMessage {
 
 	private MessageCode e(int i) {
 		try {
-			return messageCode.values()[i];
+			return MessageCode.values()[i];
 		} catch (Exception e) {
 			return MessageCode.EMPTY;
 		}

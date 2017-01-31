@@ -55,7 +55,6 @@ import net.torocraft.toroquest.entities.EntityVillageLord;
 import net.torocraft.toroquest.util.TaskRunner;
 
 public class CivilizationHandlers {
-	private static final float THEIFT_FACTOR = -1.2f;
 
 	@SubscribeEvent
 	public void handleReputationChange(CivilizationEvent.ReputationChange event) {
@@ -64,16 +63,12 @@ public class CivilizationHandlers {
 
 	@SubscribeEvent
 	public void handleEnterProvince(CivilizationEvent.Enter event) {
-		// TODO translations must be done on client
-		// event.getEntityPlayer().sendMessage(enteringMessage(event.getEntityPlayer(),
-		// event.province));
+
 	}
 
 	@SubscribeEvent
 	public void handleLeaveProvince(CivilizationEvent.Leave event) {
-		// TODO translations must be done on client
-		// event.getEntityPlayer().sendMessage(leavingMessage(event.getEntityPlayer(),
-		// event.province));
+
 	}
 
 	@SubscribeEvent
@@ -101,14 +96,14 @@ public class CivilizationHandlers {
 		if (cap == null) {
 			return;
 		}
-		
+
 		NBTTagCompound civData = cap.writeNBT();
-		
-		if(civData == null || civData.getTag("reputations") == null || ((NBTTagList)civData.getTag("reputations")).tagCount() < 1){
+
+		if (civData == null || civData.getTag("reputations") == null || ((NBTTagList) civData.getTag("reputations")).tagCount() < 1) {
 			System.out.println("Not writing empty ToroQuest data for player " + event.getEntityPlayer().getName());
 			return;
 		}
-		
+
 		event.getEntityPlayer().getEntityData().setTag(ToroQuest.MODID + ".playerCivilization", civData);
 	}
 
@@ -146,11 +141,9 @@ public class CivilizationHandlers {
 		@CapabilityInject(PlayerCivilizationCapability.class)
 		public static final Capability<PlayerCivilizationCapability> CAP = null;
 
-		private final EntityPlayer player;
 		private PlayerCivilizationCapability instance;
 
 		public PlayerCivilizationCapabilityProvider(EntityPlayer player) {
-			this.player = player;
 			instance = new PlayerCivilizationCapabilityImpl(player);
 		}
 
@@ -168,60 +161,12 @@ public class CivilizationHandlers {
 		}
 	}
 
-	@SubscribeEvent
-	public void checkForDonationsInCivilization(PlaceEvent event) {
-		if (event.getPlayer() == null) {
-			return;
-		}
-
-		int value = blockValue(event.getState().getBlock());
-
-		if (value < 1) {
-			return;
-		}
-
-		BlockPos pos = event.getBlockSnapshot().getPos();
-		adjustPlayerRep(event.getPlayer(), pos.getX() / 16, pos.getZ() / 16, value);
-	}
-
-	@SubscribeEvent
-	public void checkForTheftInCivilization(BreakEvent event) {
-		if (event.getPlayer() == null) {
-			return;
-		}
-
-		int value = blockValue(event.getState().getBlock());
-
-		if (value < 1) {
-			return;
-		}
-
-		BlockPos pos = event.getPos();
-		adjustPlayerRep(event.getPlayer(), pos.getX() / 16, pos.getZ() / 16, (int) Math.ceil(value * THEIFT_FACTOR));
-	}
-
 	public static void adjustPlayerRep(EntityPlayer player, int chunkX, int chunkZ, int value) {
 		Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), chunkX, chunkZ);
 		if (province == null || province.civilization == null) {
 			return;
 		}
 		PlayerCivilizationCapabilityImpl.get(player).adjustReputation(province.civilization, value);
-	}
-
-	private int blockValue(Block b) {
-		if (b == Blocks.IRON_BLOCK) {
-			return 10;
-		} else if (b == Blocks.GOLD_BLOCK) {
-			return 20;
-		} else if (b == Blocks.DIAMOND_BLOCK) {
-			return 50;
-		} else if (b == Blocks.EMERALD_BLOCK) {
-			return 60;
-		} else if (b == Blocks.BEACON) {
-			return 200;
-		} else {
-			return 0;
-		}
 	}
 
 	@SubscribeEvent
@@ -285,7 +230,7 @@ public class CivilizationHandlers {
 
 			return amount;
 		}
-		
+
 		if (victim instanceof EntityBat) {
 			return 0;
 		}
@@ -294,7 +239,8 @@ public class CivilizationHandlers {
 	}
 
 	private boolean isHostileMob(EntityLivingBase victim) {
-		return victim instanceof EntityMob || victim instanceof EntitySlime || victim instanceof EntityMagmaCube || victim instanceof EntityGhast || victim instanceof EntityShulker;
+		return victim instanceof EntityMob || victim instanceof EntitySlime || victim instanceof EntityMagmaCube || victim instanceof EntityGhast
+				|| victim instanceof EntityShulker;
 	}
 
 	@SubscribeEvent
@@ -330,10 +276,6 @@ public class CivilizationHandlers {
 			s = province.civilization.getNeutralEnteringMessage(province);
 		}
 		return new TextComponentString(s);
-	}
-
-	private void chat(EntityPlayer player, String message) {
-		player.sendMessage(new TextComponentString(message));
 	}
 
 	@SubscribeEvent
@@ -462,8 +404,6 @@ public class CivilizationHandlers {
 		if (localFugitiveCount > 1) {
 			return;
 		}
-
-		int count = world.rand.nextInt(3) + 1;
 
 		EntityFugitive e = new EntityFugitive(world);
 		e.setPosition(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5);

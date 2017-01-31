@@ -1,6 +1,7 @@
 package net.torocraft.toroquest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -8,6 +9,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -15,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData;
 import net.torocraft.toroquest.civilization.Province;
@@ -29,6 +32,7 @@ import net.torocraft.toroquest.generation.ThroneRoomGenerator;
 import net.torocraft.toroquest.gui.VillageLordGuiHandler;
 import net.torocraft.toroquest.util.BookCreator;
 import net.torocraft.toroquest.util.BookCreator.BookTypes;
+
 
 public class ToroQuestCommand extends CommandBase {
 
@@ -65,7 +69,7 @@ public class ToroQuestCommand extends CommandBase {
 		System.out.println("command " + command);
 
 		if ("rep".equals(command)) {
-			adjustRep(player, args);
+			adjustRep(server, player, args);
 		} else if ("list".equals(command)) {
 			listCommand(player, args);
 		} else if ("gen".equals(command)) {
@@ -80,13 +84,12 @@ public class ToroQuestCommand extends CommandBase {
 			throw new WrongUsageException("commands.tq.usage", new Object[0]);
 		}
 	}
-	
+
 	private void bookCommand(EntityPlayer player, String[] args) throws CommandException {
 		List<ItemStack> items = new ArrayList<ItemStack>();
 		items.add(BookCreator.createBook(BookTypes.CIV_LORE, "pantheon_unbiased_book_1"));
 		dropItems(player, items);
 	}
-
 
 	private void listCommand(EntityPlayer player, String[] args) throws CommandException {
 		List<Province> provinces = CivilizationsWorldSaveData.get(player.world).getProvinces();
@@ -97,7 +100,7 @@ public class ToroQuestCommand extends CommandBase {
 		player.sendMessage(new TextComponentString(sb.toString()));
 	}
 
-	private void adjustRep(EntityPlayer player, String[] args) throws CommandException {
+	private void adjustRep(MinecraftServer server, EntityPlayer player, String[] args) throws CommandException {
 		int amount;
 		if (args.length < 2) {
 			throw new WrongUsageException("commands.tq.usage", new Object[0]);
@@ -108,11 +111,30 @@ public class ToroQuestCommand extends CommandBase {
 				throw new WrongUsageException("commands.tq.usage", new Object[0], e);
 			}
 		}
-		Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), player.chunkCoordX, player.chunkCoordZ);
-		if (province == null || province.civilization == null) {
-			throw new WrongUsageException("commands.tq.not_in_civ", new Object[0]);
+
+		Entity entity = null;
+		EntityPlayer playerToSet = player;
+
+		if (args.length >= 3) {
+			entity = getEntity(server, player, args[2]);
 		}
-		PlayerCivilizationCapabilityImpl.get(player).setReputation(province.civilization, amount);
+
+		if (entity != null && entity instanceof EntityPlayer) {
+			playerToSet = (EntityPlayer) entity;
+		}
+
+		CivilizationType civ;
+		if (args.length >= 4) {
+			civ = CivilizationType.valueOf(args[3]);
+		} else {
+			Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), player.chunkCoordX, player.chunkCoordZ);
+			if (province == null || province.civilization == null) {
+				throw new WrongUsageException("commands.tq.not_in_civ", new Object[0]);
+			}
+			civ = province.civilization;
+		}
+
+		PlayerCivilizationCapabilityImpl.get(playerToSet).setReputation(civ, amount);
 	}
 
 	private void genCommand(EntityPlayer player, String[] args) throws CommandException {
@@ -157,7 +179,8 @@ public class ToroQuestCommand extends CommandBase {
 		String type = args[1];
 
 		if ("lord".equals(type)) {
-			player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), player.world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+			player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), player.world, player.getPosition().getX(),
+					player.getPosition().getY(), player.getPosition().getZ());
 			return;
 		}
 
@@ -230,7 +253,7 @@ public class ToroQuestCommand extends CommandBase {
 				player.sendMessage(new TextComponentString(quest.getDescription()));
 				dropItems(player, returnItems);
 			}
-			
+
 		} else if ("complete".equals(sub)) {
 
 			QuestData data = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
@@ -304,47 +327,46 @@ public class ToroQuestCommand extends CommandBase {
 
 	@Override
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
-		List<String> tabOptions = new ArrayList<String>();
 
 		if (args.length == 0) {
-			tabOptions.add("tq");
+			return l("tq");
 		} else if (args.length == 1) {
-			String command = args[0];
+			return getListOfStringsMatchingLastWord(args, "rep", "gen", "gui", "quest", "list", "book");
 
-			if (command == null || command.trim().length() == 0) {
-				tabOptions.add("rep");
-				tabOptions.add("gen");
-				tabOptions.add("gui");
-				tabOptions.add("quest");
-				tabOptions.add("list");
-				tabOptions.add("book");
-			} else {
-				if (command.startsWith("r")) {
-					tabOptions.add("rep");
-				} else if (command.startsWith("g")) {
-					tabOptions.add("gen");
-					tabOptions.add("gui");
-				}
-			}
 		} else if (args.length == 2) {
 			if ("gen".equals(args[0])) {
-				tabOptions.add("throne_room");
-				tabOptions.add("mage_tower");
-				tabOptions.add("bastions_lair");
-				tabOptions.add("monolith");
-				tabOptions.add("graveyard");
+
+				return getListOfStringsMatchingLastWord(args, "throne_room", "mage_tower", "bastions_lair", "monolith", "graveyard");
+
 			} else if ("gui".equals(args[0])) {
-				tabOptions.add("lord");
+				return getListOfStringsMatchingLastWord(args, "lord");
+
 			} else if ("quest".equals(args[0])) {
-				tabOptions.add("current");
-				tabOptions.add("complete");
-				tabOptions.add("list");
-				tabOptions.add("next");
-				tabOptions.add("accept");
-				tabOptions.add("reject");
+
+				return getListOfStringsMatchingLastWord(args, "current", "complete", "list", "next", "accept", "reject");
+
+			} else if ("rep".equals(args[0])) {
+				return l("10");
+			}
+		} else if (args.length == 3) {
+			if ("rep".equals(args[0])) {
+				return getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames());
+			}
+		} else if (args.length == 4) {
+			if ("rep".equals(args[0])) {
+				return getListOfStringsMatchingLastWord(args, Arrays.asList(CivilizationType.values()));
 			}
 		}
-		return tabOptions;
+
+		return l();
+	}
+
+	private <T> List<T> l(T... items) {
+		List<T> l = new ArrayList<T>();
+		for (T item : items) {
+			l.add(item);
+		}
+		return l;
 	}
 
 }

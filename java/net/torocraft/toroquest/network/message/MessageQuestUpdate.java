@@ -58,7 +58,6 @@ public class MessageQuestUpdate implements IMessage {
 
 		void work(MessageQuestUpdate message, EntityPlayer player) {
 			Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), player.chunkCoordX, player.chunkCoordZ);
-			QuestData currentQuestData = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
 
 			EntityVillageLord lord = VillageLordGuiHandler.getVillageLord(player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
 			IVillageLordInventory inventory = lord.getInventory(player.getUniqueID());
@@ -106,7 +105,6 @@ public class MessageQuestUpdate implements IMessage {
 		}
 
 		private void handleReturnStolenItem(EntityPlayer player, Province province, IVillageLordInventory inventory, ItemStack stack) {
-			System.out.println("handleReturnStolenItem");
 			inventory.setDonationItem(ItemStack.EMPTY);
 			ItemStack emeralds = new ItemStack(Items.EMERALD, 2 + player.world.rand.nextInt(3));
 			List<ItemStack> l = new ArrayList<ItemStack>(1);

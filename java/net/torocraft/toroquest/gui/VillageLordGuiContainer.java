@@ -74,7 +74,7 @@ public class VillageLordGuiContainer extends GuiContainer {
 	}
 
 	private void drawGuiTitle(int xPos, int yPos) {
-		fontRendererObj.drawString(I18n.format("quest.gui.title", this.civName), xPos, yPos, Color.darkGray.getRGB());
+		fontRendererObj.drawString(I18n.format("quest.gui.title", VillageLordGuiContainer.civName), xPos, yPos, Color.darkGray.getRGB());
 	}
 
 	private void drawDonateButton(int mouseX, int mouseY) {
@@ -129,10 +129,6 @@ public class VillageLordGuiContainer extends GuiContainer {
 			fontRendererObj.drawString(I18n.format("quest.gui.empty"), xPos + 13, yPos + 15, Color.darkGray.getRGB());
 
 		}
-	}
-
-	private boolean isSet(String s) {
-		return s != null && s.trim().length() > 0;
 	}
 
 	private void drawQuestTitle(int xPos, int yPos) {
@@ -201,14 +197,6 @@ public class VillageLordGuiContainer extends GuiContainer {
 		}
 
 		return sb.toString();
-	}
-
-	private static boolean isSingle(String string) {
-		try {
-			return Integer.parseInt(string, 10) == 1;
-		} catch (Exception e) {
-			return false;
-		}
 	}
 
 	public static void setProvinceName(String name) {

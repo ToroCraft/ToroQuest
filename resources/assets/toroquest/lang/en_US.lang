@@ -7,6 +7,7 @@ achievement.bounty_hunter=Bounty Hunter
 achievement.bastion=Bastion Slayer
 achievement.mage=Mage Slayer
 achievement.village_lord=King Slayer
+achievement.jackpot=Jackpot!
 item.obsidian_sword.name=Obsidian Sword
 item.fire_sword.name=Fire Sword
 item.diamond_battle_axe.name=Diamond Battle Axe
@@ -28,6 +29,7 @@ item.toro_armor_leggings.name=Toro Leggings
 item.toro_armor_chestplate.name=Toro Chestplate
 item.toro_leather.name=Toro Leather
 item.torch_arrow.name=Torch Arrow
+item.pickaxe_of_greed.name=Pickaxe of Greed
 
 effect.toroquest\:royalty=Royalty
 potion.effect.toroquest\:royalty=Potion of Royalty

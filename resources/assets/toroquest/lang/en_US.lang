@@ -31,6 +31,7 @@ item.toro_leather.name=Toro Leather
 item.torch_arrow.name=Torch Arrow
 item.pickaxe_of_greed.name=Pickaxe of Greed
 item.sword_of_pain.name=Sword of Pain
+item.spicy_chicken.name=Spicy Chicken
 
 effect.toroquest\:royalty=Royalty
 potion.effect.toroquest\:royalty=Potion of Royalty

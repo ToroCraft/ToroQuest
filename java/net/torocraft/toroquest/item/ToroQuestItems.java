@@ -20,6 +20,7 @@ public class ToroQuestItems {
 		ItemBattleAxe.init();
 		ItemPickaxeOfGreed.init();
 		ItemSwordOfPain.init();
+		ItemSpicyChicken.init();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -34,6 +35,7 @@ public class ToroQuestItems {
 		ItemBattleAxe.registerRenders();
 		ItemPickaxeOfGreed.registerRenders();
 		ItemSwordOfPain.registerRenders();
+		ItemSpicyChicken.registerRenders();
 	}
 
 }

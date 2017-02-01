@@ -62,7 +62,7 @@ public class ItemPickaxeOfGreed extends ItemPickaxe {
 		ItemStack stack = drops.get(0);
 		int count = stack.getCount();
 
-		if (rand.nextInt(2) == 0) {
+		if (rand.nextInt(77) == 0) {
 			player.addStat(JACKPOT_ACHIEVEMNT);
 			stack.setCount(stack.getMaxStackSize());
 		} else if (rand.nextInt(10) == 0) {

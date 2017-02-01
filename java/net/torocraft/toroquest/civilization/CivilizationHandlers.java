@@ -70,6 +70,10 @@ public class CivilizationHandlers {
 	public void handleLeaveProvince(CivilizationEvent.Leave event) {
 
 	}
+	
+	/*
+	 * -1360 40 342
+	 */
 
 	@SubscribeEvent
 	public void onDeath(PlayerEvent.Clone event) {
@@ -80,9 +84,15 @@ public class CivilizationHandlers {
 		PlayerCivilizationCapability newCap = PlayerCivilizationCapabilityImpl.get(event.getEntityPlayer());
 		PlayerCivilizationCapability originalCap = PlayerCivilizationCapabilityImpl.get(event.getOriginal());
 
-		if (newCap == null || originalCap == null) {
+		if (originalCap == null) {
 			return;
 		}
+		
+		if(newCap == null){
+			throw new NullPointerException("missing player capability during clone");
+		}
+		
+		//System.out.println("CLONE: " + originalCap.writeNBT());
 
 		newCap.readNBT(originalCap.writeNBT());
 	}
@@ -99,8 +109,10 @@ public class CivilizationHandlers {
 
 		NBTTagCompound civData = cap.writeNBT();
 
-		if (civData == null || civData.getTag("reputations") == null || ((NBTTagList) civData.getTag("reputations")).tagCount() < 1) {
-			System.out.println("Not writing empty ToroQuest data for player " + event.getEntityPlayer().getName());
+		//System.out.println("SAVE: " + civData);
+		
+ 		if (civData == null || civData.getTag("reputations") == null || ((NBTTagList) civData.getTag("reputations")).tagCount() < 1) {
+			//System.out.println("******************Not writing empty ToroQuest data for player " + event.getEntityPlayer().getName());
 			return;
 		}
 
@@ -117,7 +129,16 @@ public class CivilizationHandlers {
 		if (cap == null) {
 			return;
 		}
-		cap.readNBT((NBTTagCompound) event.getEntityPlayer().getEntityData().getTag(ToroQuest.MODID + ".playerCivilization"));
+		
+		NBTTagCompound c = event.getEntityPlayer().getEntityData().getCompoundTag(ToroQuest.MODID + ".playerCivilization");
+		
+		if(c == null){
+			//System.out.println("******************Missing civ data on load");
+		}else{
+			System.out.println("LOAD: " + c.toString());
+		}
+		
+		cap.readNBT(c);
 	}
 
 	@SubscribeEvent

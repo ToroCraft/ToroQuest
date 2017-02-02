@@ -52,6 +52,9 @@ public class ItemClaymore extends ItemSword {
 		m.put(ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -9.5D, 0));
 		
 		
+		m.put(ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -9.5D, 0));
+		
+		
 		for(AttributeModifier a : m.get(ATTACK_SPEED.getName())){
 			System.out.println("AttributeModifier: " + a.toString());
 		}

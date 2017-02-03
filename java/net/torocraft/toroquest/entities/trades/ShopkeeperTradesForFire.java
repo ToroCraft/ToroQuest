@@ -9,6 +9,7 @@ import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.torocraft.toroquest.civilization.ReputationLevel;
 import net.torocraft.toroquest.item.ItemFireSword;
+import net.torocraft.toroquest.item.ItemSpicyChicken;
 
 public class ShopkeeperTradesForFire {
 	public static MerchantRecipeList trades(EntityPlayer player, ReputationLevel rep) {
@@ -32,7 +33,7 @@ public class ShopkeeperTradesForFire {
 		}
 		
 		if (rep.equals(ReputationLevel.FRIEND) || rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
-
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(4)), new ItemStack(Items.CHICKEN, 1), new ItemStack(ItemSpicyChicken.INSTANCE)));
 		}
 
 		if (rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {

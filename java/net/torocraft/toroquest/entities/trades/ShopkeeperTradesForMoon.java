@@ -9,6 +9,8 @@ import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.torocraft.toroquest.civilization.ReputationLevel;
 import net.torocraft.toroquest.item.ItemObsidianSword;
+import net.torocraft.toroquest.item.ItemPickaxeOfGreed;
+import net.torocraft.toroquest.item.ItemSwordOfPain;
 
 public class ShopkeeperTradesForMoon {
 	public static MerchantRecipeList trades(EntityPlayer player, ReputationLevel rep) {
@@ -28,7 +30,8 @@ public class ShopkeeperTradesForMoon {
 		}
 		
 		if (rep.equals(ReputationLevel.FRIEND) || rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
-
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(5)), new ItemStack(Items.QUARTZ, 20), new ItemStack(ItemPickaxeOfGreed.INSTANCE)));
+			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(5)), new ItemStack(Items.QUARTZ, 20), new ItemStack(ItemSwordOfPain.INSTANCE)));
 		}
 
 		if (rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {

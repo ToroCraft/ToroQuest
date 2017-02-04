@@ -52,10 +52,11 @@ public class EntityToro extends EntityTameable implements IMob {
 
 	public static String NAME = "toro";
 
-	private static final DataParameter<Boolean> CHARGING = EntityDataManager.<Boolean>createKey(EntityToro.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Boolean> CHARGING = EntityDataManager.<Boolean> createKey(EntityToro.class, DataSerializers.BOOLEAN);
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityToro.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0x3f3024, 0xe0d6b9);
+		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityToro.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2,
+				true, 0x3f3024, 0xe0d6b9);
 	}
 
 	public static void registerRenders() {
@@ -154,9 +155,14 @@ public class EntityToro extends EntityTameable implements IMob {
 	@Override
 	public void onEntityUpdate() {
 		super.onEntityUpdate();
-		if (world.getTotalWorldTime() % 100L == 0L) {
-			// TODO why does the charge get out of sync with the attack target?
-			syncChargingWithAttackTarget();
+		try {
+			if (world.getTotalWorldTime() % 100L == 0L) {
+				syncChargingWithAttackTarget();
+			}
+		} catch (NullPointerException e) {
+			/*
+			 * https://github.com/ToroCraft/ToroQuest/issues/116
+			 */
 		}
 	}
 
@@ -188,7 +194,8 @@ public class EntityToro extends EntityTameable implements IMob {
 			setAttackTarget(null);
 
 			if (knockback > 0 && victim instanceof EntityLivingBase) {
-				((EntityLivingBase) victim).knockBack(this, (float) knockback * 0.5F, (double) MathHelper.sin(this.rotationYaw * 0.017453292F), (double) (-MathHelper.cos(this.rotationYaw * 0.017453292F)));
+				((EntityLivingBase) victim).knockBack(this, (float) knockback * 0.5F, (double) MathHelper.sin(this.rotationYaw * 0.017453292F),
+						(double) (-MathHelper.cos(this.rotationYaw * 0.017453292F)));
 				this.motionX *= 0.6D;
 				this.motionZ *= 0.6D;
 			}

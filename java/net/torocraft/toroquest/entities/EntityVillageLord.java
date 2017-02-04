@@ -1,14 +1,11 @@
 package net.torocraft.toroquest.entities;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
-
-import com.google.common.base.Predicate;
 
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -34,7 +31,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.util.datafix.walkers.ItemStackDataLists;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -133,7 +129,6 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		if (world.isRemote) {
 			return;
 		}
-		IVillageLordInventory inventory = getInventory(player.getUniqueID());
 		player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), world, getPosition().getX(), getPosition().getY(), getPosition().getZ());
 	}
 
@@ -208,28 +203,6 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		}
 
 		PlayerCivilizationCapabilityImpl.get(player).adjustReputation(civ, -5);
-	}
-
-	private void callForHelp(EntityLivingBase attacker) {
-		List<EntityToroNpc> help = world.getEntitiesWithinAABB(EntityToroNpc.class, new AxisAlignedBB(getPosition()).expand(16, 6, 16), new Predicate<EntityToroNpc>() {
-			public boolean apply(@Nullable EntityToroNpc entity) {
-				if (!(entity instanceof EntityGuard || entity instanceof EntitySentry)) {
-					return false;
-				}
-
-				CivilizationType civ = entity.getCivilization();
-
-				if (civ == null) {
-					return false;
-				}
-
-				return civ.equals(EntityVillageLord.this.getCivilization());
-			}
-		});
-
-		for (EntityToroNpc entity : help) {
-			entity.setAttackTarget(attacker);
-		}
 	}
 
 	@Override

@@ -69,13 +69,13 @@ public class EntitySentry extends EntityToroNpc {
 
 	protected void initEntityAI() {
 		tasks.addTask(0, new EntityAISwimming(this));
-		tasks.addTask(2, new EntityAIAttackMelee(this, 0.6D, false));
+		tasks.addTask(2, new EntityAIAttackMelee(this, 0.5D, false));
 		tasks.addTask(7, new EntityAIWander(this, 0.35D));
 		tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		tasks.addTask(8, new EntityAILookIdle(this));
 
 		targetTasks.addTask(2, new EntityAINearestAttackableCivTarget(this));
-		targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityMob.class, 2, false, false, new Predicate<EntityMob>() {
+		targetTasks.addTask(3, new EntityAINearestAttackableTarget<EntityMob>(this, EntityMob.class, 2, false, false, new Predicate<EntityMob>() {
 			@Override
 			public boolean apply(EntityMob target) {
 				return !(target instanceof EntityCreeper);
@@ -101,6 +101,7 @@ public class EntitySentry extends EntityToroNpc {
 		EntityLivingBase attacker = this.getAttackTarget();
 		if (attacker == null && source.getEntity() instanceof EntityLivingBase) {
 			setAttackTarget((EntityLivingBase) source.getEntity());
+			callForHelp((EntityLivingBase) source.getEntity());
 		}
 		return true;
 	}
@@ -126,7 +127,7 @@ public class EntitySentry extends EntityToroNpc {
 			return false;
 		}
 		int rep = PlayerCivilizationCapabilityImpl.get(target).getReputation(civ);
-		return rep < -10;
+		return rep < -100;
 	}
 
 	@Nullable

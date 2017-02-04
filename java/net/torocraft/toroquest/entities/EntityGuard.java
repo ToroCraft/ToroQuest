@@ -105,7 +105,7 @@ public class EntityGuard extends EntityToroNpc {
 		tasks.addTask(8, new EntityAILookIdle(this));
 
 		targetTasks.addTask(2, new EntityAINearestAttackableCivTarget(this));
-		targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityMob.class, 10, false, false, new Predicate<EntityMob>() {
+		targetTasks.addTask(3, new EntityAINearestAttackableTarget<EntityMob>(this, EntityMob.class, 10, false, false, new Predicate<EntityMob>() {
 			@Override
 			public boolean apply(EntityMob target) {
 				return !(target instanceof EntityCreeper);
@@ -141,10 +141,11 @@ public class EntityGuard extends EntityToroNpc {
 		if (!super.attackEntityFrom(source, amount)) {
 			return false;
 		}
-
+		
 		EntityLivingBase attacker = this.getAttackTarget();
 		if (attacker == null && source.getEntity() instanceof EntityLivingBase) {
 			setAttackTarget((EntityLivingBase) source.getEntity());
+			callForHelp((EntityLivingBase) source.getEntity());
 		}
 		return true;
 	}
@@ -192,7 +193,7 @@ public class EntityGuard extends EntityToroNpc {
 			return false;
 		}
 		int rep = PlayerCivilizationCapabilityImpl.get(target).getReputation(civ);
-		return rep < -10;
+		return rep < -100;
 	}
 
 	public void attackTargetEntityWithCurrentItem(Entity targetEntity) {

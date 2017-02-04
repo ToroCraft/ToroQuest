@@ -1,5 +1,11 @@
 package net.torocraft.toroquest.entities;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import com.google.common.base.Predicate;
+
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -18,6 +24,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -274,6 +281,28 @@ public class EntityToroNpc extends EntityCreature {
 		super.applyEntityAttributes();
 		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
 
+	}
+	
+	protected void callForHelp(EntityLivingBase attacker) {
+		List<EntityToroNpc> help = world.getEntitiesWithinAABB(EntityToroNpc.class, new AxisAlignedBB(getPosition()).expand(16, 6, 16), new Predicate<EntityToroNpc>() {
+			public boolean apply(@Nullable EntityToroNpc entity) {
+				if (!(entity instanceof EntityGuard || entity instanceof EntitySentry)) {
+					return false;
+				}
+
+				CivilizationType civ = entity.getCivilization();
+
+				if (civ == null) {
+					return false;
+				}
+
+				return civ.equals(EntityToroNpc.this.getCivilization());
+			}
+		});
+
+		for (EntityToroNpc entity : help) {
+			entity.setAttackTarget(attacker);
+		}
 	}
 
 	/**

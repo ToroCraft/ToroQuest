@@ -30,13 +30,9 @@ public class EntityAINearestAttackableCivTarget extends EntityAITarget {
 	public EntityAINearestAttackableCivTarget(EntityToroNpc npc) {
 		super(npc, false, false);
 
-		// (Predicate<EntityPlayer>)
-
 		this.taskOwner = npc;
 		this.theNearestAttackableTargetSorter = new EntityAINearestAttackableTarget.Sorter(npc);
 		this.setMutexBits(1);
-
-		final Predicate<? super EntityLivingBase> targetSelector = (Predicate<? super EntityLivingBase>) null;
 
 		this.targetEntitySelector = new Predicate<EntityPlayer>() {
 			public boolean apply(@Nullable EntityPlayer target) {
@@ -77,7 +73,33 @@ public class EntityAINearestAttackableCivTarget extends EntityAITarget {
 
 		int rep = PlayerCivilizationCapabilityImpl.get(target).getReputation(civ);
 
-		return rep < -10;
+		if (rep > -10) {
+			return false;
+		}
+
+		if (rep < -800) {
+			return true;
+		}
+
+		int attackOdds;
+
+		if (rep < -400) {
+			attackOdds = 10;
+
+		} else if (rep < -200) {
+			attackOdds = 40;
+
+		} else if (rep < -100) {
+			attackOdds = 200;
+
+		} else if (rep < -50) {
+			attackOdds = 400;
+
+		} else {
+			attackOdds = 800;
+		}
+
+		return target.getEntityWorld().rand.nextInt(attackOdds) == 0;
 	}
 
 	/**
@@ -104,13 +126,14 @@ public class EntityAINearestAttackableCivTarget extends EntityAITarget {
 		double maxXZDistance = getTargetDistance();
 		double maxYDistance = getTargetDistance();
 
-		targetEntity = taskOwner.world.getNearestAttackablePlayer(taskOwner.posX, taskOwner.posY + (double) taskOwner.getEyeHeight(), taskOwner.posZ, maxXZDistance, maxYDistance, null, targetEntitySelector);
+		targetEntity = taskOwner.world.getNearestAttackablePlayer(taskOwner.posX, taskOwner.posY + (double) taskOwner.getEyeHeight(), taskOwner.posZ,
+				maxXZDistance, maxYDistance, null, targetEntitySelector);
 
 		return targetEntity != null;
 	}
 
 	protected boolean shouldExecuteNonPlayer() {
-		List<EntityToroNpc> list = taskOwner.world.<EntityToroNpc>getEntitiesWithinAABB(EntityToroNpc.class, getTargetableArea(getTargetDistance()));
+		List<EntityToroNpc> list = taskOwner.world.<EntityToroNpc> getEntitiesWithinAABB(EntityToroNpc.class, getTargetableArea(getTargetDistance()));
 
 		if (list.isEmpty()) {
 			return false;

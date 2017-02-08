@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -83,18 +82,26 @@ public class EntityToro extends EntityTameable implements IMob {
 
 	public EntityToro(World worldIn) {
 		super(worldIn);
-		setSize(1.8F, 1.6F);
+		/*
+		 * If the width is made any larger than 0.7 Toros can hit through walls.
+		 * Previously I was extending EntityAIAttackMelee but that seemed to
+		 * cause a conflict with other mods,
+		 * https://github.com/ToroCraft/ToroQuest/issues/116. So instead of
+		 * extending the class should probably be copied if a larger bounding
+		 * box is required.
+		 */
+		setSize(0.7F, 1.8F);
 	}
 
 	protected void initEntityAI() {
 		enableCowAi();
-		targetTasks.addTask(2, new ToroAIAttackMelee(this));
+		targetTasks.addTask(2, new EntityAIAttackMelee(this, 1.75, false));
 	}
 
 	protected void enableCowAi() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(1, new EntityAIPanic(this, 2.0D));
-		this.tasks.addTask(2, new EntityAIMate(this, 1.0D));
+		this.tasks.addTask(2, new EntityAIMate(this, 0.9D));
 		this.tasks.addTask(3, new EntityAITempt(this, 1.25D, Items.WHEAT, false));
 		this.tasks.addTask(4, new EntityAIFollowParent(this, 1.25D));
 		this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
@@ -234,18 +241,6 @@ public class EntityToro extends EntityTameable implements IMob {
 
 	public float getEyeHeight() {
 		return this.isChild() ? this.height : 1.3F;
-	}
-
-	public static class ToroAIAttackMelee extends EntityAIAttackMelee {
-
-		public ToroAIAttackMelee(EntityCreature creature) {
-			super(creature, 1.75, false);
-		}
-
-		protected double getAttackReachSqr(EntityLivingBase attackTarget) {
-			return 1.5 + attackTarget.width;
-		}
-
 	}
 
 	@Override

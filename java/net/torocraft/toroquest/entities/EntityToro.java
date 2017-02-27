@@ -11,16 +11,12 @@ import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIFollowParent;
 import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMate;
 import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAITempt;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,7 +43,7 @@ import net.torocraft.toroquest.entities.model.ModelToro;
 import net.torocraft.toroquest.entities.render.RenderToro;
 import net.torocraft.toroquest.item.ItemToroLeather;
 
-public class EntityToro extends EntityTameable implements IMob {
+public class EntityToro extends EntityTameable {
 
 	public static String NAME = "toro";
 
@@ -82,31 +78,17 @@ public class EntityToro extends EntityTameable implements IMob {
 
 	public EntityToro(World worldIn) {
 		super(worldIn);
-		/*
-		 * If the width is made any larger than 0.7 Toros can hit through walls.
-		 * Previously I was extending EntityAIAttackMelee but that seemed to
-		 * cause a conflict with other mods,
-		 * https://github.com/ToroCraft/ToroQuest/issues/116. So instead of
-		 * extending the class should probably be copied if a larger bounding
-		 * box is required.
-		 */
 		setSize(0.7F, 1.8F);
 	}
 
 	protected void initEntityAI() {
-		enableCowAi();
-		targetTasks.addTask(2, new EntityAIAttackMelee(this, 1.75, false));
-	}
-
-	protected void enableCowAi() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(1, new EntityAIPanic(this, 2.0D));
-		this.tasks.addTask(2, new EntityAIMate(this, 0.9D));
-		this.tasks.addTask(3, new EntityAITempt(this, 1.25D, Items.WHEAT, false));
-		this.tasks.addTask(4, new EntityAIFollowParent(this, 1.25D));
+		this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.75, false));
 		this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(7, new EntityAILookIdle(this));
+
 	}
 
 	protected void applyEntityAttributes() {
@@ -183,6 +165,7 @@ public class EntityToro extends EntityTameable implements IMob {
 		syncChargingWithAttackTarget();
 	}
 
+	@Override
 	public boolean attackEntityAsMob(Entity victim) {
 
 		float attackDamage = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();

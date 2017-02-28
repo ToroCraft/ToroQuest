@@ -15,7 +15,6 @@ import net.minecraft.tileentity.MobSpawnerBaseLogic;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
@@ -30,7 +29,8 @@ public class MageTowerGenerator extends WorldGenerator {
 
 	private int height = 0;// floors * floorHieght + 2;
 
-	protected IBlockState[] aFloorBlock = { Blocks.NETHER_BRICK.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), ((BlockStoneBrick) Blocks.STONEBRICK).getStateFromMeta(1), Blocks.BRICK_BLOCK.getDefaultState() };
+	protected IBlockState[] aFloorBlock = { Blocks.NETHER_BRICK.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(),
+			((BlockStoneBrick) Blocks.STONEBRICK).getStateFromMeta(1), Blocks.BRICK_BLOCK.getDefaultState() };
 	protected IBlockState aWallDecorationBlock[] = { Blocks.GLOWSTONE.getDefaultState(), Blocks.SEA_LANTERN.getDefaultState() };
 	protected IBlockState[] aWallBlock = { Blocks.QUARTZ_BLOCK.getDefaultState(), Blocks.STONEBRICK.getDefaultState() };
 	protected IBlockState[] aWallRandBlock = { ((BlockQuartz) Blocks.QUARTZ_BLOCK).getStateFromMeta(1), Blocks.COBBLESTONE.getDefaultState() };
@@ -99,7 +99,7 @@ public class MageTowerGenerator extends WorldGenerator {
 	private void spawnMage(World world, BlockPos pos) {
 		EntityMage e = new EntityMage(world);
 		e.setPosition(pos.getX() + 3, pos.getY() + (floors * floorHieght) + 1, pos.getZ() + 3);
-		world.spawnEntity(e);
+		world.spawnEntityInWorld(e);
 	}
 
 	private BlockPos findSurface(World world, BlockPos start) {
@@ -166,7 +166,8 @@ public class MageTowerGenerator extends WorldGenerator {
 
 	private boolean isGroundBlock(IBlockState blockState) {
 
-		if (blockState.getBlock() == Blocks.LEAVES || blockState.getBlock() == Blocks.LEAVES2 || blockState.getBlock() == Blocks.LOG || blockState.getBlock() instanceof BlockBush) {
+		if (blockState.getBlock() == Blocks.LEAVES || blockState.getBlock() == Blocks.LEAVES2 || blockState.getBlock() == Blocks.LOG
+				|| blockState.getBlock() instanceof BlockBush) {
 			return false;
 		}
 
@@ -249,7 +250,7 @@ public class MageTowerGenerator extends WorldGenerator {
 		placeBlock(world, pos, Blocks.MOB_SPAWNER);
 		TileEntityMobSpawner theSpawner = (TileEntityMobSpawner) world.getTileEntity(pos);
 		MobSpawnerBaseLogic logic = theSpawner.getSpawnerBaseLogic();
-		logic.setEntityId(new ResourceLocation(mob));
+		logic.setEntityName(mob);
 	}
 
 	public static void placeBlock(World world, BlockPos pos, net.minecraft.block.Block block) {

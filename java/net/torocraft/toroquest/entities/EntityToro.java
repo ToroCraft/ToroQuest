@@ -50,8 +50,7 @@ public class EntityToro extends EntityTameable {
 	private static final DataParameter<Boolean> CHARGING = EntityDataManager.<Boolean> createKey(EntityToro.class, DataSerializers.BOOLEAN);
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityToro.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2,
-				true, 0x3f3024, 0xe0d6b9);
+		EntityRegistry.registerModEntity(EntityToro.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0x3f3024, 0xe0d6b9);
 	}
 
 	public static void registerRenders() {
@@ -117,7 +116,7 @@ public class EntityToro extends EntityTameable {
 	}
 
 	public void notifyDataManagerChange(DataParameter<?> key) {
-		if (CHARGING.equals(key) && this.isCharging() && world.isRemote) {
+		if (CHARGING.equals(key) && this.isCharging() && worldObj.isRemote) {
 		}
 		super.notifyDataManagerChange(key);
 	}
@@ -145,7 +144,7 @@ public class EntityToro extends EntityTameable {
 	public void onEntityUpdate() {
 		super.onEntityUpdate();
 		try {
-			if (world.getTotalWorldTime() % 100L == 0L) {
+			if (worldObj.getTotalWorldTime() % 100L == 0L) {
 				syncChargingWithAttackTarget();
 			}
 		} catch (NullPointerException e) {
@@ -200,7 +199,7 @@ public class EntityToro extends EntityTameable {
 
 					if (this.rand.nextFloat() < f1) {
 						entityplayer.getCooldownTracker().setCooldown(Items.SHIELD, 100);
-						this.world.setEntityState(entityplayer, (byte) 30);
+						this.worldObj.setEntityState(entityplayer, (byte) 30);
 					}
 				}
 			}
@@ -219,7 +218,7 @@ public class EntityToro extends EntityTameable {
 	}
 
 	public EntityCow createChild(EntityAgeable ageable) {
-		return new EntityCow(this.world);
+		return new EntityCow(this.worldObj);
 	}
 
 	public float getEyeHeight() {
@@ -229,7 +228,7 @@ public class EntityToro extends EntityTameable {
 	@Override
 	public void onDeath(DamageSource cause) {
 		super.onDeath(cause);
-		if (!world.isRemote) {
+		if (!worldObj.isRemote) {
 			dropLoot();
 		}
 	}
@@ -241,14 +240,14 @@ public class EntityToro extends EntityTameable {
 
 	protected void dropBeef() {
 		ItemStack stack = new ItemStack(Items.BEEF, rand.nextInt(3) + 2);
-		EntityItem dropItem = new EntityItem(world, posX, posY, posZ, stack.copy());
-		world.spawnEntity(dropItem);
+		EntityItem dropItem = new EntityItem(worldObj, posX, posY, posZ, stack.copy());
+		worldObj.spawnEntityInWorld(dropItem);
 	}
 
 	protected void dropLeather() {
 		ItemStack stack = new ItemStack(ItemToroLeather.INSTANCE, 1);
-		EntityItem dropItem = new EntityItem(world, posX, posY, posZ, stack.copy());
-		world.spawnEntity(dropItem);
+		EntityItem dropItem = new EntityItem(worldObj, posX, posY, posZ, stack.copy());
+		worldObj.spawnEntityInWorld(dropItem);
 	}
 
 	@Nullable

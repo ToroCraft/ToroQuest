@@ -47,7 +47,7 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 		items = dropOverItems(items, 4);
 		for (int i = 0; i < 4; i++) {
 			if (i >= items.size()) {
-				setInventorySlotContents(i, ItemStack.EMPTY);
+				setInventorySlotContents(i, null);
 			} else {
 				setInventorySlotContents(i, items.get(i));
 			}
@@ -70,7 +70,7 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 		items = dropOverItems(items, 4);
 		for (int i = 0; i < 4; i++) {
 			if (i >= items.size()) {
-				setInventorySlotContents(i + 4, ItemStack.EMPTY);
+				setInventorySlotContents(i + 4, null);
 			} else {
 				setInventorySlotContents(i + 4, items.get(i));
 			}
@@ -108,9 +108,9 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 
 	private void dropItems(List<ItemStack> items) {
 		for (ItemStack stack : items) {
-			EntityItem dropItem = new EntityItem(lord.world, lord.posX, lord.posY, lord.posZ, stack);
+			EntityItem dropItem = new EntityItem(lord.worldObj, lord.posX, lord.posY, lord.posZ, stack);
 			dropItem.setNoPickupDelay();
-			lord.world.spawnEntity(dropItem);
+			lord.worldObj.spawnEntityInWorld(dropItem);
 		}
 	}
 
@@ -118,7 +118,7 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 		NBTTagList list = new NBTTagList();
 		for (int i = 0; i < getSizeInventory(); ++i) {
 			ItemStack itemstack = (ItemStack) getStackInSlot(i);
-			if (!itemstack.isEmpty()) {
+			if (itemstack.stackSize > 0) {
 				NBTTagCompound nbttagcompound = new NBTTagCompound();
 				nbttagcompound.setByte("Slot", (byte) i);
 				itemstack.writeToNBT(nbttagcompound);
@@ -133,13 +133,13 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 			NBTTagCompound nbttagcompound = list.getCompoundTagAt(i);
 			int slot = nbttagcompound.getByte("Slot") & 255;
 			if (slot >= 0 && slot < getSizeInventory()) {
-				setInventorySlotContents(slot, new ItemStack(nbttagcompound));
+				setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(nbttagcompound));
 			}
 		}
 	}
 
 	@Override
 	public Province getProvince() {
-		return CivilizationsWorldSaveData.get(lord.world).atLocation(lord.chunkCoordX, lord.chunkCoordZ);
+		return CivilizationsWorldSaveData.get(lord.worldObj).atLocation(lord.chunkCoordX, lord.chunkCoordZ);
 	}
 }

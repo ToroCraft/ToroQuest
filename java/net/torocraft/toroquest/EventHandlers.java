@@ -22,7 +22,6 @@ import net.torocraft.toroquest.util.TaskRunner;
 
 public class EventHandlers {
 
-
 	@SubscribeEvent
 	public void handleWorldTick(WorldTickEvent event) {
 
@@ -55,7 +54,7 @@ public class EventHandlers {
 		}
 
 		entity.getEntityData().setBoolean("AddedToWorld", true);
-		
+
 		World world = event.getWorld();
 
 		if (world.rand.nextInt(8) != 0) {
@@ -67,12 +66,11 @@ public class EventHandlers {
 		if (spawnPoint == null) {
 			return;
 		}
-		
-		
+
 		Entity toro = new EntityToro(world);
 
 		toro.setPosition(spawnPoint.getX(), spawnPoint.getY() + 1, spawnPoint.getZ());
-		world.spawnEntity(toro);
+		world.spawnEntityInWorld(toro);
 	}
 
 	@SubscribeEvent

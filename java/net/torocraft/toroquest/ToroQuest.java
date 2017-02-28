@@ -11,6 +11,16 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.torocraft.toroquest.configuration.ConfigurationHandler;
 
+/*
+ * 
+ * 
+ * - pigs are spawned into villages
+ * 
+ * - vampire bats do not attack
+ * 
+ * 
+ */
+
 @Mod(modid = ToroQuest.MODID, name = ToroQuest.MODNAME, version = ToroQuest.VERSION, guiFactory = "net.torocraft." + ToroQuest.MODID
 		+ ".gui.GuiFactoryToroQuest")
 public class ToroQuest {

@@ -10,7 +10,6 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
@@ -123,10 +122,6 @@ public class VillageLordContainer extends Container {
 		}
 
 		addListener(new IContainerListener() {
-			@Override
-			public void updateCraftingInventory(Container containerToSend, NonNullList<ItemStack> itemsList) {
-
-			}
 
 			@Override
 			public void sendSlotContents(Container containerToSend, int slotInd, ItemStack stack) {
@@ -144,6 +139,11 @@ public class VillageLordContainer extends Container {
 			public void sendAllWindowProperties(Container containerIn, IInventory inventory) {
 
 			}
+
+			@Override
+			public void updateCraftingInventory(Container containerToSend, List<ItemStack> itemsList) {
+
+			}
 		});
 	}
 
@@ -155,7 +155,7 @@ public class VillageLordContainer extends Container {
 	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
 		Slot slot = (Slot) this.inventorySlots.get(index);
 		if (slot == null || !slot.getHasStack()) {
-			return ItemStack.EMPTY;
+			return null;
 		}
 
 		ItemStack sourceStack = slot.getStack();
@@ -163,20 +163,20 @@ public class VillageLordContainer extends Container {
 
 		if (indexIsForAVanillaSlot(index)) {
 			if (!mergeItemStack(sourceStack, LORD_INVENTORY_FIRST_SLOT_INDEX, LORD_INVENTORY_FIRST_SLOT_INDEX + LORD_INVENTORY_SLOT_COUNT, false)) {
-				return ItemStack.EMPTY;
+				return null;
 			}
 		} else if (indexIsForALordInventorySlot(index) || indexIsForLordOutputSlot(index)) {
 			if (!mergeStackFromLordToPlayer(sourceStack)) {
-				return ItemStack.EMPTY;
+				return null;
 			}
 		} else {
-			return ItemStack.EMPTY;
+			return null;
 		}
 
-		int stackSize = sourceStack.getCount();
+		int stackSize = sourceStack.stackSize;
 
 		if (stackSize == 0) {
-			slot.putStack(ItemStack.EMPTY);
+			slot.putStack(null);
 		} else {
 			slot.onSlotChanged();
 		}
@@ -224,13 +224,13 @@ public class VillageLordContainer extends Container {
 	}
 
 	private void updateDonationInfo() {
-		if (!player.world.isRemote) {
+		if (!player.worldObj.isRemote) {
 			ToroQuestPacketHandler.INSTANCE.sendTo(new MessageSetItemReputationAmount(inventory), (EntityPlayerMP) player);
 		}
 	}
 
 	private void updateClientQuest() {
-		if (!player.world.isRemote) {
+		if (!player.worldObj.isRemote) {
 			Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), player.chunkCoordX, player.chunkCoordZ);
 			QuestData currentQuest = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuestFor(province);
 			QuestData nextQuest = PlayerCivilizationCapabilityImpl.get(player).getNextQuestFor(province);

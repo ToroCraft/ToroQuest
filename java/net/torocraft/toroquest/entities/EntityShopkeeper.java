@@ -12,7 +12,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -41,8 +40,7 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 	public static String NAME = "shopkeeper";
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityShopkeeper.class, NAME, entityId, ToroQuest.INSTANCE, 60,
-				2, true, 0x000000, 0xe0d6b9);
+		EntityRegistry.registerModEntity(EntityShopkeeper.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0x000000, 0xe0d6b9);
 	}
 
 	public static void registerRenders() {
@@ -58,9 +56,9 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 		super(worldIn, 3);
 	}
 
-	@Override
-	public IEntityLivingData finalizeMobSpawn(DifficultyInstance p_190672_1_, @Nullable IEntityLivingData p_190672_2_, boolean p_190672_3_) {
-		return p_190672_2_;
+	@Nullable
+	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
+		return livingdata;
 	}
 
 	public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
@@ -68,7 +66,7 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 
 		if (!flag && isEntityAlive() && !isTrading() && !isChild() && !player.isSneaking()) {
 
-			if (!this.world.isRemote) {
+			if (!this.worldObj.isRemote) {
 
 				RepData rep = getReputation(player);
 
@@ -84,7 +82,7 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 			player.addStat(StatList.TALKED_TO_VILLAGER);
 			return true;
 		} else {
-			return super.processInteract(player, hand);
+			return super.processInteract(player, hand, stack);
 		}
 	}
 
@@ -132,7 +130,7 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 	};
 
 	private void chat(EntityPlayer player, String message) {
-		player.sendMessage(new TextComponentString(message));
+		player.addChatMessage(new TextComponentString(message));
 	}
 
 	private static class RepData {
@@ -147,7 +145,7 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 			return rep;
 		}
 
-		Province province = CivilizationUtil.getProvinceAt(world, chunkCoordX, chunkCoordZ);
+		Province province = CivilizationUtil.getProvinceAt(worldObj, chunkCoordX, chunkCoordZ);
 
 		if (province == null) {
 			return rep;

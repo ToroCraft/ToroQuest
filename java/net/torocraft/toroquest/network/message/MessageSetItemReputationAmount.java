@@ -29,7 +29,7 @@ public class MessageSetItemReputationAmount implements IMessage {
 
 	public MessageSetItemReputationAmount(IVillageLordInventory inventory) {
 		ItemStack item = inventory.getDonationItem();
-		if (item.isEmpty()) {
+		if (item.stackSize < 1) {
 			reputation = 0;
 			messageCode = MessageCode.EMPTY;
 			return;
@@ -131,7 +131,7 @@ public class MessageSetItemReputationAmount implements IMessage {
 	public static class Worker {
 		public void work(MessageSetItemReputationAmount message) {
 			Minecraft minecraft = Minecraft.getMinecraft();
-			final EntityPlayer player = minecraft.player;
+			final EntityPlayer player = minecraft.thePlayer;
 
 			if (player == null) {
 				return;

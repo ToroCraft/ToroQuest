@@ -42,7 +42,7 @@ public class MessageSetPlayerReputation implements IMessage {
 	public static class Worker {
 		public void work(MessageSetPlayerReputation message) {
 			Minecraft minecraft = Minecraft.getMinecraft();
-			final EntityPlayer player = minecraft.player;
+			final EntityPlayer player = minecraft.thePlayer;
 
 			if (player == null) {
 				return;

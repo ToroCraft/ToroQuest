@@ -20,7 +20,7 @@ import net.torocraft.toroquest.entities.EntityRainbowGuard;
 import net.torocraft.toroquest.entities.EntityRainbowGuard.Color;
 import net.torocraft.toroquest.entities.EntityRainbowKing;
 
-public class ThroneRoomGenerator extends WorldGenerator {	
+public class ThroneRoomGenerator extends WorldGenerator {
 
 	protected final IBlockState stone = Blocks.STONE.getDefaultState();
 	protected final IBlockState stoneBrickSlabs = Blocks.STONE_SLAB.getDefaultState().withProperty(BlockStoneSlab.VARIANT, EnumType.SMOOTHBRICK);
@@ -36,11 +36,11 @@ public class ThroneRoomGenerator extends WorldGenerator {
 	protected final IBlockState stoneBrickStairsE = Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.EAST);
 	protected final IBlockState stoneBrickStairsW = Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.WEST);
 	protected final IBlockState oakFence = Blocks.OAK_FENCE.getDefaultState();
-	
+
 	private int width = 30;
 	private int length = 85;
 	private int height = 16;
-	
+
 	private World world;
 	private BlockPos origin;
 	private Random rand;
@@ -64,31 +64,31 @@ public class ThroneRoomGenerator extends WorldGenerator {
 					if (isWallOrFloor(y, x, z)) {
 						currentBlock = stone;
 					}
-					
+
 					if (isEntranceStoneBrick(y, x, z)) {
 						currentBlock = stoneBrick;
 					}
-					
+
 					if (isEntranceOpening(y, x, z)) {
 						currentBlock = air;
 					}
-					
+
 					if (isEntranceTorchHolder(y, x, z)) {
 						currentBlock = oakFence;
 					}
-					
+
 					if (isEntranceTorch(y, x, z)) {
 						currentBlock = torch;
 					}
-					
+
 					if (z == 0 && y == 7 && x == 13) {
 						currentBlock = stoneBrickStairsW.withProperty(BlockStairs.HALF, EnumHalf.TOP);
 					}
-					
+
 					if (z == 0 && y == 7 && x == 17) {
 						currentBlock = stoneBrickStairsE.withProperty(BlockStairs.HALF, EnumHalf.TOP);
 					}
-					
+
 					if (isLavaLampSourceOrDest(y, x, z)) {
 						if (y == 0) {
 							currentBlock = air;
@@ -96,95 +96,95 @@ public class ThroneRoomGenerator extends WorldGenerator {
 							currentBlock = lava;
 						}
 					}
-					
+
 					if (isInTorchGrid(y, x, z)) {
 						currentBlock = torch;
 					}
-					
+
 					if (isAisleCarpet(y, x, z) || isThroneCarpet(y, x, z) || isEntranceCarpet(y, x, z)) {
 						currentBlock = redCarpet;
 					}
-					
+
 					if (isAisleEdging(y, x, z)) {
 						currentBlock = stoneBrickSlabs;
 					}
-					
+
 					if (isAisleEdging(y, x, z) && isAisleTorch(z)) {
 						currentBlock = stoneBrick;
 					}
-					
+
 					if (y == 2 && (x == 13 || x == 17) && isAisleTorch(z)) {
 						currentBlock = torch;
 					}
-					
+
 					if (isEntrancePlatform(y, x, z)) {
 						currentBlock = stone;
 					}
-					
+
 					if (isEntranceStairsEast(y, x, z)) {
 						currentBlock = stoneBrickStairsE;
 					}
-					
+
 					if (isEntranceStairsWest(y, x, z)) {
 						currentBlock = stoneBrickStairsW;
 					}
-					
+
 					if (isEntranceStairsNorth(y, x, z)) {
 						currentBlock = stoneBrickStairsN;
 					}
-					
+
 					if (isThronePlatform(y, x, z)) {
 						currentBlock = stone;
 					}
-					
+
 					if (isThroneArms(y, x, z)) {
 						currentBlock = goldBlock;
 					}
-					
+
 					if (isBackOfThrone(y, x, z)) {
 						currentBlock = redstoneBlock;
 					}
-					
+
 					if (isThroneTorch(y, x, z) || isEntrancePlatformTorch(y, x, z)) {
 						currentBlock = torch;
 					}
-					
+
 					if (isThroneStairsNorth(y, x, z)) {
 						currentBlock = stoneBrickStairsN;
 					}
-					
+
 					if (isThroneStairsEast(y, x, z)) {
 						currentBlock = stoneBrickStairsE;
 					}
-					
+
 					if (isThroneStairsWest(y, x, z)) {
 						currentBlock = stoneBrickStairsW;
 					}
-					
+
 					if (isThroneStairsSouth(y, x, z)) {
 						currentBlock = stoneBrickStairsS;
 					}
-					
+
 					if (isThroneSideLavaDitch(y, x, z)) {
 						currentBlock = air;
 					}
-					
+
 					if (isThroneSideLavaFlow(y, x, z) || isEntranceLavaFlow(y, x, z)) {
 						currentBlock = lava;
 					}
-					
+
 					if (isEntranceLavaCatcherRight(y, x, z) || isEntranceLavaCatcherLeft(y, x, z)) {
 						currentBlock = stoneBrickStairsN.withProperty(BlockStairs.HALF, EnumHalf.TOP);
 					}
-					
+
 					if (isEntranceLavaCatcherCornerEast(y, x, z)) {
 						currentBlock = stoneBrickStairsE.withProperty(BlockStairs.HALF, EnumHalf.TOP);
 					}
-					
+
 					if (isEntranceLavaCatcherCornerWest(y, x, z)) {
 						currentBlock = stoneBrickStairsW.withProperty(BlockStairs.HALF, EnumHalf.TOP);
 					}
-					
+
 					setBlockAndNotifyAdequately(world, startPos.add(x, y, z), currentBlock);
 				}
 			}
@@ -216,7 +216,8 @@ public class ThroneRoomGenerator extends WorldGenerator {
 	}
 
 	private boolean isEntranceStoneBrick(int y, int x, int z) {
-		return (z == 0 && (y == 3 || y == 8) & x >= 12 && x <= 18) || (z == 0 && (x == 12 || x == 18) && y >= 4 && y <= 7) || (z == 0 && (x == 13 || x == 17) && y == 4);
+		return (z == 0 && (y == 3 || y == 8) & x >= 12 && x <= 18) || (z == 0 && (x == 12 || x == 18) && y >= 4 && y <= 7)
+				|| (z == 0 && (x == 13 || x == 17) && y == 4);
 	}
 
 	private boolean isEntranceOpening(int y, int x, int z) {
@@ -228,15 +229,19 @@ public class ThroneRoomGenerator extends WorldGenerator {
 	}
 
 	private boolean isThroneStairsSouth(int y, int x, int z) {
-		return (y == 1 && z == length - 10 && x >= 12 && x <= 18) || (y == 2 && z == length - 9 && x >= 13 && x <= 17) || (y == 3 && z == length - 8 && x >= 14 && x <= 16) || (y == 4 && z == length - 5 && x >= 14 && x <= 16) || (y == 5 && z == length - 4 && x >= 14 && x <= 16);
+		return (y == 1 && z == length - 10 && x >= 12 && x <= 18) || (y == 2 && z == length - 9 && x >= 13 && x <= 17)
+				|| (y == 3 && z == length - 8 && x >= 14 && x <= 16) || (y == 4 && z == length - 5 && x >= 14 && x <= 16)
+				|| (y == 5 && z == length - 4 && x >= 14 && x <= 16);
 	}
 
 	private boolean isThroneStairsWest(int y, int x, int z) {
-		return (y == 1 && x == 19 && z <= length - 6 && z >= length - 10) || (y == 2 && x == 18 && z <= length - 7 && z >= length - 9) || (y == 3 && x == 17 && z <= length - 7 && z >= length - 8);
+		return (y == 1 && x == 19 && z <= length - 6 && z >= length - 10) || (y == 2 && x == 18 && z <= length - 7 && z >= length - 9)
+				|| (y == 3 && x == 17 && z <= length - 7 && z >= length - 8);
 	}
 
 	private boolean isThroneStairsEast(int y, int x, int z) {
-		return (y == 1 && x == 11 && z <= length - 6 && z >= length - 10) || (y == 2 && x == 12 && z <= length - 7 && z >= length - 9) || (y == 3 && x == 13 && z <= length - 7 && z >= length - 8);
+		return (y == 1 && x == 11 && z <= length - 6 && z >= length - 10) || (y == 2 && x == 12 && z <= length - 7 && z >= length - 9)
+				|| (y == 3 && x == 13 && z <= length - 7 && z >= length - 8);
 	}
 
 	private boolean isThroneStairsNorth(int y, int x, int z) {
@@ -252,7 +257,8 @@ public class ThroneRoomGenerator extends WorldGenerator {
 	}
 
 	private boolean isEntranceLavaCatcherLeft(int y, int x, int z) {
-		return (z == 1 && y == 3 && x <= width - 4 && x >= width - 6) || (z == 1 && y == 4 && (x == width - 3 || x == width - 7)) || (z == 2 && y == 4 && x <= width - 4 && x >= width - 6);
+		return (z == 1 && y == 3 && x <= width - 4 && x >= width - 6) || (z == 1 && y == 4 && (x == width - 3 || x == width - 7))
+				|| (z == 2 && y == 4 && x <= width - 4 && x >= width - 6);
 	}
 
 	private boolean isEntranceLavaCatcherRight(int y, int x, int z) {
@@ -272,7 +278,8 @@ public class ThroneRoomGenerator extends WorldGenerator {
 	}
 
 	private boolean isAisleTorch(int z) {
-		return z == 9 || z == 11 || z == 16 || z == 21 || z == 23 || z == 28 || z == 33 || z == 35 || z == 40 || z == 45 || z == 47 || z == 52 || z == 57 || z == 59 || z == 64 || z == 69 || z == 71;
+		return z == 9 || z == 11 || z == 16 || z == 21 || z == 23 || z == 28 || z == 33 || z == 35 || z == 40 || z == 45 || z == 47 || z == 52
+				|| z == 57 || z == 59 || z == 64 || z == 69 || z == 71;
 	}
 
 	private boolean isBackOfThrone(int y, int x, int z) {
@@ -288,7 +295,8 @@ public class ThroneRoomGenerator extends WorldGenerator {
 	}
 
 	private boolean isThroneCarpet(int y, int x, int z) {
-		return (y == 6 && x > 13 && x < 17 && (z == length - 3 || z == length - 2)) || (y == 4 && x > 13 && x < 17 && (z == length - 6 || z == length - 7));
+		return (y == 6 && x > 13 && x < 17 && (z == length - 3 || z == length - 2))
+				|| (y == 4 && x > 13 && x < 17 && (z == length - 6 || z == length - 7));
 	}
 
 	private boolean isThroneTorch(int y, int x, int z) {
@@ -296,21 +304,26 @@ public class ThroneRoomGenerator extends WorldGenerator {
 	}
 
 	private boolean isThroneArms(int y, int x, int z) {
-		return (y == 3 && (x == 13 || x == 17) && z == length - 6) || (y == 4 && (x == 13 || x == 17) && z == length - 5) || (y == 5 && (x == 13 || x == 17) && z == length -4) || 
-				(y == 6 && (x == 13 || x == 17) && (z == length - 3 || z == length - 2)) ||	(y == 7 && (x == 13 || x == 17) && z == length - 1);
+		return (y == 3 && (x == 13 || x == 17) && z == length - 6) || (y == 4 && (x == 13 || x == 17) && z == length - 5)
+				|| (y == 5 && (x == 13 || x == 17) && z == length - 4) || (y == 6 && (x == 13 || x == 17) && (z == length - 3 || z == length - 2))
+				|| (y == 7 && (x == 13 || x == 17) && z == length - 1);
 	}
 
 	private boolean isThronePlatform(int y, int x, int z) {
-		return (y == 1 && (x >= 13 && x <= 17) && z >= length - 9) || (y == 1 && (x == 12 || x == 18) && z >= length -9 && z <= length - 6) || (y == 2 && (x >= 13 && x <= 17) && z >= length -8) || (y == 3 && x >= 13 && x <= 17 && z >= length - 5)
-				|| (y == 3 && x >= 14 && x <= 16 && z >= length - 7) || (y == 4 && x >= 13 && x <= 17 && z >= length - 4) || (y == 5 && x >= 13 && x <= 17 && z >= length - 3) || (y == 6 && (x == 13 || x == 17) && z == length - 1);
+		return (y == 1 && (x >= 13 && x <= 17) && z >= length - 9) || (y == 1 && (x == 12 || x == 18) && z >= length - 9 && z <= length - 6)
+				|| (y == 2 && (x >= 13 && x <= 17) && z >= length - 8) || (y == 3 && x >= 13 && x <= 17 && z >= length - 5)
+				|| (y == 3 && x >= 14 && x <= 16 && z >= length - 7) || (y == 4 && x >= 13 && x <= 17 && z >= length - 4)
+				|| (y == 5 && x >= 13 && x <= 17 && z >= length - 3) || (y == 6 && (x == 13 || x == 17) && z == length - 1);
 	}
 
 	private boolean isEntranceStairsNorth(int y, int x, int z) {
-		return (y == 1 && z == 6 && x >= 10 && x <= width - 10) || (y == 2 && z == 4 && x >= 12 && x <= width - 12) || (y == 3 && z == 2 && x >= 14 && x <= width - 14);
+		return (y == 1 && z == 6 && x >= 10 && x <= width - 10) || (y == 2 && z == 4 && x >= 12 && x <= width - 12)
+				|| (y == 3 && z == 2 && x >= 14 && x <= width - 14);
 	}
 
 	private boolean isEntranceStairsWest(int y, int x, int z) {
-		return (y == 1 && x == width - 9 && z > 0 && z <= 6) || (y == 2 && x == width - 11 && z > 0 && z <= 4) || (y == 3 && x == width - 13 && z > 0 && z <= 2);
+		return (y == 1 && x == width - 9 && z > 0 && z <= 6) || (y == 2 && x == width - 11 && z > 0 && z <= 4)
+				|| (y == 3 && x == width - 13 && z > 0 && z <= 2);
 	}
 
 	private boolean isEntranceStairsEast(int y, int x, int z) {
@@ -318,7 +331,8 @@ public class ThroneRoomGenerator extends WorldGenerator {
 	}
 
 	private boolean isEntrancePlatform(int y, int x, int z) {
-		return (y == 1 && (x >= 10 && x <= width - 10) && z <= 5) || (y == 2 && (x >= 12 && x <= width - 12) && z <= 3) || (y == 3 && (x >= 14 && x <= width - 14) && z == 1);
+		return (y == 1 && (x >= 10 && x <= width - 10) && z <= 5) || (y == 2 && (x >= 12 && x <= width - 12) && z <= 3)
+				|| (y == 3 && (x >= 14 && x <= width - 14) && z == 1);
 	}
 
 	private void spawnKing() {
@@ -326,7 +340,7 @@ public class ThroneRoomGenerator extends WorldGenerator {
 		king.setPosition(origin.getX() + 15 + 0.5D, origin.getY() + 7, origin.getZ() + (length - 3) + 0.5D);
 		king.onInitialSpawn(world.getDifficultyForLocation(origin), (IEntityLivingData) null);
 		king.setLookAt(origin.add(15, king.getEyeHeight(), 0));
-		world.spawnEntity(king);
+		world.spawnEntityInWorld(king);
 	}
 
 	private void spawnRainbowGuards() {
@@ -354,7 +368,7 @@ public class ThroneRoomGenerator extends WorldGenerator {
 			entity.setLookAt(origin.add(x - 100, 4, z));
 		}
 		entity.onInitialSpawn(world.getDifficultyForLocation(origin), (IEntityLivingData) null);
-		world.spawnEntity(entity);
+		world.spawnEntityInWorld(entity);
 	}
 
 }

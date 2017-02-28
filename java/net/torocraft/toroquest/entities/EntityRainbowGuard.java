@@ -28,7 +28,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DifficultyInstance;
@@ -60,13 +59,15 @@ public class EntityRainbowGuard extends EntityMob {
 
 	private Color color = Color.RED;
 
-	private static final DataParameter<Boolean> AT_ATTENTION = EntityDataManager.<Boolean>createKey(EntityRainbowGuard.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<BlockPos> LOOK_AT = EntityDataManager.<BlockPos>createKey(EntityRainbowGuard.class, DataSerializers.BLOCK_POS);
+	private static final DataParameter<Boolean> AT_ATTENTION = EntityDataManager.<Boolean> createKey(EntityRainbowGuard.class,
+			DataSerializers.BOOLEAN);
+	private static final DataParameter<BlockPos> LOOK_AT = EntityDataManager.<BlockPos> createKey(EntityRainbowGuard.class,
+			DataSerializers.BLOCK_POS);
 
 	// TODO: add new data parameter for color when we stop using armor
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityRainbowGuard.class, NAME, entityId, ToroQuest.INSTANCE, 90, 2, true, 0xffffff, 0x909090);
+		EntityRegistry.registerModEntity(EntityRainbowGuard.class, NAME, entityId, ToroQuest.INSTANCE, 90, 2, true, 0xffffff, 0x909090);
 	}
 
 	public static void registerRenders() {
@@ -174,19 +175,21 @@ public class EntityRainbowGuard extends EntityMob {
 	}
 
 	protected void wakeIfPlayerIsClose(boolean wakePartner) {
-		if (world.getTotalWorldTime() % 30 != 0 || !isAtAttention()) {
+		if (worldObj.getTotalWorldTime() % 30 != 0 || !isAtAttention()) {
 			return;
 		}
 
 		// TODO check if visible?
-		List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(getPosition()).expand(WAKE_DIAMETER, 6, WAKE_DIAMETER), EntitySelectors.CAN_AI_TARGET);
+		List<EntityPlayer> players = worldObj.getEntitiesWithinAABB(EntityPlayer.class,
+				new AxisAlignedBB(getPosition()).expand(WAKE_DIAMETER, 6, WAKE_DIAMETER), EntitySelectors.CAN_AI_TARGET);
 
 		if (players.size() < 1) {
 			return;
 		}
 
 		if (wakePartner) {
-			List<EntityRainbowGuard> nearbyRainbowGuards = world.getEntitiesWithinAABB(EntityRainbowGuard.class, getEntityBoundingBox().expand(5.0D, 4.0D, 2.0D));
+			List<EntityRainbowGuard> nearbyRainbowGuards = worldObj.getEntitiesWithinAABB(EntityRainbowGuard.class,
+					getEntityBoundingBox().expand(5.0D, 4.0D, 2.0D));
 			if (nearbyRainbowGuards != null && !nearbyRainbowGuards.isEmpty()) {
 				nearbyRainbowGuards.get(0).wokenByPartner();
 			}
@@ -195,13 +198,12 @@ public class EntityRainbowGuard extends EntityMob {
 		setAtAttention(false);
 		tasks.removeTask(new EntityAIStayCentered(this));
 
-		setAttackTarget(players.get(world.rand.nextInt(players.size())));
+		setAttackTarget(players.get(worldObj.rand.nextInt(players.size())));
 	}
 
 	protected void updateAITasks() {
 		super.updateAITasks();
 	}
-
 
 	public class EntityAIAtAttention extends EntityAIBase {
 
@@ -245,7 +247,8 @@ public class EntityRainbowGuard extends EntityMob {
 		 */
 		public void updateTask() {
 			entity.setPosition(entity.getPosition().getX() + 0.5d, entity.posY, entity.getPosition().getZ() + 0.5d);
-			entity.getLookHelper().setLookPosition(getLookAt().getX(), getLookAt().getY(), getLookAt().getZ(), (float) entity.getHorizontalFaceSpeed(), 0.0f);
+			entity.getLookHelper().setLookPosition(getLookAt().getX(), getLookAt().getY(), getLookAt().getZ(),
+					(float) entity.getHorizontalFaceSpeed(), 0.0f);
 		}
 	}
 

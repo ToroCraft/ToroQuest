@@ -25,7 +25,6 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -42,7 +41,7 @@ public class EntitySentry extends EntityToroNpc {
 	public static String NAME = "sentry";
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntitySentry.class, NAME, entityId, ToroQuest.INSTANCE, 80, 2, true, 0x3f3024, 0xe0d6b9);
+		EntityRegistry.registerModEntity(EntitySentry.class, NAME, entityId, ToroQuest.INSTANCE, 80, 2, true, 0x3f3024, 0xe0d6b9);
 	}
 
 	public static void registerRenders() {
@@ -164,24 +163,24 @@ public class EntitySentry extends EntityToroNpc {
 	private int determineColorByCiv() {
 		int color = 0;
 		switch (getCivilization()) {
-			case EARTH:
-				color = 6717235;
-				break;
-			case FIRE:
-				color = 0xff9900;
-				break;
-			case MOON:
-				color = 0x333333;
-				break;
-			case SUN:
-				color = 0xffff00;
-				break;
-			case WATER:
-				color = 0x2B65EC;
-				break;
-			case WIND:
-				color = 0xffffff;
-				break;
+		case EARTH:
+			color = 6717235;
+			break;
+		case FIRE:
+			color = 0xff9900;
+			break;
+		case MOON:
+			color = 0x333333;
+			break;
+		case SUN:
+			color = 0xffff00;
+			break;
+		case WATER:
+			color = 0x2B65EC;
+			break;
+		case WIND:
+			color = 0xffffff;
+			break;
 		}
 		return color;
 	}

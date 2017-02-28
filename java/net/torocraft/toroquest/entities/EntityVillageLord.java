@@ -20,14 +20,13 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.IInventoryChangedListener;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.util.datafix.walkers.ItemStackDataLists;
@@ -55,7 +54,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 	public static Achievement LORD_ACHIEVEMNT = new Achievement("village_lord", "village_lord", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityVillageLord.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0xeca58c, 0xba12c8);
+		EntityRegistry.registerModEntity(EntityVillageLord.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0xeca58c, 0xba12c8);
 	}
 
 	public static void registerRenders() {
@@ -70,7 +69,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		if (world.getTotalWorldTime() % 500 == 0 && isEntityAlive()) {
+		if (worldObj.getTotalWorldTime() % 500 == 0 && isEntityAlive()) {
 			setHasLord(true);
 		}
 	}
@@ -115,7 +114,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 			for (int j = 0; j < i; ++j) {
 				ItemStack itemstack = prevInventory.getStackInSlot(j);
 
-				if (!itemstack.isEmpty()) {
+				if (itemstack.stackSize > 0) {
 					newInventory.setInventorySlotContents(j, itemstack.copy());
 				}
 			}
@@ -126,16 +125,17 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 	}
 
 	public void openGUI(EntityPlayer player) {
-		if (world.isRemote) {
+		if (worldObj.isRemote) {
 			return;
 		}
-		player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), world, getPosition().getX(), getPosition().getY(), getPosition().getZ());
+		player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), worldObj, getPosition().getX(), getPosition().getY(),
+				getPosition().getZ());
 	}
 
 	@Override
-	protected boolean processInteract(EntityPlayer player, EnumHand hand) {
+	protected boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack) {
 		if (this.isEntityAlive() && !this.isChild()) {
-			if (!this.world.isRemote) {
+			if (!this.worldObj.isRemote) {
 				openGUI(player);
 			}
 			return true;
@@ -205,17 +205,12 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		PlayerCivilizationCapabilityImpl.get(player).adjustReputation(civ, -5);
 	}
 
-	@Override
-	public void onInventoryChanged(IInventory invBasic) {
-
-	}
-
 	public void onDeath(DamageSource cause) {
 		super.onDeath(cause);
 
 		// TODO set no lord
 
-		if (world.isRemote || inventories == null) {
+		if (worldObj.isRemote || inventories == null) {
 			return;
 		}
 
@@ -228,7 +223,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 	}
 
 	protected void achievement(DamageSource cause) {
-		if (world.isRemote) {
+		if (worldObj.isRemote) {
 			return;
 		}
 		Entity entity = cause.getEntity();
@@ -243,7 +238,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		}
 		for (int i = 0; i < inventory.getSizeInventory(); ++i) {
 			ItemStack itemstack = inventory.getStackInSlot(i);
-			if (!itemstack.isEmpty()) {
+			if (itemstack.stackSize > 0) {
 				entityDropItem(itemstack, 0.0F);
 			}
 		}
@@ -271,17 +266,17 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 	}
 
 	public static void registerFixesVillageLord(DataFixer fixer) {
-		EntityLiving.registerFixesMob(fixer, EntityVillageLord.class);
-		fixer.registerWalker(FixTypes.ENTITY, new ItemStackDataLists(EntityVillageLord.class, new String[] { "Items" }));
+		EntityLiving.registerFixesMob(fixer, EntityVillageLord.class.getName());
+		fixer.registerWalker(FixTypes.ENTITY, new ItemStackDataLists(EntityVillageLord.class.getName(), new String[] { "Items" }));
 	}
 
 	private void setHasLord(boolean hasLord) {
-		Province province = CivilizationUtil.getProvinceAt(world, chunkCoordX, chunkCoordZ);
+		Province province = CivilizationUtil.getProvinceAt(worldObj, chunkCoordX, chunkCoordZ);
 
 		if (province == null) {
 			return;
 		}
-		CivilizationDataAccessor worldData = CivilizationsWorldSaveData.get(world);
+		CivilizationDataAccessor worldData = CivilizationsWorldSaveData.get(worldObj);
 		if (worldData.provinceHasLord(province.id) == hasLord) {
 			return;
 		}
@@ -291,5 +286,10 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		}
 
 		worldData.setProvinceHasLord(province.id, hasLord);
+	}
+
+	@Override
+	public void onInventoryChanged(InventoryBasic invBasic) {
+
 	}
 }

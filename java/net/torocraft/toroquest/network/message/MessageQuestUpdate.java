@@ -9,13 +9,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item.ToolMaterial;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.item.Item;
+import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -61,7 +61,7 @@ public class MessageQuestUpdate implements IMessage {
 		void work(MessageQuestUpdate message, EntityPlayer player) {
 			Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), player.chunkCoordX, player.chunkCoordZ);
 
-			EntityVillageLord lord = VillageLordGuiHandler.getVillageLord(player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
+			EntityVillageLord lord = VillageLordGuiHandler.getVillageLord(player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
 			IVillageLordInventory inventory = lord.getInventory(player.getUniqueID());
 
 			switch (action) {
@@ -102,7 +102,7 @@ public class MessageQuestUpdate implements IMessage {
 			DonationReward reward = getRepForDonation(donation);
 			if (reward != null) {
 				PlayerCivilizationCapabilityImpl.get(player).adjustReputation(province.civilization, reward.rep);
-				inventory.setDonationItem(ItemStack.EMPTY);
+				inventory.setDonationItem(null);
 				inventory.setReturnItems(l(new ItemStack(reward.item)));
 			}
 		}
@@ -116,12 +116,12 @@ public class MessageQuestUpdate implements IMessage {
 		}
 
 		private void handleReturnStolenItem(EntityPlayer player, Province province, IVillageLordInventory inventory, ItemStack stack) {
-			inventory.setDonationItem(ItemStack.EMPTY);
-			ItemStack emeralds = new ItemStack(Items.EMERALD, 2 + player.world.rand.nextInt(3));
+			inventory.setDonationItem(null);
+			ItemStack emeralds = new ItemStack(Items.EMERALD, 2 + player.worldObj.rand.nextInt(3));
 			List<ItemStack> l = new ArrayList<ItemStack>(1);
 			l.add(emeralds);
 			inventory.setReturnItems(l);
-			PlayerCivilizationCapabilityImpl.get(player).adjustReputation(province.civilization, 2 + player.world.rand.nextInt(3));
+			PlayerCivilizationCapabilityImpl.get(player).adjustReputation(province.civilization, 2 + player.worldObj.rand.nextInt(3));
 		}
 
 		private void writeReplyNote(IVillageLordInventory inventory, ItemStack donation) {
@@ -132,7 +132,7 @@ public class MessageQuestUpdate implements IMessage {
 				return;
 			}
 
-			inventory.setDonationItem(ItemStack.EMPTY);
+			inventory.setDonationItem(null);
 			donation.setStackDisplayName("Reply Note");
 			donation.getTagCompound().setBoolean("reply", true);
 
@@ -241,7 +241,7 @@ public class MessageQuestUpdate implements IMessage {
 
 	public static DonationReward getRepForDonation(ItemStack item) {
 
-		if (item.isEmpty()) {
+		if (item.stackSize < 1) {
 			return null;
 		}
 
@@ -275,21 +275,21 @@ public class MessageQuestUpdate implements IMessage {
 		}
 
 		if (item.getItem() == Items.DIAMOND) {
-			return new DonationReward(1 * item.getCount(), null);
+			return new DonationReward(1 * item.stackSize, null);
 		}
 
 		if (item.getItem() == Items.EMERALD) {
-			return new DonationReward(2 * item.getCount(), null);
+			return new DonationReward(2 * item.stackSize, null);
 		}
 
 		if (item.getItem() instanceof ItemBlock) {
 			Block block = ((ItemBlock) item.getItem()).block;
 			if (Blocks.DIAMOND_BLOCK == block) {
-				return new DonationReward(9 * item.getCount(), null);
+				return new DonationReward(9 * item.stackSize, null);
 			}
 
 			if (Blocks.EMERALD_BLOCK == block) {
-				return new DonationReward(18 * item.getCount(), null);
+				return new DonationReward(18 * item.stackSize, null);
 			}
 		}
 
@@ -297,27 +297,27 @@ public class MessageQuestUpdate implements IMessage {
 
 		if (is(item, Items.BREAD, Items.POTATO, Items.APPLE)) {
 
-			reward.rep = 3 * MathHelper.floor(item.getCount() / 16);
+			reward.rep = 3 * MathHelper.floor_float(item.stackSize / 16);
 		}
 
 		if (is(item, Items.CARROT, Items.BEETROOT)) {
-			reward.rep = 2 * MathHelper.floor(item.getCount() / 16);
+			reward.rep = 2 * MathHelper.floor_float(item.stackSize / 16);
 		}
 
 		if (is(item, Items.WHEAT)) {
-			reward.rep = 1 * MathHelper.floor(item.getCount() / 16);
+			reward.rep = 1 * MathHelper.floor_float(item.stackSize / 16);
 		}
 
 		if (is(item, Items.CHICKEN, Items.COOKED_CHICKEN, Items.PORKCHOP, Items.COOKED_PORKCHOP, Items.MUTTON, Items.COOKED_MUTTON, Items.RABBIT,
 				Items.COOKED_RABBIT, Items.FISH, Items.COOKED_FISH, Items.BEEF, Items.COOKED_BEEF)) {
-			reward.rep = 4 * MathHelper.floor(item.getCount() / 16);
+			reward.rep = 4 * MathHelper.floor_float(item.stackSize / 16);
 		}
 
 		if (reward.rep == 0) {
 			return null;
 		}
 
-		if (item.getCount() >= 64) {
+		if (item.stackSize >= 64) {
 			reward.item = Items.GOLD_NUGGET;
 		}
 

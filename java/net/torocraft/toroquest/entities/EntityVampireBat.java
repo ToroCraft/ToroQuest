@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -40,7 +39,7 @@ public class EntityVampireBat extends EntityMob {
 	private EntityBas nearbyBas;
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityVampireBat.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0x2015, 0x909090);
+		EntityRegistry.registerModEntity(EntityVampireBat.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0x2015, 0x909090);
 	}
 
 	public static void registerRenders() {
@@ -162,17 +161,17 @@ public class EntityVampireBat extends EntityMob {
 			return randomNearByPlace();
 		}
 
-		return new BlockPos((int) nearbyBas.posX + rand.nextInt(30) - 15, (int) nearbyBas.posY + rand.nextInt(8) + 2, (int) nearbyBas.posZ + rand.nextInt(30) - 15);
+		return new BlockPos((int) nearbyBas.posX + rand.nextInt(30) - 15, (int) nearbyBas.posY + rand.nextInt(8) + 2,
+				(int) nearbyBas.posZ + rand.nextInt(30) - 15);
 	}
-
 
 	protected BlockPos randomNearByPlace() {
-		return new BlockPos((int) posX + rand.nextInt(7) - rand.nextInt(7), (int) posY + rand.nextInt(6) - 2, (int) posZ + rand.nextInt(7) - rand.nextInt(7));
+		return new BlockPos((int) posX + rand.nextInt(7) - rand.nextInt(7), (int) posY + rand.nextInt(6) - 2,
+				(int) posZ + rand.nextInt(7) - rand.nextInt(7));
 	}
 
-
 	private void searchForBas() {
-		List<EntityBas> list = world.getEntitiesWithinAABB(EntityBas.class, new AxisAlignedBB(getPosition()).expand(40, 20, 40));
+		List<EntityBas> list = worldObj.getEntitiesWithinAABB(EntityBas.class, new AxisAlignedBB(getPosition()).expand(40, 20, 40));
 		if (list.size() < 1) {
 			return;
 		}
@@ -213,7 +212,7 @@ public class EntityVampireBat extends EntityMob {
 	}
 
 	public static void registerFixesBat(DataFixer fixer) {
-		EntityLiving.registerFixesMob(fixer, EntityVampireBat.class);
+		EntityLiving.registerFixesMob(fixer, EntityVampireBat.class.getName());
 	}
 
 	public float getEyeHeight() {
@@ -223,56 +222,6 @@ public class EntityVampireBat extends EntityMob {
 	@Nullable
 	protected ResourceLocation getLootTable() {
 		return LootTableList.ENTITIES_BAT;
-	}
-
-	/**
-	 * Moves the entity based on the specified heading.
-	 */
-	public void moveEntityWithHeading(float strafe, float forward) {
-		if (this.isInWater()) {
-			this.moveRelative(strafe, forward, 0.02F);
-			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
-			this.motionX *= 0.800000011920929D;
-			this.motionY *= 0.800000011920929D;
-			this.motionZ *= 0.800000011920929D;
-		} else if (this.isInLava()) {
-			this.moveRelative(strafe, forward, 0.02F);
-			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
-			this.motionX *= 0.5D;
-			this.motionY *= 0.5D;
-			this.motionZ *= 0.5D;
-		} else {
-			float f = 0.91F;
-
-			if (this.onGround) {
-				f = this.world.getBlockState(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getEntityBoundingBox().minY) - 1, MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.91F;
-			}
-
-			float f1 = 0.16277136F / (f * f * f);
-			this.moveRelative(strafe, forward, this.onGround ? 0.1F * f1 : 0.02F);
-			f = 0.91F;
-
-			if (this.onGround) {
-				f = this.world.getBlockState(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getEntityBoundingBox().minY) - 1, MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.91F;
-			}
-
-			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
-			this.motionX *= (double) f;
-			this.motionY *= (double) f;
-			this.motionZ *= (double) f;
-		}
-
-		this.prevLimbSwingAmount = this.limbSwingAmount;
-		double d1 = this.posX - this.prevPosX;
-		double d0 = this.posZ - this.prevPosZ;
-		float f2 = MathHelper.sqrt(d1 * d1 + d0 * d0) * 4.0F;
-
-		if (f2 > 1.0F) {
-			f2 = 1.0F;
-		}
-
-		this.limbSwingAmount += (f2 - this.limbSwingAmount) * 0.4F;
-		this.limbSwing += this.limbSwingAmount;
 	}
 
 	/**

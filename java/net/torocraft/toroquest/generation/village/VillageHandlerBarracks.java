@@ -44,7 +44,8 @@ public class VillageHandlerBarracks implements IVillageCreationHandler {
 	}
 
 	@Override
-	public Village buildComponent(PieceWeight villagePiece, Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
+	public Village buildComponent(PieceWeight villagePiece, Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3,
+			EnumFacing facing, int p5) {
 		return VillagePieceBarracks.createPiece(startPiece, pieces, random, p1, p2, p3, facing, p5);
 
 	}
@@ -55,11 +56,14 @@ public class VillageHandlerBarracks implements IVillageCreationHandler {
 		protected int getYOffset() {
 			return -1;
 		}
-		
-		public static VillagePieceBarracks createPiece(StructureVillagePieces.Start start, List<StructureComponent> structures, Random rand, int x, int y, int z, EnumFacing facing, int p_175850_7_) {
+
+		public static VillagePieceBarracks createPiece(StructureVillagePieces.Start start, List<StructureComponent> structures, Random rand, int x,
+				int y, int z, EnumFacing facing, int p_175850_7_) {
 			BlockPos size = new BlockMapMeasurer(NAME).measure();
-			StructureBoundingBox bounds = StructureBoundingBox.getComponentToAddBoundingBox(x, y, z, 0, 0, 0, size.getX(), size.getY(), size.getZ(), facing);
-			return canVillageGoDeeper(bounds) && StructureComponent.findIntersecting(structures, bounds) == null ? new VillagePieceBarracks(start, p_175850_7_, rand, bounds, facing) : null;
+			StructureBoundingBox bounds = StructureBoundingBox.getComponentToAddBoundingBox(x, y, z, 0, 0, 0, size.getX(), size.getY(), size.getZ(),
+					facing);
+			return canVillageGoDeeper(bounds) && StructureComponent.findIntersecting(structures, bounds) == null
+					? new VillagePieceBarracks(start, p_175850_7_, rand, bounds, facing) : null;
 		}
 
 		public VillagePieceBarracks() {
@@ -75,7 +79,7 @@ public class VillageHandlerBarracks implements IVillageCreationHandler {
 			if (!c.equals("xx")) {
 				return false;
 			}
-			
+
 			setBlockState(world, Blocks.AIR.getDefaultState(), x, y, z, boundingBox);
 
 			int j = this.getXWithOffset(x, z);
@@ -88,7 +92,7 @@ public class VillageHandlerBarracks implements IVillageCreationHandler {
 
 			EntityArmorStand stand = new EntityArmorStand(world);
 			stand.setLocationAndAngles((double) j + 0.5D, (double) k, (double) l + 0.5D, 90F, 0.0F);
-			world.spawnEntity(stand);
+			world.spawnEntityInWorld(stand);
 
 			List<String> entities = new ArrayList<String>();
 			entities.add(ToroQuest.MODID + ":guard");
@@ -97,7 +101,6 @@ public class VillageHandlerBarracks implements IVillageCreationHandler {
 			return true;
 
 		}
-
 
 		@Override
 		protected void alterPalette(Map<String, IBlockState> palette) {

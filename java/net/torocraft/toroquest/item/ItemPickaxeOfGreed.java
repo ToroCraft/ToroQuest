@@ -60,13 +60,13 @@ public class ItemPickaxeOfGreed extends ItemPickaxe {
 		}
 
 		ItemStack stack = drops.get(0);
-		int count = stack.getCount();
+		int count = stack.stackSize;
 
 		if (rand.nextInt(77) == 0) {
 			player.addStat(JACKPOT_ACHIEVEMNT);
-			stack.setCount(stack.getMaxStackSize());
+			stack.stackSize = stack.getMaxStackSize();
 		} else if (rand.nextInt(10) == 0) {
-			stack.setCount(count + (rand.nextInt(3) + 3));
+			stack.stackSize = count + (rand.nextInt(3) + 3);
 		} else {
 			drops.clear();
 			drops.add(new ItemStack(Items.COAL, count));

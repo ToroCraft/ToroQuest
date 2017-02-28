@@ -107,7 +107,8 @@ public class BastionsLairGenerator extends WorldGenerator {
 	}
 
 	private boolean isGroundBlock(IBlockState blockState) {
-		if (blockState.getBlock() == Blocks.LEAVES || blockState.getBlock() == Blocks.LEAVES2 || blockState.getBlock() == Blocks.LOG || blockState.getBlock() instanceof BlockBush) {
+		if (blockState.getBlock() == Blocks.LEAVES || blockState.getBlock() == Blocks.LEAVES2 || blockState.getBlock() == Blocks.LOG
+				|| blockState.getBlock() instanceof BlockBush) {
 			return false;
 		}
 		return blockState.isOpaqueCube();
@@ -287,7 +288,7 @@ public class BastionsLairGenerator extends WorldGenerator {
 		EntityBas e = new EntityBas(world);
 		e.setPosition(origin.getX() + 0.5, origin.getY() + walkwayHeight + 1, origin.getZ() + 0.5);
 		e.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(e)), (IEntityLivingData) null);
-		world.spawnEntity(e);
+		world.spawnEntityInWorld(e);
 	}
 
 }

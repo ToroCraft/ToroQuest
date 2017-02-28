@@ -9,7 +9,6 @@ import net.minecraft.tileentity.MobSpawnerBaseLogic;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
@@ -117,7 +116,7 @@ public class MonolithGenerator extends WorldGenerator {
 		setBlockAndNotifyAdequately(world, pos, Blocks.MOB_SPAWNER.getDefaultState());
 		TileEntityMobSpawner theSpawner = (TileEntityMobSpawner) world.getTileEntity(pos);
 		MobSpawnerBaseLogic logic = theSpawner.getSpawnerBaseLogic();
-		logic.setEntityId(new ResourceLocation("magma_cube"));
+		logic.setEntityName("magma_cube");
 	}
 
 	private void setHeight(Random rand) {
@@ -129,7 +128,7 @@ public class MonolithGenerator extends WorldGenerator {
 		BlockPos entityPos = new BlockPos(pos.getX(), pos.getY() + (monolithHeight + underseaHeight + eyeFloatHeight) - 2, pos.getZ());
 		EntityMonolithEye e = new EntityMonolithEye(world);
 		e.setPosition(entityPos.getX() + .5, entityPos.getY() + .5, entityPos.getZ() + .5);
-		world.spawnEntity(e);
+		world.spawnEntityInWorld(e);
 	}
 
 	private BlockPos findSurface(World world, BlockPos start) {
@@ -206,7 +205,8 @@ public class MonolithGenerator extends WorldGenerator {
 
 	private boolean isGroundBlock(IBlockState blockState) {
 
-		if (blockState.getBlock() == Blocks.LEAVES || blockState.getBlock() == Blocks.LEAVES2 || blockState.getBlock() == Blocks.LOG || blockState.getBlock() instanceof BlockBush) {
+		if (blockState.getBlock() == Blocks.LEAVES || blockState.getBlock() == Blocks.LEAVES2 || blockState.getBlock() == Blocks.LOG
+				|| blockState.getBlock() instanceof BlockBush) {
 			return false;
 		}
 

@@ -34,7 +34,7 @@ import net.torocraft.toroquest.civilization.Province;
 
 public class EntityToroNpc extends EntityCreature {
 
-	private static final DataParameter<String> CIV = EntityDataManager.<String>createKey(EntityEnderman.class, DataSerializers.STRING);
+	private static final DataParameter<String> CIV = EntityDataManager.<String> createKey(EntityEnderman.class, DataSerializers.STRING);
 
 	public EntityToroNpc(World worldIn, CivilizationType civ) {
 		super(worldIn);
@@ -155,7 +155,7 @@ public class EntityToroNpc extends EntityCreature {
 
 	private void pledgeAllegianceIfUnaffiliated() {
 
-		if (world.getTotalWorldTime() % 80L != 0L) {
+		if (worldObj.getTotalWorldTime() % 80L != 0L) {
 			return;
 		}
 
@@ -163,11 +163,11 @@ public class EntityToroNpc extends EntityCreature {
 			return;
 		}
 
-		if (world.isRemote) {
+		if (worldObj.isRemote) {
 			return;
 		}
 
-		Province civ = CivilizationUtil.getProvinceAt(world, chunkCoordX, chunkCoordZ);
+		Province civ = CivilizationUtil.getProvinceAt(worldObj, chunkCoordX, chunkCoordZ);
 
 		if (civ == null || civ.civilization == null) {
 			return;
@@ -235,7 +235,8 @@ public class EntityToroNpc extends EntityCreature {
 
 	protected void handleSuccessfulAttack(Entity entityIn, int knockback) {
 		if (knockback > 0 && entityIn instanceof EntityLivingBase) {
-			((EntityLivingBase) entityIn).knockBack(this, (float) knockback * 0.5F, (double) MathHelper.sin(this.rotationYaw * 0.017453292F), (double) (-MathHelper.cos(this.rotationYaw * 0.017453292F)));
+			((EntityLivingBase) entityIn).knockBack(this, (float) knockback * 0.5F, (double) MathHelper.sin(this.rotationYaw * 0.017453292F),
+					(double) (-MathHelper.cos(this.rotationYaw * 0.017453292F)));
 			this.motionX *= 0.6D;
 			this.motionZ *= 0.6D;
 		}
@@ -256,7 +257,7 @@ public class EntityToroNpc extends EntityCreature {
 
 				if (this.rand.nextFloat() < f1) {
 					entityplayer.getCooldownTracker().setCooldown(Items.SHIELD, 100);
-					this.world.setEntityState(entityplayer, (byte) 30);
+					this.worldObj.setEntityState(entityplayer, (byte) 30);
 				}
 			}
 		}
@@ -265,7 +266,7 @@ public class EntityToroNpc extends EntityCreature {
 	}
 
 	public float getBlockPathWeight(BlockPos pos) {
-		return 0.5F - this.world.getLightBrightness(pos);
+		return 0.5F - this.worldObj.getLightBrightness(pos);
 	}
 
 	/**
@@ -282,23 +283,24 @@ public class EntityToroNpc extends EntityCreature {
 		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
 
 	}
-	
+
 	protected void callForHelp(EntityLivingBase attacker) {
-		List<EntityToroNpc> help = world.getEntitiesWithinAABB(EntityToroNpc.class, new AxisAlignedBB(getPosition()).expand(16, 6, 16), new Predicate<EntityToroNpc>() {
-			public boolean apply(@Nullable EntityToroNpc entity) {
-				if (!(entity instanceof EntityGuard || entity instanceof EntitySentry)) {
-					return false;
-				}
+		List<EntityToroNpc> help = worldObj.getEntitiesWithinAABB(EntityToroNpc.class, new AxisAlignedBB(getPosition()).expand(16, 6, 16),
+				new Predicate<EntityToroNpc>() {
+					public boolean apply(@Nullable EntityToroNpc entity) {
+						if (!(entity instanceof EntityGuard || entity instanceof EntitySentry)) {
+							return false;
+						}
 
-				CivilizationType civ = entity.getCivilization();
+						CivilizationType civ = entity.getCivilization();
 
-				if (civ == null) {
-					return false;
-				}
+						if (civ == null) {
+							return false;
+						}
 
-				return civ.equals(EntityToroNpc.this.getCivilization());
-			}
-		});
+						return civ.equals(EntityToroNpc.this.getCivilization());
+					}
+				});
 
 		for (EntityToroNpc entity : help) {
 			entity.setAttackTarget(attacker);

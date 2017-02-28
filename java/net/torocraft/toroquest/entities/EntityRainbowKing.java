@@ -9,7 +9,6 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -21,11 +20,11 @@ import net.torocraft.toroquest.entities.render.RenderRainbowKing;
 public class EntityRainbowKing extends EntityRainbowGuard {
 
 	public static String NAME = "rainbow_king";
-	
+
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityRainbowKing.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 10040115, 3361970);
+		EntityRegistry.registerModEntity(EntityRainbowKing.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 10040115, 3361970);
 	}
-	
+
 	public static void registerRenders() {
 		RenderingRegistry.registerEntityRenderingHandler(EntityRainbowKing.class, new IRenderFactory<EntityRainbowKing>() {
 			@Override
@@ -34,7 +33,7 @@ public class EntityRainbowKing extends EntityRainbowGuard {
 			}
 		});
 	}
-	
+
 	public EntityRainbowKing(World worldIn) {
 		super(worldIn);
 		this.setSize(0.6F * 2, 1.99F * 2);
@@ -48,26 +47,26 @@ public class EntityRainbowKing extends EntityRainbowGuard {
 		setItemStackToSlot(EntityEquipmentSlot.LEGS, colorArmor(new ItemStack(Items.LEATHER_LEGGINGS, 1), 0xffff00));
 		setItemStackToSlot(EntityEquipmentSlot.FEET, colorArmor(new ItemStack(Items.LEATHER_BOOTS, 1), 10040115));
 	}
-	
+
 	protected ItemStack colorArmor(ItemStack stack, int color) {
 		ItemArmor armor = (ItemArmor) stack.getItem();
 		armor.setColor(stack, color);
 		stack.getTagCompound().setBoolean("Unbreakable", true);
 		return stack;
 	}
-	
+
 	@Override
 	public float getEyeHeight() {
 		return super.getEyeHeight() * 2f;
 	}
-	
+
 	@Nullable
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
 		livingdata = super.onInitialSpawn(difficulty, livingdata);
 		setEquipmentBasedOnDifficulty(difficulty);
 		return livingdata;
 	}
-	
+
 	@Override
 	protected boolean canDespawn() {
 		return false;

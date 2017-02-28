@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.monster.EntityZombieVillager;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
@@ -42,18 +42,23 @@ public class EntitySpawning {
 				event.getEntity().setDead();
 			}
 		}
+
 	}
 
 	@SubscribeEvent
 	public void onZombieVillagerDeath(LivingUpdateEvent event) {
-		if (!event.getEntity().getEntityWorld().isRemote && event.getEntity().isDead && event.getEntity() instanceof EntityZombieVillager) {
+		if (!event.getEntity().getEntityWorld().isRemote && event.getEntity().isDead && event.getEntity() instanceof EntityZombie) {
+
+			if (!((EntityZombie) event.getEntity()).isVillager()) {
+				return;
+			}
 
 			EntityLiving convertTo = null;
 
 			if (hasRoyalEffect(event)) {
-				convertTo = new EntityVillageLord(event.getEntity().world);
+				convertTo = new EntityVillageLord(event.getEntity().worldObj);
 			} else if (hasLoyalEffect(event)) {
-				convertTo = new EntityGuard(event.getEntity().world);
+				convertTo = new EntityGuard(event.getEntity().worldObj);
 			}
 
 			if (convertTo == null) {
@@ -67,15 +72,15 @@ public class EntitySpawning {
 	}
 
 	private boolean hasRoyalEffect(LivingUpdateEvent event) {
-		return ((EntityZombieVillager) event.getEntity()).getActivePotionEffect(PotionRoyal.INSTANCE) != null;
+		return ((EntityZombie) event.getEntity()).getActivePotionEffect(PotionRoyal.INSTANCE) != null;
 	}
 
 	private boolean hasLoyalEffect(LivingUpdateEvent event) {
-		return ((EntityZombieVillager) event.getEntity()).getActivePotionEffect(PotionLoyalty.INSTANCE) != null;
+		return ((EntityZombie) event.getEntity()).getActivePotionEffect(PotionLoyalty.INSTANCE) != null;
 	}
 
 	private void removeVillager(LivingUpdateEvent event) {
-		List<EntityVillager> list = event.getEntity().world.getEntitiesWithinAABB(EntityVillager.class,
+		List<EntityVillager> list = event.getEntity().worldObj.getEntitiesWithinAABB(EntityVillager.class,
 				new AxisAlignedBB(event.getEntity().getPosition()));
 		if (list.size() < 1) {
 			return;
@@ -115,7 +120,7 @@ public class EntitySpawning {
 	}
 
 	private void replaceEntityWithVillageLord(PossibleConversionData data, EntityLiving toEntity) {
-		World world = data.from.world;
+		World world = data.from.worldObj;
 		BlockPos pos = data.from.getPosition();
 
 		if (toEntity == null) {
@@ -132,7 +137,7 @@ public class EntitySpawning {
 
 		toEntity.onInitialSpawn(world.getDifficultyForLocation(pos), (IEntityLivingData) null);
 		toEntity.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
-		world.spawnEntity(toEntity);
+		world.spawnEntityInWorld(toEntity);
 		toEntity.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 200, 0));
 	}
 

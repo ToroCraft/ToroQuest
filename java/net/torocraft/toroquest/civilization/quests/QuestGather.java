@@ -57,7 +57,7 @@ public class QuestGather extends QuestBase implements Quest {
 	}
 
 	private static QuestData questDarkOak(Province province, EntityPlayer player) {
-		Random rand = player.world.rand;
+		Random rand = player.worldObj.rand;
 		int roll = rand.nextInt(32);
 		QuestData data = baseQuest(province, player);
 		List<ItemStack> required = new ArrayList<ItemStack>();
@@ -72,7 +72,7 @@ public class QuestGather extends QuestBase implements Quest {
 	}
 
 	private static QuestData quest2(Province province, EntityPlayer player) {
-		Random rand = player.world.rand;
+		Random rand = player.worldObj.rand;
 		QuestData data = baseQuest(province, player);
 		List<ItemStack> required = new ArrayList<ItemStack>();
 		required.add(new ItemStack(Items.FLINT_AND_STEEL, 1));
@@ -133,7 +133,7 @@ public class QuestGather extends QuestBase implements Quest {
 
 	@Override
 	public List<ItemStack> complete(QuestData data, List<ItemStack> items) {
-		Province province = loadProvince(data.getPlayer().world, data.getPlayer().getPosition());
+		Province province = loadProvince(data.getPlayer().worldObj, data.getPlayer().getPosition());
 
 		if (province == null || !province.id.equals(data.getProvinceId())) {
 			return null;
@@ -142,7 +142,7 @@ public class QuestGather extends QuestBase implements Quest {
 		try {
 			items = removeItems(getRequiredItems(data), items);
 		} catch (InsufficientItems ex) {
-			data.getPlayer().sendMessage(new TextComponentString("Missing " + ex.getMessage()));
+			data.getPlayer().addChatMessage(new TextComponentString("Missing " + ex.getMessage()));
 			return null;
 		}
 

@@ -42,7 +42,8 @@ public class ModelMonolithEye extends ModelBase {
 		this.guardianBody.render(scale);
 	}
 
-	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
+	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor,
+			Entity entityIn) {
 		EntityMonolithEye entityMonolithEye = (EntityMonolithEye) entityIn;
 		this.guardianBody.setRotationPoint(0.0F, 0.0F, 0.0F);
 		this.guardianBody.rotateAngleY = netHeadYaw * 0.017453292F;
@@ -68,9 +69,10 @@ public class ModelMonolithEye extends ModelBase {
 
 			Vec3d vec3d2 = entityIn.getLook(0.0F);
 			vec3d2 = new Vec3d(vec3d2.xCoord, 0.0D, vec3d2.zCoord);
-			Vec3d vec3d3 = (new Vec3d(vec3d1.xCoord - vec3d.xCoord, 0.0D, vec3d1.zCoord - vec3d.zCoord)).normalize().rotateYaw(((float) Math.PI / 2F));
+			Vec3d vec3d3 = (new Vec3d(vec3d1.xCoord - vec3d.xCoord, 0.0D, vec3d1.zCoord - vec3d.zCoord)).normalize()
+					.rotateYaw(((float) Math.PI / 2F));
 			double d1 = vec3d2.dotProduct(vec3d3);
-			this.guardianEye.rotationPointX = MathHelper.sqrt((float) Math.abs(d1)) * 2.0F * (float) Math.signum(d1);
+			this.guardianEye.rotationPointX = MathHelper.sqrt_float((float) Math.abs(d1)) * 2.0F * (float) Math.signum(d1);
 		}
 
 		this.guardianEye.showModel = true;

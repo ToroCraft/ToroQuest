@@ -39,9 +39,12 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 	@CapabilityInject(PlayerCivilizationCapability.class)
 	public static Capability<PlayerCivilizationCapability> INSTANCE = null;
 
-	public static Achievement FRIEND_ACHIEVEMNT = new Achievement("civilization_friend", "civilization_friend", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
-	public static Achievement ALLY_ACHIEVEMNT = new Achievement("civilization_ally", "civilization_ally", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
-	public static Achievement HERO_ACHIEVEMNT = new Achievement("civilization_hero", "civilization_hero", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
+	public static Achievement FRIEND_ACHIEVEMNT = new Achievement("civilization_friend", "civilization_friend", 0, 0, Items.DIAMOND_SWORD, null)
+			.registerStat();
+	public static Achievement ALLY_ACHIEVEMNT = new Achievement("civilization_ally", "civilization_ally", 0, 0, Items.DIAMOND_SWORD, null)
+			.registerStat();
+	public static Achievement HERO_ACHIEVEMNT = new Achievement("civilization_hero", "civilization_hero", 0, 0, Items.DIAMOND_SWORD, null)
+			.registerStat();
 
 	public static Achievement FIRST_QUEST_ACHIEVEMNT = new Achievement("first_quest", "first_quest", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
 
@@ -108,7 +111,7 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 	@Override
 	public void updatePlayerLocation(int chunkX, int chunkZ) {
 		Province prev = inCiv;
-		Province curr = CivilizationUtil.getProvinceAt(player.world, chunkX, chunkZ);
+		Province curr = CivilizationUtil.getProvinceAt(player.worldObj, chunkX, chunkZ);
 
 		if (equals(prev, curr)) {
 			return;
@@ -169,12 +172,13 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 	}
 
 	public static void register() {
-		CapabilityManager.INSTANCE.register(PlayerCivilizationCapability.class, new PlayerCivilizationStorage(), new Callable<PlayerCivilizationCapability>() {
-			@Override
-			public PlayerCivilizationCapability call() throws Exception {
-				return null;
-			}
-		});
+		CapabilityManager.INSTANCE.register(PlayerCivilizationCapability.class, new PlayerCivilizationStorage(),
+				new Callable<PlayerCivilizationCapability>() {
+					@Override
+					public PlayerCivilizationCapability call() throws Exception {
+						return null;
+					}
+				});
 	}
 
 	private int i(Integer integer) {

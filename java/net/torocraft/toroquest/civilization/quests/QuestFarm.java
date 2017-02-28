@@ -25,7 +25,8 @@ import net.torocraft.toroquest.civilization.quests.util.Quests;
 
 public class QuestFarm extends QuestBase implements Quest {
 
-	private static final Block[] CROP_TYPES = { Blocks.CARROTS, Blocks.POTATOES, Blocks.WHEAT, Blocks.MELON_STEM, Blocks.PUMPKIN_STEM, Blocks.BEETROOTS };
+	private static final Block[] CROP_TYPES = { Blocks.CARROTS, Blocks.POTATOES, Blocks.WHEAT, Blocks.MELON_STEM, Blocks.PUMPKIN_STEM,
+			Blocks.BEETROOTS };
 
 	public static QuestFarm INSTANCE;
 
@@ -44,7 +45,7 @@ public class QuestFarm extends QuestBase implements Quest {
 			return;
 		}
 
-		Province provinceFarmedIn = loadProvince(event.getPlayer().world, event.getBlockSnapshot().getPos());
+		Province provinceFarmedIn = loadProvince(event.getPlayer().worldObj, event.getBlockSnapshot().getPos());
 
 		if (provinceFarmedIn == null || provinceFarmedIn.civilization == null) {
 			return;
@@ -59,7 +60,7 @@ public class QuestFarm extends QuestBase implements Quest {
 			return;
 		}
 
-		Province provinceFarmedIn = loadProvince(event.getPlayer().world, event.getPos());
+		Province provinceFarmedIn = loadProvince(event.getPlayer().worldObj, event.getPos());
 
 		if (provinceFarmedIn == null || provinceFarmedIn.civilization == null) {
 			return;
@@ -82,7 +83,7 @@ public class QuestFarm extends QuestBase implements Quest {
 	}
 
 	public boolean perform(DataWrapper quest, boolean plant) {
-		if (quest.getData().getPlayer().world.isRemote) {
+		if (quest.getData().getPlayer().worldObj.isRemote) {
 			return false;
 		}
 
@@ -154,9 +155,9 @@ public class QuestFarm extends QuestBase implements Quest {
 		q.setCropType(rand.nextInt(CROP_TYPES.length));
 		q.setCurrentAmount(0);
 		q.setRewardRep(0);
-		q.setTargetAmount(MathHelper.clamp(roll, 32, 100));
-		
-		ItemStack emeralds = new ItemStack(Items.EMERALD, MathHelper.clamp(q.getTargetAmount() / 32, 1, 4));
+		q.setTargetAmount(MathHelper.clamp_int(roll, 32, 100));
+
+		ItemStack emeralds = new ItemStack(Items.EMERALD, MathHelper.clamp_int(q.getTargetAmount() / 32, 1, 4));
 		List<ItemStack> rewardItems = new ArrayList<ItemStack>();
 		rewardItems.add(emeralds);
 		setRewardItems(q.data, rewardItems);
@@ -180,7 +181,7 @@ public class QuestFarm extends QuestBase implements Quest {
 			return null;
 		}
 
-		Province province = loadProvince(quest.getPlayer().world, quest.getPlayer().getPosition());
+		Province province = loadProvince(quest.getPlayer().worldObj, quest.getPlayer().getPosition());
 
 		if (province == null || province.id == null || !province.id.equals(quest.getProvinceId())) {
 			return null;
@@ -190,7 +191,7 @@ public class QuestFarm extends QuestBase implements Quest {
 
 		playerCiv.adjustReputation(quest.getCiv(), new DataWrapper().setData(quest).getRewardRep());
 
-		if (playerCiv.getReputation(province.civilization) > 100 && quest.getPlayer().world.rand.nextInt(10) > 8) {
+		if (playerCiv.getReputation(province.civilization) > 100 && quest.getPlayer().worldObj.rand.nextInt(10) > 8) {
 			ItemStack hoe = new ItemStack(Items.GOLDEN_HOE);
 			hoe.setStackDisplayName("Golden Hoe of " + province.name);
 			items.add(hoe);
@@ -208,7 +209,7 @@ public class QuestFarm extends QuestBase implements Quest {
 		private QuestData data = new QuestData();
 		private Province provinceFarmedIn;
 		private Block farmedCrop;
-		
+
 		public QuestData getData() {
 			return data;
 		}

@@ -13,10 +13,10 @@ public class CivilizationOverlayHandler extends Hud {
 	private final int PADDING_FROM_EDGE = 5;
 	int screenWidth;
 	int screenHeight;
-	
+
 	int badgeWidth = 20;
 	int badgeHeight = 25;
-	
+
 	public CivilizationOverlayHandler(Minecraft mc) {
 		super(mc, 20, 10);
 	}
@@ -26,18 +26,18 @@ public class CivilizationOverlayHandler extends Hud {
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
 
-		EntityPlayerSP player = mc.player;
-		
+		EntityPlayerSP player = mc.thePlayer;
+
 		if (player.dimension != 0) {
 			return;
 		}
-		
+
 		Province civ = PlayerCivilizationCapabilityImpl.get(player).getInCivilization();
 
 		if (civ == null || civ.civilization == null) {
 			return;
 		}
-		
+
 		displayPosition = ConfigurationHandler.repDisplayPosition;
 
 		drawCurrentCivilizationIcon(civ, player);
@@ -47,13 +47,14 @@ public class CivilizationOverlayHandler extends Hud {
 		drawReputationText(civ, player);
 		drawCivilizationBadge(civ.civilization);
 	}
-	
+
 	private void drawReputationText(Province civ, EntityPlayerSP player) {
 		int textX = determineTextX();
 		int textY = determineIconY();
-		
+
 		if (displayPosition.contains("RIGHT")) {
-			drawRightString(Integer.toString(PlayerCivilizationCapabilityImpl.get(player).getReputation(civ.civilization), 10) + " Rep", textX, textY, 0xffffff);
+			drawRightString(Integer.toString(PlayerCivilizationCapabilityImpl.get(player).getReputation(civ.civilization), 10) + " Rep", textX, textY,
+					0xffffff);
 			textY += 10;
 
 			drawRightString(PlayerCivilizationCapabilityImpl.get(player).getReputationLevel(civ.civilization).getLocalname(), textX, textY, 0xffffff);
@@ -61,7 +62,8 @@ public class CivilizationOverlayHandler extends Hud {
 
 			drawRightString(civ.name, textX, textY, 0xffffff);
 		} else {
-			drawString(Integer.toString(PlayerCivilizationCapabilityImpl.get(player).getReputation(civ.civilization), 10) + " Rep", textX, textY, 0xffffff);
+			drawString(Integer.toString(PlayerCivilizationCapabilityImpl.get(player).getReputation(civ.civilization), 10) + " Rep", textX, textY,
+					0xffffff);
 			textY += 10;
 
 			drawString(PlayerCivilizationCapabilityImpl.get(player).getReputationLevel(civ.civilization).getLocalname(), textX, textY, 0xffffff);
@@ -74,7 +76,7 @@ public class CivilizationOverlayHandler extends Hud {
 	private void drawCivilizationBadge(CivilizationType civType) {
 		int badgeX = determineBadgeX();
 		int badgeY = determineIconY();
-		
+
 		ToroGuiUtils.drawOverlayIcon(mc, badgeX - 2, badgeY, 0, 96, 20, 27);
 		ToroGuiUtils.drawOverlayIcon(mc, badgeX, badgeY + 3, iconIndex(civType), 0);
 	}
@@ -83,18 +85,18 @@ public class CivilizationOverlayHandler extends Hud {
 		if (displayPosition.equals("CUSTOM")) {
 			return ConfigurationHandler.repDisplayX + badgeWidth;
 		}
-		
+
 		if (displayPosition.contains("RIGHT")) {
 			return screenWidth - PADDING_FROM_EDGE - badgeWidth;
 		}
-		
+
 		if (displayPosition.contains("CENTER")) {
 			return (screenWidth + badgeWidth + PADDING_FROM_EDGE) / 2;
 		}
-		
+
 		return PADDING_FROM_EDGE + badgeWidth;
 	}
-	
+
 	private int determineBadgeX() {
 		if (displayPosition.equals("CUSTOM")) {
 			return ConfigurationHandler.repDisplayX;
@@ -107,7 +109,7 @@ public class CivilizationOverlayHandler extends Hud {
 		}
 		return PADDING_FROM_EDGE;
 	}
-	
+
 	private int determineIconY() {
 		if (displayPosition.equals("CUSTOM")) {
 			return ConfigurationHandler.repDisplayY;
@@ -115,7 +117,7 @@ public class CivilizationOverlayHandler extends Hud {
 		if (displayPosition.contains("BOTTOM")) {
 			return screenHeight - PADDING_FROM_EDGE - badgeHeight;
 		}
-		
+
 		return PADDING_FROM_EDGE;
 	}
 

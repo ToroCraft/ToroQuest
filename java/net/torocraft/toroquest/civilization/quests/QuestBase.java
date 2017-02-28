@@ -39,7 +39,7 @@ public abstract class QuestBase implements Quest {
 	protected static String listItems__OLD(List<ItemStack> items) {
 		StringBuilder s = new StringBuilder();
 		for (ItemStack stack : items) {
-			s.append(" ").append(stack.getCount()).append(" ").append(stack.getDisplayName());
+			s.append(" ").append(stack.stackSize).append(" ").append(stack.getDisplayName());
 		}
 		return s.toString();
 	}
@@ -61,7 +61,7 @@ public abstract class QuestBase implements Quest {
 			}
 			sb.append(item.getItem().getUnlocalizedName());
 			sb.append(",");
-			sb.append(item.getCount());
+			sb.append(item.stackSize);
 		}
 		return sb.toString();
 	}
@@ -77,8 +77,8 @@ public abstract class QuestBase implements Quest {
 		}
 
 		for (ItemStack remainingRequired : requiredItems) {
-			if (remainingRequired.getCount() > 0) {
-				throw new InsufficientItems(remainingRequired.getCount() + " " + remainingRequired.getDisplayName());
+			if (remainingRequired.stackSize > 0) {
+				throw new InsufficientItems(remainingRequired.stackSize + " " + remainingRequired.getDisplayName());
 			}
 		}
 
@@ -90,12 +90,12 @@ public abstract class QuestBase implements Quest {
 			return;
 		}
 
-		if (requiredItem.getCount() < 1 || givenItem.getCount() < 1) {
+		if (requiredItem.stackSize < 1 || givenItem.stackSize < 1) {
 			return;
 		}
-		int decrementBy = Math.min(requiredItem.getCount(), givenItem.getCount());
-		requiredItem.shrink(decrementBy);
-		givenItem.shrink(decrementBy);
+		int decrementBy = Math.min(requiredItem.stackSize, givenItem.stackSize);
+		requiredItem.stackSize -= decrementBy;
+		givenItem.stackSize -= decrementBy;
 	}
 
 	protected static boolean equals(ItemStack requiredItem, ItemStack givenItem) {
@@ -138,7 +138,7 @@ public abstract class QuestBase implements Quest {
 		try {
 			NBTTagList list = (NBTTagList) c.getTag(name);
 			for (int i = 0; i < list.tagCount(); i++) {
-				items.add(new ItemStack(list.getCompoundTagAt(i)));
+				items.add(ItemStack.loadItemStackFromNBT(list.getCompoundTagAt(i)));
 			}
 			return items;
 		} catch (Exception e) {
@@ -194,7 +194,8 @@ public abstract class QuestBase implements Quest {
 	}
 
 	protected static boolean isGroundBlock(IBlockState blockState) {
-		if (blockState.getBlock() == Blocks.LEAVES || blockState.getBlock() == Blocks.LEAVES2 || blockState.getBlock() == Blocks.LOG || blockState.getBlock() instanceof BlockBush) {
+		if (blockState.getBlock() == Blocks.LEAVES || blockState.getBlock() == Blocks.LEAVES2 || blockState.getBlock() == Blocks.LOG
+				|| blockState.getBlock() instanceof BlockBush) {
 			return false;
 		}
 		return blockState.isOpaqueCube();
@@ -229,7 +230,7 @@ public abstract class QuestBase implements Quest {
 	 * @return the province that gave the quest
 	 */
 	protected static Province getQuestProvince(QuestData data) {
-		return getProvinceById(data.getPlayer().world, data.getProvinceId());
+		return getProvinceById(data.getPlayer().worldObj, data.getProvinceId());
 	}
 
 	protected static BlockPos getProvincePosition(Province province) {
@@ -254,7 +255,7 @@ public abstract class QuestBase implements Quest {
 	}
 
 	protected String getProvinceName(EntityPlayer player, UUID provinceId) {
-		Province province = getProvinceById(player.world, provinceId);
+		Province province = getProvinceById(player.worldObj, provinceId);
 		if (province == null) {
 			return "";
 		}
@@ -281,7 +282,7 @@ public abstract class QuestBase implements Quest {
 	public static List<ItemStack> removeEmptyItemStacks(List<ItemStack> givenItems) {
 		List<ItemStack> itemsToReturn = new ArrayList<ItemStack>();
 		for (ItemStack item : givenItems) {
-			if (!item.isEmpty()) {
+			if (item.stackSize > 0) {
 				itemsToReturn.add(item);
 			}
 		}

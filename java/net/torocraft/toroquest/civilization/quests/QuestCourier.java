@@ -37,7 +37,7 @@ public class QuestCourier extends QuestBase implements Quest {
 			return null;
 		}
 
-		note.setCount(0);
+		note.stackSize = 0;
 		in.remove(note);
 
 		List<ItemStack> rewards = getRewardItems(data);
@@ -70,7 +70,7 @@ public class QuestCourier extends QuestBase implements Quest {
 		}
 
 		if (!isReply) {
-			data.getPlayer().sendMessage(new TextComponentString("This is not a reply note"));
+			data.getPlayer().addChatMessage(new TextComponentString("This is not a reply note"));
 			return false;
 		}
 
@@ -78,7 +78,7 @@ public class QuestCourier extends QuestBase implements Quest {
 		 * quest ID must match
 		 */
 		if (!noteQuestId.equals(data.getQuestId().toString())) {
-			data.getPlayer().sendMessage(new TextComponentString("This reply is not for your current quest"));
+			data.getPlayer().addChatMessage(new TextComponentString("This reply is not for your current quest"));
 			return false;
 		}
 
@@ -126,7 +126,7 @@ public class QuestCourier extends QuestBase implements Quest {
 
 	@Override
 	public QuestData generateQuestFor(EntityPlayer player, Province questProvince) {
-		Province deliverToProvince = chooseRandomProvince(questProvince, player.world, true);
+		Province deliverToProvince = chooseRandomProvince(questProvince, player.worldObj, true);
 		if (deliverToProvince == null) {
 			return null;
 		}
@@ -138,7 +138,8 @@ public class QuestCourier extends QuestBase implements Quest {
 		data.setQuestType(ID);
 		data.setCompleted(false);
 		setDeliverToProvinceId(data, deliverToProvince.id);
-		setDistance(data, (int) Math.round(player.getPosition().getDistance(deliverToProvince.chunkX * 16, (int) player.posY, deliverToProvince.chunkZ * 16)));
+		setDistance(data,
+				(int) Math.round(player.getPosition().getDistance(deliverToProvince.chunkX * 16, (int) player.posY, deliverToProvince.chunkZ * 16)));
 		setRewardRep(data, 5 + (getDistance(data) / 50));
 
 		List<ItemStack> rewards = new ArrayList<ItemStack>(1);
@@ -149,7 +150,6 @@ public class QuestCourier extends QuestBase implements Quest {
 		return data;
 	}
 
-
 	private void setDeliverToProvinceId(QuestData data, UUID id) {
 		data.getsData().put("deliverTo", id.toString());
 	}
@@ -159,7 +159,7 @@ public class QuestCourier extends QuestBase implements Quest {
 	}
 
 	private Province getDeliverToProvince(QuestData data) {
-		Province p = getProvinceById(data.getPlayer().world, data.getsData().get("deliverTo"));
+		Province p = getProvinceById(data.getPlayer().worldObj, data.getsData().get("deliverTo"));
 		if (p == null) {
 			throw new UnsupportedOperationException("Deliever to provice ID[" + data.getsData().get("deliverTo") + "] was not found");
 		}

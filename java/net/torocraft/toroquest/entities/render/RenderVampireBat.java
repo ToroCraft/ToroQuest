@@ -37,9 +37,9 @@ public class RenderVampireBat extends RenderLiving<EntityVampireBat> {
 	}
 
 	@Override
-	protected void applyRotations(EntityVampireBat entityLiving, float p_77043_2_, float p_77043_3_, float partialTicks) {
+	protected void rotateCorpse(EntityVampireBat entityLiving, float p_77043_2_, float p_77043_3_, float partialTicks) {
 		bounceModel(p_77043_2_);
-		super.applyRotations(entityLiving, p_77043_2_, p_77043_3_, partialTicks);
+		super.rotateCorpse(entityLiving, p_77043_2_, p_77043_3_, partialTicks);
 	}
 
 	protected void bounceModel(float p_77043_2_) {

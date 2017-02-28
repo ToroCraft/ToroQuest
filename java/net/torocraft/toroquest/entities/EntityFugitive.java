@@ -22,7 +22,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.DifficultyInstance;
@@ -39,10 +38,11 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 
 	public static String NAME = "fugitive";
 
-	public static Achievement BOUNTY_HUNTER_ACHIEVEMNT = new Achievement("bounty_hunter", "bounty_hunter", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
+	public static Achievement BOUNTY_HUNTER_ACHIEVEMNT = new Achievement("bounty_hunter", "bounty_hunter", 0, 0, Items.DIAMOND_SWORD, null)
+			.registerStat();
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityFugitive.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0x000000, 0xe0d6b9);
+		EntityRegistry.registerModEntity(EntityFugitive.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0x000000, 0xe0d6b9);
 	}
 
 	public static void registerRenders() {
@@ -65,10 +65,10 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 		return false;
 	}
-	
+
 	@Override
-	public IEntityLivingData finalizeMobSpawn(DifficultyInstance p_190672_1_, @Nullable IEntityLivingData p_190672_2_, boolean p_190672_3_) {
-		return p_190672_2_;
+	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
+		return livingdata;
 	}
 
 	protected void initEntityAI() {
@@ -83,13 +83,13 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 
 		achievement(cause);
 
-		if (!world.isRemote) {
+		if (!worldObj.isRemote) {
 			dropLoot();
 		}
 	}
 
 	protected void achievement(DamageSource cause) {
-		if (world.isRemote) {
+		if (worldObj.isRemote) {
 			return;
 		}
 		Entity entity = cause.getEntity();
@@ -104,8 +104,9 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 		}
 	}
 
-	private static final Item[] STOLEN_ITEMS = { Items.DIAMOND_AXE, Items.IRON_AXE, Items.DIAMOND_PICKAXE, Items.IRON_PICKAXE, Items.GOLDEN_APPLE, Items.GOLD_INGOT, Items.DIAMOND, Items.BOW, Items.SHIELD, Items.BANNER, Items.DIAMOND_SWORD,
-			Items.GOLDEN_SWORD, Items.CHAINMAIL_HELMET, Items.DIAMOND_BOOTS };
+	private static final Item[] STOLEN_ITEMS = { Items.DIAMOND_AXE, Items.IRON_AXE, Items.DIAMOND_PICKAXE, Items.IRON_PICKAXE, Items.GOLDEN_APPLE,
+			Items.GOLD_INGOT, Items.DIAMOND, Items.BOW, Items.SHIELD, Items.BANNER, Items.DIAMOND_SWORD, Items.GOLDEN_SWORD, Items.CHAINMAIL_HELMET,
+			Items.DIAMOND_BOOTS };
 
 	private ItemStack randomStolenItem() {
 		ItemStack stolenItem = new ItemStack(STOLEN_ITEMS[rand.nextInt(STOLEN_ITEMS.length)]);
@@ -115,7 +116,7 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 	}
 
 	protected void setProvince(ItemStack stolenItem) {
-		Province stolenFrom = QuestBase.chooseRandomProvince(null, world, true);
+		Province stolenFrom = QuestBase.chooseRandomProvince(null, worldObj, true);
 		if (stolenFrom == null) {
 			return;
 		}
@@ -131,9 +132,9 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 	}
 
 	private void dropItem(ItemStack stack) {
-		EntityItem dropItem = new EntityItem(world, posX, posY, posZ, stack);
+		EntityItem dropItem = new EntityItem(worldObj, posX, posY, posZ, stack);
 		dropItem.setNoPickupDelay();
-		world.spawnEntity(dropItem);
+		worldObj.spawnEntityInWorld(dropItem);
 	}
 
 	/**
@@ -158,7 +159,7 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 
 		private boolean holdingLeadIn(EntityPlayer player, EntityEquipmentSlot mainhand) {
 			ItemStack itemstack = player.getItemStackFromSlot(mainhand);
-			return !itemstack.isEmpty() && itemstack.getItem() == Items.LEAD;
+			return itemstack.stackSize > 0 && itemstack.getItem() == Items.LEAD;
 		}
 	};
 

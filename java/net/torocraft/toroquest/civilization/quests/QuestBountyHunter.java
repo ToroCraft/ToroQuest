@@ -69,7 +69,7 @@ public class QuestBountyHunter extends QuestBase {
 
 	@Override
 	public QuestData generateQuestFor(EntityPlayer player, Province province) {
-		Province locationProvince = chooseRandomProvince(province, player.world, true);
+		Province locationProvince = chooseRandomProvince(province, player.worldObj, true);
 		if (locationProvince == null) {
 			return null;
 		}
@@ -81,7 +81,8 @@ public class QuestBountyHunter extends QuestBase {
 		data.setQuestType(ID);
 		data.setCompleted(false);
 		setLocationId(data, locationProvince.id);
-		setDistance(data, (int) Math.round(player.getPosition().getDistance(locationProvince.chunkX * 16, (int) player.posY, locationProvince.chunkZ * 16)));
+		setDistance(data,
+				(int) Math.round(player.getPosition().getDistance(locationProvince.chunkX * 16, (int) player.posY, locationProvince.chunkZ * 16)));
 		setRewardRep(data, 5 + (getDistance(data) / 50));
 
 		List<ItemStack> rewards = new ArrayList<ItemStack>(1);
@@ -101,7 +102,7 @@ public class QuestBountyHunter extends QuestBase {
 	}
 
 	private Province getLocation(QuestData data) {
-		Province p = getProvinceById(data.getPlayer().world, data.getsData().get("location"));
+		Province p = getProvinceById(data.getPlayer().worldObj, data.getsData().get("location"));
 		if (p == null) {
 			throw new UnsupportedOperationException("Deliever to provice ID[" + data.getsData().get("deliverTo") + "] was not found");
 		}

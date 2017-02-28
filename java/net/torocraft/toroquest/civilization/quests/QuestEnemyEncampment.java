@@ -61,7 +61,7 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 	public List<ItemStack> complete(QuestData data, List<ItemStack> in) {
 
 		if (getKills(data) < 1) {
-			data.getPlayer().sendMessage(new TextComponentTranslation("quests.enemey_encampment.wasnt_you"));
+			data.getPlayer().addChatMessage(new TextComponentTranslation("quests.enemey_encampment.wasnt_you"));
 			return null;
 		}
 
@@ -69,9 +69,9 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 
 		if (count > 0) {
 			if (count == 1) {
-				data.getPlayer().sendMessage(new TextComponentTranslation("quests.enemey_encampment.one_left"));
+				data.getPlayer().addChatMessage(new TextComponentTranslation("quests.enemey_encampment.one_left"));
 			} else {
-				data.getPlayer().sendMessage(new TextComponentTranslation("quests.enemey_encampment.some_left", count));
+				data.getPlayer().addChatMessage(new TextComponentTranslation("quests.enemey_encampment.some_left", count));
 			}
 			return null;
 		}
@@ -105,7 +105,8 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 				return entity.getTags().contains("encampment_quest") && entity.getTags().contains(data.getQuestId().toString());
 			}
 		};
-		return data.getPlayer().world.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(getSpawnPosition(data)).expand(80, 40, 80), filter).size();
+		return data.getPlayer().worldObj.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(getSpawnPosition(data)).expand(80, 40, 80), filter)
+				.size();
 	}
 
 	@Override
@@ -153,7 +154,7 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 			return null;
 		}
 
-		if (data.getPlayer().world.isAnyPlayerWithinRangeAt((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), 60d)) {
+		if (data.getPlayer().worldObj.isAnyPlayerWithinRangeAt((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), 60d)) {
 			return null;
 		}
 
@@ -211,8 +212,6 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 		}
 		return pos.up();
 	}
-
-
 
 	private void buildHut(QuestData data, BlockPos pos) {
 		World world = data.getPlayer().getEntityWorld();
@@ -298,14 +297,13 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 	private String getEnemyNames(QuestData data) {
 		String name = getEnemyType(data).get(0);
 		try {
-			Entity entity = TileEntityToroSpawner.getEntityForId(data.getPlayer().world, name);
+			Entity entity = TileEntityToroSpawner.getEntityForId(data.getPlayer().worldObj, name);
 			return entity.getName();
 		} catch (Exception e) {
 			System.out.println("failed to get name of entity [" + name + "] : " + e.getMessage());
 			return "unknown enemy";
 		}
 	}
-
 
 	@Override
 	public QuestData generateQuestFor(EntityPlayer player, Province province) {

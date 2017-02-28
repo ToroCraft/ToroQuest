@@ -28,9 +28,9 @@ import net.torocraft.toroquest.civilization.quests.util.Quests;
 
 public class QuestMine extends QuestBase {
 	public static QuestMine INSTANCE;
-	
-	private static final Block[] BLOCK_TYPES = { Blocks.GRAVEL, Blocks.STONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.OBSIDIAN, Blocks.REDSTONE_ORE };
 
+	private static final Block[] BLOCK_TYPES = { Blocks.GRAVEL, Blocks.STONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.OBSIDIAN,
+			Blocks.REDSTONE_ORE };
 
 	public static int ID;
 
@@ -48,7 +48,7 @@ public class QuestMine extends QuestBase {
 		}
 
 		EntityPlayer player = event.getHarvester();
-		Province inProvince = loadProvince(event.getHarvester().world, event.getPos());
+		Province inProvince = loadProvince(event.getHarvester().worldObj, event.getPos());
 
 		if (inProvince == null || inProvince.civilization == null) {
 			return;
@@ -120,22 +120,22 @@ public class QuestMine extends QuestBase {
 			if (isForThisQuest(data, item)) {
 				if (item.getItem() instanceof ItemTool) {
 					toolIncluded = true;
-					item.setCount(0);
+					item.stackSize = 0;
 				} else {
-					requiredLeft -= item.getCount();
-					item.setCount(0);
+					requiredLeft -= item.stackSize;
+					item.stackSize = 0;
 				}
 			} else {
 			}
 		}
 
 		if (requiredLeft > 0) {
-			data.getPlayer().sendMessage(new TextComponentString("You are " + requiredLeft + " short"));
+			data.getPlayer().addChatMessage(new TextComponentString("You are " + requiredLeft + " short"));
 			return null;
 		}
 
 		if (!toolIncluded) {
-			data.getPlayer().sendMessage(new TextComponentString("You must turn in the tool that you were given"));
+			data.getPlayer().addChatMessage(new TextComponentString("You must turn in the tool that you were given"));
 			return null;
 		}
 
@@ -145,7 +145,7 @@ public class QuestMine extends QuestBase {
 	}
 
 	protected boolean isForThisQuest(QuestData data, ItemStack item) {
-		if (!item.hasTagCompound() || item.isEmpty()) {
+		if (!item.hasTagCompound() || item.stackSize < 1) {
 			return false;
 		}
 		String wasMinedForQuestId = item.getTagCompound().getString("mine_quest");
@@ -167,23 +167,23 @@ public class QuestMine extends QuestBase {
 			if (isForThisQuest(data, item)) {
 				if (item.getItem() instanceof ItemTool) {
 					toolIncluded = true;
-					item.setCount(0);
+					item.stackSize = 0;
 				}
 			}
 		}
 
 		if (!toolIncluded) {
 			for (ItemStack item : givenItems) {
-				if (!item.isEmpty() && item.getItem() == Items.EMERALD) {
-					int decBy = Math.min(item.getCount(), emeraldRemainingCount);
+				if (item.stackSize > 0 && item.getItem() == Items.EMERALD) {
+					int decBy = Math.min(item.stackSize, emeraldRemainingCount);
 					emeraldRemainingCount -= decBy;
-					item.shrink(decBy);
+					item.stackSize -= decBy;
 				}
 			}
 		}
 
 		if (!toolIncluded && emeraldRemainingCount > 0) {
-			data.getPlayer().sendMessage(new TextComponentString("Return the tool that was provided or 5 emeralds to pay for it"));
+			data.getPlayer().addChatMessage(new TextComponentString("Return the tool that was provided or 5 emeralds to pay for it"));
 			return null;
 		}
 
@@ -235,7 +235,7 @@ public class QuestMine extends QuestBase {
 
 	@Override
 	public QuestData generateQuestFor(EntityPlayer player, Province questProvince) {
-		Random rand = player.world.rand;
+		Random rand = player.worldObj.rand;
 		QuestData data = new QuestData();
 		data.setCiv(questProvince.civilization);
 		data.setPlayer(player);
@@ -260,7 +260,7 @@ public class QuestMine extends QuestBase {
 
 		return data;
 	}
-	
+
 	private int getBlockType(QuestData data) {
 		return coalesce(data.getiData().get("block_type"), 0);
 	}
@@ -289,7 +289,7 @@ public class QuestMine extends QuestBase {
 	private void setMaxDepth(QuestData data, int depth) {
 		data.getiData().put("max_depth", depth);
 	}
-	
+
 	private int getMinDepth(QuestData data) {
 		return coalesce(data.getiData().get("min_depth"), 0);
 	}
@@ -305,6 +305,5 @@ public class QuestMine extends QuestBase {
 	private void setTargetAmount(QuestData data, int amount) {
 		data.getiData().put("target_amount", amount);
 	}
-
 
 }

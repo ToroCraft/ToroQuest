@@ -22,7 +22,6 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -134,11 +133,11 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 		if (!compound.hasKey(key)) {
 			return null;
 		}
-		return new ItemStack(compound.getCompoundTag(key));
+		return ItemStack.loadItemStackFromNBT(compound.getCompoundTag(key));
 	}
 
 	public void update() {
-		if (!world.isRemote && isRunTick() && withinRange()) {
+		if (!worldObj.isRemote && isRunTick() && withinRange()) {
 			triggerSpawner();
 		}
 	}
@@ -147,11 +146,11 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 		for (String entityId : entityIds) {
 			spawnCreature(entityId);
 		}
-		world.setBlockToAir(pos);
+		worldObj.setBlockToAir(pos);
 	}
 
 	public void spawnCreature(String entityID) {
-		Random rand = world.rand;
+		Random rand = worldObj.rand;
 
 		Entity entity = getEntityForId(getWorld(), entityID);
 
@@ -164,7 +163,7 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 	}
 
 	private BlockPos findSuitableSpawnLocation() {
-		Random rand = world.rand;
+		Random rand = worldObj.rand;
 
 		if (spawnRadius < 1) {
 			return getPos();
@@ -196,7 +195,7 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 		boolean[] airSpace = { false, false };
 
 		while (yOffset < 14) {
-			blockState = world.getBlockState(pos);
+			blockState = worldObj.getBlockState(pos);
 			if (isGroundBlock(blockState)) {
 				groundFound = true;
 				airSpace[0] = false;
@@ -225,7 +224,8 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 	}
 
 	private boolean isGroundBlock(IBlockState blockState) {
-		if (blockState.getBlock() == Blocks.LEAVES || blockState.getBlock() == Blocks.LEAVES2 || blockState.getBlock() == Blocks.LOG || blockState.getBlock() instanceof BlockBush) {
+		if (blockState.getBlock() == Blocks.LEAVES || blockState.getBlock() == Blocks.LEAVES2 || blockState.getBlock() == Blocks.LOG
+				|| blockState.getBlock() instanceof BlockBush) {
 			return false;
 		}
 		return blockState.isOpaqueCube();
@@ -244,7 +244,7 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 			entityName = entityID;
 		}
 
-		return EntityList.createEntityByIDFromName(new ResourceLocation(domain, entityName), world);
+		return EntityList.createEntityByIDFromName(entityName, world);
 	}
 
 	protected boolean spawnEntityLiving(EntityLiving entity, BlockPos pos) {
@@ -253,10 +253,10 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 		double y = pos.getY();
 		double z = pos.getZ() + 0.5D;
 
-		entity.setLocationAndAngles(x, y, z, MathHelper.wrapDegrees(world.rand.nextFloat() * 360.0F), 0.0F);
+		entity.setLocationAndAngles(x, y, z, MathHelper.wrapDegrees(worldObj.rand.nextFloat() * 360.0F), 0.0F);
 		entity.rotationYawHead = entity.rotationYaw;
 		entity.renderYawOffset = entity.rotationYaw;
-		entity.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entity)), (IEntityLivingData) null);
+		entity.onInitialSpawn(worldObj.getDifficultyForLocation(new BlockPos(entity)), (IEntityLivingData) null);
 
 		entity.enablePersistence();
 
@@ -298,27 +298,29 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 			}
 		}
 
-		world.spawnEntity(entity);
+		worldObj.spawnEntityInWorld(entity);
 		entity.playLivingSound();
 		return true;
 	}
 
 	private void spawnCreature() {
-		EntityGuard entity = new EntityGuard(world);
+		EntityGuard entity = new EntityGuard(worldObj);
 		EntityLiving entityliving = (EntityLiving) entity;
-		entity.setLocationAndAngles((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, MathHelper.wrapDegrees(world.rand.nextFloat() * 360.0F), 0.0F);
+		entity.setLocationAndAngles((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D,
+				MathHelper.wrapDegrees(worldObj.rand.nextFloat() * 360.0F), 0.0F);
 		entityliving.rotationYawHead = entityliving.rotationYaw;
 		entityliving.renderYawOffset = entityliving.rotationYaw;
-		entityliving.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entityliving)), (IEntityLivingData) null);
-		world.spawnEntity(entity);
+		entityliving.onInitialSpawn(worldObj.getDifficultyForLocation(new BlockPos(entityliving)), (IEntityLivingData) null);
+		worldObj.spawnEntityInWorld(entity);
 	}
 
 	private boolean withinRange() {
-		return world.isAnyPlayerWithinRangeAt((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, (double) this.triggerDistance);
+		return worldObj.isAnyPlayerWithinRangeAt((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D,
+				(double) this.triggerDistance);
 	}
 
 	private boolean isRunTick() {
-		return world.getTotalWorldTime() % 20L == 0L;
+		return worldObj.getTotalWorldTime() % 20L == 0L;
 	}
 
 	@Nullable

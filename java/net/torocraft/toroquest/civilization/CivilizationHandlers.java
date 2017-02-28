@@ -70,7 +70,7 @@ public class CivilizationHandlers {
 	public void handleLeaveProvince(CivilizationEvent.Leave event) {
 
 	}
-	
+
 	/*
 	 * -1360 40 342
 	 */
@@ -87,12 +87,12 @@ public class CivilizationHandlers {
 		if (originalCap == null) {
 			return;
 		}
-		
-		if(newCap == null){
+
+		if (newCap == null) {
 			throw new NullPointerException("missing player capability during clone");
 		}
-		
-		//System.out.println("CLONE: " + originalCap.writeNBT());
+
+		// System.out.println("CLONE: " + originalCap.writeNBT());
 
 		newCap.readNBT(originalCap.writeNBT());
 	}
@@ -109,10 +109,11 @@ public class CivilizationHandlers {
 
 		NBTTagCompound civData = cap.writeNBT();
 
-		//System.out.println("SAVE: " + civData);
-		
- 		if (civData == null || civData.getTag("reputations") == null || ((NBTTagList) civData.getTag("reputations")).tagCount() < 1) {
-			//System.out.println("******************Not writing empty ToroQuest data for player " + event.getEntityPlayer().getName());
+		// System.out.println("SAVE: " + civData);
+
+		if (civData == null || civData.getTag("reputations") == null || ((NBTTagList) civData.getTag("reputations")).tagCount() < 1) {
+			// System.out.println("******************Not writing empty ToroQuest
+			// data for player " + event.getEntityPlayer().getName());
 			return;
 		}
 
@@ -129,15 +130,15 @@ public class CivilizationHandlers {
 		if (cap == null) {
 			return;
 		}
-		
+
 		NBTTagCompound c = event.getEntityPlayer().getEntityData().getCompoundTag(ToroQuest.MODID + ".playerCivilization");
-		
-		if(c == null){
-			//System.out.println("******************Missing civ data on load");
-		}else{
+
+		if (c == null) {
+			// System.out.println("******************Missing civ data on load");
+		} else {
 			System.out.println("LOAD: " + c.toString());
 		}
-		
+
 		cap.readNBT(c);
 	}
 
@@ -429,7 +430,7 @@ public class CivilizationHandlers {
 		EntityFugitive e = new EntityFugitive(world);
 		e.setPosition(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5);
 		e.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(e)), (IEntityLivingData) null);
-		world.spawnEntity(e);
+		world.spawnEntityInWorld(e);
 	}
 
 	protected void spawnSentry(EntityPlayer player, BlockPos position, World world) {
@@ -472,7 +473,7 @@ public class CivilizationHandlers {
 			e.setCivilization(province.civilization);
 			e.setPosition(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5);
 			e.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(e)), (IEntityLivingData) null);
-			world.spawnEntity(e);
+			world.spawnEntityInWorld(e);
 		}
 
 	}

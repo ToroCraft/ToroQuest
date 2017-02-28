@@ -26,7 +26,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DifficultyInstance;
@@ -44,7 +43,7 @@ public class EntityBas extends EntitySkeleton {
 	public static Achievement BASTION_ACHIEVEMNT = new Achievement("bastion", "bastion", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityBas.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0xffffff, 0x909090);
+		EntityRegistry.registerModEntity(EntityBas.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0xffffff, 0x909090);
 	}
 
 	public static void registerRenders() {
@@ -117,12 +116,12 @@ public class EntityBas extends EntitySkeleton {
 	}
 
 	private void spawnLimitedBats() {
-		if (world.isRemote) {
+		if (worldObj.isRemote) {
 			return;
 		}
 		long start = System.currentTimeMillis();
-		int playerCount = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(getPosition()).expand(40, 20, 40)).size();
-		int batCount = world.getEntitiesWithinAABB(EntityVampireBat.class, new AxisAlignedBB(getPosition()).expand(40, 20, 40)).size();
+		int playerCount = worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(getPosition()).expand(40, 20, 40)).size();
+		int batCount = worldObj.getEntitiesWithinAABB(EntityVampireBat.class, new AxisAlignedBB(getPosition()).expand(40, 20, 40)).size();
 
 		if (batCount > 7 * playerCount) {
 			return;
@@ -132,7 +131,7 @@ public class EntityBas extends EntitySkeleton {
 	}
 
 	private void spawnBats(EntityLivingBase target) {
-		if (world.isRemote) {
+		if (worldObj.isRemote) {
 			return;
 		}
 		for (int i = 0; i < 3 + rand.nextInt(4); i++) {
@@ -141,11 +140,11 @@ public class EntityBas extends EntitySkeleton {
 	}
 
 	protected void spawnBat(EntityLivingBase target) {
-		if (world.isRemote) {
+		if (worldObj.isRemote) {
 			return;
 		}
 
-		EntityVampireBat mob = new EntityVampireBat(world);
+		EntityVampireBat mob = new EntityVampireBat(worldObj);
 
 		if (target == null) {
 			mob.setPosition(posX + rand.nextInt(6) - 3, posY + 4, posZ + rand.nextInt(6) - 3);
@@ -153,7 +152,7 @@ public class EntityBas extends EntitySkeleton {
 			mob.setPosition(target.posX + rand.nextInt(3) - 1, target.posY + 1 + rand.nextInt(1), target.posZ + rand.nextInt(3) - 1);
 		}
 
-		world.spawnEntity(mob);
+		worldObj.spawnEntityInWorld(mob);
 		if (target != null) {
 			mob.setAttackTarget(target);
 		}
@@ -162,25 +161,27 @@ public class EntityBas extends EntitySkeleton {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 
-		if (world.getTotalWorldTime() % 100 == 0) {
+		if (worldObj.getTotalWorldTime() % 100 == 0) {
 			spawnLimitedBats();
 		}
 
-		if (this.world.isDaytime() && !this.world.isRemote) {
+		if (this.worldObj.isDaytime() && !this.worldObj.isRemote) {
 			float f = this.getBrightness(1.0F);
-			BlockPos blockpos = this.getRidingEntity() instanceof EntityBoat ? (new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ)).up() : new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ);
+			BlockPos blockpos = this.getRidingEntity() instanceof EntityBoat
+					? (new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ)).up()
+					: new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ);
 
-			if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.world.canSeeSky(blockpos)) {
+			if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.worldObj.canSeeSky(blockpos)) {
 				boolean flag = true;
 				ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
-				if (!itemstack.isEmpty()) {
+				if (itemstack.stackSize > 0) {
 					if (itemstack.isItemStackDamageable()) {
 						itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
 
 						if (itemstack.getItemDamage() >= itemstack.getMaxDamage()) {
 							this.renderBrokenItemStack(itemstack);
-							this.setItemStackToSlot(EntityEquipmentSlot.HEAD, ItemStack.EMPTY);
+							this.setItemStackToSlot(EntityEquipmentSlot.HEAD, null);
 						}
 					}
 
@@ -218,14 +219,14 @@ public class EntityBas extends EntitySkeleton {
 	@Override
 	public void onDeath(DamageSource cause) {
 		super.onDeath(cause);
-		if (!world.isRemote) {
+		if (!worldObj.isRemote) {
 			dropLoot();
 			achievement(cause);
 		}
 	}
 
 	protected void achievement(DamageSource cause) {
-		if (world.isRemote) {
+		if (worldObj.isRemote) {
 			return;
 		}
 		Entity entity = cause.getEntity();
@@ -249,12 +250,12 @@ public class EntityBas extends EntitySkeleton {
 
 		for (int i = 0; i < amount; i++) {
 			ItemStack stack = new ItemStack(item);
-			EntityItem dropItem = new EntityItem(world, posX, posY, posZ, stack.copy());
+			EntityItem dropItem = new EntityItem(worldObj, posX, posY, posZ, stack.copy());
 			dropItem.setNoPickupDelay();
 			dropItem.motionY = rand.nextDouble();
 			dropItem.motionZ = rand.nextDouble() - 0.5d;
 			dropItem.motionX = rand.nextDouble() - 0.5d;
-			world.spawnEntity(dropItem);
+			worldObj.spawnEntityInWorld(dropItem);
 		}
 
 	}

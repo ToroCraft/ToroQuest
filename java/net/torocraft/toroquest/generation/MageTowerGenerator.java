@@ -231,19 +231,19 @@ public class MageTowerGenerator extends WorldGenerator {
 	private String randomMob(Random rand) {
 		switch (rand.nextInt(7)) {
 		case 0:
-			return "cave_spider";
+			return "CaveSpider";
 		case 1:
-			return "blaze";
+			return "Blaze";
 		case 2:
-			return "skeleton";
+			return "Skeleton";
 		case 3:
-			return "spider";
+			return "Spider";
 		case 5:
-			return "zombie";
+			return "Zombie";
 		case 6:
-			return "zombie_pigman";
+			return "PigZombie";
 		}
-		return "zombie";
+		return "Zombie";
 	}
 
 	public static void placeSpawner(World world, BlockPos pos, String mob) {

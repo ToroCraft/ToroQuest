@@ -25,7 +25,7 @@ import net.torocraft.toroquest.civilization.quests.util.Quests;
 
 public class QuestKillMobs extends QuestBase implements Quest {
 
-	private static final String[] MOB_TYPES = { "zombie", "skeleton", "creeper", "spider" };
+	private static final String[] MOB_TYPES = { "Zombie", "Skeleton", "Creeper", "Spider" };
 
 	public static QuestKillMobs INSTANCE;
 

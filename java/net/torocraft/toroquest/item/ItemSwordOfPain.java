@@ -24,8 +24,7 @@ public class ItemSwordOfPain extends ItemSword {
 	}
 
 	public static void registerRenders() {
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(INSTANCE, 0,
-				new ModelResourceLocation("minecraft:iron_sword", "inventory"));
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(INSTANCE, 0, new ModelResourceLocation("iron_sword", "inventory"));
 	}
 
 	public ItemSwordOfPain() {

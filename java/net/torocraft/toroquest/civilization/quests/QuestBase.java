@@ -111,7 +111,9 @@ public abstract class QuestBase implements Quest {
 	protected static List<ItemStack> copyItems(List<ItemStack> itemsIn) {
 		List<ItemStack> items = new ArrayList<ItemStack>();
 		for (ItemStack stack : itemsIn) {
-			items.add(stack.copy());
+			if (stack != null) {
+				items.add(stack.copy());
+			}
 		}
 		return items;
 	}
@@ -282,7 +284,7 @@ public abstract class QuestBase implements Quest {
 	public static List<ItemStack> removeEmptyItemStacks(List<ItemStack> givenItems) {
 		List<ItemStack> itemsToReturn = new ArrayList<ItemStack>();
 		for (ItemStack item : givenItems) {
-			if (item.stackSize > 0) {
+			if (item != null && item.stackSize > 0) {
 				itemsToReturn.add(item);
 			}
 		}
@@ -293,7 +295,12 @@ public abstract class QuestBase implements Quest {
 		if (getRewardItems(data) == null || givenItems == null) {
 			return;
 		}
-		givenItems.addAll(getRewardItems(data));
+
+		for (ItemStack in : getRewardItems(data)) {
+			if (in != null) {
+				givenItems.add(in);
+			}
+		}
 	}
 
 	public static Province chooseRandomProvince(Province exclude, World world, boolean mustHaveLord) {

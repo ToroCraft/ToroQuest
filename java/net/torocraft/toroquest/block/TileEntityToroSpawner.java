@@ -239,12 +239,12 @@ public class TileEntityToroSpawner extends TileEntity implements ITickable {
 		if (parts.length == 2) {
 			domain = parts[0];
 			entityName = parts[1];
+			return EntityList.createEntityByIDFromName(domain + "." + entityName, world);
 		} else {
-			domain = "minecraft";
 			entityName = entityID;
+			return EntityList.createEntityByIDFromName(entityName, world);
 		}
 
-		return EntityList.createEntityByIDFromName(entityName, world);
 	}
 
 	protected boolean spawnEntityLiving(EntityLiving entity, BlockPos pos) {

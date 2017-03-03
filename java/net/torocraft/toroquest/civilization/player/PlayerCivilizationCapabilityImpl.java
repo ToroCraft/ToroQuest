@@ -254,7 +254,7 @@ public class PlayerCivilizationCapabilityImpl extends PlayerCivilization impleme
 		}
 
 		// Testing Override
-		// q = QuestCourier.INSTANCE.generateQuestFor(player, province);
+		q = QuestEnemyEncampment.INSTANCE.generateQuestFor(player, province);
 
 		nextQuests.add(q);
 		return q;

@@ -116,7 +116,7 @@ public class MonolithGenerator extends WorldGenerator {
 		setBlockAndNotifyAdequately(world, pos, Blocks.MOB_SPAWNER.getDefaultState());
 		TileEntityMobSpawner theSpawner = (TileEntityMobSpawner) world.getTileEntity(pos);
 		MobSpawnerBaseLogic logic = theSpawner.getSpawnerBaseLogic();
-		logic.setEntityName("magma_cube");
+		logic.setEntityName("LavaSlime");
 	}
 
 	private void setHeight(Random rand) {

@@ -29,7 +29,7 @@ public class MessageSetItemReputationAmount implements IMessage {
 
 	public MessageSetItemReputationAmount(IVillageLordInventory inventory) {
 		ItemStack item = inventory.getDonationItem();
-		if (item.stackSize < 1) {
+		if (item == null || item.stackSize < 1) {
 			reputation = 0;
 			messageCode = MessageCode.EMPTY;
 			return;

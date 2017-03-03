@@ -32,8 +32,7 @@ public class ItemPickaxeOfGreed extends ItemPickaxe {
 	}
 
 	public static void registerRenders() {
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(INSTANCE, 0,
-				new ModelResourceLocation("minecraft:iron_pickaxe", "inventory"));
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(INSTANCE, 0, new ModelResourceLocation("iron_pickaxe", "inventory"));
 	}
 
 	public ItemPickaxeOfGreed() {

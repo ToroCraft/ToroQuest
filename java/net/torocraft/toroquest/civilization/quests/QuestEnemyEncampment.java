@@ -48,7 +48,7 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 	private final static int hutHalfWidth = 6;
 
 	// TODO make dynamic and save in quest data
-	private final static int mobCount = 30;
+	private final static int mobCount = 15;
 
 	public static void init(int id) {
 		INSTANCE = new QuestEnemyEncampment();
@@ -331,7 +331,7 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 		// TODO set amount
 		List<String> enemies = new ArrayList<String>();
 		for (int i = 0; i < mobCount; i++) {
-			enemies.add("minecraft:stray");
+			enemies.add("Witch");
 		}
 		setEnemyType(data, enemies);
 	}
@@ -370,7 +370,7 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 	private List<String> getDefaultEnemies(QuestData data) {
 		List<String> zombies = new ArrayList<String>();
 		for (int i = 0; i < 69; i++) {
-			zombies.add("zombie");
+			zombies.add("Zombie");
 		}
 		return zombies;
 	}

@@ -108,6 +108,9 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 
 	private void dropItems(List<ItemStack> items) {
 		for (ItemStack stack : items) {
+			if (stack == null) {
+				continue;
+			}
 			EntityItem dropItem = new EntityItem(lord.worldObj, lord.posX, lord.posY, lord.posZ, stack);
 			dropItem.setNoPickupDelay();
 			lord.worldObj.spawnEntityInWorld(dropItem);
@@ -118,7 +121,7 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 		NBTTagList list = new NBTTagList();
 		for (int i = 0; i < getSizeInventory(); ++i) {
 			ItemStack itemstack = (ItemStack) getStackInSlot(i);
-			if (itemstack.stackSize > 0) {
+			if (itemstack != null && itemstack.stackSize > 0) {
 				NBTTagCompound nbttagcompound = new NBTTagCompound();
 				nbttagcompound.setByte("Slot", (byte) i);
 				itemstack.writeToNBT(nbttagcompound);

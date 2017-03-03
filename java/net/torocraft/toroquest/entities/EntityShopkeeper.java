@@ -54,15 +54,27 @@ public class EntityShopkeeper extends EntityVillager implements IMerchant {
 
 	public EntityShopkeeper(World worldIn) {
 		super(worldIn, 3);
+
 	}
 
 	@Nullable
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
 		return livingdata;
 	}
+	/*
+	 * protected void updateAITasks() { /* attempt to set buyerList to avoid
+	 * null pointer by call this method
+	 *
+	 * getRecipes(player); super.updateAITasks(); }
+	 */
 
 	public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
 		boolean flag = stack != null && stack.getItem() == Items.SPAWN_EGG;
+
+		/*
+		 * attempt to set buyerList to avoid null pointer by call this method
+		 */
+		super.getRecipes(player);
 
 		if (!flag && isEntityAlive() && !isTrading() && !isChild() && !player.isSneaking()) {
 

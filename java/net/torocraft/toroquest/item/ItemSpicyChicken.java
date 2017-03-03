@@ -24,8 +24,7 @@ public class ItemSpicyChicken extends ItemFood {
 	}
 
 	public static void registerRenders() {
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(INSTANCE, 0,
-				new ModelResourceLocation("minecraft:cooked_chicken", "inventory"));
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(INSTANCE, 0, new ModelResourceLocation("cooked_chicken", "inventory"));
 	}
 
 	public ItemSpicyChicken() {

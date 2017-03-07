@@ -17,7 +17,8 @@ public class ToroQuestConfiguration {
 	public static int structureMinDistanceBetweenSame = 4000;
 	public static float toroHealthMultiplier = 1;
 	public static float toroAttackDamageMultiplier = 1;
-	
+	public static boolean cropsAffectRep = true;
+	public static boolean animalsAffectRep = true;
 
 	public static void init(File configFile) {
 		if (config == null) {
@@ -36,12 +37,14 @@ public class ToroQuestConfiguration {
 
 			structureMinDistanceBetweenSame = config.getInt("structureMinDistanceBetweenSame", CATEGORY, 4000, 100, 100000,
 					"The minimum distance allowed between to of the same special structures");
-			
-			toroHealthMultiplier = config.getFloat("toroHealthMultiplier", CATEGORY, 1, 0.01f, 100f,
-					"Toro health multipler");
-			
-			toroAttackDamageMultiplier = config.getFloat("toroAttackDamageMultiplier", CATEGORY, 1, 0.01f, 100f,
-					"Toro damage multipler");
+
+			toroHealthMultiplier = config.getFloat("toroHealthMultiplier", CATEGORY, 1, 0.01f, 100f, "Toro health multipler");
+
+			toroAttackDamageMultiplier = config.getFloat("toroAttackDamageMultiplier", CATEGORY, 1, 0.01f, 100f, "Toro damage multipler");
+
+			cropsAffectRep = config.getBoolean("cropsAffectRep", CATEGORY, true, "Gain rep when planting crops and lose it when harvesting");
+
+			animalsAffectRep = config.getBoolean("animalsAffectRep", CATEGORY, true, "Gain rep when breeding animals and lose it when killing them");
 
 			config.save();
 		} catch (Exception e) {

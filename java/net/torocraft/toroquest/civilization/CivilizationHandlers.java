@@ -48,6 +48,7 @@ import net.torocraft.toroquest.EventHandlers.SyncTask;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapability;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
+import net.torocraft.toroquest.config.ToroQuestConfiguration;
 import net.torocraft.toroquest.entities.EntityFugitive;
 import net.torocraft.toroquest.entities.EntitySentry;
 import net.torocraft.toroquest.entities.EntityToroNpc;
@@ -70,10 +71,6 @@ public class CivilizationHandlers {
 	public void handleLeaveProvince(CivilizationEvent.Leave event) {
 
 	}
-	
-	/*
-	 * -1360 40 342
-	 */
 
 	@SubscribeEvent
 	public void onDeath(PlayerEvent.Clone event) {
@@ -87,12 +84,12 @@ public class CivilizationHandlers {
 		if (originalCap == null) {
 			return;
 		}
-		
-		if(newCap == null){
+
+		if (newCap == null) {
 			throw new NullPointerException("missing player capability during clone");
 		}
-		
-		//System.out.println("CLONE: " + originalCap.writeNBT());
+
+		// System.out.println("CLONE: " + originalCap.writeNBT());
 
 		newCap.readNBT(originalCap.writeNBT());
 	}
@@ -109,10 +106,11 @@ public class CivilizationHandlers {
 
 		NBTTagCompound civData = cap.writeNBT();
 
-		//System.out.println("SAVE: " + civData);
-		
- 		if (civData == null || civData.getTag("reputations") == null || ((NBTTagList) civData.getTag("reputations")).tagCount() < 1) {
-			//System.out.println("******************Not writing empty ToroQuest data for player " + event.getEntityPlayer().getName());
+		// System.out.println("SAVE: " + civData);
+
+		if (civData == null || civData.getTag("reputations") == null || ((NBTTagList) civData.getTag("reputations")).tagCount() < 1) {
+			// System.out.println("******************Not writing empty ToroQuest
+			// data for player " + event.getEntityPlayer().getName());
 			return;
 		}
 
@@ -129,15 +127,15 @@ public class CivilizationHandlers {
 		if (cap == null) {
 			return;
 		}
-		
+
 		NBTTagCompound c = event.getEntityPlayer().getEntityData().getCompoundTag(ToroQuest.MODID + ".playerCivilization");
-		
-		if(c == null){
-			//System.out.println("******************Missing civ data on load");
-		}else{
+
+		if (c == null) {
+			// System.out.println("******************Missing civ data on load");
+		} else {
 			System.out.println("LOAD: " + c.toString());
 		}
-		
+
 		cap.readNBT(c);
 	}
 
@@ -256,7 +254,12 @@ public class CivilizationHandlers {
 			return 0;
 		}
 
-		return -1;
+		if (ToroQuestConfiguration.animalsAffectRep) {
+			return -1;
+		} else {
+			return 0;
+		}
+
 	}
 
 	private boolean isHostileMob(EntityLivingBase victim) {
@@ -301,6 +304,9 @@ public class CivilizationHandlers {
 
 	@SubscribeEvent
 	public void breed(BabyEntitySpawnEvent event) {
+		if (!ToroQuestConfiguration.animalsAffectRep) {
+			return;
+		}
 		if (!(event.getParentA() instanceof EntityAnimal)) {
 			return;
 		}
@@ -327,6 +333,9 @@ public class CivilizationHandlers {
 
 	@SubscribeEvent
 	public void farm(PlaceEvent event) {
+		if (!ToroQuestConfiguration.cropsAffectRep) {
+			return;
+		}
 		if (event.getPlayer() == null) {
 			return;
 		}
@@ -349,6 +358,9 @@ public class CivilizationHandlers {
 
 	@SubscribeEvent
 	public void harvestDrops(HarvestDropsEvent event) {
+		if (!ToroQuestConfiguration.cropsAffectRep) {
+			return;
+		}
 		if (isCrop(event.getState().getBlock())) {
 			BlockPos pos = event.getPos();
 			AxisAlignedBB bb = new AxisAlignedBB(pos);
@@ -363,6 +375,9 @@ public class CivilizationHandlers {
 
 	@SubscribeEvent
 	public void harvest(BreakEvent event) {
+		if (!ToroQuestConfiguration.cropsAffectRep) {
+			return;
+		}
 		if (event.getPlayer() == null) {
 			return;
 		}

@@ -1,0 +1,138 @@
+#PARSE_ESCAPES
+achievement.civilization_friend=Amigo
+achievement.civilization_ally=Aliado
+achievement.civilization_hero=Herói
+achievement.first_quest=Fazedor de Missões
+achievement.bounty_hunter=Caçador de Recompensas
+achievement.bastion=Matador de Bastião
+achievement.mage=Matador de Magos
+achievement.village_lord=Matador de Reis
+achievement.jackpot=Sorte Grande!
+item.obsidian_sword.name=Espada de Obsidiana
+item.fire_sword.name=Espada das Chamas
+item.diamond_battle_axe.name=Machado de Batalha de Diamante
+item.reinforced_diamond_boots.name=Botas Reforçadas de Diamante
+item.reinforced_diamond_helmet.name=Elmo Reforçado de Diamante
+item.reinforced_diamond_leggings.name=Calças Reforçadas de Diamante
+item.reinforced_diamond_chestplate.name=Armadura Reforçada de Diamante
+item.royal_boots.name=Botas Reais
+item.royal_helmet.name=Elmo real
+item.royal_leggings.name=Calças Reais
+item.royal_chestplate.name=Armadura Real
+item.samurai_boots.name=Saia Samurai
+item.samurai_helmet.name=Elmo Samurai
+item.samurai_leggings.name=Calças Samurai
+item.samurai_chestplate.name=Armadura Samurai
+item.toro_armor_boots.name=Botas Toro
+item.toro_armor_helmet.name=Elmo Toro
+item.toro_armor_leggings.name=Calças Toro
+item.toro_armor_chestplate.name=Armadura Toro
+item.toro_leather.name=Coro de Toro
+item.torch_arrow.name=Flecha tocha
+item.pickaxe_of_greed.name=Picareta Gananciosa
+item.sword_of_pain.name=Espada da Dor
+item.spicy_chicken.name=Frango Picante
+
+effect.toroquest\:royalty=Realesa
+potion.effect.toroquest\:royalty=Poção da Realesa
+splash_potion.effect.toroquest\:royalty=Poção Arremessável da Realesa
+lingering_splash_potion.effect.toroquest\:royalty=Poção Persistente da Realesa
+
+effect.toroquest\:loyalty=Lealdade
+potion.effect.toroquest\:loyalty=Poção da Lealdade
+splash_potion.effect.toroquest\:loyalty=Poção Arremessável da Lealdade
+lingering_potion.effect.toroquest\:loyalty=Poção Persistente da Lealdade
+
+entity.toroquest.monolitheye.name=Observador
+entity.monolitheye.name=Observador
+
+entity.toroquest.mage.name=Mago
+entity.mage.name=Mago
+
+entity.toroquest.toro.name=Toro
+entity.toro.name=Toro
+
+entity.toroquest.guard.name=Guarda
+entity.guard.name=Guarda
+
+entity.toroquest.village_lord.name=Senhor da Vila
+entity.village_lord.name=Senhor da Vila
+
+entity.toroquest.shopkeeper.name=Lojista
+entity.shopkeeper.name=Lojista
+
+entity.toroquest.fugitive.name=Fugitivo
+entity.fugitive.name=Fugitivo
+
+entity.toroquest.vampire_bat.name=Morcego Vampiro
+entity.vampire_bat.name=Morcego Vampiro
+
+entity.toroquest.bas.name=Senhor Bastião
+entity.bas.name=Senhor Bastião
+
+entity.toroquest.sentry.name=Sentinela
+entity.sentry.name=Sentinela
+
+entity.toroquest.rainbow_guard.name=Guardião do Arco-íris
+entity.rainbow_guard.name=Guardião do Arco-íris
+
+entity.toroquest.rainbow_king.name=Rei do Arco-íris
+entity.rainbow_king.name=Rei do Arco-íris
+
+civilization.earth.name=Terra
+civilization.wind.name=Gustaberg
+civilization.fire.name=Lumens
+civilization.moon.name=Lobus
+civilization.sun.name=Solaris
+civilization.water.name=Aquarius
+civilization.entering.friendly=Bem-vindo de volta a %s de %s
+civilization.entering.neutral=Entrando em %s de %s
+civilization.entering.hostile=Passando por %s de %s
+civilization.leaving.friendly=Saindo de %s de %s
+civilization.leaving.neutral=Deixando %s de %s
+civilization.leaving.hostile=Escapando %s de %s
+
+
+civilization.reputation_level.hero=Herói
+civilization.reputation_level.ally=Aliado
+civilization.reputation_level.friend=Amigo
+civilization.reputation_level.drifter=Indeciso
+civilization.reputation_level.outcast=Exilado
+civilization.reputation_level.enemy=Inimigo
+civilization.reputation_level.villain=Vilão
+
+quest.gui.title=Senhor de %s
+quest.gui.rep_for=%d de Rep. para
+quest.gui.reply=Obter resposta
+quest.gui.stolen_item=Devolver item
+quest.gui.empty=Dar itens
+quest.gui.button.donate=Doar
+quest.gui.button.accept=Aceitar
+quest.gui.button.complete=Completar
+quest.gui.button.reject=Abandonar
+quest.directions=%s metros, em direção a %s,%s
+
+quests.no_items=sem itens
+quests.courier.title=§lMensageiro§r
+quests.courier.description=§lEntrege§r uma carta para %s e traga a resposta para\n§lLocal§r %s\n§lRecompensa§r %s\n§lReceber§r %s de reputação
+
+quests.enemey_encampment.title=§lLimpar acampamento§r
+quests.enemey_encampment.description=§lLimpar§r %s acampamento em\n§lLocal§r %s\n§lRecompensa§r %s\n§lReceber§r %s de reputação
+quests.enemey_encampment.wasnt_you=Você não matour ninguém do acampamento!
+quests.enemey_encampment.one_left=Você não matou todos! Ainda falta um!
+quests.enemey_encampment.some_left=Você não matou todos! Ainda restam %i lá!
+
+quests.bounty_hunter.title=§lCaçador de Recompensas§r
+quests.bounty_hunter.description=Capture e traga um fugitivo que se enconde em %s\n§lLocal %s\n§lRecompensa§r %s\n§lReceber§r %s de reputação
+
+quests.farm.title=§lMissão de Plantar§r
+quests.farm.description=§lPlante§r %s %s em %s\nVocê plantou %s\n§lRecompensa§r %s
+
+quests.gather.title=§lMissão de Conseguir§r
+quests.gather.description=§lConsiga§r %s\n§lRecompensa§r %s\n§lReceber§r %s de reputação
+
+quests.kill_mobs.title=§lMatar Mobs§r
+quests.kill_mobs.description=§lMate§r %s %s mobs em %s\nYou have killed %s\n§lRecompensa§r %s
+
+quests.mine.title=§lMinerar na Província§r
+quests.mine.description=§lMinere§r %s blocos de %s nessa provícia\n§lLower§r que nível 30\n§lUse§r a ferramenta e traga de volta\n§lRecompensa§r %s\n§lReceber§r %s de reputação

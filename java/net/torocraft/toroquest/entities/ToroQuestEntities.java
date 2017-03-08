@@ -1,6 +1,9 @@
 package net.torocraft.toroquest.entities;
 
 public class ToroQuestEntities {
+
+	public static final String ENTITY_PREFIX = "toroquest_";
+
 	public static void init() {
 		int id = 1;
 		EntityMage.init(id++);

@@ -50,6 +50,7 @@ import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
+import net.torocraft.toroquest.config.ToroQuestConfiguration;
 import net.torocraft.toroquest.entities.ai.EntityAIMoveIntoArea;
 import net.torocraft.toroquest.entities.ai.EntityAINearestAttackableCivTarget;
 import net.torocraft.toroquest.entities.render.RenderGuard;
@@ -69,8 +70,15 @@ public class EntityGuard extends EntityToroNpc {
 
 	public static String NAME = "guard";
 
+	static {
+		if (ToroQuestConfiguration.specificEntityNames) {
+			NAME = ToroQuestEntities.ENTITY_PREFIX + NAME;
+		}
+	}
+
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityGuard.class, NAME, entityId, ToroQuest.INSTANCE, 80, 2, true, 0x3f3024, 0xe0d6b9);
+		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityGuard.class, NAME, entityId, ToroQuest.INSTANCE, 80, 2,
+				true, 0x3f3024, 0xe0d6b9);
 	}
 
 	public static void registerRenders() {
@@ -141,7 +149,7 @@ public class EntityGuard extends EntityToroNpc {
 		if (!super.attackEntityFrom(source, amount)) {
 			return false;
 		}
-		
+
 		EntityLivingBase attacker = this.getAttackTarget();
 		if (attacker == null && source.getEntity() instanceof EntityLivingBase) {
 			setAttackTarget((EntityLivingBase) source.getEntity());
@@ -204,7 +212,8 @@ public class EntityGuard extends EntityToroNpc {
 				float modifierForCreature;
 
 				if (targetEntity instanceof EntityLivingBase) {
-					modifierForCreature = EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), ((EntityLivingBase) targetEntity).getCreatureAttribute());
+					modifierForCreature = EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(),
+							((EntityLivingBase) targetEntity).getCreatureAttribute());
 				} else {
 					modifierForCreature = EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), EnumCreatureAttribute.UNDEFINED);
 				}
@@ -214,7 +223,8 @@ public class EntityGuard extends EntityToroNpc {
 					int i = 0;
 					i = i + EnchantmentHelper.getKnockbackModifier(this);
 
-					boolean criticalHit = this.fallDistance > 0.0F && !this.onGround && !this.isOnLadder() && !this.isInWater() && !this.isPotionActive(MobEffects.BLINDNESS) && !this.isRiding() && targetEntity instanceof EntityLivingBase;
+					boolean criticalHit = this.fallDistance > 0.0F && !this.onGround && !this.isOnLadder() && !this.isInWater()
+							&& !this.isPotionActive(MobEffects.BLINDNESS) && !this.isRiding() && targetEntity instanceof EntityLivingBase;
 					criticalHit = criticalHit && !this.isSprinting();
 
 					if (criticalHit) {
@@ -255,9 +265,12 @@ public class EntityGuard extends EntityToroNpc {
 					if (successfulAttack) {
 						if (i > 0) {
 							if (targetEntity instanceof EntityLivingBase) {
-								((EntityLivingBase) targetEntity).knockBack(this, (float) i * 0.5F, (double) MathHelper.sin(this.rotationYaw * 0.017453292F), (double) (-MathHelper.cos(this.rotationYaw * 0.017453292F)));
+								((EntityLivingBase) targetEntity).knockBack(this, (float) i * 0.5F,
+										(double) MathHelper.sin(this.rotationYaw * 0.017453292F),
+										(double) (-MathHelper.cos(this.rotationYaw * 0.017453292F)));
 							} else {
-								targetEntity.addVelocity((double) (-MathHelper.sin(this.rotationYaw * 0.017453292F) * (float) i * 0.5F), 0.1D, (double) (MathHelper.cos(this.rotationYaw * 0.017453292F) * (float) i * 0.5F));
+								targetEntity.addVelocity((double) (-MathHelper.sin(this.rotationYaw * 0.017453292F) * (float) i * 0.5F), 0.1D,
+										(double) (MathHelper.cos(this.rotationYaw * 0.017453292F) * (float) i * 0.5F));
 							}
 
 							this.motionX *= 0.6D;
@@ -266,14 +279,18 @@ public class EntityGuard extends EntityToroNpc {
 						}
 
 						if (swordSweep) {
-							for (EntityLivingBase entitylivingbase : this.world.getEntitiesWithinAABB(EntityLivingBase.class, targetEntity.getEntityBoundingBox().expand(1.0D, 0.25D, 1.0D))) {
-								if (entitylivingbase != this && entitylivingbase != targetEntity && !this.isOnSameTeam(entitylivingbase) && this.getDistanceSqToEntity(entitylivingbase) < 9.0D) {
-									entitylivingbase.knockBack(this, 0.4F, (double) MathHelper.sin(this.rotationYaw * 0.017453292F), (double) (-MathHelper.cos(this.rotationYaw * 0.017453292F)));
+							for (EntityLivingBase entitylivingbase : this.world.getEntitiesWithinAABB(EntityLivingBase.class,
+									targetEntity.getEntityBoundingBox().expand(1.0D, 0.25D, 1.0D))) {
+								if (entitylivingbase != this && entitylivingbase != targetEntity && !this.isOnSameTeam(entitylivingbase)
+										&& this.getDistanceSqToEntity(entitylivingbase) < 9.0D) {
+									entitylivingbase.knockBack(this, 0.4F, (double) MathHelper.sin(this.rotationYaw * 0.017453292F),
+											(double) (-MathHelper.cos(this.rotationYaw * 0.017453292F)));
 									entitylivingbase.attackEntityFrom(DamageSource.causeMobDamage(this), 1.0F);
 								}
 							}
 
-							world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, this.getSoundCategory(), 1.0F, 1.0F);
+							world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP,
+									this.getSoundCategory(), 1.0F, 1.0F);
 							this.spawnSweepParticles();
 						}
 
@@ -286,12 +303,14 @@ public class EntityGuard extends EntityToroNpc {
 						}
 
 						if (criticalHit) {
-							this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, this.getSoundCategory(), 1.0F, 1.0F);
+							this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_CRIT,
+									this.getSoundCategory(), 1.0F, 1.0F);
 							this.onCriticalHit(targetEntity);
 						}
 
 						if (!criticalHit && !swordSweep) {
-							this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_STRONG, this.getSoundCategory(), 1.0F, 1.0F);
+							this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_STRONG,
+									this.getSoundCategory(), 1.0F, 1.0F);
 						}
 
 						if (modifierForCreature > 0.0F) {
@@ -303,7 +322,8 @@ public class EntityGuard extends EntityToroNpc {
 							ItemStack itemstack2 = this.getHeldItemMainhand();
 							ItemStack itemstack3 = entityplayer.isHandActive() ? entityplayer.getActiveItemStack() : null;
 
-							if (itemstack2 != null && itemstack3 != null && itemstack2.getItem() instanceof ItemAxe && itemstack3.getItem() == Items.SHIELD) {
+							if (itemstack2 != null && itemstack3 != null && itemstack2.getItem() instanceof ItemAxe
+									&& itemstack3.getItem() == Items.SHIELD) {
 								float f3 = 0.25F + (float) EnchantmentHelper.getEfficiencyModifier(this) * 0.05F;
 								if (this.rand.nextFloat() < f3) {
 									entityplayer.getCooldownTracker().setCooldown(Items.SHIELD, 100);
@@ -347,13 +367,15 @@ public class EntityGuard extends EntityToroNpc {
 
 							if (world instanceof WorldServer && damageDealt > 2.0F) {
 								int k = (int) ((double) damageDealt * 0.5D);
-								((WorldServer) this.world).spawnParticle(EnumParticleTypes.DAMAGE_INDICATOR, targetEntity.posX, targetEntity.posY + (double) (targetEntity.height * 0.5F), targetEntity.posZ, k, 0.1D, 0.0D, 0.1D, 0.2D,
+								((WorldServer) this.world).spawnParticle(EnumParticleTypes.DAMAGE_INDICATOR, targetEntity.posX,
+										targetEntity.posY + (double) (targetEntity.height * 0.5F), targetEntity.posZ, k, 0.1D, 0.0D, 0.1D, 0.2D,
 										new int[0]);
 							}
 						}
 
 					} else {
-						this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_NODAMAGE, this.getSoundCategory(), 1.0F, 1.0F);
+						this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_NODAMAGE,
+								this.getSoundCategory(), 1.0F, 1.0F);
 
 						if (setFireToTarget) {
 							targetEntity.extinguish();
@@ -375,7 +397,8 @@ public class EntityGuard extends EntityToroNpc {
 		double d1 = (double) MathHelper.cos(this.rotationYaw * 0.017453292F);
 
 		if (this.world instanceof WorldServer) {
-			((WorldServer) this.world).spawnParticle(EnumParticleTypes.SWEEP_ATTACK, this.posX + d0, this.posY + (double) this.height * 0.5D, this.posZ + d1, 0, d0, 0.0D, d1, 0.0D, new int[0]);
+			((WorldServer) this.world).spawnParticle(EnumParticleTypes.SWEEP_ATTACK, this.posX + d0, this.posY + (double) this.height * 0.5D,
+					this.posZ + d1, 0, d0, 0.0D, d1, 0.0D, new int[0]);
 		}
 	}
 

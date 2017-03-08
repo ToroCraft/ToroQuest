@@ -41,39 +41,51 @@ lingering_potion.effect.toroquest\:loyalty=Verweiltrank der Loyalität
 
 entity.toroquest.monolitheye.name=Aufseher
 entity.monolitheye.name=Aufseher
+entity.toroquest_monolitheye.name=Aufseher
 
 entity.toroquest.mage.name=Magier
 entity.mage.name=Magier
+entity.toroquest_mage.name=Magier
 
 entity.toroquest.toro.name=Toro
 entity.toro.name=Toro
+entity.toroquest_toro.name=Toro
 
 entity.toroquest.guard.name=Gardist
 entity.guard.name=Gardist
+entity.toroquest_guard.name=Gardist
 
 entity.toroquest.village_lord.name=Dorfherr
 entity.village_lord.name=Dorfherr
+entity.toroquest_village_lord.name=Dorfherr
 
 entity.toroquest.shopkeeper.name=Verkäufer
 entity.shopkeeper.name=Verkäufer
+entity.toroquest_shopkeeper.name=Verkäufer
 
 entity.toroquest.fugitive.name=Flüchtiger
 entity.fugitive.name=Flüchtiger
+entity.toroquest_fugitive.name=Flüchtiger
 
 entity.toroquest.vampire_bat.name=Vampirfledermaus
+entity.vampire_bat.name=Vampirfledermaus
 entity.vampire_bat.name=Vampirfledermaus
 
 entity.toroquest.bas.name=Lord Bastion
 entity.bas.name=Lord Bastion
+entity.toroquest_bas.name=Lord Bastion
 
 entity.toroquest.sentry.name=Wächter
 entity.sentry.name=Wächter
+entity.toroquest_sentry.name=Wächter
 
 entity.toroquest.rainbow_guard.name=Regenbogengardist
 entity.rainbow_guard.name=Regenbogengardist
+entity.toroquest_rainbow_guard.name=Regenbogengardist
 
 entity.toroquest.rainbow_king.name=Regenbogenkönig
 entity.rainbow_king.name=Regenbogenkönig
+entity.toroquest_rainbow_king.name=Regenbogenkönig
 
 civilization.earth.name=Terra
 civilization.wind.name=Gustaberg

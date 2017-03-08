@@ -35,16 +35,24 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.config.ToroQuestConfiguration;
 import net.torocraft.toroquest.entities.render.RenderBas;
 
 public class EntityBas extends EntitySkeleton {
 
 	public static String NAME = "bas";
 
+	static {
+		if (ToroQuestConfiguration.specificEntityNames) {
+			NAME = ToroQuestEntities.ENTITY_PREFIX + NAME;
+		}
+	}
+
 	public static Achievement BASTION_ACHIEVEMNT = new Achievement("bastion", "bastion", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityBas.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0xffffff, 0x909090);
+		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityBas.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2,
+				true, 0xffffff, 0x909090);
 	}
 
 	public static void registerRenders() {
@@ -168,7 +176,9 @@ public class EntityBas extends EntitySkeleton {
 
 		if (this.world.isDaytime() && !this.world.isRemote) {
 			float f = this.getBrightness(1.0F);
-			BlockPos blockpos = this.getRidingEntity() instanceof EntityBoat ? (new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ)).up() : new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ);
+			BlockPos blockpos = this.getRidingEntity() instanceof EntityBoat
+					? (new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ)).up()
+					: new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ);
 
 			if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.world.canSeeSky(blockpos)) {
 				boolean flag = true;

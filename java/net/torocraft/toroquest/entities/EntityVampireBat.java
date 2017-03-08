@@ -31,16 +31,24 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.config.ToroQuestConfiguration;
 import net.torocraft.toroquest.entities.render.RenderVampireBat;
 
 public class EntityVampireBat extends EntityMob {
 
 	public static String NAME = "vampire_bat";
 
+	static {
+		if (ToroQuestConfiguration.specificEntityNames) {
+			NAME = ToroQuestEntities.ENTITY_PREFIX + NAME;
+		}
+	}
+
 	private EntityBas nearbyBas;
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityVampireBat.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0x2015, 0x909090);
+		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityVampireBat.class, NAME, entityId, ToroQuest.INSTANCE, 60,
+				2, true, 0x2015, 0x909090);
 	}
 
 	public static void registerRenders() {
@@ -162,14 +170,14 @@ public class EntityVampireBat extends EntityMob {
 			return randomNearByPlace();
 		}
 
-		return new BlockPos((int) nearbyBas.posX + rand.nextInt(30) - 15, (int) nearbyBas.posY + rand.nextInt(8) + 2, (int) nearbyBas.posZ + rand.nextInt(30) - 15);
+		return new BlockPos((int) nearbyBas.posX + rand.nextInt(30) - 15, (int) nearbyBas.posY + rand.nextInt(8) + 2,
+				(int) nearbyBas.posZ + rand.nextInt(30) - 15);
 	}
-
 
 	protected BlockPos randomNearByPlace() {
-		return new BlockPos((int) posX + rand.nextInt(7) - rand.nextInt(7), (int) posY + rand.nextInt(6) - 2, (int) posZ + rand.nextInt(7) - rand.nextInt(7));
+		return new BlockPos((int) posX + rand.nextInt(7) - rand.nextInt(7), (int) posY + rand.nextInt(6) - 2,
+				(int) posZ + rand.nextInt(7) - rand.nextInt(7));
 	}
-
 
 	private void searchForBas() {
 		List<EntityBas> list = world.getEntitiesWithinAABB(EntityBas.class, new AxisAlignedBB(getPosition()).expand(40, 20, 40));
@@ -245,7 +253,8 @@ public class EntityVampireBat extends EntityMob {
 			float f = 0.91F;
 
 			if (this.onGround) {
-				f = this.world.getBlockState(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getEntityBoundingBox().minY) - 1, MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.91F;
+				f = this.world.getBlockState(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getEntityBoundingBox().minY) - 1,
+						MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.91F;
 			}
 
 			float f1 = 0.16277136F / (f * f * f);
@@ -253,7 +262,8 @@ public class EntityVampireBat extends EntityMob {
 			f = 0.91F;
 
 			if (this.onGround) {
-				f = this.world.getBlockState(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getEntityBoundingBox().minY) - 1, MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.91F;
+				f = this.world.getBlockState(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getEntityBoundingBox().minY) - 1,
+						MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.91F;
 			}
 
 			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);

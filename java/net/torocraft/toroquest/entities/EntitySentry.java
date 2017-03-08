@@ -34,6 +34,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.CivilizationType;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
+import net.torocraft.toroquest.config.ToroQuestConfiguration;
 import net.torocraft.toroquest.entities.ai.EntityAINearestAttackableCivTarget;
 import net.torocraft.toroquest.entities.render.RenderSentry;
 
@@ -41,8 +42,15 @@ public class EntitySentry extends EntityToroNpc {
 
 	public static String NAME = "sentry";
 
+	static {
+		if (ToroQuestConfiguration.specificEntityNames) {
+			NAME = ToroQuestEntities.ENTITY_PREFIX + NAME;
+		}
+	}
+
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntitySentry.class, NAME, entityId, ToroQuest.INSTANCE, 80, 2, true, 0x3f3024, 0xe0d6b9);
+		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntitySentry.class, NAME, entityId, ToroQuest.INSTANCE, 80, 2,
+				true, 0x3f3024, 0xe0d6b9);
 	}
 
 	public static void registerRenders() {
@@ -164,24 +172,24 @@ public class EntitySentry extends EntityToroNpc {
 	private int determineColorByCiv() {
 		int color = 0;
 		switch (getCivilization()) {
-			case EARTH:
-				color = 6717235;
-				break;
-			case FIRE:
-				color = 0xff9900;
-				break;
-			case MOON:
-				color = 0x333333;
-				break;
-			case SUN:
-				color = 0xffff00;
-				break;
-			case WATER:
-				color = 0x2B65EC;
-				break;
-			case WIND:
-				color = 0xffffff;
-				break;
+		case EARTH:
+			color = 6717235;
+			break;
+		case FIRE:
+			color = 0xff9900;
+			break;
+		case MOON:
+			color = 0x333333;
+			break;
+		case SUN:
+			color = 0xffff00;
+			break;
+		case WATER:
+			color = 0x2B65EC;
+			break;
+		case WIND:
+			color = 0xffffff;
+			break;
 		}
 		return color;
 	}

@@ -37,12 +37,19 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.config.ToroQuestConfiguration;
 import net.torocraft.toroquest.entities.ai.EntityAIStayCentered;
 import net.torocraft.toroquest.entities.render.RenderRainbowGuard;
 
 public class EntityRainbowGuard extends EntityMob {
 
 	public static String NAME = "rainbow_guard";
+
+	static {
+		if (ToroQuestConfiguration.specificEntityNames) {
+			NAME = ToroQuestEntities.ENTITY_PREFIX + NAME;
+		}
+	}
 
 	public static enum Color {
 		RED(10040115), ORANGE(0xff9900), YELLOW(0xffff00), GREEN(6717235), BLUE(3361970), PURPLE(8339378);
@@ -60,13 +67,16 @@ public class EntityRainbowGuard extends EntityMob {
 
 	private Color color = Color.RED;
 
-	private static final DataParameter<Boolean> AT_ATTENTION = EntityDataManager.<Boolean>createKey(EntityRainbowGuard.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<BlockPos> LOOK_AT = EntityDataManager.<BlockPos>createKey(EntityRainbowGuard.class, DataSerializers.BLOCK_POS);
+	private static final DataParameter<Boolean> AT_ATTENTION = EntityDataManager.<Boolean> createKey(EntityRainbowGuard.class,
+			DataSerializers.BOOLEAN);
+	private static final DataParameter<BlockPos> LOOK_AT = EntityDataManager.<BlockPos> createKey(EntityRainbowGuard.class,
+			DataSerializers.BLOCK_POS);
 
 	// TODO: add new data parameter for color when we stop using armor
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityRainbowGuard.class, NAME, entityId, ToroQuest.INSTANCE, 90, 2, true, 0xffffff, 0x909090);
+		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityRainbowGuard.class, NAME, entityId, ToroQuest.INSTANCE,
+				90, 2, true, 0xffffff, 0x909090);
 	}
 
 	public static void registerRenders() {
@@ -179,14 +189,16 @@ public class EntityRainbowGuard extends EntityMob {
 		}
 
 		// TODO check if visible?
-		List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(getPosition()).expand(WAKE_DIAMETER, 6, WAKE_DIAMETER), EntitySelectors.CAN_AI_TARGET);
+		List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class,
+				new AxisAlignedBB(getPosition()).expand(WAKE_DIAMETER, 6, WAKE_DIAMETER), EntitySelectors.CAN_AI_TARGET);
 
 		if (players.size() < 1) {
 			return;
 		}
 
 		if (wakePartner) {
-			List<EntityRainbowGuard> nearbyRainbowGuards = world.getEntitiesWithinAABB(EntityRainbowGuard.class, getEntityBoundingBox().expand(5.0D, 4.0D, 2.0D));
+			List<EntityRainbowGuard> nearbyRainbowGuards = world.getEntitiesWithinAABB(EntityRainbowGuard.class,
+					getEntityBoundingBox().expand(5.0D, 4.0D, 2.0D));
 			if (nearbyRainbowGuards != null && !nearbyRainbowGuards.isEmpty()) {
 				nearbyRainbowGuards.get(0).wokenByPartner();
 			}
@@ -201,7 +213,6 @@ public class EntityRainbowGuard extends EntityMob {
 	protected void updateAITasks() {
 		super.updateAITasks();
 	}
-
 
 	public class EntityAIAtAttention extends EntityAIBase {
 
@@ -245,7 +256,8 @@ public class EntityRainbowGuard extends EntityMob {
 		 */
 		public void updateTask() {
 			entity.setPosition(entity.getPosition().getX() + 0.5d, entity.posY, entity.getPosition().getZ() + 0.5d);
-			entity.getLookHelper().setLookPosition(getLookAt().getX(), getLookAt().getY(), getLookAt().getZ(), (float) entity.getHorizontalFaceSpeed(), 0.0f);
+			entity.getLookHelper().setLookPosition(getLookAt().getX(), getLookAt().getY(), getLookAt().getZ(),
+					(float) entity.getHorizontalFaceSpeed(), 0.0f);
 		}
 	}
 

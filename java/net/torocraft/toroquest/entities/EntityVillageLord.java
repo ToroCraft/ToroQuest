@@ -43,6 +43,7 @@ import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
+import net.torocraft.toroquest.config.ToroQuestConfiguration;
 import net.torocraft.toroquest.entities.render.RenderVillageLord;
 import net.torocraft.toroquest.gui.VillageLordGuiHandler;
 import net.torocraft.toroquest.inventory.IVillageLordInventory;
@@ -52,10 +53,18 @@ import net.torocraft.toroquest.item.armor.ItemRoyalArmor;
 public class EntityVillageLord extends EntityToroNpc implements IInventoryChangedListener {
 
 	public static String NAME = "village_lord";
+
+	static {
+		if (ToroQuestConfiguration.specificEntityNames) {
+			NAME = ToroQuestEntities.ENTITY_PREFIX + NAME;
+		}
+	}
+
 	public static Achievement LORD_ACHIEVEMNT = new Achievement("village_lord", "village_lord", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityVillageLord.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0xeca58c, 0xba12c8);
+		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityVillageLord.class, NAME, entityId, ToroQuest.INSTANCE, 60,
+				2, true, 0xeca58c, 0xba12c8);
 	}
 
 	public static void registerRenders() {

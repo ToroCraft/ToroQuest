@@ -45,39 +45,51 @@ lingering_potion.effect.toroquest\:loyalty=Poção Persistente da Lealdade
 
 entity.toroquest.monolitheye.name=Observador
 entity.monolitheye.name=Observador
+entity.toroquest_monolitheye.name=Observador
 
 entity.toroquest.mage.name=Mago
 entity.mage.name=Mago
+entity.toroquest_mage.name=Mago
 
 entity.toroquest.toro.name=Toro
 entity.toro.name=Toro
+entity.toroquest_toro.name=Toro
 
 entity.toroquest.guard.name=Guarda
 entity.guard.name=Guarda
+entity.toroquest_guard.name=Guarda
 
 entity.toroquest.village_lord.name=Senhor da Vila
 entity.village_lord.name=Senhor da Vila
+entity.toroquest_village_lord.name=Senhor da Vila
 
 entity.toroquest.shopkeeper.name=Lojista
 entity.shopkeeper.name=Lojista
+entity.toroquest_shopkeeper.name=Lojista
 
 entity.toroquest.fugitive.name=Fugitivo
 entity.fugitive.name=Fugitivo
+entity.toroquest_fugitive.name=Fugitivo
 
 entity.toroquest.vampire_bat.name=Morcego Vampiro
 entity.vampire_bat.name=Morcego Vampiro
+entity.toroquest_vampire_bat.name=Morcego Vampiro
 
 entity.toroquest.bas.name=Senhor Bastião
 entity.bas.name=Senhor Bastião
+entity.toroquest_bas.name=Senhor Bastião
 
 entity.toroquest.sentry.name=Sentinela
 entity.sentry.name=Sentinela
+entity.toroquest_sentry.name=Sentinela
 
 entity.toroquest.rainbow_guard.name=Guardião do Arco-íris
 entity.rainbow_guard.name=Guardião do Arco-íris
+entity.toroquest_rainbow_guard.name=Guardião do Arco-íris
 
 entity.toroquest.rainbow_king.name=Rei do Arco-íris
 entity.rainbow_king.name=Rei do Arco-íris
+entity.toroquest_rainbow_king.name=Rei do Arco-íris
 
 civilization.earth.name=Terra
 civilization.wind.name=Gustaberg

@@ -45,39 +45,52 @@ lingering_potion.effect.toroquest\:loyalty=Lingering Potion of Loyalty
 
 entity.toroquest.monolitheye.name=Overseer
 entity.monolitheye.name=Overseer
+entity.toroquest_monolitheye.name=Overseer
+
 
 entity.toroquest.mage.name=Mage
 entity.mage.name=Mage
+entity.toroquest_mage.name=Mage
 
 entity.toroquest.toro.name=Toro
 entity.toro.name=Toro
+entity.toroquest_toro.name=Toro
 
 entity.toroquest.guard.name=Guard
 entity.guard.name=Guard
+entity.toroquest_guard.name=Guard
 
 entity.toroquest.village_lord.name=Village Lord
 entity.village_lord.name=Village Lord
+entity.toroquest_village_lord.name=Village Lord
 
 entity.toroquest.shopkeeper.name=Shopkeeper
 entity.shopkeeper.name=Shopkeeper
+entity.toroquest_shopkeeper.name=Shopkeeper
 
 entity.toroquest.fugitive.name=Fugitive
 entity.fugitive.name=Fugitive
+entity.toroquest_fugitive.name=Fugitive
 
 entity.toroquest.vampire_bat.name=Vampire Bat
 entity.vampire_bat.name=Vampire Bat
+entity.toroquest_vampire_bat.name=Vampire Bat
 
 entity.toroquest.bas.name=Lord Bastion
 entity.bas.name=Lord Bastion
+entity.toroquest_bas.name=Lord Bastion
 
 entity.toroquest.sentry.name=Sentry
 entity.sentry.name=Sentry
+entity.toroquest_sentry.name=Sentry
 
 entity.toroquest.rainbow_guard.name=Rainbow Guardsman
 entity.rainbow_guard.name=Rainbow Guardsman
+entity.toroquest_rainbow_guard.name=Rainbow Guardsman
 
 entity.toroquest.rainbow_king.name=Rainbow King
 entity.rainbow_king.name=Rainbow King
+entity.toroquest_rainbow_king.name=Rainbow King
 
 civilization.earth.name=Terra
 civilization.wind.name=Gustaberg

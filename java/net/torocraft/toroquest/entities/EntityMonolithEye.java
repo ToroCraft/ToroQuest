@@ -38,16 +38,25 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.config.ToroQuestConfiguration;
 import net.torocraft.toroquest.entities.ai.EntityAIStayCentered;
 
 public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 
 	private int clientSideAttackTime;
-	private static final DataParameter<Byte> STATUS = EntityDataManager.<Byte>createKey(EntityMonolithEye.class, DataSerializers.BYTE);
-	private static final DataParameter<Integer> TARGET_ENTITY = EntityDataManager.<Integer>createKey(EntityMonolithEye.class, DataSerializers.VARINT);
-	private static final DataParameter<Boolean> IS_AGGRESSIVE = EntityDataManager.<Boolean>createKey(EntityMonolithEye.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Byte> STATUS = EntityDataManager.<Byte> createKey(EntityMonolithEye.class, DataSerializers.BYTE);
+	private static final DataParameter<Integer> TARGET_ENTITY = EntityDataManager.<Integer> createKey(EntityMonolithEye.class,
+			DataSerializers.VARINT);
+	private static final DataParameter<Boolean> IS_AGGRESSIVE = EntityDataManager.<Boolean> createKey(EntityMonolithEye.class,
+			DataSerializers.BOOLEAN);
 
 	public static String NAME = "monolitheye";
+
+	static {
+		if (ToroQuestConfiguration.specificEntityNames) {
+			NAME = ToroQuestEntities.ENTITY_PREFIX + NAME;
+		}
+	}
 
 	private EntityLivingBase targetedEntity;
 	private float field_175485_bl;
@@ -71,14 +80,16 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 		DamageSource ds = DamageSource.causeIndirectMagicDamage(this, this);
 
 		entityIn.attackEntityFrom(ds, damage);
-		entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue());
+		entityIn.attackEntityFrom(DamageSource.causeMobDamage(this),
+				(float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue());
 		this.world.setEntityState(this, (byte) 15);
 		this.playSound(SoundEvents.ENTITY_GENERIC_EXPLODE, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 
 	}
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityMonolithEye.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityMonolithEye.class, NAME, entityId, ToroQuest.INSTANCE, 60,
+				2, true);
 	}
 
 	@Override
@@ -90,7 +101,8 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 		tasks.addTask(1, new EntityAIStayCentered(this));
 		tasks.addTask(4, new AIAttack(this));
 		tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 20.0F));
-		targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityLivingBase.class, 10, true, false, new MonolithEyeTargetSelector(this)));
+		targetTasks.addTask(1,
+				new EntityAINearestAttackableTarget(this, EntityLivingBase.class, 10, true, false, new MonolithEyeTargetSelector(this)));
 	}
 
 	static class MonolithEyeTargetSelector implements Predicate<EntityLivingBase> {
@@ -101,7 +113,8 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 		}
 
 		public boolean apply(@Nullable EntityLivingBase p_apply_1_) {
-			return (p_apply_1_ instanceof EntityPlayer || p_apply_1_ instanceof EntitySquid) && p_apply_1_.getDistanceSqToEntity(this.parentEntity) > 9.0D;
+			return (p_apply_1_ instanceof EntityPlayer || p_apply_1_ instanceof EntitySquid)
+					&& p_apply_1_.getDistanceSqToEntity(this.parentEntity) > 9.0D;
 		}
 	}
 
@@ -170,11 +183,12 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 					if (this.theEntity.world.getDifficulty() == EnumDifficulty.HARD) {
 						damage += 3.0F;
 					}
-					
+
 					DamageSource ds = DamageSource.causeIndirectMagicDamage(this.theEntity, this.theEntity);
 
 					entitylivingbase.attackEntityFrom(ds, damage);
-					entitylivingbase.attackEntityFrom(DamageSource.causeMobDamage(this.theEntity), (float) this.theEntity.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue());
+					entitylivingbase.attackEntityFrom(DamageSource.causeMobDamage(this.theEntity),
+							(float) this.theEntity.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue());
 					theEntity.attackedTarget = theEntity.getAttackTarget();
 					theEntity.setAttackTarget((EntityLivingBase) null);
 					theEntity.world.setEntityState(theEntity, (byte) 15);
@@ -185,7 +199,6 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 			}
 		}
 	}
-
 
 	public EntityLivingBase attackedTarget;
 
@@ -301,8 +314,9 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 	public void spawnAuraParticle() {
 		if (this.rand.nextDouble() <= 0.36D) {
 
-			this.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, this.posX + this.rand.nextGaussian() * 0.06999999523162842D, this.posY + 1.5D + this.rand.nextGaussian() * 0.20999999523162842D,
-					this.posZ + this.rand.nextGaussian() * 0.06999999523162842D, 0.0D, 0.0D, 0.0D, new int[0]);
+			this.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, this.posX + this.rand.nextGaussian() * 0.06999999523162842D,
+					this.posY + 1.5D + this.rand.nextGaussian() * 0.20999999523162842D, this.posZ + this.rand.nextGaussian() * 0.06999999523162842D,
+					0.0D, 0.0D, 0.0D, new int[0]);
 
 		}
 
@@ -378,7 +392,8 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 			float f = 0.91F;
 
 			if (this.onGround) {
-				f = this.world.getBlockState(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getEntityBoundingBox().minY) - 1, MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.91F;
+				f = this.world.getBlockState(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getEntityBoundingBox().minY) - 1,
+						MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.91F;
 			}
 
 			float f1 = 0.16277136F / (f * f * f);
@@ -386,7 +401,8 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 			f = 0.91F;
 
 			if (this.onGround) {
-				f = this.world.getBlockState(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getEntityBoundingBox().minY) - 1, MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.91F;
+				f = this.world.getBlockState(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getEntityBoundingBox().minY) - 1,
+						MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.91F;
 			}
 
 			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
@@ -421,8 +437,6 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 			}
 		}
 
-
-
 		return false;
 	}
 
@@ -456,10 +470,12 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 		double d1 = target.getEntityBoundingBox().minY + (double) (target.height / 3.0F) - entityarrow.posY;
 		double d2 = target.posZ - this.posZ;
 		double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
-		entityarrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float) (14 - this.world.getDifficulty().getDifficultyId() * 4));
+		entityarrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F,
+				(float) (14 - this.world.getDifficulty().getDifficultyId() * 4));
 		int i = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.POWER, this);
 		int j = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.PUNCH, this);
-		entityarrow.setDamage((double) (charge * 2.0F) + this.rand.nextGaussian() * 0.25D + (double) ((float) this.world.getDifficulty().getDifficultyId() * 0.11F));
+		entityarrow.setDamage((double) (charge * 2.0F) + this.rand.nextGaussian() * 0.25D
+				+ (double) ((float) this.world.getDifficulty().getDifficultyId() * 0.11F));
 
 		if (i > 0) {
 			entityarrow.setDamage(entityarrow.getDamage() + (double) i * 0.5D + 0.5D);

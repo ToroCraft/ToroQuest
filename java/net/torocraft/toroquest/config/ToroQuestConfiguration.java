@@ -19,6 +19,7 @@ public class ToroQuestConfiguration {
 	public static float toroAttackDamageMultiplier = 1;
 	public static boolean cropsAffectRep = true;
 	public static boolean animalsAffectRep = true;
+	public static boolean specificEntityNames = false;
 
 	public static void init(File configFile) {
 		if (config == null) {
@@ -45,6 +46,9 @@ public class ToroQuestConfiguration {
 			cropsAffectRep = config.getBoolean("cropsAffectRep", CATEGORY, true, "Gain rep when planting crops and lose it when harvesting");
 
 			animalsAffectRep = config.getBoolean("animalsAffectRep", CATEGORY, true, "Gain rep when breeding animals and lose it when killing them");
+
+			specificEntityNames = config.getBoolean("specificEntityNames", CATEGORY, false,
+					"Use specific entity names to improve mod compatabilty, SETTING THIS WILL REMOVE CURRENT TQ ENTITIES IN YOUR WORLD!");
 
 			config.save();
 		} catch (Exception e) {

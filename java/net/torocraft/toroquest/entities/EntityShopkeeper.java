@@ -28,6 +28,7 @@ import net.torocraft.toroquest.civilization.CivilizationUtil;
 import net.torocraft.toroquest.civilization.Province;
 import net.torocraft.toroquest.civilization.ReputationLevel;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
+import net.torocraft.toroquest.config.ToroQuestConfiguration;
 import net.torocraft.toroquest.entities.render.RenderShopkeeper;
 import net.torocraft.toroquest.entities.trades.ShopkeeperTradesForEarth;
 import net.torocraft.toroquest.entities.trades.ShopkeeperTradesForFire;
@@ -39,6 +40,12 @@ import net.torocraft.toroquest.entities.trades.ShopkeeperTradesForWind;
 public class EntityShopkeeper extends EntityVillager implements IMerchant {
 
 	public static String NAME = "shopkeeper";
+
+	static {
+		if (ToroQuestConfiguration.specificEntityNames) {
+			NAME = ToroQuestEntities.ENTITY_PREFIX + NAME;
+		}
+	}
 
 	public static void init(int entityId) {
 		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityShopkeeper.class, NAME, entityId, ToroQuest.INSTANCE, 60,

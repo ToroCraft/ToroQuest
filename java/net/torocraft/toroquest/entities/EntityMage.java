@@ -55,6 +55,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.config.ToroQuestConfiguration;
 
 /*
  * sweet drops
@@ -70,16 +71,24 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 	private static final UUID MODIFIER_UUID = UUID.fromString("5CD17E52-A79A-43D3-A529-90FDE04B181E");
 	private static final AttributeModifier MODIFIER = (new AttributeModifier(MODIFIER_UUID, "Drinking speed penalty", -0.25D, 0)).setSaved(false);
 
-	private static final DataParameter<Boolean> IS_AGGRESSIVE = EntityDataManager.<Boolean>createKey(EntityWitch.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Boolean> IS_AGGRESSIVE = EntityDataManager.<Boolean> createKey(EntityWitch.class, DataSerializers.BOOLEAN);
 
 	private int attackTimer;
 	private int staffTimer;
 
 	public static String NAME = "mage";
-	private static final DataParameter<Boolean> STAFF_ATTACK = EntityDataManager.<Boolean>createKey(EntityMage.class, DataSerializers.BOOLEAN);
+
+	static {
+		if (ToroQuestConfiguration.specificEntityNames) {
+			NAME = ToroQuestEntities.ENTITY_PREFIX + NAME;
+		}
+	}
+
+	private static final DataParameter<Boolean> STAFF_ATTACK = EntityDataManager.<Boolean> createKey(EntityMage.class, DataSerializers.BOOLEAN);
 
 	public static void init(int entityId) {
-		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityMage.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2, true, 0xff3024, 0xe0d6b9);
+		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityMage.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2,
+				true, 0xff3024, 0xe0d6b9);
 	}
 
 	@Nullable
@@ -252,12 +261,14 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 			potiontype = PotionTypes.FIRE_RESISTANCE;
 		} else if (this.rand.nextFloat() < 0.05F && this.getHealth() < this.getMaxHealth()) {
 			potiontype = PotionTypes.HEALING;
-		} else if (this.rand.nextFloat() < 0.5F && this.getAttackTarget() != null && !this.isPotionActive(MobEffects.SPEED) && this.getAttackTarget().getDistanceSqToEntity(this) > 121.0D) {
+		} else if (this.rand.nextFloat() < 0.5F && this.getAttackTarget() != null && !this.isPotionActive(MobEffects.SPEED)
+				&& this.getAttackTarget().getDistanceSqToEntity(this) > 121.0D) {
 			potiontype = PotionTypes.SWIFTNESS;
 		}
 
 		if (potiontype != null) {
-			this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_WITCH_DRINK, this.getSoundCategory(), 1.0F, 0.8F + this.rand.nextFloat() * 0.4F);
+			this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_WITCH_DRINK, this.getSoundCategory(), 1.0F,
+					0.8F + this.rand.nextFloat() * 0.4F);
 			this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), potiontype));
 			this.attackTimer = 10;
 			this.setAggressive(true);
@@ -269,7 +280,8 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 
 	protected void handleDrinkingPotionUpdate() {
 		if (this.attackTimer-- <= 0) {
-			this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_WITCH_DRINK, this.getSoundCategory(), 1.0F, 0.8F + this.rand.nextFloat() * 0.4F);
+			this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_WITCH_DRINK, this.getSoundCategory(), 1.0F,
+					0.8F + this.rand.nextFloat() * 0.4F);
 			this.setAggressive(false);
 			ItemStack itemstack = this.getHeldItemOffhand();
 			this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, ItemStack.EMPTY);
@@ -300,7 +312,8 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 	@SideOnly(Side.CLIENT)
 	protected void spawnWitchParticles() {
 		for (int i = 0; i < this.rand.nextInt(35) + 10; ++i) {
-			this.world.spawnParticle(EnumParticleTypes.SPELL_WITCH, this.posX + this.rand.nextGaussian() * 0.12999999523162842D, this.getEntityBoundingBox().maxY + 0.5D + this.rand.nextGaussian() * 0.12999999523162842D,
+			this.world.spawnParticle(EnumParticleTypes.SPELL_WITCH, this.posX + this.rand.nextGaussian() * 0.12999999523162842D,
+					this.getEntityBoundingBox().maxY + 0.5D + this.rand.nextGaussian() * 0.12999999523162842D,
 					this.posZ + this.rand.nextGaussian() * 0.12999999523162842D, 0.0D, 0.0D, 0.0D, new int[0]);
 		}
 	}
@@ -421,11 +434,13 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 			potiontype = PotionTypes.WEAKNESS;
 		}
 
-		EntityPotion entitypotion = new EntityPotion(this.world, this, PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), potiontype));
+		EntityPotion entitypotion = new EntityPotion(this.world, this,
+				PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), potiontype));
 		entitypotion.rotationPitch -= -20.0F;
 		entitypotion.setThrowableHeading(targetX, d2 + (double) (f * 0.2F), targetZ, 0.75F, 8.0F);
 
-		this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_WITCH_THROW, this.getSoundCategory(), 1.0F, 0.8F + this.rand.nextFloat() * 0.4F);
+		this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_WITCH_THROW, this.getSoundCategory(), 1.0F,
+				0.8F + this.rand.nextFloat() * 0.4F);
 		this.world.spawnEntity(entitypotion);
 	}
 
@@ -438,10 +453,12 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 		double d1 = target.getEntityBoundingBox().minY + (double) (target.height / 3.0F) - entityarrow.posY;
 		double d2 = target.posZ - this.posZ;
 		double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
-		entityarrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float) (14 - this.world.getDifficulty().getDifficultyId() * 4));
+		entityarrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F,
+				(float) (14 - this.world.getDifficulty().getDifficultyId() * 4));
 		int i = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.POWER, this);
 		int j = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.PUNCH, this);
-		entityarrow.setDamage((double) (charge * 2.0F) + this.rand.nextGaussian() * 0.25D + (double) ((float) this.world.getDifficulty().getDifficultyId() * 0.11F));
+		entityarrow.setDamage((double) (charge * 2.0F) + this.rand.nextGaussian() * 0.25D
+				+ (double) ((float) this.world.getDifficulty().getDifficultyId() * 0.11F));
 
 		if (i > 0) {
 			entityarrow.setDamage(entityarrow.getDamage() + (double) i * 0.5D + 0.5D);

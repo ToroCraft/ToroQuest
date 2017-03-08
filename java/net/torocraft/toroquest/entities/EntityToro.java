@@ -47,6 +47,12 @@ public class EntityToro extends EntityTameable {
 
 	public static String NAME = "toro";
 
+	static {
+		if (ToroQuestConfiguration.specificEntityNames) {
+			NAME = ToroQuestEntities.ENTITY_PREFIX + NAME;
+		}
+	}
+
 	private static final DataParameter<Boolean> CHARGING = EntityDataManager.<Boolean> createKey(EntityToro.class, DataSerializers.BOOLEAN);
 
 	public static void init(int entityId) {

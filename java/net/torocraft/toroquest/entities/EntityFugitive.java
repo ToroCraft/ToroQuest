@@ -159,7 +159,7 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 
 		private boolean holdingLeadIn(EntityPlayer player, EntityEquipmentSlot mainhand) {
 			ItemStack itemstack = player.getItemStackFromSlot(mainhand);
-			return itemstack.stackSize > 0 && itemstack.getItem() == Items.LEAD;
+			return itemstack != null && itemstack.stackSize > 0 && itemstack.getItem() == Items.LEAD;
 		}
 	};
 

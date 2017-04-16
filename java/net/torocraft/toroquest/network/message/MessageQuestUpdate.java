@@ -89,6 +89,10 @@ public class MessageQuestUpdate implements IMessage {
 		private void processDonate(EntityPlayer player, Province province, IVillageLordInventory inventory) {
 			ItemStack donation = inventory.getDonationItem();
 
+			if (donation == null) {
+				return;
+			}
+
 			if (MessageSetItemReputationAmount.isNoteForLord(province, donation)) {
 				writeReplyNote(inventory, donation);
 				return;
@@ -103,7 +107,9 @@ public class MessageQuestUpdate implements IMessage {
 			if (reward != null) {
 				PlayerCivilizationCapabilityImpl.get(player).adjustReputation(province.civilization, reward.rep);
 				inventory.setDonationItem(null);
-				inventory.setReturnItems(l(new ItemStack(reward.item)));
+				if (reward.item != null) {
+					inventory.setReturnItems(l(new ItemStack(reward.item)));
+				}
 			}
 		}
 

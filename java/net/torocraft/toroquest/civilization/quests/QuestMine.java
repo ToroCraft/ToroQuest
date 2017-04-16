@@ -56,7 +56,7 @@ public class QuestMine extends QuestBase {
 
 		ItemStack tool = player.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
 
-		if (!tool.hasTagCompound()) {
+		if (tool == null || !tool.hasTagCompound()) {
 			return;
 		}
 

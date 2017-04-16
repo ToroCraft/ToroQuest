@@ -3,6 +3,8 @@ package net.torocraft.toroquest.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -152,6 +154,7 @@ public class VillageLordContainer extends Container {
 	}
 
 	@Override
+	@Nullable
 	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
 		Slot slot = (Slot) this.inventorySlots.get(index);
 		if (slot == null || !slot.getHasStack()) {
@@ -176,7 +179,7 @@ public class VillageLordContainer extends Container {
 		int stackSize = sourceStack.stackSize;
 
 		if (stackSize == 0) {
-			slot.putStack(null);
+			slot.putStack((ItemStack) null);
 		} else {
 			slot.onSlotChanged();
 		}

@@ -40,6 +40,10 @@ public class CivilizationOverlayHandler extends Hud {
 
 		displayPosition = ConfigurationHandler.repDisplayPosition;
 
+		if ("OFF".equals(displayPosition)) {
+			return;
+		}
+
 		drawCurrentCivilizationIcon(civ, player);
 	}
 

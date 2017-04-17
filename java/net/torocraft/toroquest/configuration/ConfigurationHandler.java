@@ -23,7 +23,7 @@ public class ConfigurationHandler {
 	public static void loadConfiguration() {
 		try {
 			repDisplayPosition = config.getString("Rep Badge Position", Configuration.CATEGORY_CLIENT, "BOTTOM RIGHT", "Location of Rep Badge",
-					new String[] { "TOP LEFT", "TOP CENTER", "TOP RIGHT", "BOTTOM LEFT", "BOTTOM RIGHT" });
+					new String[] { "TOP LEFT", "TOP CENTER", "TOP RIGHT", "BOTTOM LEFT", "BOTTOM RIGHT", "OFF" });
 			repDisplayX = config.getInt("Rep Badge X", Configuration.CATEGORY_CLIENT, 0, -20000, 20000, "Sets X offset of Rep Badge");
 			repDisplayY = config.getInt("Rep Badge Y", Configuration.CATEGORY_CLIENT, 0, -20000, 20000, "Sets Y offset of Rep Badge");
 		} catch (Exception e) {

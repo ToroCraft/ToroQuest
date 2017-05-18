@@ -25,11 +25,11 @@ import net.torocraft.toroquest.civilization.quests.util.QuestData;
 import net.torocraft.toroquest.civilization.quests.util.Quests;
 
 public class QuestKillMobs extends QuestBase implements Quest {
-	
+
 	private static final String[] MOB_TYPES = { "zombie", "skeleton", "creeper", "spider" };
-	
+
 	public static QuestKillMobs INSTANCE;
-	
+
 	public static int ID;
 
 	public static void init(int id) {
@@ -38,7 +38,7 @@ public class QuestKillMobs extends QuestBase implements Quest {
 		MinecraftForge.EVENT_BUS.register(INSTANCE);
 		ID = id;
 	}
-	
+
 	@SubscribeEvent
 	public void onKill(LivingDeathEvent event) {
 		EntityPlayer player = null;
@@ -52,17 +52,20 @@ public class QuestKillMobs extends QuestBase implements Quest {
 		if (player == null) {
 			return;
 		}
-		
+
 		Province province = PlayerCivilizationCapabilityImpl.get(player).getInCivilization();
 
 		if (province == null || province.civilization == null) {
 			return;
 		}
-		
+
 		handleKillMobsQuest(player, province, victim);
 	}
-		
+
 	private void handleKillMobsQuest(EntityPlayer player, Province provinceHuntedIn, EntityLivingBase victim) {
+	    if(){
+	      
+	    }
 		Set<QuestData> quests = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuests();
 				
 		DataWrapper quest = new DataWrapper();
@@ -80,17 +83,17 @@ public class QuestKillMobs extends QuestBase implements Quest {
 		if (quest.getData().getPlayer().world.isRemote) {
 			return false;
 		}
-		
+
 		if (!quest.isApplicable()) {
 			return false;
 		}
-		
+
 		quest.setCurrentAmount(quest.getCurrentAmount() + 1);
-		
+
 		if (quest.getCurrentAmount() >= quest.getTargetAmount()) {
 			quest.data.setCompleted(true);
 		}
-		
+
 		return true;
 	}
 
@@ -165,9 +168,9 @@ public class QuestKillMobs extends QuestBase implements Quest {
 
 	@Override
 	public QuestData generateQuestFor(EntityPlayer player, Province province) {
-		
+
 		Random rand = player.getEntityWorld().rand;
-		
+
 		DataWrapper q = new DataWrapper();
 		q.data.setCiv(province.civilization);
 		q.data.setPlayer(player);
@@ -175,27 +178,27 @@ public class QuestKillMobs extends QuestBase implements Quest {
 		q.data.setQuestId(UUID.randomUUID());
 		q.data.setQuestType(ID);
 		q.data.setCompleted(false);
-		
+
 		int roll = rand.nextInt(10);
-		
+
 		q.setMobType(rand.nextInt(MOB_TYPES.length));
 		q.setCurrentAmount(0);
 		q.setRewardRep(0);
 		q.setTargetAmount(10 + roll);
-		
+
 		ItemStack emeralds = new ItemStack(Items.EMERALD, q.getTargetAmount() / 6);
 		List<ItemStack> rewardItems = new ArrayList<ItemStack>();
 		rewardItems.add(emeralds);
 		setRewardItems(q.data, rewardItems);
-		
+
 		return q.data;
 	}
-	
+
 	public static class DataWrapper {
 		private QuestData data = new QuestData();
 		private Province provinceHuntedIn;
 		private String huntedMob;
-		
+
 		public QuestData getData() {
 			return data;
 		}
@@ -272,7 +275,7 @@ public class QuestKillMobs extends QuestBase implements Quest {
 		private boolean isInCorrectProvince() {
 			return data.getProvinceId().equals(getProvinceHuntedIn().id);
 		}
-		
+
 		private boolean isCorrectMob() {
 			return MOB_TYPES[getMobType()].equals(getHuntedMob());
 		}

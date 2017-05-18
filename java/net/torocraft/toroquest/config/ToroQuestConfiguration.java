@@ -17,6 +17,8 @@ public class ToroQuestConfiguration {
 	public static int structureMinDistanceBetweenSame = 4000;
 	public static float toroHealthMultiplier = 1;
 	public static float toroAttackDamageMultiplier = 1;
+	public static float bossHealthMultiplier = 1;
+	public static float bossAttackDamageMultiplier = 1;
 	public static boolean cropsAffectRep = true;
 	public static boolean animalsAffectRep = true;
 	public static boolean specificEntityNames = false;
@@ -42,6 +44,10 @@ public class ToroQuestConfiguration {
 			toroHealthMultiplier = config.getFloat("toroHealthMultiplier", CATEGORY, 1, 0.01f, 100f, "Toro health multipler");
 
 			toroAttackDamageMultiplier = config.getFloat("toroAttackDamageMultiplier", CATEGORY, 1, 0.01f, 100f, "Toro damage multipler");
+			
+			bossHealthMultiplier = config.getFloat("bossHealthMultiplier", CATEGORY, 1, 0.01f, 100f, "ToroQuest boss health multipler");
+
+			bossAttackDamageMultiplier = config.getFloat("bossAttackDamageMultiplier", CATEGORY, 1, 0.01f, 100f, "ToroQuest boss damage multipler");
 
 			cropsAffectRep = config.getBoolean("cropsAffectRep", CATEGORY, true, "Gain rep when planting crops and lose it when harvesting");
 

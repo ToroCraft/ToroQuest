@@ -213,7 +213,7 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D * ToroQuestConfiguration.bossHealthMultiplier);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
 	}
 
@@ -500,6 +500,8 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 
 		float reflectAmount = amount * reflectFactor;
 		float passAmount = amount - reflectAmount;
+
+		reflectAmount *= ToroQuestConfiguration.bossAttackDamageMultiplier;
 
 		Entity attacker = source.getEntity();
 		if (attacker != null) {

@@ -2,6 +2,7 @@ package net.torocraft.toroquest.civilization;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.GlStateManager;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.configuration.ConfigurationHandler;
 import net.torocraft.toroquest.util.Hud;
@@ -80,9 +81,15 @@ public class CivilizationOverlayHandler extends Hud {
 	private void drawCivilizationBadge(CivilizationType civType) {
 		int badgeX = determineBadgeX();
 		int badgeY = determineIconY();
-
+		
+		GlStateManager.pushAttrib();
+		GlStateManager.disableDepth();
+		GlStateManager.enableBlend();
+		
 		ToroGuiUtils.drawOverlayIcon(mc, badgeX - 2, badgeY, 0, 96, 20, 27);
 		ToroGuiUtils.drawOverlayIcon(mc, badgeX, badgeY + 3, iconIndex(civType), 0);
+		
+		GlStateManager.popAttrib();
 	}
 
 	private int determineTextX() {

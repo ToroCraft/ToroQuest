@@ -21,6 +21,7 @@ import net.minecraft.world.gen.structure.StructureVillagePieces.Village;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry.IVillageCreationHandler;
 import net.torocraft.toroquest.ToroQuest;
+import net.torocraft.toroquest.entities.EntityGuard;
 import net.torocraft.toroquest.generation.village.util.BlockMapMeasurer;
 import net.torocraft.toroquest.generation.village.util.VillagePieceBlockMap;
 
@@ -91,7 +92,7 @@ public class VillageHandlerBarracks implements IVillageCreationHandler {
 			world.spawnEntity(stand);
 
 			List<String> entities = new ArrayList<String>();
-			entities.add(ToroQuest.MODID + ":guard");
+			entities.add(ToroQuest.MODID + ":" + EntityGuard.NAME);
 			specialHandlingForSpawner(world, "xx", c, x, y, z, entities);
 
 			return true;

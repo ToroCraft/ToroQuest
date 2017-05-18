@@ -63,18 +63,22 @@ public class QuestKillMobs extends QuestBase implements Quest {
 	}
 
 	private void handleKillMobsQuest(EntityPlayer player, Province provinceHuntedIn, EntityLivingBase victim) {
-	    if(){
-	      
-	    }
+		if (victim == null) {
+			return;
+		}
 		Set<QuestData> quests = PlayerCivilizationCapabilityImpl.get(player).getCurrentQuests();
-				
+
 		DataWrapper quest = new DataWrapper();
-		for (QuestData data : quests) {			
-			quest.setData(data);
-			quest.huntedMob = EntityList.getKey(victim).getResourcePath();
-			quest.provinceHuntedIn = provinceHuntedIn;
-			if (perform(quest)) {
-				return;
+		for (QuestData data : quests) {
+			try {
+				quest.setData(data);
+				quest.huntedMob = EntityList.getKey(victim).getResourcePath();
+				quest.provinceHuntedIn = provinceHuntedIn;
+				if (perform(quest)) {
+					return;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}

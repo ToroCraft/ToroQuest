@@ -448,6 +448,13 @@ public class CivilizationHandlers {
 	}
 
 	protected void spawnSentry(EntityPlayer player, BlockPos position, World world) {
+		if (world == null || world.provider == null) {
+			return;
+		}
+
+		if (world.provider.getDimension() != 0) {
+			return;
+		}
 		BlockPos randomNearbySpot = position.add(randomSpawnDistance(world.rand), 0, randomSpawnDistance(world.rand));
 
 		Province province = CivilizationUtil.getProvinceAt(world, randomNearbySpot.getX() / 16, randomNearbySpot.getZ() / 16);

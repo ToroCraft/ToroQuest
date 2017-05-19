@@ -135,18 +135,18 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 	}
 
 	public void openGUI(EntityPlayer player) {
-		if (world.isRemote) {
-			return;
-		}
+		//if (world.isRemote) {
+		//	return;
+		//}
 		player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), world, getPosition().getX(), getPosition().getY(), getPosition().getZ());
 	}
 
 	@Override
 	protected boolean processInteract(EntityPlayer player, EnumHand hand) {
 		if (this.isEntityAlive() && !this.isChild()) {
-			if (!this.world.isRemote) {
+			//if (!this.world.isRemote) {
 				openGUI(player);
-			}
+			//}
 			return true;
 		} else {
 			return false;

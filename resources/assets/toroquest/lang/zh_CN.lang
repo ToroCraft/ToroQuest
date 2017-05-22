@@ -1,0 +1,151 @@
+#PARSE_ESCAPES
+achievement.civilization_friend=伙伴
+achievement.civilization_ally=同盟
+achievement.civilization_hero=英雄
+achievement.first_quest=首个任务
+achievement.bounty_hunter=赏金猎人
+achievement.bastion=堡垒杀手
+achievement.mage=法师杀手
+achievement.village_lord=领主杀手
+achievement.jackpot=头奖！
+item.obsidian_sword.name=黑曜石剑
+item.fire_sword.name=赤炎剑
+item.diamond_battle_axe.name=钻石战斧
+item.reinforced_diamond_boots.name=强化钻石靴子
+item.reinforced_diamond_helmet.name=强化钻石头盔
+item.reinforced_diamond_leggings.name=强化钻石护腿
+item.reinforced_diamond_chestplate.name=强化钻石胸甲
+item.royal_boots.name=皇家靴子
+item.royal_helmet.name=皇家头盔
+item.royal_leggings.name=皇家护腿
+item.royal_chestplate.name=皇家胸甲
+item.samurai_boots.name=武士衬裙
+item.samurai_helmet.name=武士头盔
+item.samurai_leggings.name=武士护腿
+item.samurai_chestplate.name=武士胸甲
+item.toro_armor_boots.name=托罗靴子
+item.toro_armor_helmet.name=托罗头盔
+item.toro_armor_leggings.name=托罗护腿
+item.toro_armor_chestplate.name=托罗胸甲
+item.toro_leather.name=托罗皮革
+item.torch_arrow.name=火炬箭
+item.pickaxe_of_greed.name=贪婪之镐
+item.sword_of_pain.name=伤痛之剑
+item.spicy_chicken.name=辣鸡
+
+effect.toroquest\:royalty=皇权
+potion.effect.toroquest\:royalty=皇权药水
+splash_potion.effect.toroquest\:royalty=喷溅型皇权药水
+lingering_splash_potion.effect.toroquest\:royalty=滞留型皇权药水
+
+effect.toroquest\:loyalty=忠诚
+potion.effect.toroquest\:loyalty=忠诚药水
+splash_potion.effect.toroquest\:loyalty=喷溅型忠诚药水
+lingering_potion.effect.toroquest\:loyalty=滞留型忠诚药水
+
+entity.toroquest.monolitheye.name=监视者
+entity.monolitheye.name=监视者
+entity.toroquest_monolitheye.name=监视者
+
+
+entity.toroquest.mage.name=法师
+entity.mage.name=法师
+entity.toroquest_mage.name=法师
+
+entity.toroquest.toro.name=托罗
+entity.toro.name=托罗
+entity.toroquest_toro.name=托罗
+
+entity.toroquest.guard.name=守卫
+entity.guard.name=守卫
+entity.toroquest_guard.name=守卫
+
+entity.toroquest.village_lord.name=领主
+entity.village_lord.name=领主
+entity.toroquest_village_lord.name=领主
+
+entity.toroquest.shopkeeper.name=店主
+entity.shopkeeper.name=店主
+entity.toroquest_shopkeeper.name=店主
+
+entity.toroquest.fugitive.name=小偷
+entity.fugitive.name=小偷
+entity.toroquest_fugitive.name=小偷
+
+entity.toroquest.vampire_bat.name=吸血蝙蝠
+entity.vampire_bat.name=吸血蝙蝠
+entity.toroquest_vampire_bat.name=吸血蝙蝠
+
+entity.toroquest.bas.name=堡垒之主
+entity.bas.name=堡垒之主
+entity.toroquest_bas.name=堡垒之主
+
+entity.toroquest.sentry.name=哨兵
+entity.sentry.name=哨兵
+entity.toroquest_sentry.name=哨兵
+
+entity.toroquest.rainbow_guard.name=彩虹禁卫军
+entity.rainbow_guard.name=彩虹禁卫军
+entity.toroquest_rainbow_guard.name=彩虹禁卫军
+
+entity.toroquest.rainbow_king.name=彩虹国王
+entity.rainbow_king.name=彩虹国王
+entity.toroquest_rainbow_king.name=彩虹国王
+
+civilization.earth.name=泰拉
+civilization.wind.name=古斯塔伯格
+civilization.fire.name=流明
+civilization.moon.name=天狼
+civilization.sun.name=索拉里斯
+civilization.water.name=宝瓶
+civilization.entering.friendly=Welcome back to %s of %s
+civilization.entering.neutral=Entering %s of %s
+civilization.entering.hostile=Trespassing into %s of %s
+civilization.leaving.friendly=Farewell from %s of %s
+civilization.leaving.neutral=Leaving %s of %s
+civilization.leaving.hostile=Escaped %s of %s
+
+
+civilization.reputation_level.hero=英雄
+civilization.reputation_level.ally=同盟
+civilization.reputation_level.friend=伙伴
+civilization.reputation_level.drifter=过客
+civilization.reputation_level.outcast=异类
+civilization.reputation_level.enemy=公敌
+civilization.reputation_level.villain=恶棍
+
+quest.gui.title=%s的领主
+quest.gui.rep_for=%d Rep. for
+quest.gui.reply=Get reply
+quest.gui.stolen_item=归还物品
+quest.gui.empty=给予物品
+quest.gui.button.donate=给予
+quest.gui.button.accept=接受
+quest.gui.button.complete=完成
+quest.gui.button.reject=放弃
+quest.directions=%s meters at %s,%s
+
+quests.no_items=无物品
+quests.courier.title=§lCourier§r
+quests.courier.description=§lDeliver§r a note to %s and return the reply\n§lLocation§r %s\n§lReward§r %s\n§lRecieve§r %s reputation
+
+quests.enemey_encampment.title=§lClear Encampment§r
+quests.enemey_encampment.description=§lClear§r %s encampment\n§lLocation§r %s\n§lReward§r %s\n§lRecieve§r %s reputation
+quests.enemey_encampment.wasnt_you=You didn't personally kill any from the encampment!
+quests.enemey_encampment.one_left=You didn't kill all of them, there is one left!
+quests.enemey_encampment.some_left=You didn't kill all of them, there are %i left.
+
+quests.bounty_hunter.title=§lBounty Hunter§r
+quests.bounty_hunter.description=Capture and return a fugitive hiding in %s\n§lLocation %s\n§lReward§r %s\n§lRecieve§r %s reputation
+
+quests.farm.title=§lFarm Quest§r
+quests.farm.description=§lPlant§r %s %s plants in %s\nYou have planted %s\n§lReward§r %s
+
+quests.gather.title=§lGather Quest§r
+quests.gather.description=§lGather§r %s\n§lReward§r %s\n§lRecieve§r %s reputation
+
+quests.kill_mobs.title=§lKill Mobs§r
+quests.kill_mobs.description=§lKill§r %s %s mobs in %s\nYou have killed %s\n§lReward§r %s
+
+quests.mine.title=§lMine in Province§r
+quests.mine.description=§lMine§r %s blocks of %s in this province\n§lLower§r than level 30\n§lUse§r and return provided tool\n§lReward§r %s\n§lRecieve§r %s reputation

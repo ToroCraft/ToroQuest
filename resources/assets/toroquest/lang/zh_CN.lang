@@ -33,10 +33,10 @@ item.pickaxe_of_greed.name=贪婪之镐
 item.sword_of_pain.name=伤痛之剑
 item.spicy_chicken.name=辣鸡
 
-effect.toroquest\:royalty=皇权
-potion.effect.toroquest\:royalty=皇权药水
-splash_potion.effect.toroquest\:royalty=喷溅型皇权药水
-lingering_splash_potion.effect.toroquest\:royalty=滞留型皇权药水
+effect.toroquest\:royalty=贵族
+potion.effect.toroquest\:royalty=贵族药水
+splash_potion.effect.toroquest\:royalty=喷溅型贵族药水
+lingering_splash_potion.effect.toroquest\:royalty=滞留型贵族药水
 
 effect.toroquest\:loyalty=忠诚
 potion.effect.toroquest\:loyalty=忠诚药水
@@ -97,13 +97,13 @@ civilization.wind.name=古斯塔伯格
 civilization.fire.name=流明
 civilization.moon.name=天狼
 civilization.sun.name=索拉里斯
-civilization.water.name=宝瓶
-civilization.entering.friendly=Welcome back to %s of %s
-civilization.entering.neutral=Entering %s of %s
-civilization.entering.hostile=Trespassing into %s of %s
-civilization.leaving.friendly=Farewell from %s of %s
-civilization.leaving.neutral=Leaving %s of %s
-civilization.leaving.hostile=Escaped %s of %s
+civilization.water.name=阿奎利亚
+civilization.entering.friendly=欢迎回到 %2$s 的 %1$s
+civilization.entering.neutral=进入 %2$s 的 %1$s
+civilization.entering.hostile=入侵 %2$s 的 %1$s
+civilization.leaving.friendly=告别 %2$s 的 %1$s
+civilization.leaving.neutral=离开 %2$s 的 %1$s
+civilization.leaving.hostile=逃离 %2$s 的 %1$s
 
 
 civilization.reputation_level.hero=英雄
@@ -114,38 +114,38 @@ civilization.reputation_level.outcast=异类
 civilization.reputation_level.enemy=公敌
 civilization.reputation_level.villain=恶棍
 
-quest.gui.title=%s的领主
-quest.gui.rep_for=%d Rep. for
-quest.gui.reply=Get reply
+quest.gui.title=%s 的领主
+quest.gui.rep_for=%d 贡献 
+quest.gui.reply=取得回复
 quest.gui.stolen_item=归还物品
 quest.gui.empty=给予物品
 quest.gui.button.donate=给予
 quest.gui.button.accept=接受
 quest.gui.button.complete=完成
 quest.gui.button.reject=放弃
-quest.directions=%s meters at %s,%s
+quest.directions=距 %2$s,%3$s %1$s 米
 
 quests.no_items=无物品
-quests.courier.title=§lCourier§r
-quests.courier.description=§lDeliver§r a note to %s and return the reply\n§lLocation§r %s\n§lReward§r %s\n§lRecieve§r %s reputation
+quests.courier.title=§l信使§r
+quests.courier.description=把笔记§l传递§r给 %s 并取得回复\n§l位置§r %s\n§l奖励§r %s\n§l获得§r %s 贡献
 
-quests.enemey_encampment.title=§lClear Encampment§r
-quests.enemey_encampment.description=§lClear§r %s encampment\n§lLocation§r %s\n§lReward§r %s\n§lRecieve§r %s reputation
-quests.enemey_encampment.wasnt_you=You didn't personally kill any from the encampment!
-quests.enemey_encampment.one_left=You didn't kill all of them, there is one left!
-quests.enemey_encampment.some_left=You didn't kill all of them, there are %i left.
+quests.enemey_encampment.title=§l肃清巢穴§r
+quests.enemey_encampment.description=§l肃清§r %s 巢穴\n§l位置§r %s\n§l奖励§r %s\n§l获得§r %s 贡献
+quests.enemey_encampment.wasnt_you=你并未自己击杀巢穴中的怪物！
+quests.enemey_encampment.one_left=你并未击杀全部怪物，还剩下 1 个！
+quests.enemey_encampment.some_left=你并未击杀全部怪物，还剩下 %i 个。
 
-quests.bounty_hunter.title=§lBounty Hunter§r
-quests.bounty_hunter.description=Capture and return a fugitive hiding in %s\n§lLocation %s\n§lReward§r %s\n§lRecieve§r %s reputation
+quests.bounty_hunter.title=§l赏金猎人§r
+quests.bounty_hunter.description=捉拿藏在%s的小偷并归还赃物\n§l位置 %s\n§l奖励§r %s\n§l获得§r %s 贡献
 
-quests.farm.title=§lFarm Quest§r
-quests.farm.description=§lPlant§r %s %s plants in %s\nYou have planted %s\n§lReward§r %s
+quests.farm.title=§l种植任务§r
+quests.farm.description=在%3$s§l种植§r %1$s 株%2$s\n你已种植 %4$s 株\n§l奖励§r %5$s
 
-quests.gather.title=§lGather Quest§r
-quests.gather.description=§lGather§r %s\n§lReward§r %s\n§lRecieve§r %s reputation
+quests.gather.title=§l收集任务§r
+quests.gather.description=§l收集§r%s\n§l奖励§r %s\n§l获得§r %s 贡献
 
-quests.kill_mobs.title=§lKill Mobs§r
-quests.kill_mobs.description=§lKill§r %s %s mobs in %s\nYou have killed %s\n§lReward§r %s
+quests.kill_mobs.title=§l击杀怪物§r
+quests.kill_mobs.description=在%3$s§l击杀§r %1$s 只%2$s\n你已击杀 %4$s 只\n§l奖励§r %5$s
 
-quests.mine.title=§lMine in Province§r
-quests.mine.description=§lMine§r %s blocks of %s in this province\n§lLower§r than level 30\n§lUse§r and return provided tool\n§lReward§r %s\n§lRecieve§r %s reputation
+quests.mine.title=§l在领地内挖掘§r
+quests.mine.description=§l挖掘§r %s 个%s\n§l低于§r30高度\n§l使用§r并返还所提供的工具\n§l奖励§r %s\n§l获得§r %s 贡献

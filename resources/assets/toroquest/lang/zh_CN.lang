@@ -142,10 +142,10 @@ quests.farm.title=§l种植任务§r
 quests.farm.description=在%3$s§l种植§r %1$s 株%2$s\n你已种植 %4$s 株\n§l奖励§r %5$s
 
 quests.gather.title=§l收集任务§r
-quests.gather.description=§l收集§r%s\n§l奖励§r %s\n§l获得§r %s 贡献
+quests.gather.description=§l收集 §r%s\n§l奖励§r %s\n§l获得§r %s 贡献
 
 quests.kill_mobs.title=§l击杀怪物§r
 quests.kill_mobs.description=在%3$s§l击杀§r %1$s 只%2$s\n你已击杀 %4$s 只\n§l奖励§r %5$s
 
 quests.mine.title=§l在领地内挖掘§r
-quests.mine.description=§l挖掘§r %s 个%s\n§l低于§r30高度\n§l使用§r并返还所提供的工具\n§l奖励§r %s\n§l获得§r %s 贡献
+quests.mine.description=§l挖掘§r %s 个%s\n§l低于 §r30高度\n§l使用 §r并返还所提供的工具\n§l奖励§r %s\n§l获得§r %s 贡献

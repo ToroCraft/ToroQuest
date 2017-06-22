@@ -14,6 +14,16 @@ public class GuiFactoryToroQuest implements IModGuiFactory {
 	}
 
 	@Override
+	public boolean hasConfigGui() {
+		return true;
+	}
+
+	@Override
+	public GuiScreen createConfigGui(GuiScreen parentScreen) {
+		return new GuiConfigToroQuest(parentScreen);
+	}
+
+	@Override
 	public Class<? extends GuiScreen> mainConfigGuiClass() {
 		return GuiConfigToroQuest.class;
 	}

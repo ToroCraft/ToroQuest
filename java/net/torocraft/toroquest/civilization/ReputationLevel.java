@@ -1,6 +1,7 @@
 package net.torocraft.toroquest.civilization;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.math.MathHelper;
 
 public enum ReputationLevel {
 	HERO(0.7), ALLY(0.9), FRIEND(1.0), DRIFTER(1.7), OUTCAST(10.0), ENEMY(50.0), VILLAIN(100.0);
@@ -16,7 +17,7 @@ public enum ReputationLevel {
 	}
 
 	public int adjustPrice(int price) {
-		return (int)(price * priceMultiplier);
+		return MathHelper.clamp((int) (price * priceMultiplier), 1, 64);
 	}
 	
 	public String getLocalname() {

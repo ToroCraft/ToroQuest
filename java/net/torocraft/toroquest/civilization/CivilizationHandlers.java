@@ -17,6 +17,12 @@ import net.minecraft.entity.monster.EntityShulker;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityBat;
+import net.minecraft.entity.passive.EntityChicken;
+import net.minecraft.entity.passive.EntityCow;
+import net.minecraft.entity.passive.EntityDonkey;
+import net.minecraft.entity.passive.EntityHorse;
+import net.minecraft.entity.passive.EntityPig;
+import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -222,7 +228,7 @@ public class CivilizationHandlers {
 			return 5;
 		}
 
-		if (victim instanceof EntityVillager) {
+		if (victim.getClass().getName().equals("net.minecraft.entity.passive.EntityVillager")) {
 			return -10;
 		}
 
@@ -254,7 +260,7 @@ public class CivilizationHandlers {
 			return 0;
 		}
 
-		if (ToroQuestConfiguration.animalsAffectRep) {
+		if (ToroQuestConfiguration.animalsAffectRep && isAnimal(victim)) {
 			return -1;
 		} else {
 			return 0;
@@ -262,9 +268,21 @@ public class CivilizationHandlers {
 
 	}
 
+	private boolean isAnimal(EntityLivingBase victim) {
+		return victim instanceof EntityCow ||
+				victim instanceof EntityHorse ||
+				victim instanceof EntityPig ||
+				victim instanceof EntityDonkey ||
+				victim instanceof EntityChicken ||
+				victim instanceof EntitySheep;
+	}
+
 	private boolean isHostileMob(EntityLivingBase victim) {
-		return victim instanceof EntityMob || victim instanceof EntitySlime || victim instanceof EntityMagmaCube || victim instanceof EntityGhast
-				|| victim instanceof EntityShulker;
+		return victim instanceof EntityMob ||
+				victim instanceof EntitySlime ||
+				victim instanceof EntityMagmaCube ||
+				victim instanceof EntityGhast ||
+				victim instanceof EntityShulker;
 	}
 
 	@SubscribeEvent

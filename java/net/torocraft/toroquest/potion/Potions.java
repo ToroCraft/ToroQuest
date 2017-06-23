@@ -5,6 +5,7 @@ import com.google.common.base.Predicate;
 import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionHelper;
 import net.minecraftforge.event.RegistryEvent;
@@ -14,19 +15,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber
 public class Potions {
 
-	private static final Predicate<ItemStack> emerald = new PotionHelper.ItemPredicateInstance(Items.EMERALD);
-	private static final Predicate<ItemStack> diamond = new PotionHelper.ItemPredicateInstance(Items.DIAMOND);
-	private static final Predicate<ItemStack> redstone = new PotionHelper.ItemPredicateInstance(Items.REDSTONE);
-	private static final Predicate<ItemStack> glowstone = new PotionHelper.ItemPredicateInstance(Items.GLOWSTONE_DUST);
-
 	public static void initRecipes() {
-		PotionHelper.registerPotionTypeConversion(PotionTypes.AWKWARD, emerald, TQPotionTypes.ROYALTY);
-		PotionHelper.registerPotionTypeConversion(TQPotionTypes.ROYALTY, redstone, TQPotionTypes.ROYALTY_LONG);
-		PotionHelper.registerPotionTypeConversion(TQPotionTypes.ROYALTY, glowstone, TQPotionTypes.ROYALTY_STRONG);
+		PotionHelper.func_193356_a(PotionTypes.AWKWARD, Ingredient.fromItem(Items.EMERALD), TQPotionTypes.ROYALTY);
+		PotionHelper.func_193356_a(TQPotionTypes.ROYALTY, Ingredient.fromItem(Items.REDSTONE), TQPotionTypes.ROYALTY_LONG);
+		PotionHelper.func_193356_a(TQPotionTypes.ROYALTY, Ingredient.fromItem(Items.GLOWSTONE_DUST), TQPotionTypes.ROYALTY_STRONG);
 
-		PotionHelper.registerPotionTypeConversion(PotionTypes.AWKWARD, diamond, TQPotionTypes.LOYALTY);
-		PotionHelper.registerPotionTypeConversion(TQPotionTypes.LOYALTY, redstone, TQPotionTypes.LOYALTY_LONG);
-		PotionHelper.registerPotionTypeConversion(TQPotionTypes.LOYALTY, glowstone, TQPotionTypes.LOYALTY_STRONG);
+		PotionHelper.func_193356_a(PotionTypes.AWKWARD, Ingredient.fromItem(Items.DIAMOND), TQPotionTypes.LOYALTY);
+		PotionHelper.func_193356_a(TQPotionTypes.LOYALTY, Ingredient.fromItem(Items.REDSTONE), TQPotionTypes.LOYALTY_LONG);
+		PotionHelper.func_193356_a(TQPotionTypes.LOYALTY, Ingredient.fromItem(Items.GLOWSTONE_DUST), TQPotionTypes.LOYALTY_STRONG);
 	}
 
 	@SubscribeEvent

@@ -74,12 +74,12 @@ public class VillageLordGuiContainer extends GuiContainer {
 	}
 
 	private void drawGuiTitle(int xPos, int yPos) {
-		fontRendererObj.drawString(I18n.format("quest.gui.title", VillageLordGuiContainer.civName), xPos, yPos, Color.darkGray.getRGB());
+		fontRenderer.drawString(I18n.format("quest.gui.title", VillageLordGuiContainer.civName), xPos, yPos, Color.darkGray.getRGB());
 	}
 
 	private void drawDonateButton(int mouseX, int mouseY) {
 		GuiButton submitButton = new GuiButton(0, guiLeft + 105, guiTop + 15, buttonWidth, buttonHeight, I18n.format("quest.gui.button.donate"));
-		submitButton.drawButton(mc, mouseX, mouseY);
+		submitButton.drawButton(mc, mouseX, mouseY, 1);
 		if (Mouse.getEventButtonState() && Mouse.getEventButton() != -1) {
 			if (submitButton.mousePressed(mc, mouseX, mouseY) && mouseCooldownOver()) {
 				mousePressed = Minecraft.getSystemTime();
@@ -104,7 +104,7 @@ public class VillageLordGuiContainer extends GuiContainer {
 
 	protected void drawActionButton(String label, Action action, int mouseX, int mouseY, int xOffset) {
 		GuiButton abandonButton = new GuiButton(0, guiLeft + 105 + xOffset, guiTop + 130, buttonWidth, buttonHeight, I18n.format(label));
-		abandonButton.drawButton(mc, mouseX, mouseY);
+		abandonButton.drawButton(mc, mouseX, mouseY, 1);
 		if (Mouse.getEventButtonState() && Mouse.getEventButton() != -1) {
 			if (abandonButton.mousePressed(mc, mouseX, mouseY) && mouseCooldownOver()) {
 				mousePressed = Minecraft.getSystemTime();
@@ -117,23 +117,23 @@ public class VillageLordGuiContainer extends GuiContainer {
 
 	private void updateReputationDisplay(int xPos, int yPos) {
 		if (MessageCode.DONATION.equals(donateMessageCode)) {
-			fontRendererObj.drawString(I18n.format("quest.gui.rep_for", donateRepForItem), xPos + 13, yPos + 15, Color.darkGray.getRGB());
+			fontRenderer.drawString(I18n.format("quest.gui.rep_for", donateRepForItem), xPos + 13, yPos + 15, Color.darkGray.getRGB());
 
 		} else if (MessageCode.NOTE.equals(donateMessageCode)) {
-			fontRendererObj.drawString(I18n.format("quest.gui.reply"), xPos + 13, yPos + 15, Color.darkGray.getRGB());
+			fontRenderer.drawString(I18n.format("quest.gui.reply"), xPos + 13, yPos + 15, Color.darkGray.getRGB());
 
 		} else if (MessageCode.STOLEN_ITEM.equals(donateMessageCode)) {
-			fontRendererObj.drawString(I18n.format("quest.gui.stolen_item"), xPos + 13, yPos + 15, Color.darkGray.getRGB());
+			fontRenderer.drawString(I18n.format("quest.gui.stolen_item"), xPos + 13, yPos + 15, Color.darkGray.getRGB());
 
 		} else {
-			fontRendererObj.drawString(I18n.format("quest.gui.empty"), xPos + 13, yPos + 15, Color.darkGray.getRGB());
+			fontRenderer.drawString(I18n.format("quest.gui.empty"), xPos + 13, yPos + 15, Color.darkGray.getRGB());
 
 		}
 	}
 
 	private void drawQuestTitle(int xPos, int yPos) {
-		fontRendererObj.drawString(questTitle, xPos + 2, yPos + 35, Color.darkGray.getRGB());
-		fontRendererObj.drawSplitString(questDescription, xPos + 25, yPos + 50, 115, Color.darkGray.getRGB());
+		fontRenderer.drawString(questTitle, xPos + 2, yPos + 35, Color.darkGray.getRGB());
+		fontRenderer.drawSplitString(questDescription, xPos + 25, yPos + 50, 115, Color.darkGray.getRGB());
 	}
 
 	private static String translate(String in) {

@@ -122,9 +122,11 @@ public class VillageLordContainer extends Container {
 			}
 		}
 
+
 		addListener(new IContainerListener() {
+
 			@Override
-			public void updateCraftingInventory(Container containerToSend, NonNullList<ItemStack> itemsList) {
+			public void sendAllContents(Container containerToSend, NonNullList<ItemStack> itemsList) {
 
 			}
 
@@ -136,7 +138,7 @@ public class VillageLordContainer extends Container {
 			}
 
 			@Override
-			public void sendProgressBarUpdate(Container containerIn, int varToUpdate, int newValue) {
+			public void sendWindowProperty(Container containerIn, int varToUpdate, int newValue) {
 
 			}
 

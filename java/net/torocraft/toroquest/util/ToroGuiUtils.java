@@ -1,11 +1,11 @@
 package net.torocraft.toroquest.util;
 
+import net.minecraft.client.renderer.BufferBuilder;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
@@ -31,7 +31,7 @@ public class ToroGuiUtils {
 
 	public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer worldrenderer = tessellator.getBuffer();
+		BufferBuilder worldrenderer = tessellator.getBuffer();
 		worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		worldrenderer.pos(x + 0, y + height, 0.0D).tex((textureX + 0) * TEXTURE_HEIGHT_SCALER, (textureY + height) * TEXTURE_WIDTH_SCALER)
 				.endVertex();

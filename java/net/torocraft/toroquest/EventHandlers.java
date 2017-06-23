@@ -93,7 +93,7 @@ public class EventHandlers {
 
 	private EntityLivingBase getAttacker(LivingHurtEvent event) {
 		try {
-			return (EntityLivingBase) event.getSource().getEntity();
+			return (EntityLivingBase) event.getSource().getTrueSource();
 		} catch (Exception e) {
 			return null;
 		}

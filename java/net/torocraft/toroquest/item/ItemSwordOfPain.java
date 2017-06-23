@@ -41,16 +41,16 @@ public class ItemSwordOfPain extends ItemSword {
 	}
 
 	private boolean thisToolWasUsed(LivingHurtEvent event) {
-		if (event.getSource() == null || !(event.getSource().getEntity() instanceof EntityPlayer)) {
+		if (event.getSource() == null || !(event.getSource().getTrueSource() instanceof EntityPlayer)) {
 			return false;
 		}
-		EntityPlayer player = (EntityPlayer) event.getSource().getEntity();
+		EntityPlayer player = (EntityPlayer) event.getSource().getTrueSource();
 		return player.getHeldItemMainhand() != null && player.getHeldItemMainhand().getItem() == INSTANCE;
 	}
 
 	private void alterDamage(LivingHurtEvent event) {
 		float amount = event.getAmount();
 		event.setAmount(amount * 2);
-		event.getSource().getEntity().attackEntityFrom(event.getSource(), amount / 2);
+		event.getSource().getTrueSource().attackEntityFrom(event.getSource(), amount / 2);
 	}
 }

@@ -180,7 +180,7 @@ public class BlockMap {
 		}
 
 		IProperty prop = null;
-		Object value = null;
+	  	EnumFacing value = null;
 
 		if ("facing".equals(aProp[0])) {
 			// 

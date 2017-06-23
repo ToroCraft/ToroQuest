@@ -4,10 +4,10 @@ import com.google.common.base.Splitter;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public abstract class Hud {
@@ -23,7 +23,7 @@ public abstract class Hud {
 	public Hud(Minecraft mc, int width, int height) {
 		this.mc = mc;
 		this.itemRender = mc.getRenderItem();
-		this.fontRenderer = mc.fontRendererObj;
+		this.fontRenderer = mc.fontRenderer;
 
 		if (fontRenderer == null) {
 			throw new NullPointerException("fontRenderer is NULL");
@@ -84,7 +84,7 @@ public abstract class Hud {
 		float f1 = (float) (color >> 8 & 255) / 255.0F;
 		float f2 = (float) (color & 255) / 255.0F;
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);

@@ -198,7 +198,7 @@ public class MessageQuestUpdate implements IMessage {
 				return null;
 			}
 
-			final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+			final EntityPlayerMP player = ctx.getServerHandler().player;
 
 			if (player == null) {
 				return null;
@@ -246,11 +246,11 @@ public class MessageQuestUpdate implements IMessage {
 		}
 
 		if (item.getItem() instanceof ItemTool) {
-			ToolMaterial material = ((ItemTool) item.getItem()).getToolMaterial();
+			String material = ((ItemTool) item.getItem()).getToolMaterialName();
 			switch (material) {
-			case DIAMOND:
+			case "DIAMOND":
 				return new DonationReward(2, null);
-			case GOLD:
+			case "GOLD":
 				return new DonationReward(1, null);
 			default:
 				return null;

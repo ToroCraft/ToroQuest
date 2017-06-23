@@ -10,7 +10,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.Achievement;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
@@ -19,8 +18,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.torocraft.toroquest.ToroQuest;
 
 public class ItemPickaxeOfGreed extends ItemPickaxe {
-
-	public static Achievement JACKPOT_ACHIEVEMNT = new Achievement("jackpot", "jackpot", 0, 0, Items.IRON_PICKAXE, null).registerStat();
+  	//TODO
+	//public static Achievement JACKPOT_ACHIEVEMNT = new Achievement("jackpot", "jackpot", 0, 0, Items.IRON_PICKAXE, null).registerStat();
 
 	public static ItemPickaxeOfGreed INSTANCE;
 	public static final String NAME = "pickaxe_of_greed";
@@ -63,7 +62,7 @@ public class ItemPickaxeOfGreed extends ItemPickaxe {
 		int count = stack.getCount();
 
 		if (rand.nextInt(77) == 0) {
-			player.addStat(JACKPOT_ACHIEVEMNT);
+			//player.addStat(JACKPOT_ACHIEVEMNT);
 			stack.setCount(stack.getMaxStackSize());
 		} else if (rand.nextInt(10) == 0) {
 			stack.setCount(count + (rand.nextInt(3) + 3));

@@ -84,7 +84,7 @@ public class RenderGuard extends RenderBiped<EntityGuard> {
 
 		ItemStack itemstack = clientPlayer.getHeldItemMainhand();
 		ItemStack itemstack1 = clientPlayer.getHeldItemOffhand();
-		modelplayer.setInvisible(true);
+		modelplayer.setVisible(true);
 
 		modelplayer.isSneak = clientPlayer.isSneaking();
 		ModelBiped.ArmPose modelbiped$armpose = ModelBiped.ArmPose.EMPTY;

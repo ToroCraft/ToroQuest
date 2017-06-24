@@ -8,6 +8,7 @@ import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockStem;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.monster.EntityGhast;
@@ -146,11 +147,11 @@ public class CivilizationHandlers {
 	}
 
 	@SubscribeEvent
-	public void onEntityLoad(final AttachCapabilitiesEvent.Entity event) {
-		if (!(event.getEntity() instanceof EntityPlayer)) {
+	public void onEntityLoad(AttachCapabilitiesEvent<Entity> event) {
+		if (!(event.getObject() instanceof EntityPlayer)) {
 			return;
 		}
-		EntityPlayer player = (EntityPlayer) event.getEntity();
+		EntityPlayer player = (EntityPlayer) event.getObject();
 		event.addCapability(new ResourceLocation(ToroQuest.MODID, "playerCivilization"), new PlayerCivilizationCapabilityProvider(player));
 		syncClientCapability(player);
 	}
@@ -200,8 +201,8 @@ public class CivilizationHandlers {
 		EntityLivingBase victim = (EntityLivingBase) event.getEntity();
 		DamageSource source = event.getSource();
 
-		if (source.getEntity() instanceof EntityPlayer) {
-			player = (EntityPlayer) source.getEntity();
+		if (source.getTrueSource() instanceof EntityPlayer) {
+			player = (EntityPlayer) source.getTrueSource();
 		}
 
 		if (player == null) {
@@ -333,8 +334,8 @@ public class CivilizationHandlers {
 			return;
 		}
 
-		EntityPlayer playerA = ((EntityAnimal) event.getParentA()).getPlayerInLove();
-		EntityPlayer playerB = ((EntityAnimal) event.getParentB()).getPlayerInLove();
+		EntityPlayer playerA = ((EntityAnimal) event.getParentA()).func_191993_do();
+		EntityPlayer playerB = ((EntityAnimal) event.getParentB()).func_191993_do();
 
 		if (playerA != null) {
 			adjustPlayerRep(playerA, event.getParentA().chunkCoordX, event.getParentA().chunkCoordZ, 1);

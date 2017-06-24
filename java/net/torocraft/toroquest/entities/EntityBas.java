@@ -23,7 +23,6 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.ResourceLocation;
@@ -48,7 +47,7 @@ public class EntityBas extends EntitySkeleton {
 		}
 	}
 
-	public static Achievement BASTION_ACHIEVEMNT = new Achievement("bastion", "bastion", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
+	//public static Achievement BASTION_ACHIEVEMNT = new Achievement("bastion", "bastion", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
 
 	public static void init(int entityId) {
 		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityBas.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2,
@@ -175,7 +174,7 @@ public class EntityBas extends EntitySkeleton {
 		}
 
 		if (this.world.isDaytime() && !this.world.isRemote) {
-			float f = this.getBrightness(1.0F);
+			float f = this.getBrightness();
 			BlockPos blockpos = this.getRidingEntity() instanceof EntityBoat
 					? (new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ)).up()
 					: new BlockPos(this.posX, (double) Math.round(this.posY), this.posZ);
@@ -218,10 +217,10 @@ public class EntityBas extends EntitySkeleton {
 	}
 
 	protected void attackDistantAttackerWithBats(DamageSource source) {
-		if (!(source.getEntity() instanceof EntityLivingBase)) {
+		if (!(source.getTrueSource() instanceof EntityLivingBase)) {
 			return;
 		}
-		EntityLivingBase distantAttacker = (EntityLivingBase) source.getEntity();
+		EntityLivingBase distantAttacker = (EntityLivingBase) source.getTrueSource();
 		spawnBats(distantAttacker);
 	}
 
@@ -238,9 +237,10 @@ public class EntityBas extends EntitySkeleton {
 		if (world.isRemote) {
 			return;
 		}
-		Entity entity = cause.getEntity();
+		Entity entity = cause.getTrueSource();
 		if (entity != null && entity instanceof EntityPlayer) {
-			((EntityPlayer) entity).addStat(BASTION_ACHIEVEMNT);
+			//TODO
+			//((EntityPlayer) entity).addStat(BASTION_ACHIEVEMNT);
 		}
 	}
 

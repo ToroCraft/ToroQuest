@@ -233,9 +233,16 @@ public class EntityVampireBat extends EntityMob {
 		return LootTableList.ENTITIES_BAT;
 	}
 
+	@Override
+	public void moveRelative(float strafe, float up, float forward, float friction) {
+		super.moveRelative(strafe, up, forward, friction);
+	}
+
 	/**
 	 * Moves the entity based on the specified heading.
 	 */
+
+	/* FIXME: REMOVED durning the 1.12 upgrade
 	public void moveEntityWithHeading(float strafe, float forward) {
 		if (this.isInWater()) {
 			this.moveRelative(strafe, forward, 0.02F);
@@ -283,7 +290,7 @@ public class EntityVampireBat extends EntityMob {
 
 		this.limbSwingAmount += (f2 - this.limbSwingAmount) * 0.4F;
 		this.limbSwing += this.limbSwingAmount;
-	}
+	}*/
 
 	/**
 	 * returns true if this entity is by a ladder, false otherwise

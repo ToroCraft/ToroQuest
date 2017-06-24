@@ -411,8 +411,8 @@ public class QuestEnemyEncampment extends QuestBase implements Quest {
 			return;
 		}
 
-		if (source.getEntity() instanceof EntityPlayer) {
-			player = (EntityPlayer) source.getEntity();
+		if (source.getTrueSource() instanceof EntityPlayer) {
+			player = (EntityPlayer) source.getTrueSource();
 		} else {
 			return;
 		}

@@ -24,7 +24,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.IInventoryChangedListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -60,7 +59,8 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		}
 	}
 
-	public static Achievement LORD_ACHIEVEMNT = new Achievement("village_lord", "village_lord", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
+	//TODO
+	//public static Achievement LORD_ACHIEVEMNT = new Achievement("village_lord", "village_lord", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
 
 	public static void init(int entityId) {
 		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityVillageLord.class, NAME, entityId, ToroQuest.INSTANCE, 60,
@@ -186,10 +186,10 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 			return false;
 		}
 
-		dropRepTo(source.getEntity());
+		dropRepTo(source.getTrueSource());
 
-		if (source.getEntity() instanceof EntityLivingBase) {
-			callForHelp((EntityLivingBase) source.getEntity());
+		if (source.getTrueSource() instanceof EntityLivingBase) {
+			callForHelp((EntityLivingBase) source.getTrueSource());
 		}
 
 		return super.attackEntityFrom(source, amount);
@@ -240,10 +240,13 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		if (world.isRemote) {
 			return;
 		}
-		Entity entity = cause.getEntity();
+		Entity entity = cause.getTrueSource();
+		//TODO
+		/*
 		if (entity != null && entity instanceof EntityPlayer) {
 			((EntityPlayer) entity).addStat(LORD_ACHIEVEMNT);
 		}
+		*/
 	}
 
 	protected void dropInventory(IVillageLordInventory inventory) {

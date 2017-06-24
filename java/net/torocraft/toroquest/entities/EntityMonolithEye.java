@@ -139,7 +139,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 		 * Returns whether an in-progress EntityAIBase should continue executing
 		 */
 		public boolean continueExecuting() {
-			return super.continueExecuting() && (theEntity.getDistanceSqToEntity(this.theEntity.getAttackTarget()) > 9.0D);
+			return super.shouldContinueExecuting() && (theEntity.getDistanceSqToEntity(this.theEntity.getAttackTarget()) > 9.0D);
 		}
 
 		/**
@@ -348,6 +348,11 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 	public void attackEntityWithRangedAttack(EntityLivingBase target, float p_82196_2_) {
 	}
 
+	@Override
+	public void setSwingingArms(boolean swingingArms) {
+
+	}
+
 	private void spawnParticles(double xSpeed, double ySpeed, double zSpeed) {
 		if (this.world.isRemote) {
 			for (int i = 0; i < 32; ++i) {
@@ -374,7 +379,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 	public void setIsStunned(Boolean bool) {
 		this.isStunned = bool;
 	}
-
+	/* FIXME removed during the 1.12 upgrade
 	public void moveEntityWithHeading(float strafe, float forward) {
 		if (this.isInWater()) {
 			this.moveRelative(strafe, forward, 0.02F);
@@ -422,7 +427,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 
 		this.limbSwingAmount += (f2 - this.limbSwingAmount) * 0.4F;
 		this.limbSwing += this.limbSwingAmount;
-	}
+	}*/
 
 	public boolean attackEntityFrom(DamageSource source, float amount) {
 		if (this.isEntityInvulnerable(source)) {
@@ -441,7 +446,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 	}
 
 	protected void redirectAttack(DamageSource source, float amount) {
-		Entity attacker = source.getEntity();
+		Entity attacker = source.getTrueSource();
 		if (attacker != null) {
 			attacker.attackEntityFrom(source, amount);
 		}
@@ -450,12 +455,12 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 	protected void redirectArrowAtAttacker(DamageSource source) {
 		if ("arrow".equals(source.getDamageType())) {
 
-			if (source.getEntity() != null && source.getEntity() instanceof EntityLivingBase) {
-				attackWithArrow((EntityLivingBase) source.getEntity());
+			if (source.getTrueSource() != null && source.getTrueSource() instanceof EntityLivingBase) {
+				attackWithArrow((EntityLivingBase) source.getTrueSource());
 			}
 
-			if (source.getSourceOfDamage() != null) {
-				source.getSourceOfDamage().setDead();
+			if (source.getImmediateSource() != null) {
+				source.getImmediateSource().setDead();
 			}
 
 		}

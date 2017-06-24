@@ -58,7 +58,7 @@ public class ModelMonolithEye extends ModelBase {
 		if (entity != null) {
 			Vec3d vec3d = entity.getPositionEyes(0.0F);
 			Vec3d vec3d1 = entityIn.getPositionEyes(0.0F);
-			double d0 = vec3d.yCoord - vec3d1.yCoord;
+			double d0 = vec3d.y - vec3d1.y;
 
 			if (d0 > 0.0D) {
 				this.guardianEye.rotationPointY = 0.0F;
@@ -67,8 +67,8 @@ public class ModelMonolithEye extends ModelBase {
 			}
 
 			Vec3d vec3d2 = entityIn.getLook(0.0F);
-			vec3d2 = new Vec3d(vec3d2.xCoord, 0.0D, vec3d2.zCoord);
-			Vec3d vec3d3 = (new Vec3d(vec3d1.xCoord - vec3d.xCoord, 0.0D, vec3d1.zCoord - vec3d.zCoord)).normalize().rotateYaw(((float) Math.PI / 2F));
+			vec3d2 = new Vec3d(vec3d2.x, 0.0D, vec3d2.z);
+			Vec3d vec3d3 = (new Vec3d(vec3d1.x - vec3d.x, 0.0D, vec3d1.z - vec3d.z)).normalize().rotateYaw(((float) Math.PI / 2F));
 			double d1 = vec3d2.dotProduct(vec3d3);
 			this.guardianEye.rotationPointX = MathHelper.sqrt((float) Math.abs(d1)) * 2.0F * (float) Math.signum(d1);
 		}

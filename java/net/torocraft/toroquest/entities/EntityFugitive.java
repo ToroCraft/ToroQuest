@@ -19,7 +19,6 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -45,9 +44,9 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 			NAME = ToroQuestEntities.ENTITY_PREFIX + NAME;
 		}
 	}
-
-	public static Achievement BOUNTY_HUNTER_ACHIEVEMNT = new Achievement("bounty_hunter", "bounty_hunter", 0, 0, Items.DIAMOND_SWORD, null)
-			.registerStat();
+	//TODO
+	//public static Achievement BOUNTY_HUNTER_ACHIEVEMNT = new Achievement("bounty_hunter", "bounty_hunter", 0, 0, Items.DIAMOND_SWORD, null)
+	//		.registerStat();
 
 	public static void init(int entityId) {
 		EntityRegistry.registerModEntity(new ResourceLocation(ToroQuest.MODID, NAME), EntityFugitive.class, NAME, entityId, ToroQuest.INSTANCE, 60, 2,
@@ -101,9 +100,9 @@ public class EntityFugitive extends EntityVillager implements IMerchant {
 		if (world.isRemote) {
 			return;
 		}
-		Entity entity = cause.getEntity();
+		Entity entity = cause.getTrueSource();
 		if (entity != null && entity instanceof EntityPlayer) {
-			((EntityPlayer) entity).addStat(BOUNTY_HUNTER_ACHIEVEMNT);
+			//((EntityPlayer) entity).addStat(BOUNTY_HUNTER_ACHIEVEMNT);
 		}
 	}
 

@@ -45,8 +45,8 @@ public class QuestKillMobs extends QuestBase implements Quest {
 		EntityLivingBase victim = (EntityLivingBase) event.getEntity();
 		DamageSource source = event.getSource();
 
-		if (source.getEntity() instanceof EntityPlayer) {
-			player = (EntityPlayer) source.getEntity();
+		if (source.getTrueSource() instanceof EntityPlayer) {
+			player = (EntityPlayer) source.getTrueSource();
 		}
 
 		if (player == null) {

@@ -43,7 +43,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionType;
 import net.minecraft.potion.PotionUtils;
-import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumParticleTypes;
@@ -66,7 +65,8 @@ import net.torocraft.toroquest.config.ToroQuestConfiguration;
 
 public class EntityMage extends EntityMob implements IRangedAttackMob {
 
-	public static Achievement MAGE_ACHIEVEMNT = new Achievement("mage", "mage", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
+	//TODO
+	//public static Achievement MAGE_ACHIEVEMNT = new Achievement("mage", "mage", 0, 0, Items.DIAMOND_SWORD, null).registerStat();
 
 	private static final UUID MODIFIER_UUID = UUID.fromString("5CD17E52-A79A-43D3-A529-90FDE04B181E");
 	private static final AttributeModifier MODIFIER = (new AttributeModifier(MODIFIER_UUID, "Drinking speed penalty", -0.25D, 0)).setSaved(false);
@@ -115,9 +115,10 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 		if (world.isRemote) {
 			return;
 		}
-		Entity entity = cause.getEntity();
+		Entity entity = cause.getTrueSource();
 		if (entity != null && entity instanceof EntityPlayer) {
-			((EntityPlayer) entity).addStat(MAGE_ACHIEVEMNT);
+			//TODO
+			//((EntityPlayer) entity).addStat(MAGE_ACHIEVEMNT);
 		}
 	}
 
@@ -324,7 +325,7 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 	protected float applyPotionDamageCalculations(DamageSource source, float damage) {
 		damage = super.applyPotionDamageCalculations(source, damage);
 
-		if (source.getEntity() == this) {
+		if (source.getTrueSource() == this) {
 			damage = 0.0F;
 		}
 
@@ -362,6 +363,11 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 		} else {
 			attackWithMobSpawn(target);
 		}
+	}
+
+	@Override
+	public void setSwingingArms(boolean swingingArms) {
+
 	}
 
 	private void attackWithMobSpawn(EntityLivingBase target) {
@@ -503,7 +509,7 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 
 		reflectAmount *= ToroQuestConfiguration.bossAttackDamageMultiplier;
 
-		Entity attacker = source.getEntity();
+		Entity attacker = source.getTrueSource();
 		if (attacker != null) {
 			attacker.attackEntityFrom(source, reflectAmount);
 		}
@@ -514,12 +520,12 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 	protected void redirectArrowAtAttacker(DamageSource source) {
 		if ("arrow".equals(source.getDamageType())) {
 
-			if (source.getEntity() != null && source.getEntity() instanceof EntityLivingBase) {
-				attackWithArrow((EntityLivingBase) source.getEntity());
+			if (source.getTrueSource() != null && source.getTrueSource() instanceof EntityLivingBase) {
+				attackWithArrow((EntityLivingBase) source.getTrueSource());
 			}
 
-			if (source.getSourceOfDamage() != null) {
-				source.getSourceOfDamage().setDead();
+			if (source.getImmediateSource() != null) {
+				source.getImmediateSource().setDead();
 			}
 
 		}

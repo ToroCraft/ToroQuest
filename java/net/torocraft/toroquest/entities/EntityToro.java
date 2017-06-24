@@ -141,7 +141,7 @@ public class EntityToro extends EntityTameable {
 
 	private EntityLivingBase getAttacker(DamageSource source) {
 		try {
-			return (EntityLivingBase) source.getEntity();
+			return (EntityLivingBase) source.getTrueSource();
 		} catch (Exception e) {
 			return null;
 		}
@@ -162,7 +162,7 @@ public class EntityToro extends EntityTameable {
 	}
 
 	protected void syncChargingWithAttackTarget() {
-		setCharging(getAttackTarget() != null || getAITarget() != null);
+		setCharging(getAttackTarget() != null || getAttackTarget() != null);
 	};
 
 	@Override

@@ -19,7 +19,7 @@ public class EntityAIStayCentered extends EntityAIBase {
 	}
 
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		entity.setPosition(entity.getPosition().getX() + 0.5d, entity.getPosition().getY(), entity.getPosition().getZ() + 0.5d);
 		return false;
 	}

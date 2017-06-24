@@ -271,8 +271,8 @@ public class EntityRainbowGuard extends EntityMob {
 		}
 
 		EntityLivingBase attacker = this.getAttackTarget();
-		if (attacker == null && source.getEntity() instanceof EntityLivingBase) {
-			setAttackTarget((EntityLivingBase) source.getEntity());
+		if (attacker == null && source.getTrueSource() instanceof EntityLivingBase) {
+			setAttackTarget((EntityLivingBase) source.getTrueSource());
 		}
 		return true;
 	}

@@ -107,9 +107,9 @@ public class EntitySentry extends EntityToroNpc {
 		}
 
 		EntityLivingBase attacker = this.getAttackTarget();
-		if (attacker == null && source.getEntity() instanceof EntityLivingBase) {
-			setAttackTarget((EntityLivingBase) source.getEntity());
-			callForHelp((EntityLivingBase) source.getEntity());
+		if (attacker == null && source.getTrueSource() instanceof EntityLivingBase) {
+			setAttackTarget((EntityLivingBase) source.getTrueSource());
+			callForHelp((EntityLivingBase) source.getTrueSource());
 		}
 		return true;
 	}

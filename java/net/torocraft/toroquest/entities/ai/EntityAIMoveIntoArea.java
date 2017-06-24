@@ -58,9 +58,9 @@ public class EntityAIMoveIntoArea extends EntityAIBase {
 		if (vec3d == null) {
 			return false;
 		} else {
-			this.movePosX = vec3d.xCoord;
-			this.movePosY = vec3d.yCoord;
-			this.movePosZ = vec3d.zCoord;
+			this.movePosX = vec3d.x;
+			this.movePosY = vec3d.y;
+			this.movePosZ = vec3d.z;
 			return true;
 		}
 

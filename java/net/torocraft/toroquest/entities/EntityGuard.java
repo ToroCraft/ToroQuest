@@ -21,7 +21,6 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.boss.EntityDragonPart;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -151,9 +150,9 @@ public class EntityGuard extends EntityToroNpc {
 		}
 
 		EntityLivingBase attacker = this.getAttackTarget();
-		if (attacker == null && source.getEntity() instanceof EntityLivingBase) {
-			setAttackTarget((EntityLivingBase) source.getEntity());
-			callForHelp((EntityLivingBase) source.getEntity());
+		if (attacker == null && source.getTrueSource() instanceof EntityLivingBase) {
+			setAttackTarget((EntityLivingBase) source.getTrueSource());
+			callForHelp((EntityLivingBase) source.getTrueSource());
 		}
 		return true;
 	}
@@ -332,7 +331,7 @@ public class EntityGuard extends EntityToroNpc {
 							}
 						}
 
-						this.setLastAttacker(targetEntity);
+						this.setLastAttackedEntity(targetEntity);
 
 						if (targetEntity instanceof EntityLivingBase) {
 							EnchantmentHelper.applyThornEnchantments((EntityLivingBase) targetEntity, this);
@@ -342,13 +341,14 @@ public class EntityGuard extends EntityToroNpc {
 						ItemStack mainhandItem = this.getHeldItemMainhand();
 						Entity entity = targetEntity;
 
+						/* FIXME removed in the 1.12 upgrade
 						if (targetEntity instanceof EntityDragonPart) {
 							IEntityMultiPart ientitymultipart = ((EntityDragonPart) targetEntity).entityDragonObj;
 
 							if (ientitymultipart instanceof EntityLivingBase) {
 								entity = (EntityLivingBase) ientitymultipart;
 							}
-						}
+						}*/
 
 						if (mainhandItem != null && entity instanceof EntityLivingBase) {
 							mainhandItem.getItem().hitEntity(mainhandItem, (EntityLivingBase) entity, this);

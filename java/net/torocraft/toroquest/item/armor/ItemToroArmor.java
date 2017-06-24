@@ -35,15 +35,6 @@ public class ItemToroArmor extends ItemArmor {
 		registerRendersBoots();
 	}
 
-	public static void initRecipes() {
-		ItemStack emerald = new ItemStack(Items.EMERALD);
-		ItemStack leather = new ItemStack(ItemToroLeather.INSTANCE);
-		GameRegistry.addRecipe(new ItemStack(helmetItem), "ggg", "ddd", "d d", 'g', emerald, 'd', leather);
-		GameRegistry.addRecipe(new ItemStack(chestplateItem), "dgd", "ddd", "ddd", 'g', emerald, 'd', leather);
-		GameRegistry.addRecipe(new ItemStack(leggingsItem), "ddd", "dgd", "dgd", 'g', emerald, 'd', leather);
-		GameRegistry.addRecipe(new ItemStack(bootsItem), "dgd", "dgd", 'g', emerald, 'd', leather);
-	}
-
 	private static void initBoots() {
 		bootsItem = new ItemToroArmor(NAME + "_boots", 1, EntityEquipmentSlot.FEET);
 		ToroBaseUtils.registerItem(bootsItem, NAME + "_boots");

@@ -11,14 +11,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.material.ArmorMaterials;
 import net.torocraft.toroquest.util.ToroBaseUtils;
 
+@Mod.EventBusSubscriber
 public class ItemReinforcedDiamondArmor extends ItemArmor {
 
 	public static final String NAME = "reinforced_diamond";
@@ -28,14 +32,24 @@ public class ItemReinforcedDiamondArmor extends ItemArmor {
 	public static ItemReinforcedDiamondArmor leggingsItem;
 	public static ItemReinforcedDiamondArmor bootsItem;
 
-	public static void init() {
+	@SubscribeEvent
+	public static void init(final RegistryEvent.Register<Item> event) {
+		bootsItem = new ItemReinforcedDiamondArmor(NAME + "_boots", 1, EntityEquipmentSlot.FEET);
+		leggingsItem = new ItemReinforcedDiamondArmor(NAME + "_leggings", 2, EntityEquipmentSlot.LEGS);
+		helmetItem = new ItemReinforcedDiamondArmor(NAME + "_helmet", 1, EntityEquipmentSlot.HEAD);
+		chestplateItem = new ItemReinforcedDiamondArmor(NAME + "_chestplate", 1, EntityEquipmentSlot.CHEST);
 
-		initHelmet();
-		initChestPlate();
-		initLeggings();
-		initBoots();
+		bootsItem.setRegistryName(new ResourceLocation(ToroQuest.MODID, NAME + "_boots"));
+		event.getRegistry().register(bootsItem);
 
-		MinecraftForge.EVENT_BUS.register(new EventHandlers());
+		leggingsItem.setRegistryName(new ResourceLocation(ToroQuest.MODID, NAME + "_leggings"));
+		event.getRegistry().register(leggingsItem);
+
+		helmetItem.setRegistryName(new ResourceLocation(ToroQuest.MODID, NAME + "_helmet"));
+		event.getRegistry().register(helmetItem);
+
+		chestplateItem.setRegistryName(new ResourceLocation(ToroQuest.MODID, NAME + "_chestplate"));
+		event.getRegistry().register(chestplateItem);
 	}
 
 	public static void registerRenders() {
@@ -45,36 +59,16 @@ public class ItemReinforcedDiamondArmor extends ItemArmor {
 		registerRendersBoots();
 	}
 
-	private static void initBoots() {
-		bootsItem = new ItemReinforcedDiamondArmor(NAME + "_boots", 1, EntityEquipmentSlot.FEET);
-		ToroBaseUtils.registerItem(bootsItem, NAME + "_boots");
-	}
-
 	private static void registerRendersBoots() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(bootsItem, 0, model("boots"));
-	}
-
-	private static void initLeggings() {
-		leggingsItem = new ItemReinforcedDiamondArmor(NAME + "_leggings", 2, EntityEquipmentSlot.LEGS);
-		ToroBaseUtils.registerItem(leggingsItem, NAME + "_leggings");
 	}
 
 	private static void registerRendersLeggings() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(leggingsItem, 0, model("leggings"));
 	}
 
-	private static void initHelmet() {
-		helmetItem = new ItemReinforcedDiamondArmor(NAME + "_helmet", 1, EntityEquipmentSlot.HEAD);
-		ToroBaseUtils.registerItem(helmetItem, NAME + "_helmet");
-	}
-
 	private static void registerRendersHelmet() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(helmetItem, 0, model("helmet"));
-	}
-
-	private static void initChestPlate() {
-		chestplateItem = new ItemReinforcedDiamondArmor(NAME + "_chestplate", 1, EntityEquipmentSlot.CHEST);
-		ToroBaseUtils.registerItem(chestplateItem, NAME + "_chestplate");
 	}
 
 	private static void registerRendersChestPlate() {

@@ -32,7 +32,7 @@ public class CommonProxy {
 	
 	public void preInit(FMLPreInitializationEvent e) {
 		//configDirectory = new File(e.getModConfigurationDirectory(), ToroQuest.MODID);
-
+		ToolMaterials.init();
 		initConfig(e.getSuggestedConfigurationFile());
 
 		MinecraftForge.EVENT_BUS.register(new CivilizationGeneratorHandlers());
@@ -61,9 +61,7 @@ public class CommonProxy {
 
 	public void init(FMLInitializationEvent e) {
 		PlayerCivilizationCapabilityImpl.register();
-		ToolMaterials.init();
-		ToroQuestItems.init();
-		ToroQuestBlocks.init();
+
 		WorldGenPlacer.init();
 		ToroQuestEntities.init();
 	}

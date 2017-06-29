@@ -4,14 +4,20 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.item.ItemToroLeather;
 import net.torocraft.toroquest.material.ArmorMaterials;
 import net.torocraft.toroquest.util.ToroBaseUtils;
 
+@Mod.EventBusSubscriber
 public class ItemToroArmor extends ItemArmor {
 
 	public static final String NAME = "toro_armor";
@@ -21,11 +27,24 @@ public class ItemToroArmor extends ItemArmor {
 	public static ItemToroArmor leggingsItem;
 	public static ItemToroArmor bootsItem;
 
-	public static void init() {
-		initHelmet();
-		initChestPlate();
-		initLeggings();
-		initBoots();
+	@SubscribeEvent
+	public static void init(final RegistryEvent.Register<Item> event) {
+		bootsItem = new ItemToroArmor(NAME + "_boots", 1, EntityEquipmentSlot.FEET);
+		leggingsItem = new ItemToroArmor(NAME + "_leggings", 2, EntityEquipmentSlot.LEGS);
+		helmetItem = new ItemToroArmor(NAME + "_helmet", 1, EntityEquipmentSlot.HEAD);
+		chestplateItem = new ItemToroArmor(NAME + "_chestplate", 1, EntityEquipmentSlot.CHEST);
+
+		bootsItem.setRegistryName(new ResourceLocation(ToroQuest.MODID, NAME + "_boots"));
+		event.getRegistry().register(bootsItem);
+
+		leggingsItem.setRegistryName(new ResourceLocation(ToroQuest.MODID, NAME + "_leggings"));
+		event.getRegistry().register(leggingsItem);
+
+		helmetItem.setRegistryName(new ResourceLocation(ToroQuest.MODID, NAME + "_helmet"));
+		event.getRegistry().register(helmetItem);
+
+		chestplateItem.setRegistryName(new ResourceLocation(ToroQuest.MODID, NAME + "_chestplate"));
+		event.getRegistry().register(chestplateItem);
 	}
 
 	public static void registerRenders() {
@@ -35,36 +54,16 @@ public class ItemToroArmor extends ItemArmor {
 		registerRendersBoots();
 	}
 
-	private static void initBoots() {
-		bootsItem = new ItemToroArmor(NAME + "_boots", 1, EntityEquipmentSlot.FEET);
-		ToroBaseUtils.registerItem(bootsItem, NAME + "_boots");
-	}
-
 	private static void registerRendersBoots() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(bootsItem, 0, model("boots"));
-	}
-
-	private static void initLeggings() {
-		leggingsItem = new ItemToroArmor(NAME + "_leggings", 2, EntityEquipmentSlot.LEGS);
-		ToroBaseUtils.registerItem(leggingsItem, NAME + "_leggings");
 	}
 
 	private static void registerRendersLeggings() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(leggingsItem, 0, model("leggings"));
 	}
 
-	private static void initHelmet() {
-		helmetItem = new ItemToroArmor(NAME + "_helmet", 1, EntityEquipmentSlot.HEAD);
-		ToroBaseUtils.registerItem(helmetItem, NAME + "_helmet");
-	}
-
 	private static void registerRendersHelmet() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(helmetItem, 0, model("helmet"));
-	}
-
-	private static void initChestPlate() {
-		chestplateItem = new ItemToroArmor(NAME + "_chestplate", 1, EntityEquipmentSlot.CHEST);
-		ToroBaseUtils.registerItem(chestplateItem, NAME + "_chestplate");
 	}
 
 	private static void registerRendersChestPlate() {

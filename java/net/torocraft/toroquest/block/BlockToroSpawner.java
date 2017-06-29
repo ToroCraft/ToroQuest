@@ -4,6 +4,7 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -19,25 +20,36 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.util.ToroBaseUtils;
 
+@Mod.EventBusSubscriber
 public class BlockToroSpawner extends BlockContainer {
 
-	public static BlockToroSpawner INSTANCE;
-
-	public static Item ITEM_INSTANCE;
-
 	public static final String NAME = "toroSpawnerBlock";
+	public static BlockToroSpawner INSTANCE;
+	public static Item ITEM_INSTANCE;
+	private static ResourceLocation REGISTRY_NAME = new ResourceLocation(ToroQuest.MODID, NAME);
 
-	public static void init() {
+	@SubscribeEvent
+	public static void initBlock(final RegistryEvent.Register<Block> event) {
 		GameRegistry.registerTileEntity(TileEntityToroSpawner.class, NAME);
 		INSTANCE = (BlockToroSpawner) new BlockToroSpawner().setUnlocalizedName(NAME);
-		ToroBaseUtils.registerItem(INSTANCE, NAME);
-		ITEM_INSTANCE = Item.REGISTRY.getObject(new ResourceLocation(ToroQuest.MODID, NAME));
+		INSTANCE.setRegistryName(REGISTRY_NAME);
+		event.getRegistry().register(INSTANCE);
+	}
+
+	@SubscribeEvent
+	public static void initItem(final RegistryEvent.Register<Item> event) {
+//		ITEM_INSTANCE = Item.REGISTRY.getObject(REGISTRY_NAME);
+//		ITEM_INSTANCE.setRegistryName(REGISTRY_NAME);
+//		event.getRegistry().register(ITEM_INSTANCE);
 	}
 
 	public static void registerRenders() {

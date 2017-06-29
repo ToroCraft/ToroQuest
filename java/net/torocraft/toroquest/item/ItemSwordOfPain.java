@@ -3,24 +3,28 @@ package net.torocraft.toroquest.item;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemSword;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.torocraft.toroquest.ToroQuest;
-
+@Mod.EventBusSubscriber
 public class ItemSwordOfPain extends ItemSword {
 
 	public static ItemSwordOfPain INSTANCE;
 
 	public static final String NAME = "sword_of_pain";
 
-	public static void init() {
+	@SubscribeEvent
+	public static void init(final RegistryEvent.Register<Item> event) {
 		INSTANCE = new ItemSwordOfPain();
-		GameRegistry.register(INSTANCE, new ResourceLocation(ToroQuest.MODID, NAME));
-		MinecraftForge.EVENT_BUS.register(INSTANCE);
+		INSTANCE.setRegistryName(new ResourceLocation(ToroQuest.MODID, NAME));
+		event.getRegistry().register(INSTANCE);
 	}
 
 	public static void registerRenders() {

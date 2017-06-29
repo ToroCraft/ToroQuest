@@ -283,7 +283,7 @@ public class MessageQuestUpdate implements IMessage {
 		}
 
 		if (item.getItem() instanceof ItemBlock) {
-			Block block = ((ItemBlock) item.getItem()).block;
+			Block block = ((ItemBlock) item.getItem()).getBlock();
 			if (Blocks.DIAMOND_BLOCK == block) {
 				return new DonationReward(9 * item.getCount(), null);
 			}

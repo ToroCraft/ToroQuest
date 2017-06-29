@@ -1,24 +1,30 @@
 package net.torocraft.toroquest.item;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.torocraft.toroquest.ToroQuest;
 
+@Mod.EventBusSubscriber
 public class ItemToroLeather extends Item {
 
 	public static ItemToroLeather INSTANCE;
-
 	public static final String NAME = "toro_leather";
+	private static ResourceLocation REGISTRY_NAME = new ResourceLocation(ToroQuest.MODID, NAME);
 
-	public static void init() {
+	@SubscribeEvent
+	public static void init(final RegistryEvent.Register<Item> event) {
 		INSTANCE = new ItemToroLeather();
-		ResourceLocation resourceName = new ResourceLocation(ToroQuest.MODID, NAME);
-		GameRegistry.register(INSTANCE, resourceName);
+		INSTANCE.setRegistryName(REGISTRY_NAME);
+		event.getRegistry().register(INSTANCE);
 	}
 
 	public static void registerRenders() {

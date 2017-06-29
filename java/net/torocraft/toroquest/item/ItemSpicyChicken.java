@@ -3,24 +3,30 @@ package net.torocraft.toroquest.item;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.torocraft.toroquest.ToroQuest;
-
+@Mod.EventBusSubscriber
 public class ItemSpicyChicken extends ItemFood {
 
 	public static ItemSpicyChicken INSTANCE;
 
 	public static final String NAME = "spicy_chicken";
 
-	public static void init() {
+	@SubscribeEvent
+	public static void init(final RegistryEvent.Register<Item> event) {
 		INSTANCE = new ItemSpicyChicken();
-		GameRegistry.register(INSTANCE, new ResourceLocation(ToroQuest.MODID, NAME));
+		INSTANCE.setRegistryName(new ResourceLocation(ToroQuest.MODID, NAME));
+		event.getRegistry().register(INSTANCE);
 	}
 
 	public static void registerRenders() {

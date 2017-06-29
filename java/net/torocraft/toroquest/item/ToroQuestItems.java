@@ -9,20 +9,6 @@ import net.torocraft.toroquest.item.armor.ItemToroArmor;
 
 public class ToroQuestItems {
 
-	public static final void init() {
-		ItemToroLeather.init();
-		ItemObsidianSword.init();
-		ItemFireSword.init();
-		ItemRoyalArmor.init();
-		ItemToroArmor.init();
-		ItemReinforcedDiamondArmor.init();
-		ItemSamuraiArmor.init();
-		ItemBattleAxe.init();
-		ItemPickaxeOfGreed.init();
-		ItemSwordOfPain.init();
-		ItemSpicyChicken.init();
-	}
-
 	@SideOnly(Side.CLIENT)
 	public static final void registerRenders() {
 		ItemRoyalArmor.registerRenders();

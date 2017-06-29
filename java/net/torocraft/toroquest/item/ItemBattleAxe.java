@@ -3,21 +3,27 @@ package net.torocraft.toroquest.item;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.torocraft.toroquest.ToroQuest;
 
+@Mod.EventBusSubscriber
 public class ItemBattleAxe extends ItemAxe {
 
 	public static ItemBattleAxe INSTANCE;
 
 	public static final String NAME = "diamond_battle_axe";
 
-	public static void init() {
+	@SubscribeEvent
+	public static void init(final RegistryEvent.Register<Item> event) {
 		INSTANCE = new ItemBattleAxe();
-		ResourceLocation resourceName = new ResourceLocation(ToroQuest.MODID, NAME);
-		GameRegistry.register(INSTANCE, resourceName);
+		INSTANCE.setRegistryName(new ResourceLocation(ToroQuest.MODID, NAME));
+		event.getRegistry().register(INSTANCE);
 	}
 
 	public static void registerRenders() {

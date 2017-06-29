@@ -12,11 +12,13 @@ import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.torocraft.toroquest.ToroQuest;
-
+@Mod.EventBusSubscriber
 public class ItemPickaxeOfGreed extends ItemPickaxe {
   	//TODO
 	//public static Achievement JACKPOT_ACHIEVEMNT = new Achievement("jackpot", "jackpot", 0, 0, Items.IRON_PICKAXE, null).registerStat();
@@ -24,10 +26,11 @@ public class ItemPickaxeOfGreed extends ItemPickaxe {
 	public static ItemPickaxeOfGreed INSTANCE;
 	public static final String NAME = "pickaxe_of_greed";
 
-	public static void init() {
+	@SubscribeEvent
+	public static void init(final RegistryEvent.Register<Item> event) {
 		INSTANCE = new ItemPickaxeOfGreed();
-		GameRegistry.register(INSTANCE, new ResourceLocation(ToroQuest.MODID, NAME));
-		MinecraftForge.EVENT_BUS.register(INSTANCE);
+		INSTANCE.setRegistryName(new ResourceLocation(ToroQuest.MODID, NAME));
+		event.getRegistry().register(INSTANCE);
 	}
 
 	public static void registerRenders() {

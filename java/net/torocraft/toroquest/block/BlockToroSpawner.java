@@ -45,13 +45,6 @@ public class BlockToroSpawner extends BlockContainer {
 		event.getRegistry().register(INSTANCE);
 	}
 
-	@SubscribeEvent
-	public static void initItem(final RegistryEvent.Register<Item> event) {
-//		ITEM_INSTANCE = Item.REGISTRY.getObject(REGISTRY_NAME);
-//		ITEM_INSTANCE.setRegistryName(REGISTRY_NAME);
-//		event.getRegistry().register(ITEM_INSTANCE);
-	}
-
 	public static void registerRenders() {
 		ModelResourceLocation model = new ModelResourceLocation(ToroQuest.MODID + ":" + NAME, "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(ITEM_INSTANCE, 0, model);

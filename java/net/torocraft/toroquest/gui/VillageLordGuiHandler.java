@@ -53,7 +53,7 @@ public class VillageLordGuiHandler implements IGuiHandler {
 		// maybe take the last clicked on lord in the player cap
 
 		List<EntityVillageLord> lords;
-		for (int i = 1; i < 5; i++) {
+		for (int i = 1; i < 15; i++) {
 			lords = world.getEntitiesWithinAABB(EntityVillageLord.class, new AxisAlignedBB(new BlockPos(x, y, z)).expand(i, i, i));
 			if (lords != null && lords.size() > 0) {
 				return lords.get(0);

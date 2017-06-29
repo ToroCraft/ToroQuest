@@ -142,4 +142,9 @@ public class VillageLordInventory extends InventoryBasic implements IVillageLord
 	public Province getProvince() {
 		return CivilizationsWorldSaveData.get(lord.world).atLocation(lord.chunkCoordX, lord.chunkCoordZ);
 	}
+
+	@Override
+	public int getEntityId() {
+		return lord.getEntityId();
+	}
 }

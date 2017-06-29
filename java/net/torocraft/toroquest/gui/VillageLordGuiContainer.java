@@ -38,12 +38,15 @@ public class VillageLordGuiContainer extends GuiContainer {
 	private static String questDescription = "";
 	private static boolean questAccepted = false;
 
+	private final IVillageLordInventory inventory;
+
 	public VillageLordGuiContainer() {
 		this(null, null, null);
 	}
 
 	public VillageLordGuiContainer(EntityPlayer player, IVillageLordInventory inventory, World world) {
 		super(new VillageLordContainer(player, inventory, world));
+		this.inventory = inventory;
 		xSize = 176;
 		ySize = 239;
 	}
@@ -85,6 +88,7 @@ public class VillageLordGuiContainer extends GuiContainer {
 				mousePressed = Minecraft.getSystemTime();
 				MessageQuestUpdate message = new MessageQuestUpdate();
 				message.action = Action.DONATE;
+				message.lordEntityId = inventory.getEntityId();
 				ToroQuestPacketHandler.INSTANCE.sendToServer(message);
 			}
 		}
@@ -110,6 +114,7 @@ public class VillageLordGuiContainer extends GuiContainer {
 				mousePressed = Minecraft.getSystemTime();
 				MessageQuestUpdate message = new MessageQuestUpdate();
 				message.action = action;
+				message.lordEntityId = inventory.getEntityId();
 				ToroQuestPacketHandler.INSTANCE.sendToServer(message);
 			}
 		}

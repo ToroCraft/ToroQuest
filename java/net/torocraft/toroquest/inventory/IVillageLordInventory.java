@@ -22,4 +22,6 @@ public interface IVillageLordInventory extends IInventory {
 
 	Province getProvince();
 
+	int getEntityId();
+
 }

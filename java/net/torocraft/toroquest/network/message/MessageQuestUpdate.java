@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
+import java.util.UUID;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -39,15 +40,18 @@ public class MessageQuestUpdate implements IMessage {
 	}
 
 	public Action action;
+	public int lordEntityId;
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		action = Action.values()[buf.readInt()];
+		lordEntityId = buf.readInt();
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(action.ordinal());
+		buf.writeInt(lordEntityId);
 	}
 
 	public static class Worker {
@@ -61,7 +65,7 @@ public class MessageQuestUpdate implements IMessage {
 		void work(MessageQuestUpdate message, EntityPlayer player) {
 			Province province = CivilizationUtil.getProvinceAt(player.getEntityWorld(), player.chunkCoordX, player.chunkCoordZ);
 
-			EntityVillageLord lord = VillageLordGuiHandler.getVillageLord(player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
+			EntityVillageLord lord = (EntityVillageLord) player.world.getEntityByID(message.lordEntityId);
 			IVillageLordInventory inventory = lord.getInventory(player.getUniqueID());
 
 			switch (action) {

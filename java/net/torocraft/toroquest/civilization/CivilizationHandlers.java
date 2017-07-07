@@ -334,8 +334,8 @@ public class CivilizationHandlers {
 			return;
 		}
 
-		EntityPlayer playerA = ((EntityAnimal) event.getParentA()).func_191993_do();
-		EntityPlayer playerB = ((EntityAnimal) event.getParentB()).func_191993_do();
+		EntityPlayer playerA = ((EntityAnimal) event.getParentA()).getLoveCause();
+		EntityPlayer playerB = ((EntityAnimal) event.getParentB()).getLoveCause();
 
 		if (playerA != null) {
 			adjustPlayerRep(playerA, event.getParentA().chunkCoordX, event.getParentA().chunkCoordZ, 1);

@@ -16,13 +16,13 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class Potions {
 
 	public static void initRecipes() {
-		PotionHelper.func_193356_a(PotionTypes.AWKWARD, Ingredient.fromItem(Items.EMERALD), TQPotionTypes.ROYALTY);
-		PotionHelper.func_193356_a(TQPotionTypes.ROYALTY, Ingredient.fromItem(Items.REDSTONE), TQPotionTypes.ROYALTY_LONG);
-		PotionHelper.func_193356_a(TQPotionTypes.ROYALTY, Ingredient.fromItem(Items.GLOWSTONE_DUST), TQPotionTypes.ROYALTY_STRONG);
+		PotionHelper.addMix(PotionTypes.AWKWARD, Ingredient.fromItem(Items.EMERALD), TQPotionTypes.ROYALTY);
+		PotionHelper.addMix(TQPotionTypes.ROYALTY, Ingredient.fromItem(Items.REDSTONE), TQPotionTypes.ROYALTY_LONG);
+		PotionHelper.addMix(TQPotionTypes.ROYALTY, Ingredient.fromItem(Items.GLOWSTONE_DUST), TQPotionTypes.ROYALTY_STRONG);
 
-		PotionHelper.func_193356_a(PotionTypes.AWKWARD, Ingredient.fromItem(Items.DIAMOND), TQPotionTypes.LOYALTY);
-		PotionHelper.func_193356_a(TQPotionTypes.LOYALTY, Ingredient.fromItem(Items.REDSTONE), TQPotionTypes.LOYALTY_LONG);
-		PotionHelper.func_193356_a(TQPotionTypes.LOYALTY, Ingredient.fromItem(Items.GLOWSTONE_DUST), TQPotionTypes.LOYALTY_STRONG);
+		PotionHelper.addMix(PotionTypes.AWKWARD, Ingredient.fromItem(Items.DIAMOND), TQPotionTypes.LOYALTY);
+		PotionHelper.addMix(TQPotionTypes.LOYALTY, Ingredient.fromItem(Items.REDSTONE), TQPotionTypes.LOYALTY_LONG);
+		PotionHelper.addMix(TQPotionTypes.LOYALTY, Ingredient.fromItem(Items.GLOWSTONE_DUST), TQPotionTypes.LOYALTY_STRONG);
 	}
 
 	@SubscribeEvent

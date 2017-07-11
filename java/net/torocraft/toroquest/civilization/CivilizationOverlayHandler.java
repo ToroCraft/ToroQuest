@@ -90,6 +90,8 @@ public class CivilizationOverlayHandler extends Hud {
 		ToroGuiUtils.drawOverlayIcon(mc, badgeX, badgeY + 3, iconIndex(civType), 0);
 		
 		GlStateManager.popAttrib();
+		GlStateManager.enableDepth();
+		GlStateManager.disableBlend();
 	}
 
 	private int determineTextX() {

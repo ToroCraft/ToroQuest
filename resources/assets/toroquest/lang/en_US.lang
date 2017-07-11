@@ -127,25 +127,25 @@ quest.directions=%s meters at %s,%s
 
 quests.no_items=no items
 quests.courier.title=§lCourier§r
-quests.courier.description=§lDeliver§r a note to %s and return the reply\n§lLocation§r %s\n§lReward§r %s\n§lRecieve§r %s reputation
+quests.courier.description=§lDeliver§r a note to %s and return the reply\n§lLocation§r %s\n§lReward§r %s\n§lReceive§r %s reputation
 
 quests.enemey_encampment.title=§lClear Encampment§r
-quests.enemey_encampment.description=§lClear§r %s encampment\n§lLocation§r %s\n§lReward§r %s\n§lRecieve§r %s reputation
+quests.enemey_encampment.description=§lClear§r %s encampment\n§lLocation§r %s\n§lReward§r %s\n§lReceive§r %s reputation
 quests.enemey_encampment.wasnt_you=You didn't personally kill any from the encampment!
 quests.enemey_encampment.one_left=You didn't kill all of them, there is one left!
 quests.enemey_encampment.some_left=You didn't kill all of them, there are %i left.
 
 quests.bounty_hunter.title=§lBounty Hunter§r
-quests.bounty_hunter.description=Capture and return a fugitive hiding in %s\n§lLocation %s\n§lReward§r %s\n§lRecieve§r %s reputation
+quests.bounty_hunter.description=Capture and return a fugitive hiding in %s\n§lLocation %s\n§lReward§r %s\n§lReceive§r %s reputation
 
 quests.farm.title=§lFarm Quest§r
 quests.farm.description=§lPlant§r %s %s plants in %s\nYou have planted %s\n§lReward§r %s
 
 quests.gather.title=§lGather Quest§r
-quests.gather.description=§lGather§r %s\n§lReward§r %s\n§lRecieve§r %s reputation
+quests.gather.description=§lGather§r %s\n§lReward§r %s\n§lReceive§r %s reputation
 
 quests.kill_mobs.title=§lKill Mobs§r
 quests.kill_mobs.description=§lKill§r %s %s mobs in %s\nYou have killed %s\n§lReward§r %s
 
 quests.mine.title=§lMine in Province§r
-quests.mine.description=§lMine§r %s blocks of %s in this province\n§lLower§r than level 30\n§lUse§r and return provided tool\n§lReward§r %s\n§lRecieve§r %s reputation
+quests.mine.description=§lMine§r %s blocks of %s in this province\n§lLower§r than level 30\n§lUse§r and return provided tool\n§lReward§r %s\n§lReceive§r %s reputation

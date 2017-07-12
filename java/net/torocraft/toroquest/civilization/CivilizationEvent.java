@@ -2,6 +2,7 @@ package net.torocraft.toroquest.civilization;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.torocraft.toroquest.entities.EntityVillageLord;
 
 public class CivilizationEvent extends PlayerEvent {
 
@@ -43,5 +44,16 @@ public class CivilizationEvent extends PlayerEvent {
 		public int getReputation() {
 			return reputation;
 		}
+	}
+
+	public static class VillageLordInteract extends CivilizationEvent {
+		private final EntityVillageLord villageLord;
+
+		public VillageLordInteract(EntityPlayer player, EntityVillageLord villageLord) {
+			super(player, villageLord.getCivilization());
+			this.villageLord = villageLord;
+		}
+
+		public EntityVillageLord getVillageLord() { return villageLord; }
 	}
 }

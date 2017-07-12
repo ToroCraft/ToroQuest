@@ -59,7 +59,6 @@ public class VillageLordGuiHandler implements IGuiHandler {
 				return lords.get(0);
 			}
 		}
-
-		throw new NullPointerException("village lord not found");
+		return null;
 	}
 }

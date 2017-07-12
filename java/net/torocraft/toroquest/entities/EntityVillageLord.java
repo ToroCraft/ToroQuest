@@ -30,17 +30,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.util.datafix.walkers.ItemStackDataLists;
+import net.minecraft.village.Village;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.torocraft.toroquest.ToroQuest;
-import net.torocraft.toroquest.civilization.CivilizationDataAccessor;
-import net.torocraft.toroquest.civilization.CivilizationType;
-import net.torocraft.toroquest.civilization.CivilizationUtil;
-import net.torocraft.toroquest.civilization.CivilizationsWorldSaveData;
-import net.torocraft.toroquest.civilization.Province;
+import net.torocraft.toroquest.civilization.*;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.config.ToroQuestConfiguration;
 import net.torocraft.toroquest.entities.render.RenderVillageLord;
@@ -138,7 +136,9 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 		if (world.isRemote) {
 			return;
 		}
-		player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), world, getPosition().getX(), getPosition().getY(), getPosition().getZ());
+
+		MinecraftForge.EVENT_BUS.post(new CivilizationEvent.VillageLordInteract(player, this));
+		//player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), world, getPosition().getX(), getPosition().getY(), getPosition().getZ());
 	}
 
 	@Override

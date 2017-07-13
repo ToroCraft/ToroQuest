@@ -137,6 +137,7 @@ public class EntityVillageLord extends EntityToroNpc implements IInventoryChange
 			return;
 		}
 
+		ToroQuest.NETWORK.sendTo(, player);
 		MinecraftForge.EVENT_BUS.post(new CivilizationEvent.VillageLordInteract(player, this));
 		//player.openGui(ToroQuest.INSTANCE, VillageLordGuiHandler.getGuiID(), world, getPosition().getX(), getPosition().getY(), getPosition().getZ());
 	}

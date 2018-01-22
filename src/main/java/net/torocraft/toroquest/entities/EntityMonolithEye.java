@@ -114,7 +114,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 
 		public boolean apply(@Nullable EntityLivingBase p_apply_1_) {
 			return (p_apply_1_ instanceof EntityPlayer || p_apply_1_ instanceof EntitySquid)
-					&& p_apply_1_.getDistanceSqToEntity(this.parentEntity) > 9.0D;
+					&& p_apply_1_.getDistanceSq(this.parentEntity) > 9.0D;
 		}
 	}
 
@@ -139,7 +139,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 		 * Returns whether an in-progress EntityAIBase should continue executing
 		 */
 		public boolean continueExecuting() {
-			return super.shouldContinueExecuting() && (theEntity.getDistanceSqToEntity(this.theEntity.getAttackTarget()) > 9.0D);
+			return super.shouldContinueExecuting() && (theEntity.getDistanceSq(this.theEntity.getAttackTarget()) > 9.0D);
 		}
 
 		/**
@@ -147,7 +147,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 		 */
 		public void startExecuting() {
 			this.tickCounter = -4;
-			this.theEntity.getNavigator().clearPathEntity();
+			this.theEntity.getNavigator().clearPath();
 			this.theEntity.getLookHelper().setLookPositionWithEntity(this.theEntity.getAttackTarget(), 90.0F, 90.0F);
 			this.theEntity.isAirBorne = true;
 		}
@@ -165,7 +165,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 		 */
 		public void updateTask() {
 			EntityLivingBase entitylivingbase = this.theEntity.getAttackTarget();
-			this.theEntity.getNavigator().clearPathEntity();
+			this.theEntity.getNavigator().clearPath();
 			this.theEntity.getLookHelper().setLookPositionWithEntity(entitylivingbase, 90.0F, 90.0F);
 
 			if (!this.theEntity.canEntityBeSeen(entitylivingbase)) {
@@ -475,7 +475,7 @@ public class EntityMonolithEye extends EntityMob implements IRangedAttackMob {
 		double d1 = target.getEntityBoundingBox().minY + (double) (target.height / 3.0F) - entityarrow.posY;
 		double d2 = target.posZ - this.posZ;
 		double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
-		entityarrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F,
+		entityarrow.shoot(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F,
 				(float) (14 - this.world.getDifficulty().getDifficultyId() * 4));
 		int i = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.POWER, this);
 		int j = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.PUNCH, this);

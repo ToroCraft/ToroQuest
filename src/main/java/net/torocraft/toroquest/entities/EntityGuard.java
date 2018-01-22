@@ -281,7 +281,7 @@ public class EntityGuard extends EntityToroNpc {
 							for (EntityLivingBase entitylivingbase : this.world.getEntitiesWithinAABB(EntityLivingBase.class,
 									targetEntity.getEntityBoundingBox().expand(1.0D, 0.25D, 1.0D))) {
 								if (entitylivingbase != this && entitylivingbase != targetEntity && !this.isOnSameTeam(entitylivingbase)
-										&& this.getDistanceSqToEntity(entitylivingbase) < 9.0D) {
+										&& this.getDistanceSq(entitylivingbase) < 9.0D) {
 									entitylivingbase.knockBack(this, 0.4F, (double) MathHelper.sin(this.rotationYaw * 0.017453292F),
 											(double) (-MathHelper.cos(this.rotationYaw * 0.017453292F)));
 									entitylivingbase.attackEntityFrom(DamageSource.causeMobDamage(this), 1.0F);

@@ -263,12 +263,12 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 		} else if (this.rand.nextFloat() < 0.05F && this.getHealth() < this.getMaxHealth()) {
 			potiontype = PotionTypes.HEALING;
 		} else if (this.rand.nextFloat() < 0.5F && this.getAttackTarget() != null && !this.isPotionActive(MobEffects.SPEED)
-				&& this.getAttackTarget().getDistanceSqToEntity(this) > 121.0D) {
+				&& this.getAttackTarget().getDistanceSq(this) > 121.0D) {
 			potiontype = PotionTypes.SWIFTNESS;
 		}
 
 		if (potiontype != null) {
-			this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_WITCH_DRINK, this.getSoundCategory(), 1.0F,
+			this.world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_WITCH_DRINK, this.getSoundCategory(), 1.0F,
 					0.8F + this.rand.nextFloat() * 0.4F);
 			this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), potiontype));
 			this.attackTimer = 10;
@@ -354,7 +354,7 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 
 		} else if (roll < 90) {
 
-			if (getDistanceSqToEntity(target) > 16 && rand.nextInt(100) > 60) {
+			if (getDistanceSq(target) > 16 && rand.nextInt(100) > 60) {
 				world.addWeatherEffect(new EntityLightningBolt(world, target.posX, target.posY, target.posZ, false));
 			} else {
 				attackWithForce(target);
@@ -443,7 +443,7 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 		EntityPotion entitypotion = new EntityPotion(this.world, this,
 				PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), potiontype));
 		entitypotion.rotationPitch -= -20.0F;
-		entitypotion.setThrowableHeading(targetX, d2 + (double) (f * 0.2F), targetZ, 0.75F, 8.0F);
+		entitypotion.shoot(targetX, d2 + (double) (f * 0.2F), targetZ, 0.75F, 8.0F);
 
 		this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_WITCH_THROW, this.getSoundCategory(), 1.0F,
 				0.8F + this.rand.nextFloat() * 0.4F);
@@ -459,7 +459,7 @@ public class EntityMage extends EntityMob implements IRangedAttackMob {
 		double d1 = target.getEntityBoundingBox().minY + (double) (target.height / 3.0F) - entityarrow.posY;
 		double d2 = target.posZ - this.posZ;
 		double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
-		entityarrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F,
+		entityarrow.shoot(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F,
 				(float) (14 - this.world.getDifficulty().getDifficultyId() * 4));
 		int i = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.POWER, this);
 		int j = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.PUNCH, this);

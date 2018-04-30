@@ -1,0 +1,150 @@
+#PARSE_ESCAPES
+achievement.civilization_friend=Amigo
+achievement.civilization_ally=Aliado
+achievement.civilization_hero=Héroe
+achievement.first_quest=Misionero
+achievement.bounty_hunter=Cazarecompensas
+achievement.bastion=Asesino de bastión
+achievement.mage=Asesino de magos
+achievement.village_lord=Matareyes
+achievement.jackpot=Jackpot!
+
+item.obsidian_sword.name=Espada de obsidiana
+item.fire_sword.name=Espada de fuego
+item.diamond_battle_axe.name=Hacha de diamante
+item.reinforced_diamond_boots.name=Botas de diamante reforzadas
+item.reinforced_diamond_helmet.name=Casco de diamante reforzado
+item.reinforced_diamond_leggings.name=Pantalones de diamante reforzados
+item.reinforced_diamond_chestplate.name=Pechera de diamante reforzada
+item.royal_boots.name=Botas reales
+item.royal_helmet.name=Casco real
+item.royal_leggings.name=Pantalones reales
+item.royal_chestplate.name=Pechera real
+item.samurai_boots.name=Falda de samurai
+item.samurai_helmet.name=Casco de samurai
+item.samurai_leggings.name=Pantalones de samurai
+item.samurai_chestplate.name=Pechera de samurai
+item.toro_armor_boots.name=Botas de toro
+item.toro_armor_helmet.name=Casco de toro
+item.toro_armor_leggings.name=Pantalones de toro
+item.toro_armor_chestplate.name=Pechera de toro
+item.toro_leather.name=Cuero de toro
+item.torch_arrow.name=Flecha ardiente
+item.pickaxe_of_greed.name=Pico de avaricia
+item.sword_of_pain.name=Espada del dolor
+item.spicy_chicken.name=Pollo picante
+
+effect.toroquest\:royalty=Realeza
+potion.effect.toroquest\:royalty=Poción de realeza
+splash_potion.effect.toroquest\:royalty=Poción de realeza arrojadiza
+lingering_splash_potion.effect.toroquest\:royalty=Poción de realeza persistente
+
+effect.toroquest\:loyalty=Lealtad
+potion.effect.toroquest\:loyalty=Poción de lealtad
+splash_potion.effect.toroquest\:loyalty=Poción de lealtad arrojadiza
+lingering_potion.effect.toroquest\:loyalty=Poción de lealtad persistente
+
+entity.toroquest.monolitheye.name=Capataz
+entity.monolitheye.name=Capataz
+entity.toroquest_monolitheye.name=Capataz
+
+entity.toroquest.mage.name=Mago
+entity.mage.name=Mago
+entity.toroquest_mage.name=Mago
+
+entity.toroquest.toro.name=Toro
+entity.toro.name=Toro
+entity.toroquest_toro.name=Toro
+
+entity.toroquest.guard.name=Guardia
+entity.guard.name=Guardia
+entity.toroquest_guard.name=Guardia
+
+entity.toroquest.village_lord.name=Señor de la aldea
+entity.village_lord.name=Señor de la aldea
+entity.toroquest_village_lord.name=Señor de la aldea
+
+entity.toroquest.shopkeeper.name=Tendero
+entity.shopkeeper.name=Tendero
+entity.toroquest_shopkeeper.name=Tendero
+
+entity.toroquest.fugitive.name=Fugitivp
+entity.fugitive.name=Fugitivp
+entity.toroquest_fugitive.name=Fugitivo
+
+entity.toroquest.vampire_bat.name=Murciélago vampiro
+entity.vampire_bat.name=Murciélago vampiro
+entity.toroquest_vampire_bat.name=Murciélago vampiro
+
+entity.toroquest.bas.name=Señor del bastión
+entity.bas.name=Señor del bastión
+entity.toroquest_bas.name=Señor del bastión
+
+entity.toroquest.sentry.name=Centinela
+entity.sentry.name=Centinela
+entity.toroquest_sentry.name=Centinela
+
+entity.toroquest.rainbow_guard.name=Defensor del arcoiris
+entity.rainbow_guard.name=Defensor del arcoiris
+entity.toroquest_rainbow_guard.name=Defensor del arcoiris
+
+entity.toroquest.rainbow_king.name=Rey del arcoiris
+entity.rainbow_king.name=Rey del arcoiris
+entity.toroquest_rainbow_king.name=Rey del arcoiris
+
+civilization.earth.name=Terra
+civilization.wind.name=Gustaberg
+civilization.fire.name=Lumens
+civilization.moon.name=Wolf
+civilization.sun.name=Solaris
+civilization.water.name=Aquarius
+civilization.entering.friendly=¡Bienvenido de nuevo a %s de %s!
+civilization.entering.neutral=Entrando en %s de %s
+civilization.entering.hostile=Ingresando en %s de %s
+civilization.leaving.friendly=¡Adiós desde %s de %s!
+civilization.leaving.neutral=Dejando %s de %s
+civilization.leaving.hostile=Escapado de %s de %s
+
+civilization.reputation_level.hero=Héroe
+civilization.reputation_level.ally=Aliado
+civilization.reputation_level.friend=Amigo
+civilization.reputation_level.drifter=Vagabundo
+civilization.reputation_level.outcast=Paria
+civilization.reputation_level.enemy=Enemigo
+civilization.reputation_level.villain=Villano
+
+quest.gui.title=Señor de %s
+quest.gui.rep_for=%d Rep. para
+quest.gui.reply=Obtener respuesta
+quest.gui.stolen_item=Devolver ítem
+quest.gui.empty=Dar ítems
+quest.gui.button.donate=Dar
+quest.gui.button.accept=Aceptar
+quest.gui.button.complete=Completar
+quest.gui.button.reject=Abandonar
+quest.directions=%s metros en %s,%s
+
+quests.no_items=No hay ítems
+quests.courier.title=§lMensajero§r
+quests.courier.description=§lEntregar§r una nota a %s y devuelve la respuesta \n§lLocalización§r %s\n§lRecompensa§r %s\n§lRecivir§r %s reputación
+
+quests.enemey_encampment.title=§lCampamento limpio§r
+quests.enemey_encampment.description=§lLimpia§r %s campamento\n§lLocalización§r %s \n§lRecompensa§r %s\n§lRecivir§r %s reputación
+quests.enemey_encampment.wasnt_you=¡No mataste personalmente a ninguno del campamento!
+quests.enemey_encampment.one_left=¡No mataste a todos ellos, queda uno!
+quests.enemey_encampment.some_left=¡No mataste a todos ellos, aún quedan %i!
+
+quests.bounty_hunter.title=§lCazarecompensas§r
+quests.bounty_hunter.description=Captura y devuelve a un fugitivo escondido en \n§lLocalización§r %s\n§lRecompensa§r %s\n§lRecivir§r %s reputación
+
+quests.farm.title=§lMisión de plantar§r
+quests.farm.description=§lPlanta§r %s %s plantas en %s\nHas plantado: %s\n§lRecompensa§r %s
+
+quests.gather.title=§lMisión de recolectar§r
+quests.gather.description=§lGather§r %s\n§lReward§r %s\n§lReceive§r %s reputation
+
+quests.kill_mobs.title=§lMatar mobs§r
+quests.kill_mobs.description=§lMata§r %s %s mobs en %s\nHas matado: %s\n§lRecompensa§r %s
+
+quests.mine.title=§lMinar en la provincia§r
+quests.mine.description=§lMina§r %s bloques de %s en esta provincia\n§lMenor§r Que nivel 30\n§lUsa§r y devuelve la herramienta\n§lRecompensa§r %s\n§lRecivir§r %s reputación

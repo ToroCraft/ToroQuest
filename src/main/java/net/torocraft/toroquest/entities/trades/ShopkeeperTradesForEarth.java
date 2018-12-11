@@ -1,8 +1,10 @@
 package net.torocraft.toroquest.entities.trades;
 
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
@@ -86,7 +88,7 @@ public class ShopkeeperTradesForEarth {
 	
 	private static ItemStack silkTouch() {
 		ItemStack stack = new ItemStack(Items.ENCHANTED_BOOK);
-		stack.addEnchantment(Enchantment.REGISTRY.getObjectById(33), 1);
+		ItemEnchantedBook.addEnchantment(stack, new EnchantmentData(Enchantment.REGISTRY.getObjectById(33), 1));
 		return stack;
 	}
 }

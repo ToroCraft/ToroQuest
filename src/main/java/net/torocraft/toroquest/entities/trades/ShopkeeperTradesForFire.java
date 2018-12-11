@@ -1,9 +1,11 @@
 package net.torocraft.toroquest.entities.trades;
 
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
@@ -102,35 +104,35 @@ public class ShopkeeperTradesForFire {
 	private static ItemStack level1FireProtection() {
 		ItemStack stack = new ItemStack(Items.ENCHANTED_BOOK);
 		stack.setStackDisplayName("Fire Protection I");
-		stack.addEnchantment(Enchantment.REGISTRY.getObjectById(1), 1);
+		ItemEnchantedBook.addEnchantment(stack, new EnchantmentData(Enchantment.REGISTRY.getObjectById(1), 1));
 		return stack;
 	}
 	
 	private static ItemStack level2FireProtection() {
 		ItemStack stack = new ItemStack(Items.ENCHANTED_BOOK);
 		stack.setStackDisplayName("Fire Protection II");
-		stack.addEnchantment(Enchantment.REGISTRY.getObjectById(1), 2);
+		ItemEnchantedBook.addEnchantment(stack, new EnchantmentData(Enchantment.REGISTRY.getObjectById(1), 2));
 		return stack;
 	}
 	
 	private static ItemStack level3FireProtection() {
 		ItemStack stack = new ItemStack(Items.ENCHANTED_BOOK);
 		stack.setStackDisplayName("Fire Protection III");
-		stack.addEnchantment(Enchantment.REGISTRY.getObjectById(1), 3);
+		ItemEnchantedBook.addEnchantment(stack, new EnchantmentData(Enchantment.REGISTRY.getObjectById(1), 3));
 		return stack;
 	}
 	
 	private static ItemStack level4FireProtection() {
 		ItemStack stack = new ItemStack(Items.ENCHANTED_BOOK);
 		stack.setStackDisplayName("Fire Protection IV");
-		stack.addEnchantment(Enchantment.REGISTRY.getObjectById(1), 4);
+		ItemEnchantedBook.addEnchantment(stack, new EnchantmentData(Enchantment.REGISTRY.getObjectById(1), 4));
 		return stack;
 	}
 	
 	private static ItemStack level5FireProtection() {
 		ItemStack stack = new ItemStack(Items.ENCHANTED_BOOK);
 		stack.setStackDisplayName("Fire Protection V");
-		stack.addEnchantment(Enchantment.REGISTRY.getObjectById(1), 5);
+		ItemEnchantedBook.addEnchantment(stack, new EnchantmentData(Enchantment.REGISTRY.getObjectById(1), 5));
 		return stack;
 	}
 }

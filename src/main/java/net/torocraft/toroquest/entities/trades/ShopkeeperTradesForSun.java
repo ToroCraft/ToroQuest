@@ -1,8 +1,10 @@
 package net.torocraft.toroquest.entities.trades;
 
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
@@ -26,7 +28,6 @@ public class ShopkeeperTradesForSun {
 			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(6)), level2BlastProtection()));
 			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(9)), level3BlastProtection()));
 			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(15)), level4BlastProtection()));
-			recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, rep.adjustPrice(20)), level5BlastProtection()));
 		}
 
 		if (rep.equals(ReputationLevel.FRIEND) || rep.equals(ReputationLevel.ALLY) || rep.equals(ReputationLevel.HERO)) {
@@ -91,31 +92,25 @@ public class ShopkeeperTradesForSun {
 
 	private static ItemStack level1BlastProtection() {
 		ItemStack stack = new ItemStack(Items.ENCHANTED_BOOK);
-		stack.addEnchantment(Enchantment.REGISTRY.getObjectById(3), 1);
+		ItemEnchantedBook.addEnchantment(stack, new EnchantmentData(Enchantment.REGISTRY.getObjectById(3), 1));
 		return stack;
 	}
 
 	private static ItemStack level2BlastProtection() {
 		ItemStack stack = new ItemStack(Items.ENCHANTED_BOOK);
-		stack.addEnchantment(Enchantment.REGISTRY.getObjectById(3), 2);
+		ItemEnchantedBook.addEnchantment(stack, new EnchantmentData(Enchantment.REGISTRY.getObjectById(3), 2));
 		return stack;
 	}
 
 	private static ItemStack level3BlastProtection() {
 		ItemStack stack = new ItemStack(Items.ENCHANTED_BOOK);
-		stack.addEnchantment(Enchantment.REGISTRY.getObjectById(3), 3);
+		ItemEnchantedBook.addEnchantment(stack, new EnchantmentData(Enchantment.REGISTRY.getObjectById(3), 3));
 		return stack;
 	}
 
 	private static ItemStack level4BlastProtection() {
 		ItemStack stack = new ItemStack(Items.ENCHANTED_BOOK);
-		stack.addEnchantment(Enchantment.REGISTRY.getObjectById(3), 4);
-		return stack;
-	}
-
-	private static ItemStack level5BlastProtection() {
-		ItemStack stack = new ItemStack(Items.ENCHANTED_BOOK);
-		stack.addEnchantment(Enchantment.REGISTRY.getObjectById(3), 5);
+		ItemEnchantedBook.addEnchantment(stack, new EnchantmentData(Enchantment.REGISTRY.getObjectById(3), 4));
 		return stack;
 	}
 	

@@ -507,10 +507,11 @@ public class CivilizationHandlers {
 			return;
 		}
 
-		if(ConfigurationHandler.sentrySpawnRate > 0) {
+		if(ConfigurationHandler.sentrySpawnRate == 0) {
 			return;
 		}
 
+		//TODO: Look into max spawn for sentrys
 		int count = world.rand.nextInt(ConfigurationHandler.sentrySpawnRate) + 1;
 
 		for (int i = 0; i < count; i++) {

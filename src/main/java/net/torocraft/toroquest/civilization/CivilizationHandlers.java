@@ -56,6 +56,7 @@ import net.torocraft.toroquest.ToroQuest;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapability;
 import net.torocraft.toroquest.civilization.player.PlayerCivilizationCapabilityImpl;
 import net.torocraft.toroquest.config.ToroQuestConfiguration;
+import net.torocraft.toroquest.configuration.ConfigurationHandler;
 import net.torocraft.toroquest.entities.EntityFugitive;
 import net.torocraft.toroquest.entities.EntitySentry;
 import net.torocraft.toroquest.entities.EntityToroNpc;
@@ -506,7 +507,11 @@ public class CivilizationHandlers {
 			return;
 		}
 
-		int count = world.rand.nextInt(3) + 1;
+		if(ConfigurationHandler.sentrySpawnRate > 0) {
+			return;
+		}
+
+		int count = world.rand.nextInt(ConfigurationHandler.sentrySpawnRate) + 1;
 
 		for (int i = 0; i < count; i++) {
 			EntitySentry e = new EntitySentry(world);
@@ -515,7 +520,6 @@ public class CivilizationHandlers {
 			e.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(e)), (IEntityLivingData) null);
 			world.spawnEntity(e);
 		}
-
 	}
 
 	private BlockPos findSpawnLocationFrom(World world, BlockPos from) {

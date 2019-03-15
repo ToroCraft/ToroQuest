@@ -12,6 +12,7 @@ public class ConfigurationHandler {
 	public static String repDisplayPosition;
 	public static Integer repDisplayX;
 	public static Integer repDisplayY;
+	public static Integer sentrySpawnRate;
 
 	public static Configuration config;
 
@@ -26,6 +27,8 @@ public class ConfigurationHandler {
 					new String[] { "TOP LEFT", "TOP CENTER", "TOP RIGHT", "BOTTOM LEFT", "BOTTOM RIGHT", "OFF" });
 			repDisplayX = config.getInt("Rep Badge X", Configuration.CATEGORY_CLIENT, 0, -20000, 20000, "Sets X offset of Rep Badge");
 			repDisplayY = config.getInt("Rep Badge Y", Configuration.CATEGORY_CLIENT, 0, -20000, 20000, "Sets Y offset of Rep Badge");
+			repDisplayY = config.getInt("Rep Badge Y", Configuration.CATEGORY_CLIENT, 0, -20000, 20000, "Sets Y offset of Rep Badge");
+			sentrySpawnRate = config.getInt("Sentry Spawn Rate", Configuration.CATEGORY_CLIENT, 3, 0, 5, "Sets Sentry Spawn Rate n + 1");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
